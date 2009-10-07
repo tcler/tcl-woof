@@ -1,0 +1,155 @@
+/* Woof default CSS */
+
+/* Yahoo copyrighted section - base-min.css. See base.css for readable version */
+
+/*
+Copyright (c) 2009, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.net/yui/license.txt
+version: 2.7.0
+*/
+body{margin:10px;}h1{font-size:138.5%;}h2{font-size:123.1%;}h3{font-size:108%;}h1,h2,h3{margin:1em 0;}h1,h2,h3,h4,h5,h6,strong,dt{font-weight:bold;}optgroup{font-weight:normal;}abbr,acronym{border-bottom:1px dotted #000;cursor:help;}em{font-style:italic;}del{text-decoration:line-through;}blockquote,ul,ol,dl{margin:1em;}ol,ul,dl{margin-left:2em;}ol li{list-style:decimal outside;}ul li{list-style:disc outside;}dl dd{margin-left:1em;}th,td{border:1px solid #000;padding:.5em;}th{font-weight:bold;text-align:center;}caption{margin-bottom:.5em;text-align:center;}sup{vertical-align:super;}sub{vertical-align:sub;}p,fieldset,table,pre{margin-bottom:1em;}button,input[type="checkbox"],input[type="radio"],input[type="reset"],input[type="submit"]{padding:1px;}
+
+/* End Yahoo copyright */
+
+h1,h2 {
+  color: #888888;
+  margin-bottom: 0.5em;
+}
+
+#ft {
+    font-size: 77%;
+    text-align: center;
+    border-top: 1px solid #aaaaaa;
+    /* margin-right: 180px; */
+    margin-top: 10px;
+}
+
+.banner h2 {
+    color: #006666;
+}
+
+#hd .banner {
+    font-family: Trebuchet MS, Helvetica, sans-serif;
+    font-weight: bold;
+    line-height: 64px;
+    background-image: url(../images/woof/_logo.png);
+    background-position: center left;
+    background-repeat: no-repeat;
+    text-indent: 100px;
+}
+
+
+#bd {
+  font-family: Verdana;
+  font-size: 108%;
+}
+
+.linkbox h2 {
+  color: #177f75; /* #21b6a8; */
+  margin-bottom: 0.2em;
+  margin-top: 1.5em;
+  font-size: 93%;
+}
+
+.linkbox {
+  font-size: 93%;
+}
+
+.linkbox ul {
+  margin-top: 0em;
+  margin-left: 0.5em;
+}
+
+.linkbox ul li {
+  list-style: none;
+}
+
+.linkbox a {
+  color: #177f75;
+  text-decoration: none;
+}
+
+.linkbox li a:hover {
+  font-weight: bold;
+}
+
+div.navbox {
+  margin-top: 1em;
+}
+
+.navbox {
+  font-size: 100%;
+}
+
+.navbox h2 {
+  font-size: 93%;
+  margin-bottom: 0.2em;
+  margin-top: 1.5em;
+  color: #808080;
+}
+
+.navbox ul {
+  margin-left: 1.5em;
+  margin-top: 0em;
+}
+
+.navbox ul li {
+  list-style-image: url(../images/woof/_navarrow.png);
+}
+
+.navbox li a:link, .navbox li a:visited {
+  text-decoration: none;
+  color: #808080;
+}
+
+.navbox li a:hover {
+  font-weight: bold;
+}
+
+
+table {
+  margin: 1em;
+  border: thin solid;
+  border-collapse: collapse;
+  border-color: #808080;
+  padding: 4;
+}
+
+td {
+  border: thin solid;
+  border-color: #808080;
+  vertical-align: top;
+  font-size: 93%;
+}
+th {
+  border: thin solid;
+  border-color: #808080;
+  padding: 4px;
+  background-color: #CCCCCC;
+}
+
+dt, dd {
+   font-size: 93%;
+}
+
+.witsmenu { color: blue; font-family: Arial; font-size: 93%; font-weight: bold;}
+.debug { background-color: red; }
+.seemore {
+  font-size: 93%;
+}
+.blockquote {
+  font-size: 93%;
+  margin-left: 4em;
+}
+.cmd {
+  font-size: 100%;
+  font-family: "Courier New", Courier;
+}
+.cmdblock {
+  font-size: 100%;
+  font-family: "Courier New", Courier;
+  margin-left: 2em;
+  margin-bottom: 1em;
+}
+

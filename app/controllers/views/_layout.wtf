@@ -1,0 +1,120 @@
+% # page_width determines width of the whole page. If fluid, it takes up
+% # the entire browser window.
+% # Must be one of 750px, 950px, 974px or fluid
+% set page_width fluid
+
+% # Set true if page margins are not desired around the whole display area.
+% # As per YUI, this may cause bleeding of content into the browser chrome
+% set no_margin false
+
+% # Set the width and position of the sidebar column.
+% # Note this setting is ignored
+% # if the left and right elements of the page object are not present in
+% # which case the main content area takes up the whole width.
+% # Left-positioned sidebars are currently restricted to 
+% # one of 160px, 180px, or 300px and right-positioned ones
+% # to one of 180px, 240px or 300px
+% set sidebar_pos left;           # Left or right
+% set sidebar_width 180px
+
+% # Percentage of remaining width taken up by main content.
+% # Must be one of 25%, 33%, 50%, 66%, 75%. Note this is ignored
+% # if no right column is present in the page array.
+% set main_percent 66%
+
+
+% ############## End of Customization ################ 
+
+% # Select a document width
+% set doc_id [dict get {750px doc 950px doc2 974px doc4 fluid doc3} $page_width]
+
+% # Select a layout based on location of sidebar
+% if {[page fetch sidebar sidebar_content]} {
+%     if {$sidebar_pos eq "left"} {
+%         switch -exact -- $sidebar_width {
+%             160px { set doc_class "yui-t1" }
+%             180px { set doc_class "yui-t2" }
+%             300px { set doc_class "yui-t3" }
+%             default {
+%                 exception WOOF ConfigurationError "Invalid value '$sidepos_pos' for left sidebar width."
+%             }
+%         }
+%     } else {
+%         switch -exact -- $sidebar_width {
+%             180px { set doc_class "yui-t4" }
+%             240px { set doc_class "yui-t5" }
+%             300px { set doc_class "yui-t6" }
+%             default {
+%                 exception WOOF ConfigurationError "Invalid value '$sidepos_pos' for left sidebar width."
+%             }
+%         }
+%     }
+% }
+
+% # Select a preset template based on specified width of the main block
+% if {[page fetch supplement supplement_content]} {
+%     switch -exact -- $main_percent {
+%         25% { set main_class "yui-gf" }
+%         33% { set main_class "yui-gd" }
+%         50% { set main_class "yui-g" }
+%         66% { set main_class "yui-gc" }
+%         75% { set main_class "yui-ge" }
+%         100% { set main_class "yui-g" }
+%         default {
+%             exception WOOF ConfigurationError "Invalid value '$main_percent' for main block width."
+%         }
+%     }
+% } else {
+%     set main_class "yui-g"
+%     set main_percent 100%
+% }
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html>
+  <head>
+    <title>[pagevar get @title [config :app_name]]</title>
+    [my make_style_links [pagevar get @styles [list _yui-2-7-0b-reset-fonts-grids.css]]]
+%# Note the no_margin modification only applies to #doc3, NOT other doc*
+% if {$no_margin} {
+    <style>#doc3 {margin:auto;}</style>
+% }
+  </head>
+  <body>
+% if {[info exists doc_class]} {
+    <div id="$doc_id" class="$doc_class">
+% } else {
+    <div id="$doc_id">
+% }
+% if {[page fetch header content]} {
+      <div id="hd">$content</div>
+% }
+      <div id="bd">
+% if {[info exists sidebar_content]} {
+	<div id="yui-main">
+	  <div class="yui-b">
+% }
+            <div class="$main_class">
+% if {! [page fetch main content]} {set content ""}
+% if {$main_percent eq "100%"} {
+            $content
+% } else {
+	    <div class="yui-u first">$content</div>
+	    <div class="yui-u">$supplement_content</div>
+% }
+	    </div>
+% if {[info exists sidebar_content]} {
+	  </div>
+	</div>
+
+	<div class="yui-b">
+	  $sidebar_content
+	</div>
+% }
+      </div>
+% if {[page fetch footer content]} {
+      <div id="ft">$content</div>
+% }
+    </div>
+  </body>
+</html>

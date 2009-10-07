@@ -1,0 +1,21 @@
+<h2>Welcome to Woof!</h2>
+<p>
+  It appears your Woof! installation was actually successful.
+</p>
+<p>
+  What luck!
+</p>
+% if {"woof/_manage/index" eq [config get app_default_uri]} {
+<p>
+  This page is currently the default page for the installation. At some
+  point, you should change the setting of <code>app_default_url</code>
+  in the configuration file <code>application.cfg</code> to point to
+  your application's default page.
+</p>
+% }
+<p>
+  To get started, do have a look through the
+  <a href='$woof_url(quick_start)'>Quick Start</a> chapter of the
+  <a href='$woof_url(user_guide)'>Woof! User Guide</a>,
+  if you have not done so already.
+</p>

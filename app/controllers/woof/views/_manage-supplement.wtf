@@ -1,0 +1,14 @@
+<div class='linkbox'>
+<h2>Documentation</h2>
+<ul>
+  <li>
+    <a href='$woof_url(quick_start)'>Quick Start</a>
+  </li>
+  <li>
+    <a href='$woof_url(user_guide)'>User Guide</a>
+  </li>
+  <li>
+    <a href='$woof_url(reference)'>Reference</a>
+  </li>
+</ul>
+</div>
