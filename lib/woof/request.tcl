@@ -157,6 +157,7 @@ oo::class create Request {
     }
 
     method _raw_host_with_port {} {
+
         if {[env exists HTTP_X_FORWARDED_HOST host]} {
             # List of forwards separated by commas. We are the first
             # in the list. Note whitespace may separate entries
@@ -195,11 +196,15 @@ oo::class create Request {
     
     method port {} {
         # Returns the port on which the request was received.
-        if {[regexp {:(\d+)$} [my _raw_host_with_port] notused port]} {
+        set port [lindex [my _raw_host_with_port] 1]
+        if {$port ne ""} {
             return $port
-        } else {
-            return [my standard_port]
-        }
+        } 
+        return [my standard_port]
+    }
+
+    method host {} {
+        return [lindex [my _raw_host_with_port] 0]
     }
 
     method url {} {

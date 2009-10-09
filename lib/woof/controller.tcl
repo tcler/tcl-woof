@@ -320,11 +320,17 @@ oo::class create Controller {
         # -urlpath URLPATH - specifies the URL portion after the protocol and 
         #  host components. Specifying this will cause all other URL related
         #  options to be ignored except -protocol, -host and -port.
+        #  If URLPATH begins with '/', it is taken to be the entire URL
+        #  after the host and port. Otherwise, it is assumed to be relative
+        #  to the application's root URL.
 
         my variable _dispatchinfo
 
         if {[dict exists $args -urlpath]} {
             set url [dict get $args -urlpath]
+            if {[string index $url 0] ne "/"} {
+                set url [file join [::woof::config url_root] $url]
+            }
         } else {
             set modifiers {}
             if {[dict exists $args -controller]} {
@@ -348,67 +354,6 @@ oo::class create Controller {
 
             set url [::woof::url_build $_dispatchinfo {*}$modifiers]
         }
-        
-        if {[dict exists $args -protocol]} {
-            set protocol [dict get $args -protocol]
-        } else {
-            set protocol http
-        }
-
-
-        # Get default server and port
-        # TBD - should this come from SERVER_NAME/SERVER_PORT
-        # or HTTP_HOST? Seems very server dependent as well as
-        # server configuration dependent. Currently on Apache/mod_websh
-        # we are using HTTP_HOST because SERVER_PORT
-        # does not seem to show the port in the original URL
-        # TBD - do we need to sanitize HTTP_HOST to prevent malicious
-        # requests?
-
-        # We may need host or port. Just get these right away instead
-        # of complicating logic below
-        lassign [split [env get HTTP_HOST ""] :] default_host default_port; # Defaults
-
-        if {[dict exists $args -host]} {
-            set host [dict get $args -host]; # May be "" !
-        } else {
-            set host ""
-        }
-
-        if {$host eq ""} {
-            set host $default_host
-            if {$host eq ""} {
-                # Get from SERVER_NAME
-                set host [env get SERVER_NAME ""]
-                if {$host eq ""} {
-                    # Get from SERVER_ADDR
-                    set host [env get SERVER_ADDR]; # Will error out if not there
-                }
-            }
-        }
-
-        if {[dict exists $args -port]} {
-            set port :[dict get $args -port]
-        } else {
-            set port ""
-        }
-
-        if {$port eq ""} {
-            set port $default_port
-            if {$port eq ""} {
-                set port [env get SERVER_PORT ""]
-            }
-        }
-
-        if {($protocol eq "http" && $port == 80) ||
-            ($protocol eq "https" && $port == 443)} {
-            # If default ports, exclude it again
-            set port ""
-        }
-
-        if {$port ne ""} {
-            set port :$port
-        }
 
         if {[dict exists $args -anchor]} {
             set anchor #[dict get $args -anchor]
@@ -421,17 +366,56 @@ oo::class create Controller {
             foreach {k val} [dict get $args -query] {
                 lappend query $k=$val
             }
+            # TBD - should we not encode k and val separately. Else "=" might
+            # also get encoded
             set query ?[::woof::url_encode [join $query " "]]
         } else {
             set query ""
         }
 
+        set url "$url$anchor$query"
+
+        # If protocol, host and port are unspecified, return the relative URL
+        if {![dict exists $args -protocol] &&
+            ![dict exists $args -host] &&
+            ![dict exists $args -port]} {
+            return $url
+        }
+
+        if {[dict exists $args -protocol]} {
+            set protocol [dict get $args -protocol]
+        } else {
+            set protocol http
+        }
+
+        if {[dict exists $args -host]} {
+            set host_port [dict get $args -host]
+            if {$host_port eq ""} {
+                # Caller specified empty host. Use default from request
+                set host_port [request host]
+            }
+            if {[dict exists $args -port]} {
+                # Port is also specified. Note that when port is not specified
+                # we do NOT use the port that came in with the request. This
+                # is intentional.
+                append host_port ":[dict get $args -port]"
+            }
+        } elseif {[dict exists $args -port]} {
+            # Host is not specified but port is. Use the host from
+            # the current request.
+            set host_port "[request host]:[dict get $args -port]"
+        } else {
+            # Neither host nor port specified. Use defaults from current
+            # request. (Note this case is when -protocol was specified
+            # so we could not return a simple relative URL above.
+            set host_port [request formatted_host_with_port]
+        }
 
         # TBD - does entire url need to be encoded or only pieces? 
         # Right now we encode only query above
         # TBD - Moreover who does the HTML encoding in actual hrefs?
         # TBD - does anchor come before/after query?
-        return set url "$protocol://$host$port$url$anchor$query"
+        return set url "$protocol://$host_port$url"
     }
 
     method render {} {
