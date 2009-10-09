@@ -4,8 +4,8 @@
 
 package require ncgi
 
-namespace eval ::woof::webservers::cgi_server {}
-proc ::woof::webservers::cgi_server::init {args} {
+namespace eval ::woof::webservers::cgi {}
+proc ::woof::webservers::cgi::init {args} {
     catch {WebServer destroy}
     oo::class create WebServer {
         superclass ::woof::webservers::BaseWebServer
@@ -52,7 +52,7 @@ proc ::woof::webservers::cgi_server::init {args} {
 if {[catch {
     set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. lib]]]
     source [file join [file dirname [info script]] .. lib woof master.tcl]
-    ::woof::master::init cgi_server [file normalize [file join [file dirname [info script]] ..]]
+    ::woof::master::init cgi [file normalize [file join [file dirname [info script]] ..]]
     set output_done [::woof::master::process_request]
 } msg]} {
     if {[info exists output_done] && $output_done} {

@@ -83,7 +83,6 @@ proc installer::distribute {target_dir args} {
     # Generates distribution kits for Woof
     # target_dir - path to the directory where the distribution kits are
     #   to be placed. The directory must not exist.
-    # -svn SVNEXE - SVN executable ('svn' by default)
     # -zipper ZIPEXE - ZIP file executable ('zip' by default)
     # -sdx SDXKIT - path to 'sdx.kit' file for generating Tcl kits
     # -tarrer TAREXE - path to the tar exe
@@ -92,7 +91,7 @@ proc installer::distribute {target_dir args} {
     # The command generates a woof.zip distribution kit in addition
     # to the single file self-contained executable versions.
     #
-    # This command is intended to be executed out of the source SVN
+    # This command is intended to be executed out of the source
     # tree, not from within a distribution kit.
 
     variable root_dir
@@ -110,7 +109,6 @@ proc installer::distribute {target_dir args} {
     # Note - tarrer defaults to bsdtar since Gnu tar does not properly
     # set directory permissions when tarring on Windows
     array set opts {
-        -svn svn
         -gzipper gzip
         -zipper zip
         -tarrer bsdtar
@@ -125,20 +123,15 @@ proc installer::distribute {target_dir args} {
 
     set cwd [pwd]
 
-    set svn_opts {}
-    if {$opts(-force)} {
-        lappend svn_opts --force
-    }
-
     file mkdir $target_dir
     set zip_dir [file join $target_dir "woof-$woof_version"]
-    file mkdir $zip_dir
     puts "Exporting to $zip_dir"
+    file delete -force $zip_dir; # Empty it if it exists
+    file mkdir $zip_dir
     foreach dir {app config lib public scripts} {
-        exec $opts(-svn) export {*}$svn_opts [file join $root_dir $dir] [file join $zip_dir $dir]
+        file copy -- [file join $root_dir $dir] $zip_dir
     }
-    exec $opts(-svn) export --force {*}$svn_opts [file join $root_dir thirdparty lib] [file join $zip_dir lib]
-
+    file copy -- {*}[glob [file join $root_dir thirdparty lib *]] [file join $zip_dir lib]
     set textfile_patterns {*.txt *.tcl *.htm *.html *.wtf *.bat *.cmd}
 
     puts "Converting line endings to Windows format"
@@ -196,17 +189,18 @@ proc installer::distribute {target_dir args} {
     # Now also create a standalone kit 
     puts "Creating bowwow"
     set bowwow_dir [file join $target_dir bowwow-${woof_version}.vfs]
+    file delete -force $bowwow_dir
     file mkdir [file join $bowwow_dir lib]
-    exec $opts(-svn) export {*}$svn_opts [file join $root_dir thirdparty tclhttpd3.5.2 bin] [file join $bowwow_dir bin]
-    exec $opts(-svn) export {*}$svn_opts [file join $root_dir thirdparty tclhttpd3.5.2 lib] [file join $bowwow_dir lib tclhttpd3.5.2]
-    exec $opts(-svn) export {*}$svn_opts [file join $root_dir thirdparty tclhttpd3.5.2 main.tcl] [file join $bowwow_dir main.tcl]
+    file copy [file join $root_dir thirdparty tclhttpd3.5.2 bin] [file join $bowwow_dir]
+    file copy [file join $root_dir thirdparty tclhttpd3.5.2 lib] [file join $bowwow_dir lib tclhttpd3.5.2]
+    file copy [file join $root_dir thirdparty tclhttpd3.5.2 main.tcl] [file join $bowwow_dir main.tcl]
     # For next two --force is hardcoded - intentional
-    exec $opts(-svn) export --force [file join $root_dir thirdparty lib] [file join $bowwow_dir lib]
-    exec $opts(-svn) export --force [file join $root_dir lib woof] [file join $bowwow_dir lib woof]
-    exec $opts(-svn) export {*}$svn_opts [file join $root_dir config] [file join $bowwow_dir config]
-    exec $opts(-svn) export {*}$svn_opts [file join $root_dir app] [file join $bowwow_dir app]
-    exec $opts(-svn) export {*}$svn_opts [file join $root_dir public] [file join $bowwow_dir public]
-    exec $opts(-svn) export {*}$svn_opts [file join $root_dir scripts] [file join $bowwow_dir scripts]
+    file copy {*}[glob [file join $root_dir thirdparty lib *]] [file join $bowwow_dir lib]
+    file copy [file join $root_dir lib woof] [file join $bowwow_dir lib]
+    file copy [file join $root_dir config] $bowwow_dir
+    file copy [file join $root_dir app] $bowwow_dir
+    file copy [file join $root_dir public] $bowwow_dir
+    file copy [file join $root_dir scripts] $bowwow_dir
     file mkdir [file join $bowwow_dir custom]
     file copy -force [file join $root_dir lib woof webservers tclhttpd_server.tcl] [file join $bowwow_dir custom tclhttpd_server.tcl]
 

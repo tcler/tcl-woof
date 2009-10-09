@@ -13,6 +13,7 @@ if {[llength [info commands ::woof::version]] == 0} {
 # Source util namespace under the woof namespace
 # The apply allows dir variable without polluting globals or namespaces
 apply {dir {
+    variable _server_module
     source [file join $dir errors.tcl]
     source [file join $dir util.tcl]
     source [file join $dir map.tcl]
@@ -23,13 +24,24 @@ apply {dir {
     source [file join $dir controller.tcl]
     source [file join $dir page.tcl]
     source [file join $dir wtf.tcl]
+    if {[file exists [file join $dir webservers ${_server_module}_mixins.tcl]]} {
+        source [file join $dir webservers ${_server_module}_mixins.tcl]
+    }
+    if {[llength [info class instances ::oo::class ::woof::webservers::${_server_module}::RequestMixin]]} {
+        oo::define ::woof::Request "mixin ::woof::webservers::${_server_module}::RequestMixin"
+    }
+
 } ::woof} [file dirname [info script]]
 
 namespace eval ::woof {
     
+    # Name of the server module
+    variable _server_module
+    
     # Initialize the application namespace
     namespace eval app {
-        # TBD - which of the following should we import ?
+        # TBD - which of the following should we import ? Should 
+        # we just use namespace path ?
         namespace import ::woof::util::*
         # TBD - why is the below import needed ?
         namespace import ::woof::Controller
@@ -63,6 +75,11 @@ proc ::woof::handle_request {{request_context ""}} {
     set ${trans_ns}::request_context $request_context
     namespace eval $trans_ns {
         try {
+            #ruff A new Response object is created and exported as
+            # 'response'. This holds the response to be sent back to the
+            # client.
+            ::woof::Response create response
+
             #ruff
             # The command obtains information about the request through
             # callbacks implemented by the webserver interface module.
@@ -73,11 +90,6 @@ proc ::woof::handle_request {{request_context ""}} {
             #ruff A new Request object is created and exported as
             # 'request'. This contains information about the client request.
             ::woof::Request create request $request_context
-
-            #ruff A new Response object is created and exported as
-            # 'response'. This holds the response to be sent back to the
-            # client.
-            ::woof::Response create response
 
             # TBD - we export these so Controller has access
             # but is there a faster way like using namespace paths?

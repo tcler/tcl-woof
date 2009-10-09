@@ -7,8 +7,8 @@
 # Figure out where we are. The woof root is one directory above us.
 # We do not catch the error - let tclhttpd handle errors.
 
-namespace eval ::woof::webservers::tclhttpd_server {}
-proc ::woof::webservers::tclhttpd_server::init {args} {
+namespace eval ::woof::webservers::tclhttpd {}
+proc ::woof::webservers::tclhttpd::init {args} {
     catch {WebServer destroy}
     oo::class create WebServer {
         superclass ::woof::webservers::BaseWebServer
@@ -18,13 +18,34 @@ proc ::woof::webservers::tclhttpd_server::init {args} {
             next {*}$args
         }
 
+        method server_interface {} {
+            # Get the webserver interface module name.
+            #
+            # This method must be overridden by the concrete class.
+            return tclhttpd
+        }
+
         #
         # NOTE: we do not override the default logging interface to
         # use tclhttpd logging because that always requires a connection
         # socket to be passed in which is problematic in many cases as
         # it is not always available (e.g. on startup)
 
-        method request_parameters {args} {
+        method request_environment {request_context} {
+            # Retrieves the environment passed by the web server.
+            #
+            # request_context - request context
+            # 
+            # Returns the environment as a key value list.
+
+            array set cgienv [array get ::env]
+            dict with request_context {
+                Cgi_SetEnvAll $socket {} $suffix $prefix cgienv
+            }
+            return [array get cgienv]
+        }
+
+        method request_parameters {request_context} {
             # Retrieves the parameters for the current request.
             # 
             # The method parses and returns the parameters encoded in a 
@@ -33,16 +54,12 @@ proc ::woof::webservers::tclhttpd_server::init {args} {
             #
             # Returns the parameters received in the current request.
             
-            # tclhttpd also uses the ncgi package
-            # TBD - placeholder for returning values in canonical format
-            return [::ncgi::nvlist]
-        }
-
-        method server_interface {} {
-            # Get the webserver interface module name.
-            #
-            # This method must be overridden by the concrete class.
-            return tclhttpd_server
+            upvar #0 Httpd[dict get $request_context sock] data
+            if {[info exist data(query)]} {
+                # TBD - confirm that this returns POST data as well
+                return [Url_DecodeQuery $data(query)]
+            }
+            return {}
         }
 
         method output {request_context response} {
@@ -70,16 +87,18 @@ proc ::woof::webservers::tclhttpd_server::init {args} {
 }
 
 source [file join [file dirname [info script]] .. lib woof master.tcl]
-::woof::master::init tclhttpd_server
+::woof::master::init tclhttpd
 
 # Tell tclhttpd what our URL root is
-Url_PrefixInstall [::woof::master::configuration get url_root] ::woof::webservers::tclhttpd::request_callback
+Url_PrefixInstall [::woof::master::configuration get url_root] \
+    [list ::woof::webservers::tclhttpd::request_callback \
+         [::woof::master::configuration get url_root]]
 
 # Ditto for the document root
 #Doc_Root [::woof::master::configuration get public_dir]
 
 namespace eval ::woof::webservers::tclhttpd {
-    proc request_callback {sock suffix} {
+    proc request_callback {prefix sock suffix} {
 	# Emulating (somewhat) Apache's rewrite rule set up for Woof, we
 	# if the file exists, we handle it as a real file, and not
 	# a Woof script. The file must lie in the public area.
@@ -92,14 +111,6 @@ namespace eval ::woof::webservers::tclhttpd {
         }
 
         # TBD - do we need to call tclhttpd Url_PathCheck somewhere?
-        global env;                  # Need this declaration for Cgi_SetEnv
-        # suffix may or may not have a preceding / depending on whether
-        # we are attached to / or below.
-        Cgi_SetEnv $sock [string trimright [::woof::master::configuration get url_root] /]/[string trimleft $suffix /]
-
-        # Set up ncgi environment for access to query data
-        Url_QuerySetup $sock
-
-        ::woof::master::process_request [dict create socket $sock]
+        ::woof::master::process_request [dict create socket $sock prefix $prefix suffix $suffix]
     }
 }

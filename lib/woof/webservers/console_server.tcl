@@ -2,8 +2,8 @@
 # All rights reserved.
 # See the file LICENSE in the Woof! root directory for license
 
-namespace eval ::woof::webservers::console_server {}
-proc ::woof::webservers::console_server::init {args} {
+namespace eval ::woof::webservers::console {}
+proc ::woof::webservers::console::init {args} {
     catch {WebServer destroy}
     oo::class create WebServer {
         superclass ::woof::webservers::BaseWebServer

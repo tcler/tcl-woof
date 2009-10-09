@@ -85,8 +85,8 @@ namespace eval ::scgi {
 ################################################################
 # 
 
-namespace eval ::woof::webservers::scgi_server { }
-proc ::woof::webservers::scgi_server::init {args} {
+namespace eval ::woof::webservers::scgi { }
+proc ::woof::webservers::scgi::init {args} {
     catch {WebServer destroy}
     oo::class create WebServer {
         superclass ::woof::webservers::BaseWebServer
@@ -133,22 +133,21 @@ proc ::woof::webservers::scgi_server::init {args} {
             # the same interpreter.
             #
 
-            # Reset ncgi internal state
-            ::ncgi::reset
+            if {[dict exists $request_context headers CONTENT_TYPE]} {
+                set type [dict get $request_context headers CONTENT_TYPE]
+            } else {
+                set type ""
+            }
             
             # TBD - HACK! HACK!, ncgi expects to read from content body from
             # stdin. Set it's internal variable so it thinks it has already
             # read. Really we need to fix to not use ncgi in persistent
             # servers
             switch -exact -- [dict get $request_context headers REQUEST_METHOD] {
-                GET { set ::ncgi::query [dict get $request_context headers QUERY_STRING] }
-                POST { set ::ncgi::query [dict get $request_context body] }
-                default { set ::ncgi::query "" }
+                GET { ::ncgi::reset [dict get $request_context headers QUERY_STRING] $type}
+                POST { ::ncgi::reset [dict get $request_context body] $type}
+                default { ::ncgi::reset "" }
             } 
-
-            # Parse parameters. TBD - should we do this only when 
-            # request_parameters is called? Why parse if not needed ?
-            ::ncgi::parse
 
             return
         }
@@ -219,7 +218,7 @@ proc ::scgi::main {rootdir args} {
     }
     array set opts $args
     scgi::listen $opts(-port)
-    ::woof::master::init scgi_server $rootdir
+    ::woof::master::init scgi $rootdir
     vwait ::scgi::terminate
 }
 

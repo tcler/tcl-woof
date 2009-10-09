@@ -267,7 +267,7 @@ proc ::woof::safe::map_file_to_url_alias {path url_map} {
     return ""
 }
 
-proc ::woof::master::create_web_interp {} {
+proc ::woof::master::create_web_interp {server_module} {
     # Create the web interpreter and load packages into it
     
     set ip [interp create -safe]
@@ -279,10 +279,12 @@ proc ::woof::master::create_web_interp {} {
         interp expose $ip $cmd
     }
 
-    # Set up the package loader in the safe interpreter
-    $ip eval {
-        package unknown woof_package_loader
-    }
+    # Create namespace in slave and initialize the server type
+    $ip eval "namespace eval ::woof {variable _server_module $server_module}"
+
+    # Since it is safe interpreter, we need to set up a package loading
+    # mechanism for it.
+    $ip eval {package unknown woof_package_loader}
     interp alias $ip ::woof_package_loader {} ::woof::safe::package_loader $ip
 
     # For some obscure reason, tclhttpd insists on loading md5 1.x.
@@ -297,7 +299,7 @@ proc ::woof::master::create_web_interp {} {
     }
 
     # Load Woof! into safe interpreter.
-    $ip eval "package require woof"
+    $ip eval {package require woof}
 
     # Now hide the exposed unsafe commands
     foreach cmd $unsafe_cmds {
@@ -381,7 +383,7 @@ proc ::woof::master::init {server_module {woof_root ""}} {
 
     # Create the safe web interpreter that will be used to
     # to service client requests.
-    set _winterp [create_web_interp]
+    set _winterp [create_web_interp $server_module]
 
     #ruff
     # A Configuration object is instantiated to contain

@@ -190,7 +190,7 @@ namespace eval ::woof::console {
 
 source [file join [file dirname [info script]] .. lib woof master.tcl]
 
-set ::woof::console::_safe_interp [::woof::master::init console_server [file normalize [file join [file dirname [info script]] ..]]]
+set ::woof::console::_safe_interp [::woof::master::init console [file normalize [file join [file dirname [info script]] ..]]]
 # For debugging, enable puts in the safe interpreter. THIS MUST NOT BE
 # DONE IN A REAL WEB SERVER MODULE
 interp alias $::woof::console::_safe_interp puts {} puts

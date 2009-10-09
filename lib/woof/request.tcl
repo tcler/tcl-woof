@@ -64,7 +64,6 @@ oo::class create Params {
 }
 
 
-
 #
 # The request object, contains contents of the actual request.
 catch {Request destroy}; # To allow re-sourcing
@@ -301,10 +300,15 @@ oo::class create Request {
     }
 
     method application_url {} {
-        # Returns the URL path where the application is rooted. This is
-        # normally the same as the 'url_root' value in the Woof! config
-        # dictionary.
-        TBD
+        # Returns the URL path where the application is rooted.
+        #
+        # This is NOT necessarily
+        # the same as the 'url_root' value in the Woof! config
+        # dictionary and is dependent on how the web server is configured
+        #
+        # Note the returned path does not include the protocol, host
+        # or port number.
+        return [env get SCRIPT_NAME]
     }
 
     method resource_url {} {
@@ -314,7 +318,6 @@ oo::class create Request {
         # root url and excludes the query string.
         return [env get PATH_INFO ""]
     }
-
 
     method query_string {} {
         # Returns the query string portion of request
