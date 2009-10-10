@@ -588,6 +588,31 @@ oo::class create Controller {
     }
 }
 
+################################################################
+#
+# Defines mixin classes to modify controller behaviours
+
+catch {DevModeOnly destroy}; # To allow resourcing
+oo::class create DevModeOnly {
+    constructor {request response dispatchinfo args} {
+        if {[::woof::config get run_mode] ne "development"} {
+            ::woof::exception WOOF_USER InvalidRequest
+        }
+        next $request $response $dispatchinfo {*}$args
+    }
+}
+
+catch {LocalClientOnly destroy}; # To allow resourcing
+oo::class create LocalClientOnly {
+    constructor {request response dispatchinfo args} {
+        if {[$request remote_addr] ne "127.0.0.1"} {
+            ::woof::exception WOOF_USER InvalidRequest "Request received for local URL [$request resource_url] from non-local client [$request remote_addr]."
+        }
+        next $request $response $dispatchinfo {*}$args
+    }
+}
+
+
 
 namespace eval [namespace current] {
     ::woof::util::export_all
