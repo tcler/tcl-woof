@@ -30,11 +30,7 @@ namespace eval ::woof {
 
     # Initialize the application namespace
     namespace eval app {
-        # TBD - which of the following should we import ? Should 
-        # we just use namespace path ?
-        namespace import ::woof::util::*
-        # TBD - why is the below import needed ?
-        namespace import ::woof::Controller
+        namespace path [list ::woof ::woof::util]
     }
 }
 
