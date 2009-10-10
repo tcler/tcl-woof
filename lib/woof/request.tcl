@@ -351,6 +351,12 @@ oo::class create Request {
         # if present, else an empty string
         return [env get HTTP_REFERER ""]
     }
+
+    method remote_addr {} {
+        # Returns the address of the remote client if available,
+        # else an empty string.
+        return [env get REMOTE_ADDR ""]
+    }
 }
 
 
