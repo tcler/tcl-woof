@@ -220,7 +220,7 @@ proc woofus::generate {urls args} {
 
     set cracked_urls {}
     foreach url $urls {
-        lappend cracked_urls [::woof::url_crack $url [config :url_root]]
+        lappend cracked_urls [::woof::url_crack $url]
     }
 
     # Arrange URLs by controller
@@ -410,7 +410,7 @@ proc woofus::verify {{urls {}} args} {
         }
     } else {
         foreach url $urls {
-            set curl [::woof::url_crack $url [config :url_root]]
+            set curl [::woof::url_crack $url]
             set file [file join [dict get $curl controller_dir] [dict get $curl controller_file]]
             lappend targets [list $file [dict get $curl controller_class] [dict get $curl controller]]
         }
