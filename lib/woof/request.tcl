@@ -313,7 +313,18 @@ oo::class create Request {
         #
         # Note the returned path does not include the protocol, host
         # or port number.
-        return [env get SCRIPT_NAME]
+
+        if {[env exists SCRIPT_NAME url_root]} {
+            # For example, /myapp/isapi_scgi.dll -> /myapp
+            set url_root [file dirname $url_root]
+            if {$url_root eq ""} {
+                set url_root /
+            }
+            return $url_root
+        } else {
+            # TBD - assume / ?
+            return /
+        }
     }
 
     method resource_url {} {
