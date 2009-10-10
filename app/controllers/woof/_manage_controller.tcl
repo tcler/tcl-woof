@@ -1,5 +1,5 @@
 oo::class create woof::_ManageController {
-    superclass ApplicationController
+    superclass ::woof::app::ApplicationController
     variable woof_url
     constructor args {
         # Very important to pass arguments to parent

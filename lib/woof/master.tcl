@@ -267,7 +267,7 @@ proc ::woof::safe::map_file_to_url_alias {path url_map} {
     return ""
 }
 
-proc ::woof::master::create_web_interp {server_module} {
+proc ::woof::master::create_web_interp {} {
     # Create the web interpreter and load packages into it
     
     set ip [interp create -safe]
@@ -278,9 +278,6 @@ proc ::woof::master::create_web_interp {server_module} {
     foreach cmd $unsafe_cmds {
         interp expose $ip $cmd
     }
-
-    # Create namespace in slave and initialize the server type
-    $ip eval "namespace eval ::woof {variable _server_module $server_module}"
 
     # Since it is safe interpreter, we need to set up a package loading
     # mechanism for it.
@@ -298,8 +295,16 @@ proc ::woof::master::create_web_interp {server_module} {
         interp alias $ip ::woof::util::md5hex {} ::md5::md5
     }
 
+    if {[configuration get run_mode] eq "development"} {
+        interp alias $ip puts {} puts
+    }
+
     # Load Woof! into safe interpreter.
     $ip eval {package require woof}
+
+    # Make a copy of the config in safe interp, and freeze it
+    $ip eval [list ::woof::util::Map create ::woof::config [configuration get]]
+    $ip eval {::woof::config freeze}
 
     # Now hide the exposed unsafe commands
     foreach cmd $unsafe_cmds {
@@ -312,7 +317,6 @@ proc ::woof::master::create_web_interp {server_module} {
     # Misc aliases
     $ip alias ::woof::source_file ::woof::safe::source_file_alias $ip
     $ip alias ::woof::map_file_to_url ::woof::safe::map_file_to_url_alias
-
 
     return $ip
 }
@@ -381,27 +385,23 @@ proc ::woof::master::init {server_module {woof_root ""}} {
         ::woof::errors::exception WOOF ConfigurationError "The Woof! root directory '$_woof_root' does not exist."
     }
 
-    # Create the safe web interpreter that will be used to
-    # to service client requests.
-    set _winterp [create_web_interp $server_module]
-
     #ruff
     # A Configuration object is instantiated to contain
     # static Woof configuration information. This is exported and
     # available to all components, including applications as the
     # config object.
     Configuration create configuration $_woof_root
+    configuration set server_module $server_module
+    
+    # Create the safe web interpreter that will be used to
+    # to service client requests.
+    set _winterp [create_web_interp]
 
     # Init the file cache
     FileCache create filecache -relativeroot [configuration get public_dir]
     $_winterp alias ::woof::filecache_locate ::woof::safe::filecache_locate_alias
     $_winterp alias ::woof::filecache_read ::woof::safe::filecache_read_alias
 
-
-    # Make a copy of the config in safe interp, and freeze it
-    $_winterp eval [list ::woof::util::Map create ::woof::config [configuration get]]
-    $_winterp eval {::woof::config freeze}
-    
 
     #ruff
     # Any directories specified in the configuration are
@@ -446,6 +446,9 @@ proc ::woof::master::init {server_module {woof_root ""}} {
     # the slave. This is significantly faster than $_winterp eval if
     # the request context is large amount of data
     interp alias {} handle_request_in_slave $_winterp ::woof::handle_request
+
+    # Now tell the slave interpreter to init itself
+    $_winterp eval ::woof::init
 
     #ruff
     # Returns the path to the safe interpreter.

@@ -13,7 +13,6 @@ if {[llength [info commands ::woof::version]] == 0} {
 # Source util namespace under the woof namespace
 # The apply allows dir variable without polluting globals or namespaces
 apply {dir {
-    variable _server_module
     source [file join $dir errors.tcl]
     source [file join $dir util.tcl]
     source [file join $dir map.tcl]
@@ -24,20 +23,11 @@ apply {dir {
     source [file join $dir controller.tcl]
     source [file join $dir page.tcl]
     source [file join $dir wtf.tcl]
-    if {[file exists [file join $dir webservers ${_server_module}_mixins.tcl]]} {
-        source [file join $dir webservers ${_server_module}_mixins.tcl]
-    }
-    if {[llength [info class instances ::oo::class ::woof::webservers::${_server_module}::RequestMixin]]} {
-        oo::define ::woof::Request "mixin ::woof::webservers::${_server_module}::RequestMixin"
-    }
-
 } ::woof} [file dirname [info script]]
 
 namespace eval ::woof {
-    
-    # Name of the server module
-    variable _server_module
-    
+    variable _script_dir [file normalize [file dirname [info script]]]
+
     # Initialize the application namespace
     namespace eval app {
         # TBD - which of the following should we import ? Should 
@@ -48,6 +38,33 @@ namespace eval ::woof {
     }
 }
 
+
+proc ::woof::init {} {
+    # Called by the master interpreter to initialize the safe web interpreter
+    # in which requests are processed.
+    variable _script_dir
+
+    set server_module [config get server_module]
+
+    # Loading of the following files is here because it is dependent on
+    # the server_module and application directories which are not set up
+    # when the package is actually loaded.
+    uplevel #0 [list ::woof::source_file \
+                    [file join $_script_dir webservers ${server_module}_mixins.tcl] \
+                    -sourceonce true \
+                    -ignoremissing true]
+
+    if {[llength [info class instances ::oo::class ::woof::webservers::${server_module}::RequestMixin]]} {
+        oo::define ::woof::Request "mixin ::woof::webservers::${server_module}::RequestMixin"
+    }
+
+    # Load the application controller from where controllers are derived.
+    namespace eval ::woof::app [list ::woof::source_file \
+                                    [file join \
+                                         [::woof::config get app_dir] \
+                                         controllers \
+                                         application_controller.tcl]]
+}
 
 proc ::woof::handle_request {{request_context ""}} {
     # Called by a webserver to handle a client request.
@@ -98,66 +115,46 @@ proc ::woof::handle_request {{request_context ""}} {
             # Initialize url_root if not set. We set it to
             # dir of SCRIPT_NAME or / if SCRIPT_NAME is not present
 
-            if {![::woof::config exists url_root url_root]} {
-                # Try to get it from the environment
-                if {[request env exists SCRIPT_NAME url_root]} {
-                    set url_root [file dirname $url_root]
-                } else {
-                    # TBD - assume / ?
-                    set url_root /
-                }
-            }
-
             #ruff
             # The request is then mapped to a particular controller and action
             # by the url_crack command.
             set dispatchinfo [::woof::url_crack [request resource_url]]
 
-            #ruff The corresponding file is sourced into the ::woof::app
-            # namespace. Note that file is sourced only the first time it
-            # is required by a request and not for every request. Missing
-            # files are ignored under the premise that in that case
-            # only the template is to be rendered and no controller action 
-            # is required.
-            set controller_path [file join \
-                                     [dict get $dispatchinfo controller_dir] \
-                                     [dict get $dispatchinfo controller_file]]
-            # TBD - why is application_controller sourced for every request?
-            # should just source at init time since the class is reused.
-            namespace eval ::woof::app [list \
-                                            ::woof::source_file \
-                                            [file join \
-                                                 [dict get $dispatchinfo app_dir] \
-                                                 controllers \
-                                                 application_controller.tcl] \
-                                            -sourceonce true]
-            namespace eval ::woof::app [list \
-                                            ::woof::source_file \
-                                            $controller_path \
-                                            -sourceonce true \
-                                            -ignoremissing true]
-
             set controller_class ::woof::app::[dict get $dispatchinfo controller_class]
-            if {[llength [info commands $controller_class]]} {
-                #ruff
-                # The controller must be a descendent of the ApplicationController class.
-                # After loading and creating the controller object, it's process method
-                # is called which in turn invokes the action method in the controller.
-                $controller_class create \
-                    controller \
-                    [namespace current]::request \
-                    [namespace current]::response \
-                    $dispatchinfo
-                controller process
-            } else {
-                # TBD - if no controller, only the template should be processed as documented above?
-                # TBD - where do we log url that was not found ?
-                ::woof::log err "$controller_class not found in path $controller_path"
-                response status 404
-                # TBD - replace with customizable content
-                # Also, should we redirect instead?
-                response content "<html><body>Page not found.</body></html>"
+            if {[llength [info commands $controller_class]] == 0} {
+                #ruff The corresponding file is sourced into the ::woof::app
+                # namespace. Note that file is sourced only the first time it
+                # is required by a request and not for every request. Missing
+                # files are ignored under the premise that in that case
+                # only the template is to be rendered and no controller action 
+                # is required.
+                set controller_path [file join \
+                                         [dict get $dispatchinfo controller_dir] \
+                                         [dict get $dispatchinfo controller_file]]
+
+                namespace eval ::woof::app [list \
+                                                ::woof::source_file \
+                                                $controller_path \
+                                                -sourceonce true \
+                                                -ignoremissing true]
+                if {[llength [info commands $controller_class]] == 0} {
+                    # TBD - if no controller, only the template should be processed as documented above?
+                    # TBD - where do we log url that was not found ?
+                    ::woof::log err "$controller_class not found in path $controller_path"
+                    exception WOOF_USER InvalidRequest
+                }
             }
+
+            #ruff
+            # The controller must be a descendent of the ApplicationController class.
+            # After loading and creating the controller object, it's process method
+            # is called which in turn invokes the action method in the controller.
+            $controller_class create \
+                controller \
+                [namespace current]::request \
+                [namespace current]::response \
+                $dispatchinfo
+            controller process
         } on error {msg eropts} {
             # TBD - document error handling
             # If the error should be user visible display it. Normally,
