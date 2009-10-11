@@ -273,25 +273,25 @@ oo::class create Request {
     method get? {} {
         # Returns true if the HTTP request method was a GET
         # and false otherwise.
-        return [expr {[my request_method] eq get}]
+        return [expr {[my request_method] eq "get"}]
     }
 
     method head? {} {
         # Returns true if the HTTP request method was a HEAD
         # and false otherwise.
-        return [expr {[my request_method] eq head}]
+        return [expr {[my request_method] eq "head"}]
     }
 
     method post? {} {
         # Returns true if the HTTP request method was a POST
         # and false otherwise.
-        return [expr {[my request_method] eq post}]
+        return [expr {[my request_method] eq "post"}]
     }
 
     method delete? {} {
         # Returns true if the HTTP request method was a DELETE
         # and false otherwise.
-        return [expr {[my request_method] eq delete}]
+        return [expr {[my request_method] eq "delete"}]
     }
 
     method get_or_head? {} {
