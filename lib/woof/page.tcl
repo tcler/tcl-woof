@@ -21,7 +21,7 @@ oo::class create Page {
         # Objects of this class are intended to be used as containers
         # to hold the HTML content of various sections in a page.
         # Content for a section can be directly stored or retrieved
-        # using the set and get methods. If a particular section
+        # using the store and fetch methods. If a particular section
         # has not been defined when an attempt is made to retrieve
         # it, the list of directories given by the search_dirs key
         # in the passed dispatch context is searched for a subdirectory
