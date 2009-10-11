@@ -75,8 +75,15 @@ proc installer::usage {{msg ""} {code ""}} {
 
 
 proc installer::install_log {msg} {
+    # Logs a message to the install log
+    # msg - log message
+    # The message is logged only if the application has set the
+    # opened the log file channel.
+
     variable log_fd
-    puts $log_fd "[clock format [clock seconds] -format %T] $msg"
+    if {[info exists log_fd]} {
+        puts $log_fd "[clock format [clock seconds] -format %T] $msg"
+    }
 }
 
 proc installer::distribute {target_dir args} {
@@ -191,9 +198,16 @@ proc installer::distribute {target_dir args} {
     set bowwow_dir [file join $target_dir bowwow-${woof_version}.vfs]
     file delete -force $bowwow_dir
     file mkdir [file join $bowwow_dir lib]
-    file copy [file join $root_dir thirdparty tclhttpd3.5.2 bin] [file join $bowwow_dir]
-    file copy [file join $root_dir thirdparty tclhttpd3.5.2 lib] [file join $bowwow_dir lib tclhttpd3.5.2]
-    file copy [file join $root_dir thirdparty tclhttpd3.5.2 main.tcl] [file join $bowwow_dir main.tcl]
+    set bowwow_base wibble;     # Or tclhttpd
+    if {$bowwow_base eq "tclhttpd"} {
+        file copy [file join $root_dir thirdparty tclhttpd3.5.2 bin] [file join $bowwow_dir]
+        file copy [file join $root_dir thirdparty tclhttpd3.5.2 lib] [file join $bowwow_dir lib tclhttpd3.5.2]
+        file copy [file join $root_dir thirdparty tclhttpd3.5.2 main.tcl] [file join $bowwow_dir main.tcl]
+        file copy -force [file join $root_dir lib woof webservers tclhttpd_server.tcl] [file join $bowwow_dir custom tclhttpd_server.tcl]
+    } else {
+        file copy [file join $root_dir thirdparty wibble] [file join $bowwow_dir lib wibble]
+        file copy [file join $root_dir thirdparty bowwow main.tcl] [file join $bowwow_dir main.tcl]
+    }
     # For next two --force is hardcoded - intentional
     file copy {*}[glob [file join $root_dir thirdparty lib *]] [file join $bowwow_dir lib]
     file copy [file join $root_dir lib woof] [file join $bowwow_dir lib]
@@ -202,7 +216,6 @@ proc installer::distribute {target_dir args} {
     file copy [file join $root_dir public] $bowwow_dir
     file copy [file join $root_dir scripts] $bowwow_dir
     file mkdir [file join $bowwow_dir custom]
-    file copy -force [file join $root_dir lib woof webservers tclhttpd_server.tcl] [file join $bowwow_dir custom tclhttpd_server.tcl]
 
     # TBD - make tclkit path configurable
     set tclkit [file join $root_dir thirdparty tclkit-cli.exe]
@@ -221,13 +234,14 @@ proc installer::distribute {target_dir args} {
     # Now write out the bowwow resource file
     set rc_file [file join $target_dir bowwow.rc]
     # TBD - fix hardcoded version numbers and refactor this crap
+    # TBD - change path to icon
     set fd [open $rc_file w]
-    puts $fd {
+    puts $fd [format {
 TCLSH ICON "thirdparty/tclhttpd3.5.2/images/_woof_icon.ico"
 
 1 VERSIONINFO
-FILEVERSION 0, 4, 0, 0
-PRODUCTVERSION 0, 4, 0, 0
+FILEVERSION %1$d, %2$d, 0, 0
+PRODUCTVERSION %1$d, %2$d, 0, 0
 
 FILEOS 4
 FILETYPE 1
@@ -237,17 +251,17 @@ FILETYPE 1
             VALUE "FileDescription", "BowWow Web server"
             VALUE "OriginalFilename", "bowwow.exe"
             VALUE "CompanyName", "Ashok P. Nadkarni"
-            VALUE "FileVersion", "0.4.0.0"
+            VALUE "FileVersion", "%1$d.%2$d.0.0"
             VALUE "LegalCopyright", "Copyright © 2009, Ashok P. Nadkarni"
             VALUE "ProductName", "BowWow Web Server"
-            VALUE "ProductVersion", "0.4.0.0"
+            VALUE "ProductVersion", "%1$d.%2$d.0.0"
         }
     }
     BLOCK "VarFileInfo" {
         VALUE "Translation", 0x0409, 0x04B0
     }
 }
-    }
+} {*}[split $woof_version .]]
     close $fd
     # Compile the resource file into binary format
     set res_file [file join $target_dir bowwow.res]
