@@ -171,8 +171,12 @@ proc ::woof::console::restart {} {
     exit
 }
 
-proc ::woof::console::testpage {{action welcome} {controller woof/_manage} } {
-    get http://localhost/$controller/$action
+proc ::woof::console::testpage {args} {
+    if {[llength $args] == 0} {
+        get http://localhost/woof/_manage/welcome
+    } else {
+        get http://localhost/[string trimleft [join {*}$args /] /]
+    }
 }
 
 interp alias {} ::woof::console::get {} ::woof::console::execute GET
