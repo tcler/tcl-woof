@@ -77,7 +77,13 @@ proc bowwow {args} {
         error "Invalid value specified for option -port. Must be an integer between 1 and 65535."
     }
 
-    puts "Listening at URL $opts(-urlroot) on port $opts(-port)..."
+    uplevel #0  [list source [file join $starkit::topdir scripts installer.tcl]]
+    set installer::root_dir $starkit::topdir
+    installer::write_defaults $::env(WOOF_ROOT)
+
+    puts "Listening at URL $opts(-urlroot) on port $opts(-port)."
+    puts "Restart with -urlroot and -port options to change these."
+    puts "Running. Hit Ctrl-C to exit ..."
 
     uplevel #0  [list source [file join $starkit::topdir lib woof webservers wibble_server.tcl]]
     uplevel #0  [list source [file join $starkit::topdir lib woof master.tcl]]

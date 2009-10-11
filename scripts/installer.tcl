@@ -121,6 +121,7 @@ proc installer::distribute {target_dir args} {
         -tarrer bsdtar
         -sdx sdx.kit
         -force false
+        -kit all
     }
     array set opts $args
     
@@ -131,47 +132,56 @@ proc installer::distribute {target_dir args} {
     set cwd [pwd]
 
     file mkdir $target_dir
-    set zip_dir [file join $target_dir "woof-$woof_version"]
-    puts "Exporting to $zip_dir"
-    file delete -force $zip_dir; # Empty it if it exists
-    file mkdir $zip_dir
-    foreach dir {app config lib public scripts} {
-        file copy -- [file join $root_dir $dir] $zip_dir
+
+    if {$opts(-kit) ne "bowwow"} {
+        set zip_dir [file join $target_dir "woof-$woof_version"]
+        puts "Exporting to $zip_dir"
+        file delete -force $zip_dir; # Empty it if it exists
+        file mkdir $zip_dir
+        foreach dir {app config lib public scripts} {
+            file copy -- [file join $root_dir $dir] $zip_dir
+        }
+        file copy -- {*}[glob [file join $root_dir thirdparty lib *]] [file join $zip_dir lib]
+        set textfile_patterns {*.txt *.tcl *.htm *.html *.wtf *.bat *.cmd}
+
+        if {$opts(-kit) in {zip all}} {
+            puts "Building zip distribution"
+            puts "Converting line endings to Windows format"
+            crlf_tree $zip_dir crlf $textfile_patterns
+
+            # Create a file manifest
+            puts "Creating file manifest..."
+            distro::build $zip_dir $woof_version -manifest $manifest_name -crlf crlf
+
+            # Note - when zipping, we need to cd to that directory else,
+            # zip stores the entire path specified on command line
+
+            # First create a zip archive of the directory.
+            set zip_file woof-${woof_version}.zip
+            puts "Creating Zip distribution $zip_file"
+            cd $target_dir
+            exec $opts(-zipper) -r $zip_file [file tail $zip_dir]
+            cd $cwd
+        }
+
+        if {$opts(-kit) in {targz all}} {
+            # For unix folks create a tar.gz
+            puts "Building .tar.gz distribution"
+            puts "Converting line endings to Unix format"
+            crlf_tree $zip_dir lf $textfile_patterns
+
+            # Create a file manifest
+            puts "Creating file manifest..."
+            distro::build $zip_dir $woof_version -manifest $manifest_name -crlf lf
+
+            set tar_file woof-${woof_version}.tar
+            puts "Creating tar.gz distribution ${tar_file}.gz"
+            cd $target_dir 
+            exec $opts(-tarrer) cf $tar_file [file tail $zip_dir]
+            exec $opts(-gzipper) --force $tar_file
+            cd $cwd
+        }
     }
-    file copy -- {*}[glob [file join $root_dir thirdparty lib *]] [file join $zip_dir lib]
-    set textfile_patterns {*.txt *.tcl *.htm *.html *.wtf *.bat *.cmd}
-
-    puts "Converting line endings to Windows format"
-    crlf_tree $zip_dir crlf $textfile_patterns
-
-    # Create a file manifest
-    puts "Creating file manifest..."
-    distro::build $zip_dir $woof_version -manifest $manifest_name -crlf crlf
-
-    # Note - when zipping, we need to cd to that directory else,
-    # zip stores the entire path specified on command line
-
-    # First create a zip archive of the directory.
-    set zip_file woof-${woof_version}.zip
-    puts "Creating Zip distribution $zip_file"
-    cd $target_dir
-    exec $opts(-zipper) -r $zip_file [file tail $zip_dir]
-    cd $cwd
-
-    # For unix folks create a tar.gz
-    puts "Converting line endings to Unix format"
-    crlf_tree $zip_dir lf $textfile_patterns
-
-    # Create a file manifest
-    puts "Creating file manifest..."
-    distro::build $zip_dir $woof_version -manifest $manifest_name -crlf lf
-
-    set tar_file woof-${woof_version}.tar
-    puts "Creating tar.gz distribution ${tar_file}.gz"
-    cd $target_dir 
-    exec $opts(-tarrer) cf $tar_file [file tail $zip_dir]
-    exec $opts(-gzipper) --force $tar_file
-    cd $cwd
 
     # Now a tm file - TBD - do we really need this? For CGI ? For single
     # file distributable?
@@ -193,52 +203,53 @@ proc installer::distribute {target_dir args} {
         exec cmd /c [file join $root_dir tools makeziptm.cmd] [file join $target_dir woof-tm.zip] $tm_file
     }
 
-    # Now also create a standalone kit 
-    puts "Creating bowwow"
-    set bowwow_dir [file join $target_dir bowwow-${woof_version}.vfs]
-    file delete -force $bowwow_dir
-    file mkdir [file join $bowwow_dir lib]
-    set bowwow_base wibble;     # Or tclhttpd
-    if {$bowwow_base eq "tclhttpd"} {
-        file copy [file join $root_dir thirdparty tclhttpd3.5.2 bin] [file join $bowwow_dir]
-        file copy [file join $root_dir thirdparty tclhttpd3.5.2 lib] [file join $bowwow_dir lib tclhttpd3.5.2]
-        file copy [file join $root_dir thirdparty tclhttpd3.5.2 main.tcl] [file join $bowwow_dir main.tcl]
-        file copy -force [file join $root_dir lib woof webservers tclhttpd_server.tcl] [file join $bowwow_dir custom tclhttpd_server.tcl]
-    } else {
-        file copy [file join $root_dir thirdparty wibble] [file join $bowwow_dir lib wibble]
-        file copy [file join $root_dir thirdparty bowwow main.tcl] [file join $bowwow_dir main.tcl]
-    }
-    # For next two --force is hardcoded - intentional
-    file copy {*}[glob [file join $root_dir thirdparty lib *]] [file join $bowwow_dir lib]
-    file copy [file join $root_dir lib woof] [file join $bowwow_dir lib]
-    file copy [file join $root_dir config] $bowwow_dir
-    file copy [file join $root_dir app] $bowwow_dir
-    file copy [file join $root_dir public] $bowwow_dir
-    file copy [file join $root_dir scripts] $bowwow_dir
-    file mkdir [file join $bowwow_dir custom]
+    if {$opts(-kit) in {all bowwow}} {
+        # Now also create a standalone kit 
+        puts "Creating bowwow"
+        set bowwow_dir [file join $target_dir bowwow-${woof_version}.vfs]
+        file delete -force $bowwow_dir
+        file mkdir [file join $bowwow_dir lib]
+        set bowwow_base wibble;     # Or tclhttpd
+        if {$bowwow_base eq "tclhttpd"} {
+            file copy [file join $root_dir thirdparty tclhttpd3.5.2 bin] [file join $bowwow_dir]
+            file copy [file join $root_dir thirdparty tclhttpd3.5.2 lib] [file join $bowwow_dir lib tclhttpd3.5.2]
+            file copy [file join $root_dir thirdparty tclhttpd3.5.2 main.tcl] [file join $bowwow_dir main.tcl]
+            file mkdir [file join $bowwow_dir custom]
+            file copy -force [file join $root_dir lib woof webservers tclhttpd_server.tcl] [file join $bowwow_dir custom tclhttpd_server.tcl]
+        } else {
+            file copy [file join $root_dir thirdparty wibble] [file join $bowwow_dir lib wibble]
+            file copy [file join $root_dir thirdparty bowwow main.tcl] [file join $bowwow_dir main.tcl]
+        }
+        # For next two --force is hardcoded - intentional
+        file copy {*}[glob [file join $root_dir thirdparty lib *]] [file join $bowwow_dir lib]
+        file copy [file join $root_dir lib woof] [file join $bowwow_dir lib]
+        file copy [file join $root_dir lib distro] [file join $bowwow_dir lib]
+        file copy [file join $root_dir lib ruff] [file join $bowwow_dir lib]
+        file copy [file join $root_dir config] $bowwow_dir
+        file copy [file join $root_dir app] $bowwow_dir
+        file copy [file join $root_dir public] $bowwow_dir
+        file copy [file join $root_dir scripts] $bowwow_dir
 
-    # TBD - make tclkit path configurable
-    set tclkit [file join $root_dir thirdparty tclkit-cli.exe]
-    set bowwow [file join $target_dir bowwow-${woof_version}]
-    exec $tclkit [file join $root_dir tools sdx.kit] wrap ${bowwow}.kit -vfs $bowwow_dir
-    set bowwow_exe [file join $target_dir bowwow-${woof_version}.exe]
-    # Need to copy the executable because we cannot use it as the runtime file
-    # directly
-    set runtime [file join $target_dir runtime.exe]
-    file copy -force $tclkit $runtime
-    # Decompress the exe
-    exec $upx_exe -d $runtime
-    # Remove the existing version and icon resources
-    exec $reshacker_exe -delete $runtime , $runtime , versioninfo , ,
-    exec $reshacker_exe -delete $runtime , $runtime , icongroup , ,
-    # Now write out the bowwow resource file
-    set rc_file [file join $target_dir bowwow.rc]
-    # TBD - fix hardcoded version numbers and refactor this crap
-    # TBD - change path to icon
-    set fd [open $rc_file w]
-    puts $fd [format {
-TCLSH ICON "thirdparty/tclhttpd3.5.2/images/_woof_icon.ico"
-
+        # TBD - make tclkit path configurable
+        set tclkit [file join $root_dir thirdparty tclkit-cli.exe]
+        set bowwow [file join $target_dir bowwow-${woof_version}]
+        exec $tclkit [file join $root_dir tools sdx.kit] wrap ${bowwow}.kit -vfs $bowwow_dir
+        set bowwow_exe [file join $target_dir bowwow-${woof_version}.exe]
+        # Need to copy the executable because we cannot use it as the runtime file
+        # directly
+        set runtime [file join $target_dir runtime.exe]
+        file copy -force $tclkit $runtime
+        # Decompress the exe
+        exec $upx_exe -d $runtime
+        # Remove the existing version and icon resources
+        exec $reshacker_exe -delete $runtime , $runtime , versioninfo , ,
+        exec $reshacker_exe -delete $runtime , $runtime , icongroup , ,
+        # Now write out the bowwow resource file
+        set rc_file [file join $target_dir bowwow.rc]
+        # TBD - change path to icon
+        set fd [open $rc_file w]
+        puts $fd [format {
+TCLSH ICON "public/images/woof/_woof_icon.ico"
 1 VERSIONINFO
 FILEVERSION %1$d, %2$d, 0, 0
 PRODUCTVERSION %1$d, %2$d, 0, 0
@@ -262,16 +273,16 @@ FILETYPE 1
     }
 }
 } {*}[split $woof_version .]]
-    close $fd
-    # Compile the resource file into binary format
-    set res_file [file join $target_dir bowwow.res]
-    exec $gorc_exe /fo $res_file /r $rc_file
+        close $fd
+        # Compile the resource file into binary format
+        set res_file [file join $target_dir bowwow.res]
+        exec $gorc_exe /fo $res_file /r $rc_file
 
-    # Add binary resources back into the runtime
-    exec $reshacker_exe -add $runtime , $runtime , $res_file , , ,
+        # Add binary resources back into the runtime
+        exec $reshacker_exe -add $runtime , $runtime , $res_file , , ,
 
-    exec $tclkit [file join $root_dir tools sdx.kit] wrap ${bowwow}.exe -runtime $runtime -vfs $bowwow_dir
-
+        exec $tclkit [file join $root_dir tools sdx.kit] wrap ${bowwow}.exe -runtime $runtime -vfs $bowwow_dir
+    }
     return
 }
 
@@ -629,9 +640,11 @@ proc installer::main {command args} {
 }
 
 
-set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. lib]]]
-::tcl::tm::path add [file normalize [file join [file dirname [info script]] .. lib]]
-
+if {![info exists ::starkit::topdir]} {
+    # Only add paths if not in starkit since that already has appropriate paths set up.
+    set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. lib]]]
+    ::tcl::tm::path add [file normalize [file join [file dirname [info script]] .. lib]]
+}
 if {[catch {
     package require cmdline
     package require md5 2
