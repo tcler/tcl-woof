@@ -108,9 +108,6 @@ proc ::woof::handle_request {{request_context ""}} {
             # but is there a faster way like using namespace paths?
             namespace export request response
 
-            # Initialize url_root if not set. We set it to
-            # dir of SCRIPT_NAME or / if SCRIPT_NAME is not present
-
             #ruff
             # The request is then mapped to a particular controller and action
             # by the url_crack command.
@@ -190,6 +187,7 @@ proc ::woof::handle_request {{request_context ""}} {
             # Display error
             response reset
             response status 500
+            response content_type text/html
             response content "<html><body><pre>[::woof::util::hesc $usermsg]</pre></body></html>"
         } finally {
             try {
