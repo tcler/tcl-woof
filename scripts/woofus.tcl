@@ -214,7 +214,6 @@ proc woofus::generate {urls args} {
     # -excludeviews BOOLEAN - if true, view stubs are also generated
     # For each item in $urls, the stubs for the controller, action and
     # view are generated after prompting the user for confirmation.
-
     set opts(-excludeviews) false
     array set opts $args
 
@@ -544,9 +543,11 @@ proc woofus::main {command args} {
     return $exit_code
 }
 
-
-set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. lib]]]
-::tcl::tm::path add [file normalize [file join [file dirname [info script]] .. lib]]
+if {![info exists ::starkit::topdir]} {
+    # Only add paths if not in starkit since that already has appropriate paths set up.
+    set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. lib]]]
+    ::tcl::tm::path add [file normalize [file join [file dirname [info script]] .. lib]]
+}
 
 if {[catch {
     package require cmdline
@@ -561,7 +562,7 @@ if {[catch {
 
 # If we are not being included in another script, off and running we go
 if {[file normalize $::argv0] eq [file normalize [info script]]} {
-    woofus::main [lindex $argv 0] {*}[lrange $argv 1 end]
+    woofus::main {*}$::argv
     exit $woofus::exit_code
 }
 

@@ -57,6 +57,7 @@ proc bowwow {args} {
 
 if {[lindex $argv 0] eq "stubs"} {
     source [file join $starkit::topdir scripts woofus.tcl]
+    woofus::main {*}$::argv
 } else {
     if {[catch {bowwow {*}$::argv} msg]} {
         puts stderr $msg
