@@ -10,7 +10,7 @@ package require csv
 package require fileutil
 
 namespace eval distro {
-    variable version 0.1
+    variable version 0.2
 
     # Array keeping track of bundles, indexed by an id. Each
     # element is a dictionary with the following keys:
