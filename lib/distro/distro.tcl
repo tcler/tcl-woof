@@ -223,11 +223,13 @@ proc distro::read_manifest {id} {
 }
 
 
-proc distro::prepare_install_steps {distro_id target_id} {
+proc distro::prepare_install_steps {distro_id target_id args} {
     # Generates the commands to be executed to install files from a
     # distribution.
     # distro_id - id of distribution to be installed
     # target_id - id for destination directory
+    # -dirs DIRLIST - list of relative directory paths. Only files
+    #   within these directories (at any depth) are considered for install.
     #
     # The command returns two lists. The first list contains pairs of
     # commands, each pair consisting of an "install command"
@@ -251,6 +253,12 @@ proc distro::prepare_install_steps {distro_id target_id} {
     
     variable distros
 
+    #ruff
+    # -updatesameversion BOOLEAN - if specified as true (default),
+    #  updates the target directory even if it is the same version.
+    set opts(-updatesameversion) true
+    array set opts $args
+
     set srcdir [dict get $distros($distro_id) npath]
     set dstdir [dict get $distros($target_id) npath]
 
@@ -266,8 +274,13 @@ proc distro::prepare_install_steps {distro_id target_id} {
 
     set target_version [dict get $distros($target_id) version]
     set distro_version [dict get $distros($distro_id) version]
-    if {[package vcompare $target_version $distro_version] > 0} {
-        error "Installed version $target_version is newer than distribution version $distro_version."
+    set version_compare [package vcompare $target_version $distro_version]
+    if {$version_compare > 0 || ($version_compare == 0 && ! $opts(-updatesameversion))} {
+        # error "Installed version $target_version is same or newer than distribution version $distro_version."
+        #ruff
+        # The command returns an empty list if the installed version is newer or
+        # if it is the same and the -updatesameversion option is false.
+        return {}
     }
 
     set srcfiles [dict get $distros($distro_id) manifest]
@@ -275,9 +288,36 @@ proc distro::prepare_install_steps {distro_id target_id} {
     set cmds {};                # Commands to run
     set cleanup_cmds {};        # Cleanup commands to be run at the end
 
+    if {[info exists opts(-dirs)]} {
+        set dirs {}
+        foreach dir $opts(-dirs) {
+            # Note the dirs may contain glob characters though
+            # we do not explicitly document this. Else we need
+            # to escape them if we do not want that behavior
+            lappend dirs [file join $dir *]
+        }
+    }
+
     # Construct the commands for copying
     foreach path [dict keys $srcfiles] {
         # $path is the relative path
+
+        # If the caller has specified a dir option, ignore all
+        # files that do not fall under one of the specified 
+        # directories.
+        if {[info exists dirs]} {
+            set match 0
+            foreach dir $dirs {
+                if {[string match {*}$nocase $dir $path]} {
+                    set match 1
+                    break
+                }
+            }
+            if {! $match} {
+                continue;       # Skip this file
+            }
+        }
+        
         set src [file join $srcdir $path]
         set dst [file join $dstdir $path]
 
@@ -287,7 +327,7 @@ proc distro::prepare_install_steps {distro_id target_id} {
         #
         # If the destination file does not exist, the source file is
         # simply copied. The corresponding rollback command will delete
-        # the newly copied file but not any intermediated directories that
+        # the newly copied file but not any intermediate directories that
         # might have been created.
         if {![file exists $dst]} {
             # No rollback for mkdir
@@ -342,7 +382,7 @@ proc distro::prepare_install_steps {distro_id target_id} {
     }
     
 
-    # Finally copy the manifest itself
+    # Finally copy the manifest itself. Note we do this irrespective of -dirs option.
     set backup ${dst_manifest_path}.bak
     if {[file exists $dst_manifest_path]} {
         lappend cmds [list [list file rename -force -- $dst_manifest_path $backup] [list file rename -force -- $backup $dst_manifest_path]]
@@ -462,8 +502,21 @@ proc distro::install {distro_path target_path args} {
     # -logcmd SCRIPT - command to call to log actions. An additional message
     #   string is appended to SCRIPT before it is called.
     #  -manifest NAME - the name to use for the file manifest
-    array set opts [list -manifest $manifest_defaults(filename) -logcmd ""]
+    # -updatesameversion BOOLEAN - if specified as true (default),
+    #  updates the target directory even if it is the same version.
+    array set opts [list -manifest $manifest_defaults(filename) \
+                        -logcmd "" \
+                        -updatesameversion true]
     array set opts $args
+
+    #ruff
+    # -dirs DIRLIST - list of relative directory paths. Only files
+    #   within these directories (at any depth) are considered for install.
+    if {[info exists opts(-dirs)]} {
+        set opt_dirs [list -dirs $opts(-dirs)]
+    } else {
+        set opt_dirs {}
+    }
 
     if {[_contained_file $distro_path $target_path]} {
         error "Target directory '$target_path' must not be under the distribution directory '$distro_path'."
@@ -473,7 +526,9 @@ proc distro::install {distro_path target_path args} {
     distro::read_manifest $from_distro
     set to_distro [distro::distro $target_path -manifest $opts(-manifest)]
     distro::read_manifest $to_distro
-    set install_steps [distro::prepare_install_steps $from_distro $to_distro]
+    set install_steps [distro::prepare_install_steps $from_distro $to_distro \
+                           {*}$opt_dirs \
+                           -updatesameversion $opts(-updatesameversion)]
     distro::run_install_steps $install_steps -logcmd $opts(-logcmd)
     # distro::save_manifest $to_distro - not needed, as the install steps include copying of manifest
     distro::release $from_distro
