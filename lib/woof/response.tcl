@@ -31,7 +31,6 @@ oo::class create Response {
         # NOTE - experimentation shows the objects created below
         # get automatically destroyed when containing object is destroyed
         # without needing explicit destruction in a destructor.
-        # TBD - Confirm with DKF
 
         # Input cookies
         ::woof::CookiesOut create _cookies
@@ -266,7 +265,7 @@ oo::class create Response {
     method reset {} {
         # Currently not implemented.
 
-        # TBD - what should we reset?
+        # TBD - what should we reset? Content, content type?
     }
 
     method redirect {url {status 307} {text ""}} {
