@@ -171,7 +171,7 @@ proc ::woof::webservers::wibble::main {rootdir args} {
 # If we are not being included in another script, off and running we go
 if {[file normalize $::argv0] eq [file normalize [info script]]} {
     set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. .. .. lib]]]
-    lappend auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. .. .. thirdparty]]]
+    lappend auto_path [file normalize [file join [file dirname [info script]] .. .. .. thirdparty]]
     package require uri
     package require wibble
     source [file join [file dirname [info script]] .. .. .. lib woof master.tcl]
