@@ -18,11 +18,7 @@ namespace eval installer {
     # Dir where woof is installed or when running as an installer
     # where the distribution resides
     variable root_dir
-    if {[info exists ::env(WOOF_ROOT)]} {
-        set root_dir $::env(WOOF_ROOT)
-    } else {
-        set root_dir [file normalize [file dirname [file dirname [info script]]]]
-    }
+    set root_dir [file normalize [file dirname [file dirname [info script]]]]
 
     # Source tree root
     variable source_root_dir
@@ -229,6 +225,7 @@ proc installer::distribute {target_dir args} {
         file copy [file join $root_dir app] $bowwow_dir
         file copy [file join $root_dir public] $bowwow_dir
         file copy [file join $root_dir scripts] $bowwow_dir
+        distro::build $bowwow_dir $woof_version -manifest $manifest_name -crlf lf
 
         # TBD - make tclkit path configurable
         set tclkit [file join $root_dir thirdparty tclkit-cli.exe]
