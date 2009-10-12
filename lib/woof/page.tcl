@@ -132,7 +132,15 @@ oo::class create Page {
                                           -dirs $search_dirs \
                                           -relativeroot $view_root]
                     } trap {WOOF MissingFile} {} {
-                        # Will fall through below to return false
+                        try {
+                            set template [::woof::filecache_read \
+                                              [file join views _${name}.wtf] \
+                                              -cachecontrol $cachecontrol \
+                                              -dirs $search_dirs \
+                                              -relativeroot $view_root]
+                        } trap {WOOF MissingFile} {} {
+                            # Will fall through below to return false
+                        }                        
                     }
                 }
             }
