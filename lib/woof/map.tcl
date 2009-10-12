@@ -53,7 +53,8 @@ oo::class create util::Map {
         set args [lassign $args key]
         
         #ruff
-        # If the key exists in the object, its value is returned.
+        # Otherwise, the first argument is treated as the key and
+        # if it exists in the object, its value is returned.
         if {[info exists _map($key)]} {
             return $_map($key)
         }
