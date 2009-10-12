@@ -73,8 +73,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
 <html>
   <head>
-    <title>[pagevar get @title [config :app_name]]</title>
-    [my make_style_links [pagevar get @styles [list _yui-2-7-0b-reset-fonts-grids.css]]]
+    <title>[pagevar get title [config :app_name]]</title>
+        [my make_style_links [pagevar get styles {}]]
 %# Note the no_margin modification only applies to #doc3, NOT other doc*
 % if {$no_margin} {
     <style>#doc3 {margin:auto;}</style>

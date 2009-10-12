@@ -5,6 +5,11 @@ oo::class create woof::_ManageController {
         # Very important to pass arguments to parent
         next {*}$args
 
+        pagevar set styles {
+            {relativeurl stylesheets/_yui-2-8-0r4-reset-fonts-grids.css}
+            {relativeurl stylesheets/_yui-2-8-0r4-base-min.css}
+            {file _woof.css}
+        }
         set woof_url(user_guide) "http://woof.magicsplat.com/woof_guide"
         set woof_url(quick_start) "http://woof.magicsplat.com/woof_guide/quick_start"
         set woof_url(reference)   "http://woof.magicsplat.com/manuals/woof/index.html"

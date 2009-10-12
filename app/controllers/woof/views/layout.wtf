@@ -73,7 +73,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
 <html>
   <head>
-    <title>[pagevar get @title [config :app_name]]</title>
+    <title>[pagevar get title [config :app_name]]</title>
         [my make_style_links [pagevar get styles {
             {relativeurl stylesheets/_yui-2-8-0r4-reset-fonts-grids.css}
             {relativeurl stylesheets/_yui-2-8-0r4-base-min.css}
