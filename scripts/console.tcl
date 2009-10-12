@@ -195,6 +195,7 @@ namespace eval ::woof::console {
 source [file join [file dirname [info script]] .. lib woof master.tcl]
 
 set ::woof::console::_safe_interp [::woof::master::init console [file normalize [file join [file dirname [info script]] ..]]]
+$::woof::console::_safe_interp alias ::puts ::puts
 
 namespace import ::woof::console::*
 

@@ -38,20 +38,22 @@ oo::class create Page {
         array set _sections {}
     }
 
-    method fetch {name {varname {}}} {
+    method fetch {name varname args} {
         # Check the existence of a page section and optionally return its
         # content.
         # name - name of page section
         # varname - name of a variable in the caller's context
         # The method checks if the specified page section exists.
         # It returns false if the section does not exist.
-        # If the section exists, the method returns true and if
-        # $varname is specified, stores the value in the variable of
+        # If the section exists, the method returns true and
+        # stores the value in the variable of
         # that name in the caller's context.
         #
 
         my variable _dispatchinfo
         my variable _sections
+
+        array set opts $args
 
         #ruff
         # If the section has already been defined for the page, the method
