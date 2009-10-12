@@ -1,11 +1,11 @@
 % # page_width determines width of the whole page. If fluid, it takes up
 % # the entire browser window.
 % # Must be one of 750px, 950px, 974px or fluid
-% set page_width fluid
+% set page_width [pagevar get yui_page_width fluid]
 
 % # Set true if page margins are not desired around the whole display area.
 % # As per YUI, this may cause bleeding of content into the browser chrome
-% set no_margin false
+% set no_margin [pagevar get yui_no_margin false]
 
 % # Set the width and position of the sidebar column.
 % # Note this setting is ignored
@@ -14,13 +14,13 @@
 % # Left-positioned sidebars are currently restricted to 
 % # one of 160px, 180px, or 300px and right-positioned ones
 % # to one of 180px, 240px or 300px
-% set sidebar_pos left;           # Left or right
-% set sidebar_width 180px
+% set sidebar_pos [pagevar get yui_sidebar_pos left]; # Left or right
+% set sidebar_width [pagevar get yui_sidebar_width 180px]
 
 % # Percentage of remaining width taken up by main content.
 % # Must be one of 25%, 33%, 50%, 66%, 75%. Note this is ignored
 % # if no right column is present in the page array.
-% set main_percent 66%
+% set main_percent [pagevar get yui_main_percent 66%]
 
 
 % ############## End of Customization ################ 
