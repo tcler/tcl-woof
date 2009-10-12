@@ -18,6 +18,8 @@ oo::class create util::Map {
     #  DirtyMap. TBD - perhaps a trace mechanism would be a better way
     #  to track modifications.
 
+    variable _map
+
     constructor {{map {}}} {
         # Constructs a dictionary-like object with additional functionality.
         # map - is a list of key value pairs that will be used to initialize
@@ -34,14 +36,12 @@ oo::class create util::Map {
         # on demand from some arbitrary source.
 
         # TBD - see if _map should be a dict instead of an array
-        my variable _map
         array set _map $map
     }
 
     method get {args} {
         # Retrieves values associated with keys.
         # args - optional arguments
-        my variable _map
 
         #ruff
         # If the method is invoked with no parameters, the content
@@ -115,7 +115,6 @@ oo::class create util::Map {
         # $v_val is specified, stores the value in the variable $v_val
         # in the caller's context.
 
-        my variable _map
         if {![info exists _map($key)]} {
             my lazy_load $key
         }
@@ -140,13 +139,13 @@ oo::class create util::Map {
         # in the back end (if any) but not in this object.
         # Caller may explicitly call lazy_load
         # before calling this method if that is desired.
-        my variable _map
+
         return [array names _map]
     }
 
     method count {} {
         # Returns the number of keys in the object.
-        my variable _map
+
         return [array size _map]
     }
 
@@ -176,7 +175,7 @@ oo::class create util::Map {
         # args - a list of key value elements
         # The value of each key specified is
         # set to the corresponding specified value.
-        my variable _map
+
         array set _map $args
     }
 
@@ -187,7 +186,6 @@ oo::class create util::Map {
         # set to the corresponding specified value if the key
         # did not already exist in the object.
 
-        my variable _map
         set newvals {}
         foreach {k val} $args {
             if {![info exists _map($k)]} {
@@ -202,7 +200,7 @@ oo::class create util::Map {
     method unset {args} {
         # Removes one or more keys from the object.
         # args - list of keys to be removed
-        my variable _map
+
         foreach key $args {
             unset -nocomplain _map($key)
         }
@@ -213,7 +211,7 @@ oo::class create util::Map {
         # pattern - the pattern to match
         # The keys are matched againt $pattern using the matching rules
         # of the Tcl string match command.
-        my variable _map
+
         array unset _map $pattern
     }
     
@@ -262,12 +260,12 @@ oo::class create util::Map {
 catch {util::DirtyMap destroy}
 oo::class create util::DirtyMap {
     superclass util::Map
+    variable _dirty
+
     constructor {args} {
         # Constructs a Map with the additional functionality that
         # state is maintained about whether the contents have been
         # modified.
-
-        my variable _dirty
         set _dirty false
         next {*}$args
     }
@@ -275,7 +273,6 @@ oo::class create util::DirtyMap {
     method set args {
         # Calls Map::set with all arguments and marks the object dirty.
         # args - passed on Map::set
-        my variable _dirty
         next {*}$args
         set _dirty true
     }
@@ -283,7 +280,6 @@ oo::class create util::DirtyMap {
     method init args {
         # Calls Map::init with all arguments and marks the object dirty.
         # args - passed on Map::init
-        my variable _dirty
         next {*}$args
         set _dirty true
     }
@@ -291,7 +287,6 @@ oo::class create util::DirtyMap {
     method unset args {
         # Calls Map::unset with all arguments and marks the object dirty.
         # args - passed on Map::set
-        my variable _dirty
         next {*}$args
         set _dirty true
     }
@@ -299,7 +294,6 @@ oo::class create util::DirtyMap {
     method clear args {
         # Calls Map::clear with all arguments and marks the object dirty.
         # args - passed on Map::clear
-        my variable _dirty
         next {*}$args
         set _dirty true
     }
@@ -307,13 +301,11 @@ oo::class create util::DirtyMap {
     method dirty? {} {
         # Returns true if the object has been modified since it was constructed
         # and false otherwise
-        my variable _dirty
         return $_dirty
     }
 
     method clean {} {
         # Marks the object as being unmodified.
-        my variable _dirty
         set _dirty false
     }
 }
