@@ -110,6 +110,9 @@ oo::class create Controller {
             ::woof::util::hesc \
             ::woof::errors::exception
 
+        # Used for saving/discarding flash
+        my variable _clear_flash_on_return
+
         # TBD - check if we could use namespace path instead of the below
         namespace import $request $response; # Imports request and response as a command
 
@@ -126,45 +129,6 @@ oo::class create Controller {
         set _dispatchinfo $dispatchinfo
 
         set _output_done false
-    }
-
-    method process {{action ""}} {
-        # Called to invoke a specific action in a controller.
-        # action - the name of the action method to invoke. If specified as
-        #          an empty string, the method name is picked from the
-        #          URL of the request.
-        #
-        my variable _output_done
-        my variable _dispatchinfo
-
-        if {$action eq ""} {
-            # Note - error raised if _dispatchinfo also does not have this
-            set action [dict get $_dispatchinfo action]
-        }
-        #ruff
-        # By default, $action may refer to any exported method defined in the 
-        # controller leaf class itself (i.e. not including inherited methods).
-        # A controller may define the method _action_methods
-        # to return a non-empty list of methods to restrict this. In this
-        # case, only those methods which are in the returned list are allowed
-        # to be invoked.
-        if {[llength [set allowed_methods [my _action_methods]]] == 0} {
-            # We want a list of all exported methods for the leaf class
-            # Note we use [info object class [self]] as opposed to
-            # [self class] as the latter will return this class as
-            # opposed to the leaf class. Also, we leave off -all
-            # and -private as we only want exported methods and
-            # only those directly defined in the leaf.
-            set allowed_methods [info class methods [info object class [self]]]
-        }
-        if {$action ni $allowed_methods} {
-            # Action method does not exist or inaccessible
-            # TBD - should we also try method unknown or
-            # some special method "method_missing" like Rails
-
-            ::woof::log err "Action '$action' not defined for controller [self]"
-            exception WOOF_USER InvalidRequest
-        }
 
         #ruff
         # Before invoking the controller action, an object 'session'
@@ -205,10 +169,10 @@ oo::class create Controller {
         # the 'flash' object.
         ::woof::Flash create flash
         if {[session exists _flash content]} {
-            set clear_flash_on_return 1
+            set _clear_flash_on_return 1
             flash transient {*}$content
         } else {
-            set clear_flash_on_return 0
+            set _clear_flash_on_return 0
         }
 
         #ruff
@@ -216,9 +180,54 @@ oo::class create Controller {
         ::woof::Page create page $_dispatchinfo
 
         #ruff
-        # The Map object 'pagevar' is created to pass values to the
-        # template.
-        ::woof::util::Map create pagevar; # TBD - is this needed/used ?
+        # The Map object 'pagevar' is created to pass values related
+        # to page metadata such as stylesheets, scripts, page titles
+        # etc. Concrete controller classes may append to 
+        ::woof::util::Map create pagevar {
+            styles {}
+        }
+
+    }
+
+    method process {{action ""}} {
+        # Called to invoke a specific action in a controller.
+        # action - the name of the action method to invoke. If specified as
+        #          an empty string, the method name is picked from the
+        #          URL of the request.
+        #
+        my variable _output_done
+        my variable _dispatchinfo
+        my variable _clear_flash_on_return
+
+        if {$action eq ""} {
+            # Note - error raised if _dispatchinfo also does not have this
+            set action [dict get $_dispatchinfo action]
+        }
+        #ruff
+        # By default, $action may refer to any exported method defined in the 
+        # controller leaf class itself (i.e. not including inherited methods).
+        # A controller may define the method _action_methods
+        # to return a non-empty list of methods to restrict this. In this
+        # case, only those methods which are in the returned list are allowed
+        # to be invoked.
+        if {[llength [set allowed_methods [my _action_methods]]] == 0} {
+            # We want a list of all exported methods for the leaf class
+            # Note we use [info object class [self]] as opposed to
+            # [self class] as the latter will return this class as
+            # opposed to the leaf class. Also, we leave off -all
+            # and -private as we only want exported methods and
+            # only those directly defined in the leaf.
+            set allowed_methods [info class methods [info object class [self]]]
+        }
+        if {$action ni $allowed_methods} {
+            # Action method does not exist or inaccessible
+            # TBD - should we also try method unknown or
+            # some special method "method_missing" like Rails
+
+            ::woof::log err "Action '$action' not defined for controller [self]"
+            exception WOOF_USER InvalidRequest
+        }
+
 
         #ruff
         # The specific action is then invoked. If it has arguments,
@@ -276,10 +285,10 @@ oo::class create Controller {
         if {[llength $flash_content]} {
             session set _flash $flash_content
         } else {
-            # We use clear_flash_on_return as a flag so we do not
+            # We use _clear_flash_on_return as a flag so we do not
             # needlessly dirty the session data causing an unnecessary
             # session commit.
-            if {$clear_flash_on_return} {
+            if {$_clear_flash_on_return} {
                 session unset _flash
             }
         }
@@ -458,46 +467,56 @@ oo::class create Controller {
         set _output_done true
     }
 
-    method make_style_links {styles} {
-        # Constructs link tags corresponding to the given styles
-        # styles - nested list of pairs containing the style locations
-        # Returns the HTML containing the links tags for the style.
+    method make_resource_links {resources type} {
+        # Constructs link tags corresponding to the given resource files.
+        # resources - nested list of pairs containing the resource locations
+        # type - one of "stylesheet", "script"
+        # Returns the HTML containing the links tags for the resources.
         my variable _dispatchinfo
 
-        # Search path for style files
+        # Search path for resource
         set dirs [dict get $_dispatchinfo search_dirs]
         set links {}
-        foreach pair $styles {
+        switch -exact -- $type {
+            stylesheet {
+                set subdir stylesheets
+            }
+            javascript {
+                set subdir js
+            }
+            default {
+                ::woof::errors::exception "Unknown resource type '$type'."
+            }
+        }
+        foreach pair $resources {
             #ruff
-            # A style may be a URL or a file. Each pair in $styles
-            # consists of a type field followed by the location.
+            # A resource may be a URL or a file. Each pair in $resources
+            # consists of a format field followed by the location.
             #
-            # If the type field is 'url', the location field is
+            # If the format field is 'url', the location field is
             # used directly as the target for the link tag.
             #
-            # If the type field is 'relativeurl', it is taken to be a
+            # If the format field is 'relativeurl', it is taken to be a
             # relative url below the root URL.
             # 
-            # If the type field is 'file', it is taken to be
+            # If the format field is 'file', it is taken to be
             # the name of a file which is searched for in the search
             # directory path for the controller under the public
             # directory under the Woof root. The corresponding
             # URL is used as the target for the link tag.
-            lassign $pair type loc
-            switch -exact -- $type {
+            lassign $pair format loc
+            switch -exact -- $format {
                 file {
-                    if {$type eq "file"} {
-                        set path [::woof::filecache_locate $loc \
-                                      $dirs \
-                                      -relativeroot [file join \
-                                                         [config get public_dir] \
-                                                         stylesheets] \
-                                     ]
-                        if {$path ne ""} {
-                            set loc [my url_for -urlpath [::woof::url_for_file $path $loc]]
-                        } else {
-                            exception WOOF MissingFile "Stylesheet $loc not found."
-                        }
+                    set path [::woof::filecache_locate $loc \
+                                  $dirs \
+                                  -relativeroot [file join \
+                                                     [config get public_dir] \
+                                                     $subdir] \
+                                 ]
+                    if {$path ne ""} {
+                        set loc [my url_for -urlpath [::woof::url_for_file $path $loc]]
+                    } else {
+                        exception WOOF MissingFile "Stylesheet $loc not found."
                     }
                 }
                 relativeurl {
@@ -507,12 +526,34 @@ oo::class create Controller {
                     # Take as is
                 }
                 default {
-                    exception WOOF Bug "Unknown stylesheet link type '$type'."
+                    exception WOOF Bug "Unknown resource link format '$format'."
                 }
             }
-            lappend links "<link rel='stylesheet' type='text/css' href='[hesc $loc]' />"
+            if {$type eq "javascript"} {
+                lappend links "<script type='text/javascript' href='[hesc $loc]' />"
+            } else {
+                lappend links "<link rel='stylesheet' type='text/css' href='[hesc $loc]' />"
+            }
         }
         return [join $links \n]
+    }
+
+    method make_style_links {styles} {
+        # Constructs link tags corresponding to the given styles
+        # styles - nested list of pairs containing the style locations
+        # Returns the HTML containing the links tags for the style.
+        # This is a wrapper around make_resource_links for stylesheet
+        # resources. Refer to that method for details.
+        return [my make_resource_links $styles stylesheet]
+    }
+
+    method make_javascript_links {scripts} {
+        # Constructs link tags corresponding to the given scripts
+        # scripts - nested list of pairs containing the script locations
+        # Returns the HTML containing the script tags linking to the scripts.
+        # This is a wrapper around make_resource_links
+        # resources. Refer to that method for details.
+        return [my make_resource_links $scripts javascript]
     }
 
     method redirect {args} {
