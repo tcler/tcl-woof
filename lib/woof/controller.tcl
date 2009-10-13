@@ -455,9 +455,9 @@ oo::class create Controller {
         # processing code in this context. We want to make
         # all instance variables visible to rendering code without additional
         # declarations in the templates. TBD - do we really want to make
-        # them visible? Inadvertent name clashes may occur.
+        # them visible? Inadvertent name clashes may occur. Also performance?
         my variable {*}[info object vars [self]]
-        if {[page fetch layout content]} {
+        if {[page fetch layout content -alias [pagevar get section_layout_alias ""]]} {
             response content $content
             response content_type [page content_type]
         } else {

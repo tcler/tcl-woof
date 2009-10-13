@@ -48,9 +48,6 @@ oo::class create Page {
         # content.
         # section_name - name of page section
         # varname - name of a variable in the caller's context
-        # -alias NAME - if specified, NAME is used as the name
-        #   of the template file to be located along the search path instead
-        #   of the constructed names described below.
         # The method checks if the specified page section exists.
         # It returns false if the section does not exist.
         # If the section exists, the method returns true and
@@ -60,6 +57,11 @@ oo::class create Page {
         my variable _dispatchinfo
         my variable _sections
 
+        # -alias NAME - if specified and NAME is not empty, it
+        #  is used as the name
+        #  of the template file to be located along the search path instead
+        #  of the constructed names described below.
+        array set opts {-alias ""}
         array set opts $args
 
         #ruff
@@ -112,7 +114,11 @@ oo::class create Page {
         set search_dirs     [dict get $_dispatchinfo search_dirs]
         set controller_name [dict get $_dispatchinfo controller]
 
-        set name [expr {[info exists opts(-alias)] ? $opts(-alias) : $section_name}]
+        if {$opts(-alias) ne ""} {
+            set name $opts(-alias)
+        } else {
+            set name $section_name
+        }
 
         if {$cachecontrol eq "readwrite"} {
             # Lookup the filename cache first.
@@ -133,7 +139,7 @@ oo::class create Page {
             
             set view_root [file join [::woof::config get root_dir] [::woof::config get app_dir] controllers]
             set tpath ""
-            if {![info exists opts(-alias)]} {
+            if {$opts(-alias) eq ""} {
                 # First check for controller / action specific in the first dir
                 # but only if alias was not specified
                 set tpath [::woof::filecache_locate \

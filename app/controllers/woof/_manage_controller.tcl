@@ -5,6 +5,11 @@ oo::class create woof::_ManageController {
         # Very important to pass arguments to parent
         next {*}$args
 
+        # Only use Woof default section layout, not something user might
+        # have defined.
+        pagevar set section_layout_alias _layout
+        
+        # Customize the layout as per our liking
         pagevar set \
             yui_page_width 750px \
             yui_sidebar_width 160px \
