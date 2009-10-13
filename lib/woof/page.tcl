@@ -43,11 +43,14 @@ oo::class create Page {
         array set _sections {}
     }
 
-    method fetch {name varname args} {
+    method fetch {section_name varname args} {
         # Check the existence of a page section and optionally return its
         # content.
-        # name - name of page section
+        # section_name - name of page section
         # varname - name of a variable in the caller's context
+        # -alias NAME - if specified, NAME is used as the name
+        #   of the template file to be located along the search path instead
+        #   of the constructed names described below.
         # The method checks if the specified page section exists.
         # It returns false if the section does not exist.
         # If the section exists, the method returns true and
@@ -63,10 +66,10 @@ oo::class create Page {
         # If the section has already been defined for the page, the method
         # returns true and the section content is stored in $varname if
         # specified.
-        if {[info exists _sections($name)]} {
+        if {[info exists _sections($section_name)]} {
             if {$varname ne ""} {
                 upvar $varname content
-                set content $_sections($name)
+                set content $_sections($section_name)
             }
             return true
         }
@@ -109,10 +112,7 @@ oo::class create Page {
         set search_dirs     [dict get $_dispatchinfo search_dirs]
         set controller_name [dict get $_dispatchinfo controller]
 
-        #ruff
-        # -filename FILENAME - if specified, FILENAME is used as the name
-        #   of the template file to be located along the search path instead
-        #   of the constructed names described above.
+        set name [expr {[info exists opts(-alias)] ? $opts(-alias) : $section_name}]
 
         if {$cachecontrol eq "readwrite"} {
             # Lookup the filename cache first.
@@ -129,31 +129,34 @@ oo::class create Page {
 
         if {![info exists ct]} {
             # Compiled template not in cache for whatever reason. Locate it.
-            # We try each possible location. On
-            # a specific exception of WOOF MissingFile, we look in further
-            # locations.
+            # We try each possible location.
+            
             set view_root [file join [::woof::config get root_dir] [::woof::config get app_dir] controllers]
-            # First check for controller / action specific in the first dir
-            set tpath [::woof::filecache_locate \
-                           ${controller_name}-${action}-${name}.wtf \
-                           [list [file join [lindex $search_dirs 0] views]] \
-                           -relativeroot $view_root \
-                           -cachecontrol $cachecontrol]
-            if {$tpath eq ""} {
-                # Not there, try controller-specific, action-independent one
+            set tpath ""
+            if {![info exists opts(-alias)]} {
+                # First check for controller / action specific in the first dir
+                # but only if alias was not specified
                 set tpath [::woof::filecache_locate \
-                             ${controller_name}-${name}.wtf \
-                             [list [file join [lindex $search_dirs 0] views]] \
-                             -relativeroot $view_root \
-                             -cachecontrol $cachecontrol]
+                               ${controller_name}-${action}-${name}.wtf \
+                               [list [file join [lindex $search_dirs 0] views]] \
+                               -relativeroot $view_root \
+                               -cachecontrol $cachecontrol]
                 if {$tpath eq ""} {
-                    # Still not located, try along entire path
+                    # Not there, try controller-specific, action-independent one
                     set tpath [::woof::filecache_locate \
-                                 [file join views ${name}.wtf] \
-                                 $search_dirs \
-                                 -relativeroot $view_root \
-                                 -cachecontrol $cachecontrol]
+                                   ${controller_name}-${name}.wtf \
+                                   [list [file join [lindex $search_dirs 0] views]] \
+                                   -relativeroot $view_root \
+                                   -cachecontrol $cachecontrol]
                 }
+            }
+            if {$tpath eq ""} {
+                # Still not located, try along entire path
+                set tpath [::woof::filecache_locate \
+                               [file join views ${name}.wtf] \
+                               $search_dirs \
+                               -relativeroot $view_root \
+                               -cachecontrol $cachecontrol]
             }
                 
             if {$tpath eq ""} {
