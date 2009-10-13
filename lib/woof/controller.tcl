@@ -89,6 +89,8 @@ oo::class create Flash {
 # The main Controller object, all the action happens here
 catch {Controller destroy}; # To allow resourcing
 oo::class create Controller {
+    variable _output_done _dispatchinfo
+
     constructor {request response dispatchinfo} {
         # Base class for Woof controller classes.
         # request - the Request object encapsulating the client's request
@@ -122,9 +124,6 @@ oo::class create Controller {
         interp alias {} ${ns}::params {} $request params
         interp alias {} ${ns}::headers {} $response headers
         interp alias {} ${ns}::ocookies {} $response cookies
-
-        my variable _output_done
-        my variable _dispatchinfo
 
         set _dispatchinfo $dispatchinfo
 
@@ -195,8 +194,6 @@ oo::class create Controller {
         #          an empty string, the method name is picked from the
         #          URL of the request.
         #
-        my variable _output_done
-        my variable _dispatchinfo
         my variable _clear_flash_on_return
 
         if {$action eq ""} {
@@ -333,8 +330,6 @@ oo::class create Controller {
         #  after the host and port. Otherwise, it is assumed to be relative
         #  to the application's root URL.
 
-        my variable _dispatchinfo
-
         if {[dict exists $args -urlpath]} {
             set url [dict get $args -urlpath]
             if {[string index $url 0] ne "/"} {
@@ -435,9 +430,6 @@ oo::class create Controller {
         # Refer to its documentation for more details.
         #
 
-        my variable _dispatchinfo
-        my variable _output_done
-
         # NOTE:
         # We do not want to pollute the template namespace with variable
         # names so all local variables in this method should begin with an "_".
@@ -472,7 +464,6 @@ oo::class create Controller {
         # resources - nested list of pairs containing the resource locations
         # type - one of "stylesheet", "script"
         # Returns the HTML containing the links tags for the resources.
-        my variable _dispatchinfo
 
         # Search path for resource
         set dirs [dict get $_dispatchinfo search_dirs]
@@ -575,8 +566,6 @@ oo::class create Controller {
             -httpstatus 307
         }
         array set opts $args
-
-        my variable _output_done
 
         if {$_output_done} {
             exception WOOF MultipleRenders

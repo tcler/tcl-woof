@@ -19,6 +19,8 @@ namespace eval ::woof {
 }
 
 oo::class create Page {
+    variable _dispatchinfo _sections
+
     constructor {dispatchinfo} {
         # The Page object contains HTML content for page sections.
         # dispatchinfo - Dict containing request dispatch context as returned
@@ -33,7 +35,7 @@ oo::class create Page {
         # 'views' containing a suitable template from which
         # the section can be generated.
 
-        my variable _dispatchinfo _sections _content_type
+        my variable _content_type
 
         set _dispatchinfo $dispatchinfo
 
@@ -54,8 +56,6 @@ oo::class create Page {
         # stores the value in the variable of
         # that name in the caller's context.
         #
-        my variable _dispatchinfo
-        my variable _sections
 
         # -alias NAME - if specified and NAME is not empty, it
         #  is used as the name
@@ -211,7 +211,6 @@ oo::class create Page {
         # The content being stored is expected to be a properly formatted
         # HTML fragment.
 
-        my variable _sections
         set _sections($name) [join $args ""]
         return
     }
