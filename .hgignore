@@ -1,0 +1,11 @@
+syntax: glob
+
+.hgignore
+
+# Emacs backups
+*~
+
+*.orig
+application.cfg
+dist
+temp
