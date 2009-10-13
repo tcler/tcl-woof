@@ -1,0 +1,12 @@
+% # View stub for Woof!
+% # Replace the contents of this file with the template for the
+% # main page section of the request action of the
+% # _test controller.
+<h2>Request object methods</h2>
+<p>The following environment was passed by the [::woof::webserver server_interface] server interface.</p>
+<dl>
+% foreach var [lsort {ssl? protocol standard_port formatted_host_with_port port host url request_uri request_method get? head? post? delete? get_or_head? application_url resource_url query_string referer remote_addr}] {
+<dt>[hesc $var]</dt><dd id='[hesc $var]'>[hesc [request $var]]</dd>
+% }
+</dl>
+
