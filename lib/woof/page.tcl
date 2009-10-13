@@ -5,9 +5,14 @@
 namespace eval ::woof {
     # Templates are compiled and cached when first encountered.
     # Should really be a "common" variable in Page but don't know
-    # how to do that, and not sure about performance impact
-    variable compiled_template_cache
-    set compiled_template_cache [dict create]
+    # how to do that, and not sure about performance impact.
+    # template_file_paths maps the controller/action/section to a file path.
+    # compiled_templates is indexed by file path and contains
+    # the corresponding compiled file contents.
+    variable compiled_templates
+    array set compiled_templates {}
+    variable template_files
+    set template_file_paths [dict create]
 
     # Used to generate variable names for holding template processed output
     variable template_output_counter 0
@@ -49,7 +54,6 @@ oo::class create Page {
         # stores the value in the variable of
         # that name in the caller's context.
         #
-
         my variable _dispatchinfo
         my variable _sections
 
@@ -104,62 +108,72 @@ oo::class create Page {
         set action          [dict get $_dispatchinfo action]
         set search_dirs     [dict get $_dispatchinfo search_dirs]
         set controller_name [dict get $_dispatchinfo controller]
-        if {$cachecontrol eq "readwrite" &&
-            [dict exists $::woof::compiled_template_cache $controller_name $action $search_dirs $name]} {
-            set ct [dict get $::woof::compiled_template_cache $controller_name $action $search_dirs $name]
-        } else {
-            # Not in cache, look for it. We try each possible location. On
+
+        #ruff
+        # -filename FILENAME - if specified, FILENAME is used as the name
+        #   of the template file to be located along the search path instead
+        #   of the constructed names described above.
+
+        if {$cachecontrol eq "readwrite"} {
+            # Lookup the filename cache first.
+            # As as aside, note that by keeping two separate caches, we save on memory space
+            # since multiple controller/actions will map to the same filename
+            if {[dict exists $::woof::template_file_paths $controller_name $action $search_dirs $name]} {
+                # Get the compiled template for the file name
+                set tpath [dict get $::woof::template_file_paths $controller_name $action $search_dirs $name]
+                if {[info exists ::woof::compiled_templates($tpath)]} {
+                    set ct $::woof::compiled_templates($tpath)
+                }
+            }
+        }
+
+        if {![info exists ct]} {
+            # Compiled template not in cache for whatever reason. Locate it.
+            # We try each possible location. On
             # a specific exception of WOOF MissingFile, we look in further
             # locations.
             set view_root [file join [::woof::config get root_dir] [::woof::config get app_dir] controllers]
-            try {
-                # First check for controller / action specific in the first dir
-                set template [::woof::filecache_read \
-                                  [file join $view_root [lindex $search_dirs 0] views \
-                                       ${controller_name}-${action}-${name}.wtf] \
-                                  -cachecontrol $cachecontrol]
-            } trap {WOOF MissingFile} {} {
-                try {
-                    # No such file, try controller specific one
-                    set template [::woof::filecache_read \
-                                      [file join $view_root [lindex $search_dirs 0] views \
-                                           ${controller_name}-${name}.wtf] \
-                                      -cachecontrol $cachecontrol]
-                } trap {WOOF MissingFile} {} {
+            # First check for controller / action specific in the first dir
+            set tpath [::woof::filecache_locate \
+                           ${controller_name}-${action}-${name}.wtf \
+                           [list [file join [lindex $search_dirs 0] views]] \
+                           -relativeroot $view_root \
+                           -cachecontrol $cachecontrol]
+            if {$tpath eq ""} {
+                # Not there, try controller-specific, action-independent one
+                set tpath [::woof::filecache_locate \
+                             ${controller_name}-${name}.wtf \
+                             [list [file join [lindex $search_dirs 0] views]] \
+                             -relativeroot $view_root \
+                             -cachecontrol $cachecontrol]
+                if {$tpath eq ""} {
                     # Still not located, try along entire path
-                    try {
-                        set template [::woof::filecache_read \
-                                          [file join views ${name}.wtf] \
-                                          -cachecontrol $cachecontrol \
-                                          -dirs $search_dirs \
-                                          -relativeroot $view_root]
-                    } trap {WOOF MissingFile} {} {
-                        try {
-                            set template [::woof::filecache_read \
-                                              [file join views _${name}.wtf] \
-                                              -cachecontrol $cachecontrol \
-                                              -dirs $search_dirs \
-                                              -relativeroot $view_root]
-                        } trap {WOOF MissingFile} {} {
-                            # Will fall through below to return false
-                        }                        
-                    }
+                    set tpath [::woof::filecache_locate \
+                                 [file join views ${name}.wtf] \
+                                 $search_dirs \
+                                 -relativeroot $view_root \
+                                 -cachecontrol $cachecontrol]
                 }
             }
-
-            if {! [info exists template]} {
-                #ruff
-                # If no suitable template is found, the method returns false.
+                
+            if {$tpath eq ""} {
+                # No joy, no matching template
                 return false
             }
+
+            # Cache the filename
+            dict set ::woof::template_file_paths $controller_name $action $search_dirs $name $tpath
 
             # Compile the template and store it in the cache. We supply
             # a dynamically generated name as the output variable where
             # the output content will stored when the compiled template
             # is run.
-            set ct [::woof::wtf::compile_template $template ::woof::template_output[incr ::woof::template_output_counter]]
-            dict set ::woof::compiled_template_cache $controller_name $action $search_dirs $name $ct
+            set ct [::woof::wtf::compile_template \
+                        [::woof::filecache_read $tpath -cachecontrol $cachecontrol] \
+                        ::woof::template_output[incr ::woof::template_output_counter]]
+            set ::woof::compiled_templates($tpath) $ct
         }
+
 
         #ruff
         # If a suitable template is found, the method returns true.
