@@ -134,7 +134,7 @@ proc ::woof::handle_request {{request_context ""}} {
                     # TBD - if no controller, only the template should be processed as documented above?
                     # TBD - where do we log url that was not found ?
                     ::woof::log err "$controller_class not found in path $controller_path"
-                    exception WOOF_USER InvalidRequest
+                    woof::errors::exception WOOF_USER InvalidRequest
                 }
             }
 
@@ -346,7 +346,7 @@ proc ::woof::url_for_file {path {default_url ""}} {
     }
 
     if {$url eq ""} {
-        exception WOOF_USER InvalidRequest
+        ::woof::errors::exception WOOF_USER InvalidRequest
     }
 
     #ruff
