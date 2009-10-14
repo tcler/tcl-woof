@@ -196,7 +196,7 @@ oo::class create Request {
     
     method port {} {
         # Returns the port on which the request was received.
-        set port [lindex [my _raw_host_with_port] 1]
+        set port [lindex [my _raw_host_with_port] 2]
         if {$port ne ""} {
             return $port
         } 
@@ -204,7 +204,7 @@ oo::class create Request {
     }
 
     method host {} {
-        return [lindex [my _raw_host_with_port] 0]
+        return [lindex [my _raw_host_with_port] 1]
     }
 
     method url {} {

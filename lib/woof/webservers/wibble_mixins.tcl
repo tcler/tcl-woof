@@ -11,10 +11,6 @@ namespace eval ::woof::webservers::wibble {
             }
         }
 
-        method url {} {
-            return [dict get $_context uri]
-        }
-
         method request_method {} {
             return [string tolower [dict get $_context method]]
         }
