@@ -14,5 +14,6 @@ namespace eval ::woof::test {
         port "8015"
         application_url /
         test_url_path "woof/_test"
+        query ""
     }
 }
