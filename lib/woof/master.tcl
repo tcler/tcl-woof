@@ -52,86 +52,6 @@ namespace eval ::woof::master {
 # into the safe interpreter
 namespace eval ::woof::safe { }
 
-proc ::woof::safe::source_file_alias {ip path args} {
-    # Sources a file into the interpreter
-    # ip - path to safe interpreter
-    # path - path to the file to be sourced
-    # This is used only for sourcing application files, not
-    # for the core Woof! libraries.
-
-    variable _sourced_files;    # TBD - should actually be per-interpreter
-
-    #ruff
-    # -ignoremissing BOOLEAN - if true, then missing files are treated
-    #  as though they exist but are empty. If false (default), an error
-    #  is generated
-    set opts(-ignoremissing) false
-
-    #ruff
-    # -sourceonce BOOLEAN - if true, then the file is not sourced if
-    #  it has already been sourced. Default is false. This option
-    #  is ignored if the configuration option reload_scripts is true.
-    set opts(-sourceonce) false
-
-    array set opts $args
-
-    set reload_scripts [::woof::master::configuration get reload_scripts]
-
-    # The cache is based on the passed path, not the normalized path.
-    # Normalizing is almost as expensive as reading the file so it would
-    # be useless doing the latter. In most cases it should not matter
-    # since the scripts are accessed using the same syntactic path.
-    if {[info exists _sourced_files($path)] && $opts(-sourceonce) && ! $reload_scripts} {
-        return
-    }
-
-
-    if {[file pathtype $path] eq "relative"} {
-        set path [file join [::woof::master::configuration get root_dir] $path]
-        # TBD - what other paths to try ?
-    }
-
-    # TBD - review the paths from security perspective
-
-    #ruff
-    # The path is verified to lie within the Woof directory structure.
-    # Note this is done even for relative paths
-    # since they make contain .. components.
-
-    # Use the fileutil version so symlinks get resolved.
-    set abspath [::fileutil::fullnormalize $path]
-    # TBD - check abspath is within dir tree.
-    # For now, we don't as fileutil::stripPath and
-    # fileutil::jail are both broken for different reasons
-    # tcllib bugs 2499603 and 2499641
-    #
-
-    #ruff
-    # Depending on the value of the reload_scripts configuration
-    # setting, the command will read the file from the Woof file cache.
-
-    if {! [::woof::master::filecache read $abspath \
-               -contentvar src \
-               -cachecontrol [expr {$reload_scripts ? "ignore" : "readwrite"}]]} {
-        if {$opts(-ignoremissing)} {
-            set src ""
-        } else {
-            ::woof::errors::exception WOOF MissingFile "File '$abspath' could not be sourced."
-        }
-    }
-
-    #ruff
-    # The command remembers which files are passed in based on the path
-    # passed in as input, not on its normalized equivalent. Thus, 
-    # a file may be sourced multiple times if each time it is accessed
-    # through a different syntactic path (e.g. relative) or through
-    # links.
-    set _sourced_files($path) ""; # Remember we've sourced it
-
-    # Load the code into the slave interpreter
-    $ip eval $src
-}
-
 proc ::woof::safe::package_loader {ip name args} {
     # Loads the specified package into the specified interpreter
     # ip - interpreter into which package is to be loaded
@@ -186,10 +106,11 @@ proc ::woof::safe::filecache_read_alias {trailer args} {
     # of the way upvar/uplevel work with aliases across interpreters
     # Thus the interface is a bit different
 
-    # TBD - verify access to file is allowed
+    # The filecache jails are intended to verify access is to allowed
+    # areas so we don't check here.
 
     set opts {}
-    foreach opt {-relativeroot -dirs -cachecontrol} {
+    foreach opt {-relativeroot -dirs -cachecontrol -defaultcontent -translation} {
         if {[dict exists $args $opt]} {
             lappend opts $opt [dict get $args $opt]
         }
@@ -311,7 +232,6 @@ proc ::woof::master::create_web_interp {} {
     $ip alias ::file ::woof::safe::file_alias
 
     # Misc aliases
-    $ip alias ::woof::source_file ::woof::safe::source_file_alias $ip
     $ip alias ::woof::map_file_to_url ::woof::safe::map_file_to_url_alias
 
     return $ip

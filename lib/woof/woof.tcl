@@ -358,6 +358,99 @@ proc ::woof::url_for_file {path {default_url ""}} {
     return $url
 }
 
+proc ::woof::source_file {path args} {
+    # Sources a file into the interpreter
+    # path - path to the file to be sourced
+    # This is used only for sourcing application files, not
+    # for the core Woof! libraries.
+
+    variable _sourced_files
+
+    #ruff
+    # -ignoremissing BOOLEAN - if true, then missing files are treated
+    #  as though they exist but are empty. If false (default), an error
+    #  is generated
+    set opts(-ignoremissing) false
+
+    #ruff
+    # -sourceonce BOOLEAN - if true, then the file is not sourced if
+    #  it has already been sourced. Default is false. This option
+    #  is ignored if the configuration option reload_scripts is true.
+    set opts(-sourceonce) false
+
+    array set opts $args
+
+    set reload_scripts [config get reload_scripts]
+
+    # The cache is based on the passed path, not the normalized path.
+    # Normalizing is almost as expensive as reading the file so it would
+    # be useless doing the latter. In most cases it should not matter
+    # since the scripts are accessed using the same syntactic path.
+    # However, see the note below about volumerelative paths.
+    if {[info exists _sourced_files($path)] && $opts(-sourceonce) && ! $reload_scripts} {
+        return
+    }
+
+    if {[file pathtype $path] eq "relative"} {
+        #ruff
+        # $path may be a relative path in which case it is assumed
+        # to be relative to the Woof root directory.
+        set abspath [file join [config get root_dir] $path]
+        # TBD - what other paths to try ?
+    } elseif {[file pathtype $path] eq "volumerelative"} {
+        #ruff
+        # $path must not be a volume-relative path as it does not interact
+        # properly with caching when the process' current directory on
+        # a drive is changed.
+        # There is never a need to use volume relative paths
+        # anyway.
+        woof::errors::exception WOOF Bug "Volume relative path '$path' passed in to command source_file."
+    } else {
+        #ruff
+        # $path may also be an absolute path that includes a drive letter
+        # and the full path to the file to be sourced.
+        set abspath $path
+    }
+
+    #ruff
+    # The path is verified to lie within the Woof directory structure.
+    # Note this is done even for relative paths
+    # since they make contain .. components.
+
+    # Note for implementing above security, we rely on the master
+    # interpreter to ensure we do not go outside the allowed areas
+    # so we do not care about normalization here.
+
+    #ruff
+    # Depending on the value of the reload_scripts configuration
+    # setting, the command will read the file from the Woof file cache.
+
+    set readopts [list -cachecontrol [expr {$reload_scripts ? "ignore" : "readwrite"}]]
+    if {$opts(-ignoremissing)} {
+        lappend readopts -defaultcontent ""
+    }
+    set src [filecache_read $abspath {*}$readopts]
+
+    #ruff
+    # The command remembers which files are passed in based on the path
+    # passed in as input, not on its normalized equivalent. Thus, 
+    # a file may be sourced multiple times if each time it is accessed
+    # through a different syntactic path (e.g. relative) or through
+    # links. Note relative paths are always relative to the Woof
+    # root 
+
+    set _sourced_files($path) ""; # Remember we've sourced it
+
+    # Load the code. Since we are simulating a script, set info script
+    # to return the script file path for the duration of the script.
+    set saved_script_path [info script]
+    info script $abspath
+    set ret [uplevel 1 $src]
+    info script $saved_script_path
+    return $ret
+}
+
+
 proc ::woof::app::uses {name} {
     # Finds and loads a controller class
     # name - name of the controller class, optionally namespace qualified
@@ -434,6 +527,7 @@ proc ::woof::app::uses {name} {
     }
     return
 }
+
 
 namespace eval ::woof {
     # Export our procs - note we do this before the imports
