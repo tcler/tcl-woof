@@ -79,7 +79,7 @@ proc ::woof::webservers::wibble::init {args} {
 
         method request_parameters {request_context} {
             set params [dict get $request_context query]
-            if {[my request_method] eq "POST"} {
+            if {[dict get $request_context method] eq "POST"} {
                 # Copied from wibble query parsing code.
                 # TBD - fix, probably not quite right
                 foreach elem [split [dict get $request_method content] &] {
