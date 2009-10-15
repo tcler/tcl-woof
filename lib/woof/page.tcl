@@ -80,6 +80,8 @@ oo::class create Page {
 
         # Control caching based on whether we are reloading templates
         # on every request.
+        # TBD - if we are caching compiled templates, why cache files
+        # as well and waste memory ?
         set cachecontrol [expr {[::woof::config get reload_templates false] ? "ignore" : "readwrite"}]
 
         #ruff

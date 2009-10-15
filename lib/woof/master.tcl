@@ -16,7 +16,6 @@ package require fileutil
 package require md5
 package require uuid
 
-
 namespace eval ::woof::master {
     # Where the woof package script is
     variable _script_dir [file normalize [file dirname [info script]]]
@@ -129,10 +128,7 @@ proc ::woof::safe::source_file_alias {ip path args} {
     # links.
     set _sourced_files($path) ""; # Remember we've sourced it
 
-    # It is important to explicitly specify "1" to uplevel.
-    # If the level is left out (ie uplevel $src),
-    # if the read file begins with a comment uplevel will
-    # interpret the comment (or try to) as a level number
+    # Load the code into the slave interpreter
     $ip eval $src
 }
 
@@ -397,11 +393,13 @@ proc ::woof::master::init {server_module {woof_root ""}} {
     # to service client requests.
     set _winterp [create_web_interp]
 
-    # Init the file cache
-    FileCache create filecache -relativeroot [configuration get public_dir]
+    # Init the file cache.
+    # TBD - do we need to add the lib dir to the jail? How about auto_path ?
+    FileCache create filecache \
+        -relativeroot [configuration get public_dir] \
+        -jails [list [configuration get public_dir] [configuration get app_dir]]
     $_winterp alias ::woof::filecache_locate ::woof::safe::filecache_locate_alias
     $_winterp alias ::woof::filecache_read ::woof::safe::filecache_read_alias
-
 
     #ruff
     # Any directories specified in the configuration are
@@ -475,6 +473,9 @@ proc ::woof::master::process_request {{request_context ""}} {
 
 # Set up auto path to include Woof! library
 set ::auto_path [linsert $::auto_path 0 [file normalize [file join [file dirname [info script]] .. .. lib]]]
+namespace eval ::woof {
+    source [file join $::woof::master::_script_dir util.tcl]
+}
 namespace eval ::woof::master {
     source [file join $::woof::master::_script_dir log.tcl]
     source [file join $::woof::master::_script_dir webservers base_server.tcl]

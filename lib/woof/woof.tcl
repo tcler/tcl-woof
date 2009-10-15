@@ -55,11 +55,11 @@ proc ::woof::init {} {
     }
 
     # Load the application controller from where controllers are derived.
-    namespace eval ::woof::app [list ::woof::source_file \
-                                    [file join \
-                                         [::woof::config get app_dir] \
-                                         controllers \
-                                         application_controller.tcl]]
+    namespace eval ::woof::app {
+        namespace path ::woof
+        source_file \
+            [file join [::woof::config get app_dir] controllers application_controller.tcl]
+    }
 }
 
 proc ::woof::handle_request {{request_context ""}} {
@@ -114,6 +114,7 @@ proc ::woof::handle_request {{request_context ""}} {
             set dispatchinfo [::woof::url_crack [request resource_url]]
 
             set controller_class ::woof::app::[dict get $dispatchinfo controller_class]
+            # TBD - check if reload_scripts is on and if so, destroy and reload
             if {[llength [info commands $controller_class]] == 0} {
                 #ruff The corresponding file is sourced into the ::woof::app
                 # namespace. Note that file is sourced only the first time it
@@ -124,12 +125,15 @@ proc ::woof::handle_request {{request_context ""}} {
                 set controller_path [file join \
                                          [dict get $dispatchinfo controller_dir] \
                                          [dict get $dispatchinfo controller_file]]
-
-                namespace eval ::woof::app [list \
-                                                ::woof::source_file \
-                                                $controller_path \
-                                                -sourceonce true \
-                                                -ignoremissing true]
+                namespace eval [namespace qualifiers $controller_class] {namespace path {::woof::app ::woof}}
+                # TBD - should -sourceonce be true or false? How about when
+                # reloading scripts ?
+                namespace eval [namespace qualifiers $controller_class] \
+                    [list \
+                         ::woof::source_file \
+                         $controller_path \
+                         -sourceonce true \
+                         -ignoremissing true]
                 if {[llength [info commands $controller_class]] == 0} {
                     # TBD - if no controller, only the template should be processed as documented above?
                     # TBD - where do we log url that was not found ?
@@ -279,7 +283,7 @@ proc ::woof::url_crack {url} {
                 action        $action \
                 controller_class [join [concat $module [list [::woof::util::mixcase $controller]Controller]] ::] \
                 app_dir       [config get app_dir] \
-                controller_dir  [file join [file join [config get root_dir] [config get app_dir] controllers] {*}$module] \
+                controller_dir  [file join [config get root_dir] [config get app_dir] controllers {*}$module] \
                 controller_file ${controller}_controller.tcl \
                 search_dirs     $search_dirs \
                ]
@@ -354,6 +358,82 @@ proc ::woof::url_for_file {path {default_url ""}} {
     return $url
 }
 
+proc ::woof::app::uses {name} {
+    # Finds and loads a controller class
+    # name - name of the controller class, optionally namespace qualified
+    # The command locates and loads the specified controller class if
+    # it has not already been loaded in ::woof::app namespace.
+    #
+
+    #ruff
+    # The command must be called from the top level when a source is
+    # being sourced as the file from which the class is being loaded is
+    # dependent on the script from where it is called.
+    #
+    set caller [uplevel 1 [list info script]]
+    if {$caller eq ""} {
+        ::woof::errors::exception WOOF Bug "The command 'uses' must only be called from the top level of a script."
+    }
+
+    set reload_scripts [config get reload_scripts false]
+
+    if {[namespace tail $name] eq $name} {
+        #ruff
+        # The class name $name may be unqualified in which case, it is located
+        # in the same directory as the caller and loaded into the caller's
+        # namespace.
+        if {[llength [uplevel 1 [list info commands $name]]] == 1} {
+            # Command already exists. Check if it should be reloaded
+            if {$reload_scripts} {
+                uplevel 1 [list $name destroy]
+            } else {
+                return;         # Already there, and no need to reload
+            }
+        }
+
+        set path [file join [file dirname $caller] [::woof::util::unmixcase $name].tcl]
+        uplevel 1 [list ::woof::source_file \
+                       $path -sourceonce \
+                       [expr {! $reload_scripts}]]
+    } else {
+        #ruff
+        # If $name is a qualified
+        # name it must be relative to the ::woof::app namespace (not fully
+        # qualified) and include the entire path under it.
+        #
+        if {[string range $name 0 1] eq "::"} {
+            ::woof::errors::exception WOOF Bug "Fully qualified name '$name' passed to 'use' command."
+        }
+        set fqn "::woof::app::$name"
+        # Check if command exists. It is fully qualified so we do not have
+        # to do a uplevel to verify it in the caller's context
+        if {[llength [info commands $fqn]] == 1} {
+            # Command already exists. Check if it should be reloaded
+            if {$reload_scripts} {
+                $fqn destroy
+            } else {
+                return;         # Already there, and no need to reload
+            }
+        }
+
+        #ruff The corresponding file is then loaded into that namespace,
+        # and not the namespace of the caller since by convention 
+        # controller files are defined without namespaces and are
+        # expected to be loaded into the appropriate namespace by the caller.
+        set path [file join \
+                      [config get root_dir] \
+                      [config get app_dir] \
+                      controllers \
+                      [string map {:: /} [namespace qualifiers $name]] \
+                      [::woof::util::unmixcase [namespace tail $name]].tcl]
+        
+        namespace eval [namespace qualifiers $fqn] \
+            [list ::woof::source_file \
+                 $path \
+                 -sourceonce [expr {! $reload_scripts}]]
+    }
+    return
+}
 
 namespace eval ::woof {
     # Export our procs - note we do this before the imports

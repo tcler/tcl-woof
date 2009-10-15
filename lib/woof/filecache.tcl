@@ -6,12 +6,10 @@
 
 catch {FileCache destroy}
 oo::class create FileCache {
+    variable _content _locations _relativeroot _jails
+
     constructor {args} {
         # Maintains an in-memory cache of file locations and content
-        #
-        # -relativeroot PATH - the path to use for normalizing relative
-        #  paths if this option is not specified in calls to locate
-        #  or read methods. Defaults to current working directory.
         #
         # In order to minimize reads from the file system, the class
         # keeps an internal cache from which file content can be returned.
@@ -23,20 +21,31 @@ oo::class create FileCache {
         # where files are located, given a specific search path.
         # It is a two-level dictionary, keyed by the search path,
         # and then the file tail (which is not necessarily just the name)
-        my variable _locations
         set _locations [dict create]
 
         # The _content cache contains the actual content of files.
         # It is a dictionary keyed by the path, with the value
         # being the content
-        my variable _content
         set _content [dict create]
 
-        my variable _relativeroot
+        #ruff
+        # -relativeroot PATH - the path to use for normalizing relative
+        #  paths if this option is not specified in calls to locate
+        #  or read methods. Defaults to current working directory.
+        #
         if {[dict exists $args -relativeroot]} {
             set _relativeroot [dict get $args -relativeroot]
         } else {
             set _relativeroot [pwd]
+        }
+
+        #ruff
+        # -jails DIRLIST - list of directory paths. If specified only
+        #  files under one of these paths can be accessed through the cache.
+        if {[dict exists $args -jails]} {
+            foreach dir [dict get $args -jails] {
+                lappend _jails [file normalize $dir]
+            }
         }
     }
 
@@ -73,9 +82,6 @@ oo::class create FileCache {
         # TBD - why does this not have same interface as method read ?
         # (for example why is $dirs not an option)
 
-        my variable _locations
-        my variable _relativeroot
-
         array set opts [list -cachecontrol readwrite -relativeroot $_relativeroot]
         array set opts $args
 
@@ -87,6 +93,8 @@ oo::class create FileCache {
             # callers use different syntactic forms, but that's ok
             if {[dict exists $_locations $opts(-relativeroot) $dirs $tail]} {
                 # Return absolute path or empty string (non-existent file)
+                # Note no need to call _jailed once it is in cache
+                # as _jails cannot change after construction.
                 return [dict get $_locations $opts(-relativeroot) $dirs $tail]
             }
         }
@@ -100,8 +108,9 @@ oo::class create FileCache {
                 # it is returned
                 # in normalized form if the file exists. $dirs is ignored.
                 set path [file normalize $tail]
-                if {! [file isfile $path]} {
+                if {(! [file isfile $path]) || ! [my _jailed $path]} {
                     # File does not exist or is not a regular file
+                    # or is outside allowed areas
                     set path ""
                 }
             }
@@ -122,7 +131,9 @@ oo::class create FileCache {
                     # $opts(-relativeroot) if $dir is not relative. That's
                     # exactly what we want.
                     set possible_path [file normalize [file join $opts(-relativeroot) $dir $tail]]
-                    if {[file isfile $possible_path]} {
+                    if {[file isfile $possible_path] &&
+                        [my _jailed $possible_path]} {
+                        # File exists and is not outside jail
                         set path $possible_path
                         break
                     }
@@ -132,6 +143,7 @@ oo::class create FileCache {
                 error "Unexpected path type for file '$tail'"
             }
         }
+
         if {$opts(-cachecontrol) in {readwrite write}} {
             dict set _locations $opts(-relativeroot) $dirs $tail $path
         }
@@ -168,8 +180,6 @@ oo::class create FileCache {
         # raise a Tcl exception. If the file is missing, the command will raise
         # an error only if neither -defaultcontent, nor -contentvar is 
         # specified. The corresponding error code will be {WOOF MissingFile}.
-
-        my variable _content
 
         # Note -defaultcontent & -contentvar have no default setting
         array set opts {
@@ -246,11 +256,23 @@ oo::class create FileCache {
     method flush {} {
         # Flushes all cached information about files
 
-        my variable _locations
-        my variable _content
         set _locations [dict create]
         set _content [dict create]
         return
     }
 
+    method _jailed {path} {
+
+        if {![info exists _jails]} {
+            return true
+        }
+
+        foreach dir $_jails {
+            if {[::woof::util::contained_path $path $dir]} {
+                return true
+            }
+        }
+
+        return false
+    }
 }
