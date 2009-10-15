@@ -91,18 +91,38 @@ proc util::mixcase {name} {
     #
     # The return value is constructed by removing all non-leading and
     # non-trailing underscore characters and changing the following
-    # letter to upper case.
+    # letter to upper case. This is the reciprocal of the unmixcase proc.
     #
     # Returns the converted identifier.
 
     regexp {^(_*)(.*)$} $name dontcare prefix base
     set mixcase ""
     foreach part [split $base _] {
-        append mixcase "[string toupper [string index $part 0]][string range $part 1 end]"
+        if {$part eq ""} {
+            # Trailing underscores
+            append mixcase _
+        } else {
+            append mixcase "[string toupper [string index $part 0]][string range $part 1 end]"
+        }
     }
     return $prefix$mixcase
 }
 
+proc util::unmixcase {name} {
+    # Converts an mixed case identifier to a lower case one with underscores
+    # name - identifier to be converted
+    #
+    # The return value is constructed by replacing upper case characters
+    # by lower case ones, preceded by an underscore character. This is
+    # the reciprocal of the mixcase proc.
+    #
+    # Returns the converted identifier.
+
+    # We have to separate the prefix because _Abc become _abc, not __abc.
+    regexp {^(_*)(.*)$} $name dontcare prefix base
+
+    return $prefix[string tolower [regsub -all {[A-Z]} $name _\\0]]
+}
 
 # TBD - fix these aliases for multiple server environments
 if {[llength [info commands ::web::htmlify]]} {
@@ -188,6 +208,31 @@ proc util::generate_session_id {} {
     return [md5hex [clock clicks]]
 }
 
+
+proc util::contained_path {path dirpath} {
+    # Checks if the specified path is a descendent of the specified directory
+    # path - path to check
+    # dirpath - directory path under which $path is expected to lie
+    # 
+
+    if {[file pathtype $path] ne "absolute"} {
+        set path [file normalize $path]
+    }
+    if {[file pathtype $dirpath] ne "absolute"} {
+        set dirpath [file normalize $dirpath]
+    }
+
+    set path [file join $path]; # \ -> /, remove double //, trailing / etc.
+    set dirpath [file join $dirpath]
+
+    set base_len [string length $dirpath]
+
+    set nocase [expr {$::tcl_platform(platform) eq "windows" ? "-nocase" : ""}]
+
+    # The file must lie inside the dir path, not even be the same. Thus
+    # the next char of file path must be /
+    return [string equal {*}$nocase -length [incr base_len] ${dirpath}/ $path]
+}
 
 proc util::export_all {} {
     # Exports all procs in *caller's* namespace that do not begin with an underscore
