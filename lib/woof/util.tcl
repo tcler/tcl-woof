@@ -121,7 +121,7 @@ proc util::unmixcase {name} {
     # We have to separate the prefix because _Abc become _abc, not __abc.
     regexp {^(_*)(.*)$} $name dontcare prefix base
 
-    return $prefix[string tolower [regsub -all {[A-Z]} $name _\\0]]
+    return $prefix[string tolower [string trimleft [regsub -all {[A-Z]} $name _\\0] _]]
 }
 
 # TBD - fix these aliases for multiple server environments

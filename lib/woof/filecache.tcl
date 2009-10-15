@@ -44,6 +44,9 @@ oo::class create FileCache {
         #  files under one of these paths can be accessed through the cache.
         if {[dict exists $args -jails]} {
             foreach dir [dict get $args -jails] {
+                # TBD - should we use fileutil::fullnormalize instead
+                # to completely resolve links ? How should symlinks
+                # be handled anyways ?
                 lappend _jails [file normalize $dir]
             }
         }
@@ -107,6 +110,8 @@ oo::class create FileCache {
                 # If $tail specifies an absolute or volume-relative path,
                 # it is returned
                 # in normalized form if the file exists. $dirs is ignored.
+
+                # TBD - should we use fileutil::fullnormalize instead ?
                 set path [file normalize $tail]
                 if {(! [file isfile $path]) || ! [my _jailed $path]} {
                     # File does not exist or is not a regular file
@@ -130,6 +135,7 @@ oo::class create FileCache {
                     # Note that the file join command will ignore 
                     # $opts(-relativeroot) if $dir is not relative. That's
                     # exactly what we want.
+                    # TBD - should we use fileutil::fullnormalize instead ?
                     set possible_path [file normalize [file join $opts(-relativeroot) $dir $tail]]
                     if {[file isfile $possible_path] &&
                         [my _jailed $possible_path]} {
