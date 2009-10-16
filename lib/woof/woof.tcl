@@ -301,7 +301,8 @@ proc ::woof::url_build {cracked_url args} {
     #  -controller CONTROLLER - name of controller to use instead of
     #     the default from $crack_url
     #  -module MODULE - name of the module in which controller resides,
-    #     if not the default from $crack_url
+    #     if not the default from $crack_url. This must be in the
+    #     same format returned by url_crack.
     #  -action ACTION - name of the action. This defaults to 'index',
     #     and is not based on $cracked_url
     #
@@ -313,9 +314,9 @@ proc ::woof::url_build {cracked_url args} {
 
     array set opts $args
     if {[info exists opts(-module)]} {
-        set module $opts(-module)
+        set module [join $opts(-module) /]
     } else {
-        set module [dict get $cracked_url module]
+        set module [join [dict get $cracked_url module] /]
     }
     if {[info exists opts(-controller)]} {
         set controller $opts(-controller)
@@ -328,6 +329,7 @@ proc ::woof::url_build {cracked_url args} {
         set action "index"
     }
 
+    # We use file join and not join here to take care of trailing or dup /
     return [file join [dict get $cracked_url url_root] $module $controller $action]
 }
 
