@@ -114,7 +114,13 @@ proc ::woof::handle_request {{request_context ""}} {
             set dispatchinfo [::woof::url_crack [request resource_url]]
 
             set controller_class ::woof::app::[dict get $dispatchinfo controller_class]
-            # TBD - check if reload_scripts is on and if so, destroy and reload
+            if {[::woof::config get reload_scripts] &&
+                [llength [info commands $controller_class]] != 0} {
+                # We want to reload scripts every time. Delete the class
+                # and reload.
+                $controller_class destroy
+            }
+
             if {[llength [info commands $controller_class]] == 0} {
                 #ruff The corresponding file is sourced into the ::woof::app
                 # namespace. Note that file is sourced only the first time it
