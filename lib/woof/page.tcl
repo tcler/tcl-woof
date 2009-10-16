@@ -107,11 +107,6 @@ oo::class create Page {
         # if varname is empty? Probably not worth since content
         # will eventually be required anyways.
 
-        # First check if a precompiled template has been cached.
-        # Note - we to use the view_path as a lookup key since otherwise
-        # the same controller name may occur in multiple modules. The view
-        # path distinguishes between the modules as it will be different
-        # for each.
         set action          [dict get $_dispatchinfo action]
         set search_dirs     [dict get $_dispatchinfo search_dirs]
         set controller_name [dict get $_dispatchinfo controller]
@@ -121,6 +116,12 @@ oo::class create Page {
         } else {
             set name $section_name
         }
+
+        # First check if a precompiled template has been cached.
+        # Note - we to use the view_path as a lookup key since otherwise
+        # the same controller name may occur in multiple modules. The view
+        # path distinguishes between the modules as it will be different
+        # for each.
 
         if {$cachecontrol eq "readwrite"} {
             # Lookup the filename cache first.
@@ -139,6 +140,9 @@ oo::class create Page {
             # Compiled template not in cache for whatever reason. Locate it.
             # We try each possible location.
             
+            # Note that we set cachecontrol to ignore in the calls to
+            # filecache_locate since we are caching the compiled template,
+            # there is no point caching the original template.
             set view_root [file join [::woof::config get root_dir] [::woof::config get app_dir] controllers]
             set tpath ""
             if {$opts(-alias) eq ""} {
@@ -148,14 +152,14 @@ oo::class create Page {
                                ${controller_name}-${action}-${name}.wtf \
                                [list [file join [lindex $search_dirs 0] views]] \
                                -relativeroot $view_root \
-                               -cachecontrol $cachecontrol]
+                               -cachecontrol ignore]
                 if {$tpath eq ""} {
                     # Not there, try controller-specific, action-independent one
                     set tpath [::woof::filecache_locate \
                                    ${controller_name}-${name}.wtf \
                                    [list [file join [lindex $search_dirs 0] views]] \
                                    -relativeroot $view_root \
-                                   -cachecontrol $cachecontrol]
+                                   -cachecontrol ignore]
                 }
             }
             if {$tpath eq ""} {
@@ -164,7 +168,7 @@ oo::class create Page {
                                [file join views ${name}.wtf] \
                                $search_dirs \
                                -relativeroot $view_root \
-                               -cachecontrol $cachecontrol]
+                               -cachecontrol ignore]
             }
                 
             if {$tpath eq ""} {
@@ -178,9 +182,10 @@ oo::class create Page {
             # Compile the template and store it in the cache. We supply
             # a dynamically generated name as the output variable where
             # the output content will stored when the compiled template
-            # is run.
+            # is run. Note again, that cachecontrol for filecache_read
+            # is hardcoded to ignore for reasons stated above.
             set ct [::woof::wtf::compile_template \
-                        [::woof::filecache_read $tpath -cachecontrol $cachecontrol] \
+                        [::woof::filecache_read $tpath -cachecontrol ignore] \
                         ::woof::template_output[incr ::woof::template_output_counter]]
             set ::woof::compiled_templates($tpath) $ct
         }
