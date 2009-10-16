@@ -1,4 +1,4 @@
-oo::class create _ManageController {
+oo::class create ManageController {
     superclass ApplicationController
     variable woof_url
     constructor args {
@@ -26,7 +26,7 @@ oo::class create _ManageController {
     }
 }
 
-oo::define _ManageController {
+oo::define ManageController {
     method index {} {
         my redirect -action welcome
     }
