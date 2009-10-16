@@ -173,7 +173,7 @@ proc ::woof::console::restart {} {
 
 proc ::woof::console::testpage {args} {
     if {[llength $args] == 0} {
-        get http://localhost/woof/_manage/welcome
+        get http://localhost/_woof/manage/welcome
     } else {
         get http://localhost/[string trimleft [join {*}$args /] /]
     }
