@@ -1,5 +1,5 @@
-oo::class create woof::_ManageController {
-    superclass ::woof::app::ApplicationController
+oo::class create _ManageController {
+    superclass ApplicationController
     variable woof_url
     constructor args {
         # Very important to pass arguments to parent
@@ -26,7 +26,7 @@ oo::class create woof::_ManageController {
     }
 }
 
-oo::define woof::_ManageController {
+oo::define _ManageController {
     method index {} {
         my redirect -action welcome
     }
