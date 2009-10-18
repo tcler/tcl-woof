@@ -13,7 +13,7 @@ namespace eval ::woof::test {
         host "127.0.0.1"
         port "8015"
         application_url /
-        test_url_path "woof/_test"
+        test_url_path "_woof/test"
         query ""
     }
 }

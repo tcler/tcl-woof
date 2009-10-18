@@ -13,21 +13,19 @@ package require tdom
 source [file join [file dirname [info script]] config.tcl]
 source [file join [file dirname [info script]] testutil.tcl]
 
-::tcltest::customMatch boolean ::woof::test::boolean_compare
-
 namespace eval ::woof::test::request {
     namespace import ::tcltest::test
 
     namespace path ::woof::test
 
     namespace upvar ::woof::test test_url test_url
-    variable request_dom;      # What we get back in DOM form
+    variable dom;      # What we get back in DOM form
 
     proc request_setup {} {
-        variable request_dom
-        if {![info exists request_dom]} {
-            set tok [http::geturl [make_test_url request]]
-            set request_dom [dom parse -keepEmpties -html [http::data $tok]]
+        variable dom
+        if {![info exists dom]} {
+            set tok [http::geturl [make_test_url request/dump]]
+            set dom [dom parse -keepEmpties -html [http::data $tok]]
             http::cleanup $tok
         }
     }
@@ -36,8 +34,8 @@ namespace eval ::woof::test::request {
         return [join [concat $host $port] :]
     }
     proc dom_field {id} {
-        variable request_dom
-        return [[lindex [$request_dom selectNodes "//dd\[@id='$id']"]  0] text]
+        variable dom
+        return [[lindex [$dom selectNodes "//dd\[@id='$id']"]  0] text]
     }
 
     foreach {method_name mode expected_value} \
@@ -55,11 +53,11 @@ namespace eval ::woof::test::request {
              referer         exact   "" \
              remote_addr     exact   127.0.0.1 \
              request_method  exact   get \
-             request_uri     exact   [file join $test_url(application_url) $test_url(test_url_path) request] \
-             resource_url    exact   [file join $test_url(test_url_path) request] \
+             request_uri     exact   [file join $test_url(application_url) $test_url(test_url_path) request/dump] \
+             resource_url    exact   [file join $test_url(test_url_path) request/dump] \
              ssl?            boolean [expr {$test_url(scheme) == "https"}] \
              standard_port   exact   [expr {$test_url(scheme) == "https" ? 443 : 80}] \
-             url             exact   [make_test_url request]
+             url             exact   [make_test_url request/dump]
             ] { 
                 eval [format {
                     test request_%1$s-1.0 {
@@ -74,9 +72,9 @@ namespace eval ::woof::test::request {
     
     ################################################################
 
-    if {[info exists request_dom]} {
-        $request_dom delete
-        unset request_dom
+    if {[info exists dom]} {
+        $dom delete
+        unset dom
     }
     tcltest::cleanupTests
 }

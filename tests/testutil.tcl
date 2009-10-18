@@ -24,6 +24,7 @@ proc ::woof::test::url_part {url field} {
     return [dict get [uri::split $url] $field]
 }
 
+::tcltest::customMatch boolean ::woof::test::boolean_compare
 proc ::woof::test::boolean_compare {aval bval} {
     # Compare booleans (e.g. true and 1 should compare equal)
     expr {(!!$aval) == (!!$bval)}

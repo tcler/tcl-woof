@@ -1,5 +1,5 @@
 uses TestController
-oo::class create RequestController {
+oo::class create ParamsController {
     superclass TestController
     constructor args {
         # Very important to pass arguments to parent
@@ -7,8 +7,8 @@ oo::class create RequestController {
     }
 }
 
-oo::define RequestController {
+oo::define ParamsController {
     method dump {} {
-        # Nothing to do. Let template do it all
+        params lazy_load
     }
 }
