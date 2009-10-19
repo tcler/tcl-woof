@@ -340,6 +340,88 @@ proc util::charset_iana2tcl {iana_cs {default_cs ""}} {
     charset_iana2tcl $iana_cs $default_cs
 }
 
+proc util::quoted_split {s sep {quote_chars {\"}} {esc \\}} {
+    # Splits a string into a list based on the specified criteria
+    # s - string to be split
+    # sep - character that separates the fields in the string. This must
+    #   not be the same as the quoting characters.
+    # quote_chars - a list of one or two characters that specify the
+    #   start and end character for quoted substrings. If the list has only
+    #   one element, the start and end quotes are the same.
+    # esc - the character used to escape other characters within the
+    #   quoted string.
+    set qbegin [lindex $quote_chars 0]
+
+    if {[string first $qbegin $s] < 0} {
+        # No quotes, so do a simple split
+        return [split $s $sep]
+    }
+
+    # pos is position of first quote. Note that if a quote char has to be
+    # included as a literal char, it must be placed inside quotes like "\""
+    
+    if {[llength $quote_chars] > 1} {
+        set qend [lindex $quote_chars 1]
+        set regex "\\$qbegin|\\$qend|\\$sep"
+    } else {
+        set qend $qbegin
+        set regex "\\$qbegin|\\$sep"
+    }
+    if {$esc ne ""} {
+        append regex "|\\$esc"
+    }
+
+    # Split the string into tokens based on the special chars and iterate
+    set field  "";              # current field
+    set field_begin 0
+    set fields {};              # List of collected fields
+    set state  unquoted
+    set skip_pos -1
+    foreach pos [regexp -indices -inline -all -- $regex $s] {
+        # $pos is pair with both elements equal
+        lassign $pos pos
+        if {$pos == $skip_pos} continue; # Escaped special char
+        set match_char [string index $s $pos]
+        if {$state eq "unquoted"} {
+            # Note order of checking quote begin/end important as both
+            # chars may be the same
+            if {$match_char eq $qbegin} {
+                # Start of quoted string. Append what we have so far to the
+                # current field
+                append field [string range $s $field_begin $pos-1]
+                set field_begin [incr pos]
+                set state quoted
+            } elseif {$match_char eq $sep} {
+                # End of field
+                lappend fields "${field}[string range $s $field_begin $pos-1]"
+                set field ""
+                set field_begin [incr pos]
+            } else {
+                # Escapes or end quote - no meaning outside quotes, keep going
+            }
+        } else {
+            # Currently inside quotes. Again order of checking is important.
+            # endquote is checked in case end and begin quotes are the same
+            if {$match_char eq $qend} {
+                append field [string range $s $field_begin $pos-1]
+                set field_begin [incr pos]
+                set state unquoted
+            } elseif {$match_char eq $esc} {
+                # Escape character. Copy what we have so far and
+                # ensure next character is skipped as special character
+                append field "[string range $s $field_begin $pos-1][string index $s [incr pos]]"
+                set skip_pos $pos; # Do not check next char as special
+                set field_begin [incr pos]
+            } else {
+                # separator, - no meaning inside quotes - keep going
+            }
+        }
+    }
+
+    lappend fields "$field[string range $s $field_begin end]"
+    
+    return $fields
+}
 
 proc util::export_all {} {
     # Exports all procs in *caller's* namespace that do not begin with an underscore
