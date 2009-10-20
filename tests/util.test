@@ -20,76 +20,145 @@ namespace eval ::woof::test::util {
     ################################################################
 
     test quoted_split-1.0 {
-        Quoted split with simple single element
+        Split with simple single element
     } -body {
         util::quoted_split "abc def" ,
     } -result [list "abc def"] -match list
 
     test quoted_split-1.1 {
-        Quoted split with simple n-element list
+        Split with simple n-element list
     } -body {
         util::quoted_split "abc def,xyz, 123 " ,
     } -result [list "abc def" xyz " 123 "] -match list
 
     test quoted_split-1.2 {
-        Quoted split with simple n-element list with leading separator
+        Split with simple n-element list with leading separator
     } -body {
         util::quoted_split ",abc,def,xyz" ,
     } -result [list "" "abc" "def" "xyz"] -match list
 
     test quoted_split-1.3 {
-        Quoted split with simple n-element list with trailing separator
+        Split with simple n-element list with trailing separator
     } -body {
         util::quoted_split "abc def,xyz, 123 ," ,
     } -result [list "abc def" xyz " 123 " ""] -match list
 
     test quoted_split-2.0 {
-        Quoted split with single quoted element
+        Split with single quoted element
     } -body {
         util::quoted_split {"abc,def"} ,
     } -result [list "abc,def"] -match list
 
     test quoted_split-2.1 {
-        Quoted split with single element with non-default quote char
+        Split with single element with non-default quote char
     } -body {
         util::quoted_split {'abc,def'} , '
     } -result [list "abc,def"] -match list
 
     test quoted_split-2.2 {
-        Quoted split with quoted element
+        Split with quoted element
     } -body {
         util::quoted_split {one,"two and three",four} ,
     } -result [list one "two and three" four] -match list
 
     test quoted_split-2.3 {
-        Quoted split with multiple quoted elements and embedded separators
+        Split with multiple quoted elements and embedded separators
     } -body {
         util::quoted_split {one,"two and three",four,"six,seven",eight} ,
     } -result [list one "two and three" four "six,seven" eight] -match list
 
     test quoted_split-2.4 {
-        Quoted split with trailing quoted element
+        Split with trailing quoted element
     } -body {
         util::quoted_split {one,"two,three"} ,
     } -result [list one "two,three"] -match list
 
     test quoted_split-2.5 {
-        Quoted split with trailing unterminated quoted element
+        Split with trailing unterminated quoted element
     } -body {
         util::quoted_split {one+'two+three} + '
     } -result [list one "two+three"] -match list
 
+    test quoted_split-2.6 {
+        Split with paired quotes
+    } -body {
+        util::quoted_split {one, <two, and <three>,four} , [list < >]
+    } -result [list one { two, and <three} four] -match list
+
+    test quoted_split-2.7 {
+        Split with paired quotes and escaping
+    } -body {
+        util::quoted_split {one, <two \>and <three>,four} , [list < >]
+    } -result [list one { two >and <three} four] -match list
+
     test quoted_split-3.0 {
-        Quoted split with escapes
+        Split with escapes
     } -body {
         util::quoted_split {one,"two\"three\",",} ,
     } -result [list one two\"three\", ""] -match list
 
     test quoted_split-3.1 {
-        Quoted split with escapes outside quotes
+        Split with escapes outside quotes
     } -body {
         util::quoted_split {one\,"two\"three"} ,
     } -result [list one\\ two\"three] -match list
+
+    test quoted_split-4.0 {
+        Split without quotes and with transform
+    } -body {
+        util::quoted_split { one , two , three } , [list \"] \\ "string trim"
+    } -result [list one two three] -match list
+
+    test quoted_split-4.1 {
+        Split with quotes and with transform
+    } -body {
+        util::quoted_split { one , "two , three " , four} , [list \"] \\ "string trim"
+    } -result [list one "two , three" four] -match list
+
+    ###
+
+    test http_select_header_value-1.0 {
+        Select a HTTP header value when single value is specified
+    } -body {
+        util::http_select_header_value "text/html" [list text/html application/json] "defaultvalue"
+    } -result text/html
+    
+    test http_select_header_value-1.1 {
+        Select a HTTP header value when single value matches second available
+    } -body {
+        util::http_select_header_value "application/json" [list text/html application/json] "defaultvalue"
+    } -result application/json
+    
+    test http_select_header_value-1.1 {
+        Select a HTTP header value when there are no matches
+    } -body {
+        util::http_select_header_value "text/xml" [list text/html application/json] "defaultvalue"
+    } -result defaultvalue
+
+    test http_select_header_value-2.0 {
+        Select a HTTP header value with multiple values specified
+    } -body {
+        util::http_select_header_value "text/xml, text/html, application/pdf" [list text/html application/json] "defaultvalue"
+    } -result text/html
+
+    test http_select_header_value-2.1 {
+        Select a HTTP header value with multiple values specified and second available matches
+    } -body {
+        util::http_select_header_value "text/xml, text/html" [list text/html text/xml application/json] "defaultvalue"
+    } -result text/xml
+    
+    test http_select_header_value-3.0 {
+        Select a HTTP header value when matching unspecified quality
+    } -body {
+        util::http_select_header_value "text/xml ;q=0.5, text/html" [list text/xml text/html application/json] "defaultvalue"
+    } -result text/html
+    
+    test http_select_header_value-3.1 {
+        Select a HTTP header value when highest specified quality
+    } -body {
+        util::http_select_header_value "text/xml ;q=0.5, text/html; q=0.7" [list text/xml text/html application/json] "defaultvalue"
+    } -result text/html
+    
 
     ################################################################
 

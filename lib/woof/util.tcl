@@ -340,7 +340,50 @@ proc util::charset_iana2tcl {iana_cs {default_cs ""}} {
     charset_iana2tcl $iana_cs $default_cs
 }
 
-proc util::quoted_split {s sep {quote_chars {\"}} {esc \\}} {
+
+proc util::http_select_header_value {header_value available default_value} {
+    # Select a content attribute for a HTTP response
+    # header_val - the HTTP Accept-* value (excluding the Accept-* header)
+    # available - list of available attribute values
+    # default_value - value to return if there is no match
+    # The command matches the requested HTTP header value against what
+    # is available and returns the matched value. The HTTP header value
+    # is in the format used for the Accept, Accept-Charset or
+    # Accept-Language headers.
+
+    # The header values are separated by commas
+    set requested {}
+    foreach val [quoted_split $header_value , [list \"] \\ "string trim"] {
+        # Within each value, the attributes are separated by ";"
+        set val [split $val ";"]
+        if {[llength $val] == 0} continue
+        set q 1.0
+        if {[llength $val] > 1} {
+            set q [string trim [lindex [split [lindex $val 1] =] 1]]
+            if {![string is double -strict $q]} {
+                # Ignore - invalid
+                continue
+            }
+        }
+        lappend requested [list [string trim [lindex $val 0]] $q]
+    }
+    
+    # Sort by priority and search
+    foreach val [lsort -real -index 1 -decreasing $requested] {
+        lassign $val type q
+        # Note type can be a pattern like text/*
+        set type [lsearch -glob -inline $available $type]
+        if {$type ne ""} {
+            return $type
+        }
+    }
+
+    # Nothing found
+    return $default_value
+}
+
+
+proc util::quoted_split {s sep {quote_chars {\"}} {esc \\} {transform {}}} {
     # Splits a string into a list based on the specified criteria
     # s - string to be split
     # sep - character that separates the fields in the string. This must
@@ -350,11 +393,21 @@ proc util::quoted_split {s sep {quote_chars {\"}} {esc \\}} {
     #   one element, the start and end quotes are the same.
     # esc - the character used to escape other characters within the
     #   quoted string.
-    set qbegin [lindex $quote_chars 0]
+    # transform - command prefix to invoke on each field before adding it to 
+    #   the returned list. Used for trimming whitespace, for example.
 
+    set qbegin [lindex $quote_chars 0]
     if {[string first $qbegin $s] < 0} {
         # No quotes, so do a simple split
-        return [split $s $sep]
+        if {$transform eq ""} {
+            return [split $s $sep]
+        } else {
+            set l {}
+            foreach val [split $s $sep] {
+                lappend l [eval [linsert $transform end $val]]
+            }
+            return $l
+        }
     }
 
     # pos is position of first quote. Note that if a quote char has to be
@@ -393,7 +446,11 @@ proc util::quoted_split {s sep {quote_chars {\"}} {esc \\}} {
                 set state quoted
             } elseif {$match_char eq $sep} {
                 # End of field
-                lappend fields "${field}[string range $s $field_begin $pos-1]"
+                append field [string range $s $field_begin $pos-1]
+                if {$transform ne ""} {
+                    set field [eval [linsert $transform end $field]]
+                }
+                lappend fields $field
                 set field ""
                 set field_begin [incr pos]
             } else {
@@ -418,7 +475,11 @@ proc util::quoted_split {s sep {quote_chars {\"}} {esc \\}} {
         }
     }
 
-    lappend fields "$field[string range $s $field_begin end]"
+    append field [string range $s $field_begin end]
+    if {$transform ne ""} {
+        set field [eval [linsert $transform end $field]]
+    }
+    lappend fields $field
     
     return $fields
 }

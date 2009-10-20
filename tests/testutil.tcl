@@ -29,3 +29,15 @@ proc ::woof::test::boolean_compare {aval bval} {
     # Compare booleans (e.g. true and 1 should compare equal)
     expr {(!!$aval) == (!!$bval)}
 }
+
+::tcltest::customMatch list ::woof::test::list_compare
+proc ::woof::test::list_compare {avalues bvalues} {
+    # Compare lists
+    if {[llength $avalues] != [llength $bvalues]} {
+        return 0
+    }
+    foreach a $avalues b $bvalues {
+        if {$a ne $b} {return 0}
+    }
+    return 1
+}
