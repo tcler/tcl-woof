@@ -175,13 +175,16 @@ oo::class create Controller {
         }
 
         #ruff
-        # A Page object 'page' is created to track contents of the page.
-        ::woof::Page create page $_dispatchinfo
+        # A Page object 'page' is created to track contents of the page
+        # and the list of languages specified in the Accept-Language HTTP
+        # header is passed to it.
+        ::woof::Page create page $_dispatchinfo \
+            -languages [::woof::util::http_sorted_header_values [env get HTTP_ACCEPT_LANGUAGE {}]]
 
         #ruff
         # The Map object 'pagevar' is created to pass values related
         # to page metadata such as stylesheets, scripts, page titles
-        # etc. Concrete controller classes may append to 
+        # etc. Concrete controller classes may add to this.
         ::woof::util::Map create pagevar {
             styles {}
         }

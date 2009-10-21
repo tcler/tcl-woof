@@ -19,12 +19,15 @@ namespace eval ::woof {
 }
 
 oo::class create Page {
-    variable _dispatchinfo _sections
+    variable _context _sections
 
-    constructor {dispatchinfo} {
+    constructor {dispatchinfo args} {
         # The Page object contains HTML content for page sections.
         # dispatchinfo - Dict containing request dispatch context as returned
         #   by url_split.
+        # -languages LANGID_LIST - list of language identifiers in order 
+        #   of preference. See the fetch method for details.
+        #
         # Objects of this class are intended to be used as containers
         # to hold the HTML content of various sections in a page.
         # Content for a section can be directly stored or retrieved
@@ -35,12 +38,15 @@ oo::class create Page {
         # 'views' containing a suitable template from which
         # the section can be generated.
 
-        my variable _content_type
+        set _context(dispatchinfo) $dispatchinfo
 
-        set _dispatchinfo $dispatchinfo
+        set opts(-languages) {}
+        array set opts $args
+
+        set _context(languages) $opts(-languages)
 
         # TBD - what should default Content-Type be? Should there be a charset attr ?
-        set _content_type "text/html"
+        set _context(content_type) "text/html"
 
         array set _sections {}
     }
@@ -86,9 +92,13 @@ oo::class create Page {
 
         #ruff
         # If the section has not been defined,
-        # the view search path is searched for a matching template
+        # the view search path, as passed through the search_dirs field
+        # in the dispatchinfo parameter in the constructor,
+        # is searched for a matching template
         # for the controller and action.
         #
+        # If no languages were specified when the object was created,
+        # the search proceeds as follows:
         # For the first directory in the view search
         # path, the following file names are checked:
         # CONTROLLER-ACTION-PAGESECTION.wtf,
@@ -96,20 +106,27 @@ oo::class create Page {
         # For the remaining directories in the search path, only
         # PAGESECTION.wtf is
         # checked. This is by design since it does not make sense for
-        # a file named after the controller and/or action to show up
+        # a file named after the controller and/or action to show
         # further up (and hence outside) the controller content
         # directory.
         #
         # Note the filename is considered a more important matching
         # criterion than the directory level.
+        #
+        # If the -languages option was specified when the object was
+        # created, the above search is modified slightly. For each
+        # directory in the search path, subdirectories with the same
+        # name as the language identifiers specified in the option
+        # are first checked before the directory in the search path.
+        #
 
         # TBD - can we do just a lookup instead of getting content
         # if varname is empty? Probably not worth since content
         # will eventually be required anyways.
 
-        set action          [dict get $_dispatchinfo action]
-        set search_dirs     [dict get $_dispatchinfo search_dirs]
-        set controller_name [dict get $_dispatchinfo controller]
+        set action          [dict get $_context(dispatchinfo) action]
+        set search_dirs     [dict get $_context(dispatchinfo) search_dirs]
+        set controller_name [dict get $_context(dispatchinfo) controller]
 
         if {$opts(-alias) ne ""} {
             set name $opts(-alias)
@@ -121,15 +138,17 @@ oo::class create Page {
         # Note - we to use the view_path as a lookup key since otherwise
         # the same controller name may occur in multiple modules. The view
         # path distinguishes between the modules as it will be different
-        # for each.
+        # for each. We also need to use the language list as the result
+        # might differ based on the languages specified and their order.
 
         if {$cachecontrol eq "readwrite"} {
             # Lookup the filename cache first.
-            # As as aside, note that by keeping two separate caches, we save on memory space
+            # As as aside, note that by keeping two separate caches,
+            # we save on memory space
             # since multiple controller/actions will map to the same filename
-            if {[dict exists $::woof::template_file_paths $controller_name $action $search_dirs $name]} {
+            if {[dict exists $::woof::template_file_paths $controller_name $action $search_dirs $name $_context(languages)]} {
                 # Get the compiled template for the file name
-                set tpath [dict get $::woof::template_file_paths $controller_name $action $search_dirs $name]
+                set tpath [dict get $::woof::template_file_paths $controller_name $action $search_dirs $name $_context(languages)]
                 if {[info exists ::woof::compiled_templates($tpath)]} {
                     set ct $::woof::compiled_templates($tpath)
                 }
@@ -148,25 +167,39 @@ oo::class create Page {
             if {$opts(-alias) eq ""} {
                 # First check for controller / action specific in the first dir
                 # but only if alias was not specified
+                set dir [file join [lindex $search_dirs 0] views]
+                foreach lang $_context(languages) {
+                    # Add language-specific subdirs first
+                    lappend dirs [file join $dir $lang]
+                }
+                # Add lang-independent last
+                lappend dirs $dir
                 set tpath [::woof::filecache_locate \
                                ${controller_name}-${action}-${name}.wtf \
-                               [list [file join [lindex $search_dirs 0] views]] \
+                               $dirs \
                                -relativeroot $view_root \
                                -cachecontrol ignore]
                 if {$tpath eq ""} {
                     # Not there, try controller-specific, action-independent one
                     set tpath [::woof::filecache_locate \
                                    ${controller_name}-${name}.wtf \
-                                   [list [file join [lindex $search_dirs 0] views]] \
+                                   $dirs \
                                    -relativeroot $view_root \
                                    -cachecontrol ignore]
                 }
             }
             if {$tpath eq ""} {
                 # Still not located, try along entire path
+                set dirs {}
+                foreach search_dir $search_dirs {
+                    foreach lang $_context(languages) {
+                        lappend dirs [file join $search_dir views $lang]
+                    }
+                    lappend dirs [file join $search_dir views]
+                }
                 set tpath [::woof::filecache_locate \
-                               [file join views ${name}.wtf] \
-                               $search_dirs \
+                               ${name}.wtf \
+                               $dirs \
                                -relativeroot $view_root \
                                -cachecontrol ignore]
             }
@@ -177,7 +210,7 @@ oo::class create Page {
             }
 
             # Cache the filename
-            dict set ::woof::template_file_paths $controller_name $action $search_dirs $name $tpath
+            dict set ::woof::template_file_paths $controller_name $action $search_dirs $name $_context(languages) $tpath
 
             # Compile the template and store it in the cache. We supply
             # a dynamically generated name as the output variable where
@@ -233,12 +266,11 @@ oo::class create Page {
         # from the response.
         #
         # The supplied value may contain a charset attribute as well.
-        my variable _content_type
         if {[llength $args]} {
-            set _content_type [lindex $args 0]
+            set _context(content_type) [lindex $args 0]
             return
         } else {
-            return $_content_type
+            return $_context(content_type)
         }
     }
 }
