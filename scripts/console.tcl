@@ -119,7 +119,7 @@ proc ::woof::console::setup_dummy_env {method url} {
              REMOTE_ADDR 127.0.0.1 \
              REQUEST_URI $uri \
              SCRIPT_INFO / \
-             PATH_INFO [string range $uri 1 end] \
+             PATH_INFO $url_parts(path) \
             ]
 
     if {$url_parts(query) ne ""} {
@@ -128,8 +128,9 @@ proc ::woof::console::setup_dummy_env {method url} {
 
     # Info supposedly sent by client
     lappend dummy_env \
-             HTTP_HOST $host_and_port \
-             HTTP_ACCEPT */*
+        HTTP_HOST $host_and_port \
+        HTTP_ACCEPT */* \
+        HTTP_ACCEPT_LANGUAGE "fr ;q=0.4, en"
 
     return $dummy_env
 }
