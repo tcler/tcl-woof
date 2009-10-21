@@ -23,55 +23,64 @@ proc ::woof::webservers::wibble::init {args} {
         # method init_log - inherited
         # method log - inherited
 
-        method request_environment {req} {
+        method request_environment {req args} {
             # Retrieves the environment passed by the web server.
             #
-            # req - opaque request context handle. See
-            #  request_init
-            # 
-            # The environment returned by this method is structured
-            # so as to resemble the environment passed in a CGI environment.
-            # Woof uses the values to retrieve elements such as the request
-            # URL.
-            # 
-            # Returns the environment as a key value list.
+            # req - opaque request context handle.
+            #
+            # Refer to BaseWebServer for details.
+            
+            # TBD - optimize this to not return unnecessary values
 
-	    lappend env SERVER_SOFTWARE "[my server_interface]/[package require wibble]"
+	    dict set env SERVER_SOFTWARE "[my server_interface]/[package require wibble]"
 	    # name and version of the server. Format: name/version
 
-	    lappend env GATEWAY_INTERFACE CGI/1.1
+	    dict set env GATEWAY_INTERFACE CGI/1.1
 	    # revision of the CGI specification to which this server complies.
 	    # Format: CGI/revision
 
-            lappend env HTTP_HOST [dict get $req header host]
+            dict set env HTTP_HOST [dict get $req header host]
 
             # TBD - SERVER_PORT may be slow as it might try to resolve host name,
             # may be explicitly pass server port(s) ?
-            lappend env SERVER_PORT [lindex [fconfigure [dict get $req socket] -sockname] 2]
-	    lappend env SERVER_NAME [lindex [split [dict get $env HTTP_HOST] :] 0]
-	    lappend env SERVER_PROTOCOL [dict get $req protocol]
-            lappend env REQUEST_URI [dict get $req uri]
-	    lappend env REQUEST_METHOD [dict get $req method]
+            dict set env SERVER_PORT [lindex [fconfigure [dict get $req socket] -sockname] 2]
+	    dict set env SERVER_NAME [lindex [split [dict get $env HTTP_HOST] :] 0]
+	    dict set env SERVER_PROTOCOL [dict get $req protocol]
+            dict set env REQUEST_URI [dict get $req uri]
+	    dict set env REQUEST_METHOD [dict get $req method]
             # TBD - should we decode query ? CGI spec seems to say no but Woof Request
             # class assumes it is already decoded
-            lappend env QUERY_STRING [dict get $req rawquery]
-	    lappend env SCRIPT_NAME [dict get $req prefix]
+            dict set env QUERY_STRING [dict get $req rawquery]
+	    dict set env SCRIPT_NAME [dict get $req prefix]
             set suffix [dict get $req suffix]
-	    lappend env PATH_INFO $suffix
-	    lappend env PATH_TRANSLATED [file join [dict get $req fspath] $suffix]
-	    lappend env REMOTE_ADDR [dict get $req peerhost]
-            lappend env REMOTE_PORT [dict get $req peerport]
+	    dict set env PATH_INFO $suffix
+	    dict set env PATH_TRANSLATED [file join [dict get $req fspath] $suffix]
+	    dict set env REMOTE_ADDR [dict get $req peerhost]
+            dict set env REMOTE_PORT [dict get $req peerport]
 	    if {[dict exists $req content-type]} {
-		lappend env CONTENT_TYPE [dict get $req header content-type]
+		dict set env CONTENT_TYPE [dict get $req header content-type]
             }
 	    if {[dict exists $req content-length]} {
-		lappend env CONTENT_LENGTH [dict get $req header content-length]
+		dict set env CONTENT_LENGTH [dict get $req header content-length]
             }
 
             # Append all HTTP headers sent by the client
+            # wibble concatenates multiple header values with \n. As
+            # per HTTP spec, multiple headers are equivalent to a single
+            # header with values separated with ",".
             dict for {k val} [dict get $req header] {
-                lappend env "HTTP_[string map {- /} [string toupper $k]]" $val
+                dict set env "HTTP_[string map {- _} [string toupper $k]]" \
+                    [string map [list \n ,] $val]
 	    }
+
+            # If any args specified, make sure they are set in returned value
+            # to empty strings if not in environment
+            foreach arg $args {
+                if {![dict exists $env $arg]} {
+                    dict set env $arg ""
+                }
+            }
+
 	    return $env
         }
 

@@ -43,42 +43,42 @@ proc ::woof::webservers::wub_server::init {args} {
             return
         }
 
-        method request_environment {r} {
-	    lappend env SERVER_SOFTWARE $::Httpd::server_id
+        method request_environment {r args} {
+	    dict set env SERVER_SOFTWARE $::Httpd::server_id
 	    # name and version of the server. Format: name/version
 
-	    lappend env GATEWAY_INTERFACE CGI/1.1
+	    dict set env GATEWAY_INTERFACE CGI/1.1
 	    # revision of the CGI specification to which this server complies.
 	    # Format: CGI/revision
 
-	    lappend env SERVER_NAME [dict get? $r -host]
+	    dict set env SERVER_NAME [dict get? $r -host]
 	    # server's hostname, DNS alias, or IP address
 	    # as it would appear in self-referencing URLs.
 
-	    lappend env SERVER_PROTOCOL [dict get? $r -scheme]
+	    dict set env SERVER_PROTOCOL [dict get? $r -scheme]
 	    # name and revision of the information protcol this request came in with.
 	    # Format: protocol/revision
 
-	    lappend env SERVER_PORT [dict get? $r -port]
+	    dict set env SERVER_PORT [dict get? $r -port]
 	    # port number to which the request was sent.
 	    
 	    set url [Url parse [dict get? $r -uri]]
-	    lappend env REQUEST_URI [dict get? $r -uri]
-	    lappend env REQUEST_METHOD [dict get? $r -method]
+	    dict set env REQUEST_URI [dict get? $r -uri]
+	    dict set env REQUEST_METHOD [dict get? $r -method]
 	    # method with which the request was made.
 	    # For HTTP, this is "GET", "HEAD", "POST", etc.
 
-	    lappend env HTTP_HOST [dict get? $r -host]:[dict get? $r -port]
+	    dict set env HTTP_HOST [dict get? $r -host]:[dict get? $r -port]
 
 	    if {[dict get? $url -query] ne ""} {
-		lappend env QUERY_STRING [dict get? $url -query]
+		dict set env QUERY_STRING [dict get? $url -query]
 		# information which follows the ? in the URL which referenced this script.
 		# This is the query information. It should not be decoded in any fashion.
 		# This variable should always be set when there is query information,
 		# regardless of command line decoding.
 	    }
 
-	    lappend env PATH_INFO [dict get? $r -info]
+	    dict set env PATH_INFO [dict get? $r -info]
 	    # extra path information, as given by the client.
 	    # Scripts can be accessed by their virtual pathname, followed by
 	    # extra information at the end of this path.
@@ -86,22 +86,22 @@ proc ::woof::webservers::wub_server::init {args} {
 	    # This information should be decoded by the server if it comes
 	    # from a URL before it is passed to the CGI script.
 
-	    lappend env PATH_TRANSLATED [dict get? $r -translated]
+	    dict set env PATH_TRANSLATED [dict get? $r -translated]
 	    # server provides a translated version of PATH_INFO,
 	    # which takes the path and does any virtual-to-physical mapping to it.
 	    
-	    lappend env SCRIPT_NAME [dict get? $r -script]
+	    dict set env SCRIPT_NAME [dict get? $r -script]
 	    # A virtual path to the script being executed, used for self-referencing URLs.
 	    
-	    lappend env REMOTE_ADDR [dict get? $r -ipaddr]
+	    dict set env REMOTE_ADDR [dict get? $r -ipaddr]
 	    # IP address of the remote host making the request.
 
 	    if {[dict exists $r -entity]} {
-		lappend env CONTENT_TYPE [dict get? $r content-type]
+		dict set env CONTENT_TYPE [dict get? $r content-type]
 		# For queries which have attached information, such as HTTP POST and PUT,
 		# this is the content type of the data.
 
-		lappend env CONTENT_LENGTH [dict get? $r content-length]
+		dict set env CONTENT_LENGTH [dict get? $r content-length]
 		# The length of the said content as given by the client.
 	    }
 
@@ -111,10 +111,19 @@ proc ::woof::webservers::wub_server::init {args} {
 	    # if including them would exceed any system environment limits.
 	    foreach field $fields {
 		if {[dict exists $r $field]} {
-		    lappend env [string map {- _} [string toupper $field]] [dict get $r $field]
+		    dict set env [string map {- _} [string toupper $field]] [dict get $r $field]
 		}
 	    }
-	    return $env
+
+            # If any args specified, make sure they are set in returned value
+            # to empty strings if not in environment
+            foreach arg $args {
+                if {![dict exists $env $arg]} {
+                    dict set env $arg ""
+                }
+            }
+
+            return $env
 	}
 
         method request_parameters {r} {

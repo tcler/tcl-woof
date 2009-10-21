@@ -27,8 +27,10 @@ oo::class create Environment {
         # args -  See Map.lazy_load
         # Note that for performance reasons, the method loads all environment
         # values in the Map and not just the keys specified in $args.
+        #
         # See Map.lazy_load for details.
         my variable _request_context
+
         if {[info exists _request_context]} {
             my set {*}[::woof::webserver request_environment $_request_context]
             # Once we load all that we have, unset _request_context

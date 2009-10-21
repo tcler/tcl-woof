@@ -98,7 +98,7 @@ proc ::woof::handle_request {{request_context ""}} {
             # callbacks implemented by the webserver interface module.
             # The webserver module's init_request method is called to
             # perform any per-request initialization or setup.
-            ::woof::webserver request_init $request_context
+            set request_init [::woof::webserver request_init $request_context]
 
             #ruff A new Request object is created and exported as
             # 'request'. This contains information about the client request.
@@ -208,6 +208,7 @@ proc ::woof::handle_request {{request_context ""}} {
                          status [response status] \
                          status_line [response status_line] \
                          headers [response headers] \
+                         content_type [response content_type] \
                          content [response content]]
 		set output_done true
             } finally {

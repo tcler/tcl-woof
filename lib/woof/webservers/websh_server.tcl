@@ -52,9 +52,12 @@ web::initializer {
                     web::log ${_facility}.$level $msg
                 }
 
-                method request_environment {args} {
+                method request_environment {req_context args} {
                     set environ {}
-                    foreach name [::web::request -names] {
+                    if {[llength $args] == 0} {
+                        set args [::web::request -names]
+                    }
+                    foreach name $args {
                         lappend environ $name [web::request $name]
                     }
                     return $environ

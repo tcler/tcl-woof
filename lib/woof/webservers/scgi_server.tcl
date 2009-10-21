@@ -96,20 +96,24 @@ proc ::woof::webservers::scgi::init {args} {
             next {*}$args
         }
 
-        method request_environment {request_context} {
+        method request_environment {request_context args} {
             # Retrieves the environment passed by the web server.
             #
-            # request_context - opaque request context handle. See
-            #  request_init
-            # 
-            # The environment returned by this method is structured
-            # so as to resemble the environment passed in a CGI environment.
-            # Woof uses the values to retrieve elements such as the request
-            # URL.
-            # 
-            # Returns the environment as a key value list.
+            # request_context - opaque request context handle.
+            #
+            # See BaseWebServer for details.
 
-            return [dict get $request_context headers]
+            if {[llength $args] == 0} {
+                return [dict get $request_context headers]
+            }
+            foreach arg $args {
+                if {[dict exists $request_context headers $arg]} {
+                    lappend vals $arg [dict get $request_context headers $arg]
+                } else {
+                    lappend vals $arg ""
+                }
+            }
+            return $vals
         }
 
         method request_init {request_context} {
@@ -149,7 +153,7 @@ proc ::woof::webservers::scgi::init {args} {
                 default { ::ncgi::reset "" }
             } 
 
-            return
+            return $request_context
         }
 
         method request_parameters {args} {

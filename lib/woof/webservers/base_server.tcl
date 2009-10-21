@@ -51,20 +51,39 @@ namespace eval ::woof::webservers {
             return
         }
 
-        method request_environment {request_context} {
+        method request_environment {request_context args} {
             # Retrieves the environment passed by the web server.
             #
             # request_context - opaque request context handle. See
             #  request_init
+            # args - names of environment variables whose values are
+            #  to be returned. If unspecified, all values
+            #  defined in the environment are returned.
             # 
             # The environment returned by this method is structured
             # so as to resemble the environment passed in a CGI environment.
             # Woof uses the values to retrieve elements such as the request
             # URL.
             # 
+            # If $args is specified,
+            # the returned list will include all names specified in $args
+            # but may contain other names as well. An empty string is returned
+            # as the value if the name does not exist in the environment.
+            #
             # Returns the environment as a key value list.
 
-            return [array get ::env]
+            if {[llength $args] == 0} {
+                return [array get ::env]
+            }
+
+            foreach arg $args {
+                if {[info exists ::env($arg)]} {
+                    lappend vals $arg $::env($arg)
+                } else {
+                    lappend vals $arg ""
+                }
+            }
+            return $vals
         }
 
         method request_init {request_context} {
@@ -87,8 +106,9 @@ namespace eval ::woof::webservers {
             # between multiple requests being serviced concurrently by
             # the same interpreter.
             #
+            # Returns the potentially modified request context.
 
-            return
+            return $request_context
         }
 
         method request_parameters {request_context} {

@@ -24,13 +24,10 @@ proc ::woof::webservers::console::init {args} {
             puts stderr "${_facility}.$level $msg"
         }
 
-        method request_init {args} {
+        method request_init {request_context} {
             ::ncgi::reset;                      # Clear out old data from ccgi
             ::ncgi::parse
-        }
-
-        method request_environment {args} {
-            return [array get ::env]
+            return $request_context
         }
 
         # Parse query parameters

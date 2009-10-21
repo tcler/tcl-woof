@@ -18,6 +18,12 @@ proc ::woof::webservers::tclhttpd::init {args} {
             next {*}$args
         }
 
+        method request_init {request_context} {
+
+            return $request_context
+
+        }
+
         method server_interface {} {
             # Get the webserver interface module name.
             #
@@ -31,7 +37,7 @@ proc ::woof::webservers::tclhttpd::init {args} {
         # socket to be passed in which is problematic in many cases as
         # it is not always available (e.g. on startup)
 
-        method request_environment {request_context} {
+        method request_environment {request_context args} {
             # Retrieves the environment passed by the web server.
             #
             # request_context - request context
@@ -42,7 +48,18 @@ proc ::woof::webservers::tclhttpd::init {args} {
             dict with request_context {
                 Cgi_SetEnvAll $socket {} $suffix $prefix cgienv
             }
-            return [array get cgienv]
+
+            if {[llength $args] == 0} {
+                return [array get cgienv]
+            }
+            foreach arg $args {
+                if {[info exists cgienv($arg)]} {
+                    lappend vals $arg $cgienv($arg)
+                } else {
+                    lappend vals $arg ""
+                }
+            }
+            return $vals
         }
 
         method request_parameters {request_context} {
