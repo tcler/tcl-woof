@@ -179,7 +179,9 @@ oo::class create Controller {
         # and the list of languages specified in the Accept-Language HTTP
         # header is passed to it.
         ::woof::Page create page $_dispatchinfo \
-            -languages [::woof::util::http_sorted_header_values [env get HTTP_ACCEPT_LANGUAGE {}]]
+            -languages [::woof::util::memoize \
+                            ::woof::util::http_sorted_header_values \
+                            [env get HTTP_ACCEPT_LANGUAGE {}]]
 
         #ruff
         # The Map object 'pagevar' is created to pass values related

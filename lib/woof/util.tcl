@@ -501,6 +501,20 @@ proc util::quoted_split {s sep {quote_chars {\"}} {esc \\} {transform {}}} {
     return $fields
 }
 
+proc util::memoize {args} {
+    # TBD - set limit on size of cache
+    # Redefine without the initialization
+    proc memoize {args} {
+        variable _memoize_cache
+        if {[info exists _memoize_cache($args)]} {
+            return $_memoize_cache($args)
+        }
+        return [set _memoize_cache($args) [uplevel 1 $args]]
+    }
+    
+    return [memoize {*}$args]
+}
+
 proc util::export_all {} {
     # Exports all procs in *caller's* namespace that do not begin with an underscore
 
