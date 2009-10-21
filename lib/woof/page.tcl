@@ -164,15 +164,20 @@ oo::class create Page {
             # there is no point caching the original template.
             set view_root [file join [::woof::config get root_dir] [::woof::config get app_dir] controllers]
             set tpath ""
+            set default_lang [::woof::config get app_default_language]
             if {$opts(-alias) eq ""} {
                 # First check for controller / action specific in the first dir
                 # but only if alias was not specified
                 set dir [file join [lindex $search_dirs 0] views]
+                # Add language-specific subdirs first
                 foreach lang $_context(languages) {
-                    # Add language-specific subdirs first
                     lappend dirs [file join $dir $lang]
+                    if {$lang eq $default_lang} {
+                        # The language that the default files correspond to.
+                        lappend dirs $dir
+                    }
                 }
-                # Add lang-independent last
+                # Add lang-independent last. May already be in list, no matter
                 lappend dirs $dir
                 set tpath [::woof::filecache_locate \
                                ${controller_name}-${action}-${name}.wtf \

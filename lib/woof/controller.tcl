@@ -174,6 +174,11 @@ oo::class create Controller {
             set _clear_flash_on_return 0
         }
 
+        # TBD - should the ACCEPT_LANGUAGE outcome be stored somewhere
+        # so controller methods can also access without recomputation?
+        # In fact, compute the intersection of client requirements
+        # and application supported and store that.
+
         #ruff
         # A Page object 'page' is created to track contents of the page
         # and the list of languages specified in the Accept-Language HTTP
