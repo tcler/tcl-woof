@@ -341,18 +341,18 @@ proc util::charset_iana2tcl {iana_cs {default_cs ""}} {
 }
 
 
-proc util::http_select_header_value {header_value available default_value} {
-    # Select a content attribute for a HTTP response
-    # header_val - the HTTP Accept-* value (excluding the Accept-* header)
-    # available - list of available attribute values
-    # default_value - value to return if there is no match
-    # The command matches the requested HTTP header value against what
-    # is available and returns the matched value. The HTTP header value
-    # is in the format used for the Accept, Accept-Charset or
-    # Accept-Language headers.
+proc util::http_sorted_header_values {header_value} {
+    # Parses a multi-valued HTTP header string and returns the values
+    # sorted by their quality attribute
+    # header_val - the HTTP header value such as those for the Accept-* headers.
+    #  Should not include the header itself.
+    # The command sorts the values specified in the header and returns
+    # them sorted by their associated quality attributes.
+    # For example, the value "text/html;q=0.2, text/xml, application/pdf ;q=0.3"
+    # will be result in "text/xml application/pdf text/html" being returned.
 
     # The header values are separated by commas
-    set requested {}
+    set qvals {}
     foreach val [quoted_split $header_value , [list \"] \\ "string trim"] {
         # Within each value, the attributes are separated by ";"
         set val [split $val ";"]
@@ -365,16 +365,33 @@ proc util::http_select_header_value {header_value available default_value} {
                 continue
             }
         }
-        lappend requested [list [string trim [lindex $val 0]] $q]
+        lappend qvals [list [string trim [lindex $val 0]] $q]
     }
     
     # Sort by priority and search
-    foreach val [lsort -real -index 1 -decreasing $requested] {
-        lassign $val type q
-        # Note type can be a pattern like text/*
-        set type [lsearch -glob -inline $available $type]
-        if {$type ne ""} {
-            return $type
+    set vals {}
+    foreach val [lsort -real -index 1 -decreasing $qvals] {
+        lappend vals [lindex $val 0]
+    }
+    return $vals
+}
+
+proc util::http_select_header_value {header_value available default_value} {
+    # Select a content attribute for a HTTP response
+    # header_val - the HTTP Accept-* value (excluding the Accept-* header)
+    # available - list of available attribute values
+    # default_value - value to return if there is no match
+    # The command matches the requested HTTP header value against what
+    # is available and returns the matched value. The HTTP header value
+    # is in the format used for the Accept, Accept-Charset or
+    # Accept-Language headers.
+
+    # The header values are separated by commas
+    foreach val [http_sorted_header_values $header_value] {
+        # Note val can be a pattern like text/*
+        set val [lsearch -glob -inline $available $val]
+        if {$val ne ""} {
+            return $val
         }
     }
 
