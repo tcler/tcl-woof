@@ -31,7 +31,8 @@ oo::class create FileCache {
         #ruff
         # -relativeroot PATH - the path to use for normalizing relative
         #  paths if this option is not specified in calls to locate
-        #  or read methods. Defaults to current working directory.
+        #  or read methods. Defaults to current working directory at
+        #  the time the object is created.
         #
         if {[dict exists $args -relativeroot]} {
             set _relativeroot [dict get $args -relativeroot]
@@ -52,15 +53,10 @@ oo::class create FileCache {
         }
     }
 
-    method locate {tail dirs args} {
+    method locate {tail args} {
         # Locates a file along a search path and returns its full path.
         #   tail - specifies the trailing portion of a full file path. Normally,
         #     this is just a file name but could include subdirectories as well
-        #   dirs - a list of directory names. Each of these is joined with the
-        #     tail and the resulting path is checked. Each directory path
-        #     in the list may be either absolute or relative. In the latter
-        #     case, it is assumed to be rooted at the value given by
-        #     the -relativeroot option.
         #   -cachecontrol CACHECONTROL - controls how the location cache
         #     is handled. If CACHECONTROL is "readwrite" (default), the
         #     location cache is looked up. If not found there, the disk
@@ -70,22 +66,27 @@ oo::class create FileCache {
         #     is not in it. If CACHECONTROL is "write", the cache is not
         #     looked up, but is updated. Finally, if CACHECONTROL is "ignore",
         #     the cache is completely bypassed.
+        #   -dirs DIRLIST - a list of relative or absolute directory paths. 
+        #     Each of these is joined with the
+        #     tail and the resulting path is checked. Each directory path
+        #     in the list may be either absolute or relative.
         #   -relativeroot ROOTPATH - the root path to use for all elements in
-        #     $dirs that are relative paths. Defaults to the -relativeroot
+        #     the DIRLIST value specified with the -dirs option
+        #     that are relative paths. Defaults to the -relativeroot
         #     value specified when the object was constructed.
         #
         # The command searches for a file whose path matches the path
-        # constructed from joining each directory listed in $dirs with $tail.
+        # constructed by joining each directory listed with the -dirs
+        # option with $tail.
         # Note that the search will stop at the first file found even
         # if that is unreadable for some reason (such as access denied).
         #
         # Returns the full absolute path if found or an empty string if the
         # the file is not found.
         
-        # TBD - why does this not have same interface as method read ?
-        # (for example why is $dirs not an option)
-
-        array set opts [list -cachecontrol readwrite -relativeroot $_relativeroot]
+        array set opts [list -cachecontrol readwrite \
+                            -dirs [list .] \
+                            -relativeroot $_relativeroot]
         array set opts $args
 
         if {$opts(-cachecontrol) in {readwrite read}} {
@@ -94,11 +95,11 @@ oo::class create FileCache {
             # causes disk accesses that we want to avoid. This means
             # the same file may show up multiple times in the cache if
             # callers use different syntactic forms, but that's ok
-            if {[dict exists $_locations $opts(-relativeroot) $dirs $tail]} {
+            if {[dict exists $_locations $opts(-relativeroot) $opts(-dirs) $tail]} {
                 # Return absolute path or empty string (non-existent file)
                 # Note no need to call _jailed once it is in cache
                 # as _jails cannot change after construction.
-                return [dict get $_locations $opts(-relativeroot) $dirs $tail]
+                return [dict get $_locations $opts(-relativeroot) $opts(-dirs) $tail]
             }
         }
 
@@ -121,17 +122,14 @@ oo::class create FileCache {
             }
             relative {
                 #ruff
-                # When $tail is relative, it is checked relative to
-                # each directory in $dirs, and the first existing match
-                # is returned in normalized form. If $dirs is an empty list,
-                # it is treated containing only ".". Paths in $dirs
-                # that are themselves relative are qualified with the
-                # path specified with the -relativeroot option.
-                if {[llength $dirs] == 0} {
-                    set dirs [list .]
-                }
+                # When $tail is relative, it is checked relative
+                # to each directory specified with the -dirs option,
+                # and the first existing match is returned in
+                # normalized form.  Paths that are themselves relative
+                # are qualified with the path specified with the
+                # -relativeroot option.
                 set path ""
-                foreach dir $dirs {
+                foreach dir $opts(-dirs) {
                     # Note that the file join command will ignore 
                     # $opts(-relativeroot) if $dir is not relative. That's
                     # exactly what we want.
@@ -151,7 +149,7 @@ oo::class create FileCache {
         }
 
         if {$opts(-cachecontrol) in {readwrite write}} {
-            dict set _locations $opts(-relativeroot) $dirs $tail $path
+            dict set _locations $opts(-relativeroot) $opts(-dirs) $tail $path
         }
 
         return $path
@@ -177,9 +175,6 @@ oo::class create FileCache {
         #     the data. This option also impacts the return value and
         #     handling of errors (see below).
         #   -translation MODE - Translation mode as used by the Tcl open command.
-        #   -dirs DIRLIST - list of directories to search for if $path is relative.
-        #     Defaults to ".". Each element in the list
-        #     may itself be either a relative path or absolute.
         #   -relativeroot ROOTPATH - See description of this option for the
         #     locate method.
         # For all errors, except missing files, the command will 
@@ -191,7 +186,7 @@ oo::class create FileCache {
         array set opts {
             -cachecontrol readwrite
             -translation auto
-            -dirs {}
+            -dirs {.}
         }
         array set opts $args
 
@@ -201,9 +196,9 @@ oo::class create FileCache {
         # Locate file - essentially this will also tell us if the file is 
         # missing without going to disk unless necessary.
         if {[info exists opts(-relativeroot)]} {
-            set real_path [my locate $path $opts(-dirs) -cachecontrol $opts(-cachecontrol) -relativeroot $opts(-relativeroot)]            
+            set real_path [my locate $path -dirs $opts(-dirs) -cachecontrol $opts(-cachecontrol) -relativeroot $opts(-relativeroot)]            
         } else {
-            set real_path [my locate $path $opts(-dirs) -cachecontrol $opts(-cachecontrol)]
+            set real_path [my locate $path -dirs $opts(-dirs) -cachecontrol $opts(-cachecontrol)]
         }
 
         if {$real_path ne ""} {

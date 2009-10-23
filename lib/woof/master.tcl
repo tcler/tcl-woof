@@ -85,18 +85,20 @@ proc ::woof::safe::file_alias {subcommand args} {
 }
 
 
-proc ::woof::safe::filecache_locate_alias {trailer dirs args} {
+proc ::woof::safe::filecache_locate_alias {trailer args} {
     # Safe wrapper around FileCache.locate method.
 
     # TBD - verify that dirs are all allowed directories
     # Note trailer is trailing file portion but could be absolute path
     # as well
     
-    if {[dict exists $args -relativeroot]} {
-        return [::woof::master::filecache locate $trailer $dirs -relativeroot [dict get $args -relativeroot]]
-    } else {
-        return [::woof::master::filecache locate $trailer $dirs]
+    set opts {}
+    foreach opt {-relativeroot -cachecontrol -dirs} {
+        if {[dict exists $args $opt]} {
+            lappend opts $opt [dict get $args $opt]
+        }
     }
+    return [::woof::master::filecache locate $trailer {*}$opts]
 }
 
 proc ::woof::safe::filecache_read_alias {trailer args} {

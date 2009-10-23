@@ -181,14 +181,14 @@ oo::class create Page {
                 lappend dirs $dir
                 set tpath [::woof::filecache_locate \
                                ${controller_name}-${action}-${name}.wtf \
-                               $dirs \
+                               -dirs $dirs \
                                -relativeroot $view_root \
                                -cachecontrol ignore]
                 if {$tpath eq ""} {
                     # Not there, try controller-specific, action-independent one
                     set tpath [::woof::filecache_locate \
                                    ${controller_name}-${name}.wtf \
-                                   $dirs \
+                                   -dirs $dirs \
                                    -relativeroot $view_root \
                                    -cachecontrol ignore]
                 }
@@ -204,7 +204,7 @@ oo::class create Page {
                 }
                 set tpath [::woof::filecache_locate \
                                ${name}.wtf \
-                               $dirs \
+                               -dirs $dirs \
                                -relativeroot $view_root \
                                -cachecontrol ignore]
             }

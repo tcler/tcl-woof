@@ -509,7 +509,7 @@ oo::class create Controller {
             switch -exact -- $format {
                 file {
                     set path [::woof::filecache_locate $loc \
-                                  $dirs \
+                                  -dirs $dirs \
                                   -relativeroot [file join \
                                                      [config get public_dir] \
                                                      $subdir] \
