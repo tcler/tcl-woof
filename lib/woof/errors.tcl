@@ -20,7 +20,7 @@ namespace eval errors {
         [dict create WOOF_USER {
             InvalidRequest {
                 message "The request is invalid."
-                help "You have requested a page that is invalid or to which you do not have access. Please verify the URL you have typed."
+                help "You have requested a page that is invalid or to which you do not have access. Please verify the URL."
             }
             InvalidRequestParams {
                 message "The parameters in the request are invalid."
@@ -53,8 +53,21 @@ namespace eval errors {
 }
 
 
+proc errors::help {facility symbol} {
+    # Returns the help message, if any, associated with the given
+    # facility and symbol.
+    # facility - the error facility, generally WOOF or WOOF_USER
+    # symbol - the symbolic name of the error
+    variable messages
 
-# Throw an exception
+    if {[dict exists $messages $facility $symbol help]} {
+        return [dict get $messages $facility $symbol help]
+    } else {
+        return ""
+    }
+}
+
+
 proc errors::exception {facility symbol {message ""}} {
     # Raises a Tcl exception in Woof canonical format.
     # facility - the error facility, generally WOOF or WOOF_USER
