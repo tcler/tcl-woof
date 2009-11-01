@@ -1,5 +1,5 @@
 <div class='navbox'>
-<h2>Site management</h2>
+<h2>Basic tests.</h2>
 <ul>
 % foreach {label controller} {
 %     Request request
@@ -7,7 +7,7 @@
 %     Forms  forms
 % } {
   <li>
-    <a href='[my url_for -controller $controller -action index]'>[hesc $label]</a>
+    <a href='[my url_for -controller $controller -action dump]'>[hesc $label]</a>
   </li>
 % }
 </ul>
