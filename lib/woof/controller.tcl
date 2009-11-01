@@ -226,54 +226,56 @@ oo::class create Controller {
             # only those directly defined in the leaf.
             set allowed_methods [info class methods [info object class [self]]]
         }
+
         if {$action ni $allowed_methods} {
-            # Action method does not exist or inaccessible
-            # TBD - should we also try method unknown or
-            # some special method "method_missing" like Rails
-
-            ::woof::log err "Action '$action' not defined for controller [self]"
-            exception WOOF_USER InvalidRequest
-        }
-
-
-        #ruff
-        # The specific action is then invoked. If it has arguments,
-        # they are extracted from the query parameters in the array
-        # and passed as parameters to the action method.
-        set formal_params [lindex [info class definition [info object class [self]] $action] 0]
-        if {[llength $formal_params] == 0} {
-            my $action
+            #ruff
+            # If the action method does not exist or is inaccessible,
+            # the method _missing_action is invoked and passed the action
+            # as an argument. The default implementation of this returns
+            # an error message to the user. A controller may override
+            # this to provide dynamic functionality.
+            my _missing_action $action
         } else {
-            array set request_vals [params get]; # What the request gave us
-            set param_vals {}
-            foreach param $formal_params {
-                set param_name [lindex $param 0]
-                if {[info exists request_vals($param_name)]} {
-                    lappend param_vals $request_vals($param_name)
-                    unset request_vals($param_name)
-                } else {
-                    # Not in request. See if there is a default
-                    if {[llength $param] > 1} {
-                        lappend param_vals [lindex $param 1]
+            #ruff
+            # The specific action is then invoked. If it has arguments,
+            # they are extracted from the query parameters in the array
+            # and passed as parameters to the action method.
+
+            set formal_params [lindex [info class definition [info object class [self]] $action] 0]
+            if {[llength $formal_params] == 0} {
+                my $action
+            } else {
+                array set request_vals [params get]; # What the request gave us
+                set param_vals {}
+                foreach param $formal_params {
+                    set param_name [lindex $param 0]
+                    if {[info exists request_vals($param_name)]} {
+                        lappend param_vals $request_vals($param_name)
+                        unset request_vals($param_name)
                     } else {
-                        # See if "args"
-                        # This logic is not quite right in that it does not
-                        # catch application errors if args is not
-                        # the last parameter but what the heck ...
-                        if {$param_name eq "args"} {
-                            set append_args true
+                        # Not in request. See if there is a default
+                        if {[llength $param] > 1} {
+                            lappend param_vals [lindex $param 1]
                         } else {
-                            # TBD - log error with url and missing parameter name
-                            exception WOOF_USER InvalidRequestParams
+                            # See if "args"
+                            # This logic is not quite right in that it does not
+                            # catch application errors if args is not
+                            # the last parameter but what the heck ...
+                            if {$param_name eq "args"} {
+                                set append_args true
+                            } else {
+                                # TBD - log error with url and missing parameter name
+                                exception WOOF_USER InvalidRequestParams
+                            }
                         }
                     }
                 }
-            }
-            if {[info exists append_args]} {
-                # If the method has optional args, append all remaining params
-                my $action {*}$param_vals {*}[array get request_vals]
-            } else {
-                my $action {*}$param_vals
+                if {[info exists append_args]} {
+                    # If the method has optional args, append all remaining params
+                    my $action {*}$param_vals {*}[array get request_vals]
+                } else {
+                    my $action {*}$param_vals
+                }
             }
         }
         if {! $_output_done} {
@@ -620,11 +622,22 @@ oo::class create Controller {
     }
 
 
-    # The actual derived class can override this if it wants to
-    # restrict allowed actions
     method _action_methods {} {
-        # Empty list signifies all exported methods are actionable
+        # Returns a list of allowed actions.
+        #
+        # The actual derived class can override this if it wants to
+        # restrict allowed actions
+        # Empty list signifies all exported methods are actionable.
         return {}
+    }
+
+    method _missing_action {action} {
+        # Called if there is no method defined for $action.
+        #
+        # The actual derived class can override this. By default
+        # an error page is returned to the user.
+        ::woof::log err "Action '$action' not defined for controller [self]"
+        exception WOOF_USER InvalidRequest
     }
 }
 

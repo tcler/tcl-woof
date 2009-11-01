@@ -176,6 +176,7 @@ proc ::woof::handle_request {{request_context ""}} {
                 if {[info exists ercode] &&
                     ([lindex $ercode 0] eq "WOOF_USER")} {
                     set usermsg $msg
+                    append usermsg " [::woof::errors::help WOOF_USER [lindex $ercode 1]]"
                 } else {
                     set usermsg "An internal error has occurred. Please contact the web server administrator."
                 }
@@ -198,7 +199,7 @@ proc ::woof::handle_request {{request_context ""}} {
             response reset
             response status 500
             response content_type text/html
-            response content "<html><body><pre>[::woof::util::hesc $usermsg]</pre></body></html>"
+            response content "<html><body><p>[::woof::util::hesc $usermsg]</p></body></html>"
         } finally {
             try {
                 # Display either the response or the error message. Even this
