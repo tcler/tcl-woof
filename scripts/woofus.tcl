@@ -39,7 +39,6 @@ namespace eval ::woof {
     source [file join [file dirname [info script]] .. lib woof configuration.tcl]
 }
 
-
 proc woofus::usage {{msg ""} {code ""}} {
     # Prints a usage description and exits
     # msg - optional message to print
@@ -111,11 +110,15 @@ proc woofus::delta {controller_class controller file actions {view_dir ""}} {
     # To find out whether the class/methods exist, we will source the file
     # into a ::woof::app namespace, just like Woof!
     try {
+        set controller_class ::woof::app::$controller_class
+        namespace eval [namespace qualifiers $controller_class] {
+            namespace path {::woof::app ::woof}
+        }
         namespace eval ::woof::app [list source [file join [config :app_dir] controllers application_controller.tcl]]
-        namespace eval ::woof::app [list source $file]
+        namespace eval [namespace qualifiers $controller_class] [list source $file]
 
         # Check if the class exists
-        if {[catch {info class methods ::woof::app::$controller_class} methods]} {
+        if {[catch {info class methods $controller_class} methods]} {
             # Class does not exist
             dict set change change_type class
         } else {
@@ -165,7 +168,7 @@ proc woofus::write_stubs {change} {
             } else {
                 puts "Created file [::fileutil::stripPath $cwd $path]"
             }
-            puts $fd "oo::class create $controller_class {"
+            puts $fd "oo::class create [namespace tail $controller_class] {"
             puts $fd "    superclass ApplicationController"
             puts $fd "    constructor args {"
             puts $fd "        # Very important to pass arguments to parent"
@@ -177,7 +180,7 @@ proc woofus::write_stubs {change} {
 
         set actions [dict get $change actions]
         if {[llength $actions]} {
-            puts $fd "\noo::define $controller_class {"
+            puts $fd "\noo::define [namespace tail $controller_class] {"
             foreach action $actions {
                 puts $fd "    method $action {} {"
                 puts $fd "        # Raise an exception that allows woofer to detect unimplemented actions"
@@ -350,18 +353,22 @@ proc woofus::stub_check {path controller_class controller} {
     variable view_stub_text
 
     namespace eval ::woof::app [list source [file join [config :app_dir] controllers application_controller.tcl]]
-    namespace eval ::woof::app [list source $path]
+    set controller_class ::woof::app::$controller_class
+    namespace eval [namespace qualifiers $controller_class] {
+        namespace path {::woof::app ::woof}
+    }
+    namespace eval [namespace qualifiers $controller_class] [list source $path]
 
     set view_dir [file join [file dirname $path] views]
 
     set stubs {}
     set views {}
-    foreach name [info class methods ::woof::app::$controller_class] {
+    foreach name [info class methods $controller_class] {
         # Ideally we would create the class and call the method to
         # see if it generates the appropriate exception. But we do not
         # have enough context to create an instance of the class so
         # we just do a string match.
-        set body [info class definition ::woof::app::$controller_class $name]
+        set body [info class definition $controller_class $name]
         if {[string match "*exception WOOF NotImplemented*" $body]} {
             lappend stubs $name
         }
@@ -421,7 +428,7 @@ proc woofus::verify {{urls {}} args} {
         if {[catch {
             lassign [stub_check $file $controller_class $controller] action_stubs view_stubs
         } msg]} {
-            puts " Error: $msg"
+            puts " Error: $msg\n$::errorInfo"
             set exit_code 1
             continue
         }
