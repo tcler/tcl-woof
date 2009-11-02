@@ -41,8 +41,9 @@ oo::class create FileCache {
         }
 
         #ruff
-        # -jails DIRLIST - list of directory paths. If specified only
-        #  files under one of these paths can be accessed through the cache.
+        # -jails DIRLIST - list of directory paths. If specified and not empty,
+        #  only files under one of these paths can be accessed through the 
+        #  cache.
         if {[dict exists $args -jails]} {
             foreach dir [dict get $args -jails] {
                 # TBD - should we use fileutil::fullnormalize instead
