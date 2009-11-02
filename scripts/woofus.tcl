@@ -10,9 +10,20 @@ if {! [package vsatisfies [info tclversion] 8.6]} {
     error "Woof! requires Tcl version 8.6 or later. You are running [info tclversion]"
 }
 
+
+# When this file is run, it needs to do its thing inside the Woof
+# safe interpreter so the right context and packages are loaded.
 if {[llength [info commands ::woof::source_file]] == 0} {
-    # We are the top level
+    # We are not inside the Woof interpreter. Create it and resource ourselves.
+    namespace eval ::woof::webservers::woofus {}
+    namespace eval woofus {
+        variable winterp;       # Where Woof! is actually loaded (slave)
+    }
+
     proc ::woof::webservers::woofus::init {args} {
+        # Called back from the Woof! master interpreter
+
+        # The Woof! interp always needs a dummy webserver so we create one.
         catch {WebServer destroy}
         oo::class create WebServer {
             superclass ::woof::webservers::BaseWebServer
@@ -21,24 +32,38 @@ if {[llength [info commands ::woof::source_file]] == 0} {
             }
         }
     }        
+
+    # Set up the Woof! slave interpreter
     source [file join [file dirname [info script]] .. lib woof master.tcl]
-    set ::woofus::winterp [::woof::master::init woofus [file normalize [file join [file dirname [info script]] ..]]]
+    # Init it, allowing access to the script directory
+    set ::woofus::winterp [::woof::master::init woofus \
+                               [file normalize [file join [file dirname [info script]] ..]] \
+                               -jails [list [file dirname [info script]]]]
+
+    # We need to expose certain hidden commands that are should not be
+    # available when Woof! is running as a real web server
     $::woofus::winterp expose open
-    $::woofus::winterp expose package
+    $::woofus::winterp expose pwd
+    $::woofus::winterp expose cd
+    $::woofus::winterp expose glob
+    interp share {} stdout $::woofus::winterp
+    interp share {} stderr $::woofus::winterp
+    interp share {} stdin $::woofus::winterp
+    $::woofus::winterp alias file ::file
+
+    # Source ourselves again inside the Woof! interpreter
     $::woofus::winterp eval [list ::woof::source_file [info script]]
+
+    # Now run the actual command
     $::woofus::winterp eval [list ::woofus::main {*}$argv]
-    return
+
+    # All done
+    exit [$::woofus::winterp eval {set ::woofus::exit_code}]
 }
 
+# All code from this point on only runs inside the Woof! interpreter.
+
 namespace eval woofus {
-    # Dir where woof is installed or when running as an installer
-    # where the distribution resides
-    variable root_dir
-    if {[info exists ::env(WOOF_ROOT)]} {
-        set root_dir $::env(WOOF_ROOT)
-    } else {
-        set root_dir [file normalize [file dirname [file dirname [info script]]]]
-    }
 
     # Woof! version
     variable woof_version
@@ -50,14 +75,6 @@ namespace eval woofus {
     variable view_stub_text "% # View stub for Woof!"
 }
 
-# Load the woof package - always expected to be relative to our parent dir
-# so do not do a package require.
-source [file join [file dirname [info script]] .. lib woof woof.tcl]
-# The package require now gives us the woof version
-set woofus::woof_version [package require woof]
-namespace eval ::woof {
-    source [file join [file dirname [info script]] .. lib woof configuration.tcl]
-}
 
 proc woofus::usage {{msg ""} {code ""}} {
     # Prints a usage description and exits
@@ -81,8 +98,6 @@ proc woofus::usage {{msg ""} {code ""}} {
 
     exit $code
 }
-
-::woof::Configuration create ::config $woofus::root_dir
 
 proc woofus::delta {controller_class controller file actions {view_dir ""}} {
     # Generates change information for a controller class and action
@@ -134,8 +149,8 @@ proc woofus::delta {controller_class controller file actions {view_dir ""}} {
         namespace eval [namespace qualifiers $controller_class] {
             namespace path {::woof::app ::woof}
         }
-        namespace eval ::woof::app [list source [file join [config :app_dir] controllers application_controller.tcl]]
-        namespace eval [namespace qualifiers $controller_class] [list source $file]
+        namespace eval ::woof::app [list ::woof::source_file [file join [::woof::config :app_dir] controllers application_controller.tcl]]
+        namespace eval [namespace qualifiers $controller_class] [list ::woof::source_file $file]
 
         # Check if the class exists
         if {[catch {info class methods $controller_class} methods]} {
@@ -266,7 +281,7 @@ proc woofus::generate {urls args} {
         set view_dir ""
         if {! $opts(-excludeviews)} {
             # Views are generated in the first directory in view search path
-            set view_root [file join [config get root_dir] [config get app_dir] controllers]
+            set view_root [file join [::woof::config get root_dir] [::woof::config get app_dir] controllers]
             set view_dir [file normalize \
                               [file join $view_root \
                                    [lindex [dict get $curl search_dirs] 0] \
@@ -307,7 +322,7 @@ proc woofus::generate {urls args} {
         set need_stubs true;    # Need at least one stub
 
         puts "$header:"
-        set filepath [::fileutil::relative [config :root_dir] [dict get $change file]]
+        set filepath [::fileutil::relative [::woof::config :root_dir] [dict get $change file]]
         switch -exact -- $change_type {
             file {
                 puts "$spacer File $filepath will be created."
@@ -372,12 +387,12 @@ proc woofus::stub_check {path controller_class controller} {
 
     variable view_stub_text
 
-    namespace eval ::woof::app [list source [file join [config :app_dir] controllers application_controller.tcl]]
+    namespace eval ::woof::app [list ::woof::source_file [file join [::woof::config :app_dir] controllers application_controller.tcl]]
     set controller_class ::woof::app::$controller_class
     namespace eval [namespace qualifiers $controller_class] {
         namespace path {::woof::app ::woof}
     }
-    namespace eval [namespace qualifiers $controller_class] [list source $path]
+    namespace eval [namespace qualifiers $controller_class] [list ::woof::source_file $path]
 
     set view_dir [file join [file dirname $path] views]
 
@@ -426,7 +441,7 @@ proc woofus::verify {{urls {}} args} {
 
     set targets {}
     if {[llength $urls] == 0} {
-        set controller_dir [file join [config :app_dir] controllers]
+        set controller_dir [file join [::woof::config :app_dir] controllers]
         foreach file [::fileutil::findByPattern $controller_dir -regexp {^.*_controller\.tcl$}] {
             set rel_file [::fileutil::relative $controller_dir $file]
             set controller [string range [file tail $file] 0 end-[string length "_controller.tcl"]]
@@ -563,18 +578,13 @@ proc woofus::main {command args} {
             }
         }
     } msg]} {
-        puts stderr "Error: $msg"
+        puts stderr "Error: $msg\n$::errorInfo"
         set exit_code 1
     }
 
     return $exit_code
 }
 
-if {![info exists ::starkit::topdir]} {
-    # Only add paths if not in starkit since that already has appropriate paths set up.
-    set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. lib]]]
-    ::tcl::tm::path add [file normalize [file join [file dirname [info script]] .. lib]]
-}
 
 if {[catch {
     package require cmdline
@@ -587,10 +597,6 @@ if {[catch {
     package require fileutil
 }
 
-# If we are not being included in another script, off and running we go
-if {[file normalize $::argv0] eq [file normalize [info script]]} {
-    woofus::main {*}$::argv
-    exit $woofus::exit_code
-}
+
 
 

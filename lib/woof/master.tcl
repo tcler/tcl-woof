@@ -214,10 +214,6 @@ proc ::woof::master::create_web_interp {} {
         interp alias $ip ::woof::util::md5hex {} ::md5::md5
     }
 
-    if {[configuration get run_mode] eq "development"} {
-        interp alias $ip puts {} puts
-    }
-
     # Load Woof! into safe interpreter.
     $ip eval {package require woof}
 
@@ -275,7 +271,7 @@ proc ::woof::master::get_package_load_command {name args} {
 }
 
 
-proc ::woof::master::init {server_module {woof_root ""}} {
+proc ::woof::master::init {server_module {woof_root ""} args} {
     # Called by the web server to initialize the Woof subsystem.
     # server_module - the name of the web server interface module
     #   corresponding to the web server in use.
@@ -317,9 +313,19 @@ proc ::woof::master::init {server_module {woof_root ""}} {
 
     # Init the file cache.
     # TBD - do we need to add the lib dir to the jail? How about auto_path ?
+
+    #ruff
+    # -jails DIRLIST - list of directory paths. If specified and not empty,
+    #  files under one of these paths can also be accessed through the cache.
+    #  This is in addition to the files in the public and app directories.
+    set jails [list [configuration get public_dir] [configuration get app_dir]]
+    if {[dict exists $args -jails]} {
+        lappend jails {*}[dict get $args -jails]
+    }
+
     FileCache create filecache \
         -relativeroot [configuration get public_dir] \
-        -jails [list [configuration get public_dir] [configuration get app_dir]]
+        -jails $jails
     $_winterp alias ::woof::filecache_locate ::woof::safe::filecache_locate_alias
     $_winterp alias ::woof::filecache_read ::woof::safe::filecache_read_alias
 
