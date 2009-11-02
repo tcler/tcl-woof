@@ -23,6 +23,7 @@ if {[llength [info commands ::woof::source_file]] == 0} {
     }        
     source [file join [file dirname [info script]] .. lib woof master.tcl]
     set ::woofus::winterp [::woof::master::init woofus [file normalize [file join [file dirname [info script]] ..]]]
+    $::woofus::winterp expose open
     $::woofus::winterp eval [list ::woof::source_file [info script]]
     return
 }
