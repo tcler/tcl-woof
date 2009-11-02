@@ -33,6 +33,37 @@ if {[llength [info commands ::woof::source_file]] == 0} {
         }
     }        
 
+    proc woofus::usage {{msg ""} {code ""}} {
+        # Prints a usage description and exits
+        # msg - optional message to print
+        # code - exit code
+    
+        global argv0
+
+        if {$code eq ""} {
+            set code 1
+        }
+
+        if {$msg ne ""} {
+            puts stderr $msg
+        }
+
+        set exe [file tail [info nameofexecutable]]
+        if {$::tcl_platform(platform) eq "windows"} {
+            set exe [file rootname $exe]
+        }
+        puts stderr "Usage:"
+        puts stderr "\t$exe $argv0 stubs url ?-excludeviews? ?URL ...?"
+        puts stderr "\t$exe $argv0 stubs controller ?-excludeviews? CONTROLLER_NAME ?ACTION ...?"
+        puts stderr "\t$exe $argv0 stubs verify ?-excludeviews? ?URL ...?"
+
+        exit $code
+    }
+
+    if {[llength $::argv] == 0} {
+        woofus::usage
+    }
+
     # Set up the Woof! slave interpreter
     source [file join [file dirname [info script]] .. lib woof master.tcl]
     # Init it, allowing access to the script directory
@@ -46,6 +77,7 @@ if {[llength [info commands ::woof::source_file]] == 0} {
     $::woofus::winterp expose pwd
     $::woofus::winterp expose cd
     $::woofus::winterp expose glob
+    $::woofus::winterp alias ::woofus::usage ::woofus::usage
     interp share {} stdout $::woofus::winterp
     interp share {} stderr $::woofus::winterp
     interp share {} stdin $::woofus::winterp
@@ -55,10 +87,15 @@ if {[llength [info commands ::woof::source_file]] == 0} {
     $::woofus::winterp eval [list ::woof::source_file [info script]]
 
     # Now run the actual command
-    $::woofus::winterp eval [list ::woofus::main {*}$argv]
+    if {[catch {
+        set code [$::woofus::winterp eval [list ::woofus::main {*}$argv]]
+    } msg]} {
+        puts stderr $msg
+        set code 1
+    }
 
     # All done
-    exit [$::woofus::winterp eval {set ::woofus::exit_code}]
+    exit $code
 }
 
 # All code from this point on only runs inside the Woof! interpreter.
@@ -75,29 +112,6 @@ namespace eval woofus {
     variable view_stub_text "% # View stub for Woof!"
 }
 
-
-proc woofus::usage {{msg ""} {code ""}} {
-    # Prints a usage description and exits
-    # msg - optional message to print
-    # code - exit code
-    
-    global argv0
-
-    if {$code eq ""} {
-        set code 1
-    }
-
-    if {$msg ne ""} {
-        puts stderr $msg
-    }
-
-    puts stderr "Usage:"
-    # puts stderr "\t[info nameofexecutable] $argv0 stubs controller CONTROLLER_NAME..."
-    puts stderr "\t[info nameofexecutable] $argv0 stubs url ?-excludeviews? URL ..."
-    puts stderr "\t[info nameofexecutable] $argv0 stubs ?-excludeviews? verify ?URL ...?"
-
-    exit $code
-}
 
 proc woofus::delta {controller_class controller file actions {view_dir ""}} {
     # Generates change information for a controller class and action
@@ -538,6 +552,9 @@ proc woofus::stubs {command args} {
             generate $urls -excludeviews $opts(excludeviews) 
         }
         url {
+            if {[llength $args] == 0} {
+                usage "No URL's specified."
+            }
             generate $args -excludeviews $opts(excludeviews)
         }
         verify {
@@ -565,21 +582,13 @@ proc woofus::main {command args} {
     # indicated by the $command parameter. Refer to the documentation
     # of the specific command for more information.
 
-    if {[catch {
-        switch -exact -- $command {
-            stubs {
-                woofus::$command {*}$args
-            }
-            install {
-                puts stderr "Error: no such command. Please use the installer.tcl file for building distributions and installing."
-            }
-            default {
-                usage "Unknown command '$command'"
-            }
+    switch -exact -- $command {
+        stubs {
+            woofus::$command {*}$args
         }
-    } msg]} {
-        puts stderr "Error: $msg\n$::errorInfo"
-        set exit_code 1
+        default {
+            error "Unknown command '$command'"
+        }
     }
 
     return $exit_code
