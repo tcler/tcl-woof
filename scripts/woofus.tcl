@@ -10,6 +10,22 @@ if {! [package vsatisfies [info tclversion] 8.6]} {
     error "Woof! requires Tcl version 8.6 or later. You are running [info tclversion]"
 }
 
+if {[llength [info commands ::woof::source_file]] == 0} {
+    # We are the top level
+    proc ::woof::webservers::woofus::init {args} {
+        catch {WebServer destroy}
+        oo::class create WebServer {
+            superclass ::woof::webservers::BaseWebServer
+            method log {level msg} {
+                puts stderr $msg
+            }
+        }
+    }        
+    source [file join [file dirname [info script]] .. lib woof master.tcl]
+    set ::woofus::interp [::woof::master::init woofus [file normalize [file join [file dirname [info script]] ..]]]
+    return
+}
+
 namespace eval woofus {
     # Dir where woof is installed or when running as an installer
     # where the distribution resides
