@@ -584,6 +584,15 @@ proc util::remove_left_margin {text args} {
     }
 }
 
+proc util::tag_attr_fragment {attrlist} {
+    set attrs ""
+    foreach {attr val} $attrlist {
+        # TBD - what needs to be hesc'ed ?
+        lappend attrs "${attr}='$val'"
+    }
+    return [join $attrs " "]
+}
+
 proc util::export_all {} {
     # Exports all procs in *caller's* namespace that do not begin with an underscore
 

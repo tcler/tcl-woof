@@ -456,14 +456,14 @@ oo::class create Controller {
         # 
         set attrs ""
         if {[dict exists $args -attrs]} {
-            # TBD - find and use a attribute constructor
-            foreach {attr val} [dict get $args -attrs] {
-                # TBD - what needs to be hesc'ed ?
-                lappend attrs "${attr}='$val'"
-            }
+            set attrs [::woof::util::tag_attr_fragment [dict get $args -attrs]]
             dict unset args "-attr"
         }
-        return "<a [join $attrs { }] href='[my url_for {*}$args]'>$html</a>"
+        return "<a $attrs href='[my url_for {*}$args]'>$html</a>"
+    }
+
+    method link_to_image {loc loctype {attrs {}}} {
+        return "<img src='[my url_for_static $loc $loctype images]' [tag_attr_fragment $attrs]>"
     }
 
     method render {} {
@@ -503,6 +503,64 @@ oo::class create Controller {
         set _output_done true
     }
 
+    method url_for_static {resource format args} {
+        # Constructs URL for a static resource such as an image.
+        # resource - name of resource (e.g. filename)
+        # format - format of the resource name, must be one of 'url',
+        #   'relativeurl' or 'file'
+        # -subdir RELATIVEDIR - subdirectory under the public directory
+        #  that should be the root of the search. Only used if $format
+        #  is 'file'.
+        # Returns the URL for the resource
+
+        # Search path for resource
+        set dirs [dict get $_dispatchinfo search_dirs]
+
+        #ruff
+        # A resource may be a URL or a file. 
+        # If $format is 'url', the location field is used directly
+        # as the target for the link tag.
+        #
+        # If the format field is 'relativeurl', it is taken to be a
+        # relative url below the root URL.
+        # 
+        # If the format field is 'file', it is taken to be
+        # the name of a file which is searched for in the search
+        # directory path for the controller. The root for all relative
+        # directories in the search path is the public
+        # directory under the Woof root unless the -subdir option is
+        # specified in which case that is used.
+
+        if {[dict exists $args -subdir]} {
+            set relroot [file join [config get public_dir] [dict get $args -subdir]]
+        } else {
+            set relroot [config get public_dir]
+        }
+        switch -exact -- $format {
+            file {
+                set path [::woof::filecache_locate $resource \
+                              -dirs $dirs \
+                              -relativeroot $relroot]
+                if {$path ne ""} {
+                    set resource [my url_for -urlpath [::woof::url_for_file $path $resource]]
+                } else {
+                    exception WOOF MissingFile "Resource $resource not found."
+                }
+            }
+            relativeurl {
+                set resource [file join [config get url_root] $resource]
+            }
+            url {
+                # Take as is
+            }
+            default {
+                exception WOOF Bug "Unknown resource link format '$format'."
+            }
+        }
+
+        return $resource
+    }
+
     method make_resource_links {resources type} {
         # Constructs link tags corresponding to the given resource files.
         # resources - nested list of pairs containing the resource locations
@@ -510,7 +568,7 @@ oo::class create Controller {
         # Returns the HTML containing the links tags for the resources.
 
         # Search path for resource
-        set dirs [dict get $_dispatchinfo search_dirs]
+
         set links {}
         switch -exact -- $type {
             stylesheet {
@@ -540,30 +598,8 @@ oo::class create Controller {
             # directory under the Woof root. The corresponding
             # URL is used as the target for the link tag.
             lassign $pair format loc
-            switch -exact -- $format {
-                file {
-                    set path [::woof::filecache_locate $loc \
-                                  -dirs $dirs \
-                                  -relativeroot [file join \
-                                                     [config get public_dir] \
-                                                     $subdir] \
-                                 ]
-                    if {$path ne ""} {
-                        set loc [my url_for -urlpath [::woof::url_for_file $path $loc]]
-                    } else {
-                        exception WOOF MissingFile "Stylesheet $loc not found."
-                    }
-                }
-                relativeurl {
-                    set loc [file join [config get url_root] $loc]
-                }
-                url {
-                    # Take as is
-                }
-                default {
-                    exception WOOF Bug "Unknown resource link format '$format'."
-                }
-            }
+            set loc [my url_for_static $loc $format -subdir $subdir]
+
             if {$type eq "javascript"} {
                 lappend links "<script type='text/javascript' href='[hesc $loc]' />"
             } else {
