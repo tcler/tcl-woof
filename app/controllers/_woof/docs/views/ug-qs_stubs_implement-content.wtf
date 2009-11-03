@@ -1,0 +1,43 @@
+<p>Let us start by implementing the
+simpler <span class="woof_filename">fibonacci/help</span> URL. This is
+intended to simply display some informational text so the method
+itself does not need to do any processing. We therefore edit the
+method definition to be a no-op.</p>
+[my _code_sample {
+    method help {} {
+        # Nothing to be done other than rendering the template.
+    }
+}]
+<p>The help text itself will go into the view template for the URL. As
+seen in the console output earlier, this file
+is <span class="woof_filename">app/controllers/views/fibonacci-help-main.wtf</span>. Open
+it in an editor and replace its content with the following text:</p>
+[my _code_sample {
+<p>
+  A Fibonacci sequence is a sequence of integers that
+  begins with the numbers 0 and 1 with subsequent numbers
+  being the sum of the two prior numbers.
+</p>
+}]
+<p>Now browsing to the URL
+<span class="woof_filename">http://localhost:8015/fibonacci/help</span>
+brings up the following page in the browser.</p>
+<p class="rtecenter"><img align="middle" alt="Quick Start Example Help page" src="/sites/default/files/woof_ug/quick_start_help_plain.png" /></p>
+<p>No big deal, that's not much different from a static HTML page
+except that it is a HTML fragment as opposed to a full HTML page. So
+now let us implement something a little more dynamic -
+the <span class="woof_filename">generate</span> page.</p>
+<p>Before we do that however, let us imagine our application was a
+little larger and we had generated more than two
+stubs. The <code>stubs verify</code> command helps us locate stubs
+that are still to be implemented.</p>
+[my _code_sample { 
+C:\bowwow> bowwow stubs verify fibonacci 
+FibonacciController: 
+    Action method stubs: 
+        generate
+    View stubs
+        app/controllers/views/fibonacci-generate-main.wtf
+}]
+<p>As we can see, the method <code>generate</code>and the
+corresponding view have still to be generated.</p>

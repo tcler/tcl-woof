@@ -11,7 +11,7 @@
 %   }
     <li>
 %   if {[my requested_action] eq $action} {
-      $label
+      [hesc $label]
 %   } else {
       [my link_to [hesc $label] -action $action]
 %   }

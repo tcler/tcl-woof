@@ -1,3 +1,5 @@
+
+
 oo::class create UgController {
     superclass ApplicationController
     variable _toc
@@ -11,11 +13,12 @@ oo::class create UgController {
         # the ToC heading level (1 by default)
         set _toc {
             {preface Preface}
-            {installation Installation}
-            {apache Apache 2}
-            {iis IIS 2}
-            {systemrequirements "System Requirements"}
-            {recommendedreading "Recommended Reading"}
+            {system_requirements "System Requirements"}
+            {quick_start "Quick Start"}
+            {qs_first_steps "First Steps" 2}
+            {qs_stubs_generate "Generating Stubs" 2}
+            {qs_stubs_implement "Implementing the Stubs" 2}
+            {recommended_reading "Recommended Reading"}
         }
 
         # Only use Woof default section layout, not something user might
@@ -62,5 +65,19 @@ oo::class create UgController {
     method _missing_action {action} {
         # Empty method as we will just show the templates
     }
+
+    method _chapter_link {action {display ""}} {
+        # Generates a link to a chapter
+        if {$display eq ""} {
+            set display [my _heading $action]
+        }
+        return [my link_to [hesc $display] -action $action]
+    }
+
+    method _code_sample {text} {
+        # Returns a code sample
+        return "<pre class='woof_console_session'>[hesc [::woof::util::remove_left_margin $text]]</pre>"
+    }
+
 }
 

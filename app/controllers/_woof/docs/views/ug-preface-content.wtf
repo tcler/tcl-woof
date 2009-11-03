@@ -14,5 +14,4 @@
 <p>This guide assumes the reader is familiar with
   the <a href="http://www.tcl.tk">Tcl</a> programming language and
   development of Web server-side applications. If not, refer to the
-  <a href='[my url_for -action recommendedreading]'>Recommended reading</a>
-  chapter for a reading list.</p>
+  [my _chapter_link recommended_reading] chapter for a reading list.</p>
