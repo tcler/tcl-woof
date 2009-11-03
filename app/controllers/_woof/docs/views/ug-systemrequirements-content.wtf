@@ -1,0 +1,16 @@
+<p>Woof! is platform independent and should run under a supported web
+  server on any system on which <a href='http://www.tcl.tk'>Tcl</a>
+  8.6 is available. Woof! will not
+  work with earlier versions of Tcl.</p>
+
+<p>The following web servers are supported by Woof!:
+<ul>
+  <li><a href="http://www.iis.net">Microsoft IIS</a></li>
+  <li><a href="http://httpd.apache.org">Apache</a></li>
+  <li><a href="http://www.lighttpd.net">Lighttpd</a></li>
+  <li>Any web server that supports CGI or SCGI interfaces.</li>
+</ul>
+<p>A built-in web server for development
+  or quick try-out purposes is also provided within the distribution.</p>
+<p>Refer to the <a href="installation">Installation</a> chapter
+  for more information on the various alternatives.</p>

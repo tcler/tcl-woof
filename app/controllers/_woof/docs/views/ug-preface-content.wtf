@@ -1,0 +1,18 @@
+<p><strong>Woof! - Web Oriented Object Framework - </strong>is an
+  open-source, platform and server-independent web application framework
+  written in the <a href="http://www.tcl.tk">Tcl</a> programming
+  language. It is intended to be easy to install and deploy, simple to
+  understand and customize, and embeddable into other applications.</p>
+<p>Woof! provides programming facilities that simplify web development
+  by taking care of those tasks that are commonly required in writing
+  server-side Web applications. Woof! applications are portable and
+  be easily moved between platforms and web servers with minimal
+  changes.</p>
+<p>Woof! accelerates the development process through
+  tools that enable incremental development, interactive server-side
+  debugging and automatic documentation generation.</p>
+<p>This guide assumes the reader is familiar with
+  the <a href="http://www.tcl.tk">Tcl</a> programming language and
+  development of Web server-side applications. If not, refer to the
+  <a href='[my url_for -action recommendedreading]'>Recommended reading</a>
+  chapter for a reading list.</p>

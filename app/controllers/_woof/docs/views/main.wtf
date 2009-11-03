@@ -1,0 +1,4 @@
+<h2>[hesc [my _heading]]</h2>
+% if {[page fetch content content]} {
+$content
+% }

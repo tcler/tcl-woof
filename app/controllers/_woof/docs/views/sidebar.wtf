@@ -1,0 +1,22 @@
+<div class='navbox'>
+<h2>Table of Contents</h2>
+<ul>
+% set current_level 1
+% foreach toc_entry $_toc {
+%   lassign $toc_entry action label level
+%   if {$level eq ""} {set level 1}
+%   if {$level != $current_level} {
+      [expr {$level > $current_level ? "<ul>" : "</ul>"}]
+%     set current_level $level
+%   }
+    <li>
+%   if {[my requested_action] eq $action} {
+      $label
+%   } else {
+      [my link_to [hesc $label] -action $action]
+%   }
+    </li>
+% }
+</ul>
+</div>
+

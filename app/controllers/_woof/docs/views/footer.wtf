@@ -1,0 +1,6 @@
+<p>
+  <strong>Woof! Version:</strong>  [::woof::version],
+  <strong>Server</strong>: [env get SERVER_SOFTWARE],
+  <strong>Interface</strong>: [::woof::webserver server_interface],
+  <strong>Tcl</strong>: [::info patchlevel]
+</p>
