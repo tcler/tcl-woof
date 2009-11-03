@@ -434,6 +434,15 @@ oo::class create Controller {
         return set url "$protocol://$host_port$url"
     }
 
+    method link_to {html args} {
+        # Generate a HTML link tag for a URL based on the given arguments
+        # html - the HTML text to display. Note this is the raw HTML and
+        #  is not escaped by the command.
+        # args - list of options passed to the url_for method to generate
+        #  the corresponding URL
+        return "<a href='[my url_for {*}$args]'>$html</a>"
+    }
+
     method render {} {
         # Generates content for the web page.
         #
@@ -638,6 +647,10 @@ oo::class create Controller {
         # an error page is returned to the user.
         ::woof::log err "Action '$action' not defined for controller [self]"
         exception WOOF_USER InvalidRequest
+    }
+
+    method requested_action {} {
+        return [dict get $_dispatchinfo action]
     }
 }
 
