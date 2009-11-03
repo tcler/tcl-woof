@@ -1,7 +1,9 @@
 <div class='banner'>
 <div>
 <h2>Web Oriented Object Framework</h2>
-<h3>Site management</h3>
+%if {[pagevar exists module_subheading module_subheading]} {
+   <h3>[hesc $module_subheading]</h3>
+% }
 </div>
 </div>
 <img src='[::woof::url_for_file "images/woof/_banner_separator.png" ""]' alt='line separator'/>
