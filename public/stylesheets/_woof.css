@@ -1,16 +1,5 @@
 /* Woof default CSS */
-
-/* Yahoo copyrighted section - base-min.css. See base.css for readable version */
-
-/*
-Copyright (c) 2009, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.net/yui/license.txt
-version: 2.7.0
-*/
-body{margin:10px;}h1{font-size:138.5%;}h2{font-size:123.1%;}h3{font-size:108%;}h1,h2,h3{margin:1em 0;}h1,h2,h3,h4,h5,h6,strong,dt{font-weight:bold;}optgroup{font-weight:normal;}abbr,acronym{border-bottom:1px dotted #000;cursor:help;}em{font-style:italic;}del{text-decoration:line-through;}blockquote,ul,ol,dl{margin:1em;}ol,ul,dl{margin-left:2em;}ol li{list-style:decimal outside;}ul li{list-style:disc outside;}dl dd{margin-left:1em;}th,td{border:1px solid #000;padding:.5em;}th{font-weight:bold;text-align:center;}caption{margin-bottom:.5em;text-align:center;}sup{vertical-align:super;}sub{vertical-align:sub;}p,fieldset,table,pre{margin-bottom:1em;}button,input[type="checkbox"],input[type="radio"],input[type="reset"],input[type="submit"]{padding:1px;}
-
-/* End Yahoo copyright */
+/* Assumes YUI reset-font-grids and base-min loaded */
 
 /* FYI - The Woof logo main color is #DB7D2A */
 
@@ -104,20 +93,47 @@ div.navbox {
   margin-bottom: 0em;
 }
 
-.navbox ul li {
-  list-style-image: url(../images/woof/_navarrow.png);
+.navbox li {
+  list-style-image: url(../images/woof/_navarrowright.png);
   font-weight: bold;
   color: #808080;
 }
 
-.navbox li a:link, .navbox li a:visited {
+.navbox a:link, .navbox a:visited {
   text-decoration: none;
   font-weight: normal;
   color: #808080;
 }
 
-.navbox li a:hover {
+.navbox a:hover {
   font-weight: bold;
+}
+
+.hnavbox {
+  border-top:1px solid #808080;
+  padding:0.5em;
+  text-align:center;
+  display: block;
+}
+
+.leftmost {
+  display: block;
+  float: left;
+  text-align: left;
+  background-image: url(../images/woof/_navarrowleft.png);
+  background-position: left center;
+  background-repeat: no-repeat;
+  padding-left: 15px; /* So image does not overlap */
+}
+
+.rightmost {
+  display: block;
+  float: right;
+  text-align: right;
+  background-image: url(../images/woof/_navarrowright.png);
+  background-position: right center;
+  background-repeat: no-repeat;
+  padding-right: 15px; /* So image does not overlap */
 }
 
 table {
@@ -134,6 +150,7 @@ td {
   vertical-align: top;
   font-size: 93%;
 }
+
 th {
   border: thin solid;
   border-color: #808080;
@@ -145,23 +162,6 @@ dt, dd {
    font-size: 93%;
 }
 
-.witsmenu { color: blue; font-family: Arial; font-size: 93%; font-weight: bold;}
-.debug { background-color: red; }
-.seemore {
-  font-size: 93%;
-}
-.blockquote {
-  font-size: 93%;
-  margin-left: 4em;
-}
-.cmd {
-  font-size: 100%;
-  font-family: "Courier New", Courier;
-}
-.cmdblock {
-  font-size: 100%;
-  font-family: "Courier New", Courier;
-  margin-left: 2em;
-  margin-bottom: 1em;
-}
+
+
 

@@ -451,8 +451,19 @@ oo::class create Controller {
         # html - the HTML text to display. Note this is the raw HTML and
         #  is not escaped by the command.
         # args - list of options passed to the url_for method to generate
-        #  the corresponding URL
-        return "<a href='[my url_for {*}$args]'>$html</a>"
+        #  the corresponding URL.
+        # -attrs ATTRLIST - list of attribute value pairs for the link tag
+        # 
+        set attrs ""
+        if {[dict exists $args -attrs]} {
+            # TBD - find and use a attribute constructor
+            foreach {attr val} [dict get $args -attrs] {
+                # TBD - what needs to be hesc'ed ?
+                lappend attrs "${attr}='$val'"
+            }
+            dict unset args "-attr"
+        }
+        return "<a [join $attrs { }] href='[my url_for {*}$args]'>$html</a>"
     }
 
     method render {} {

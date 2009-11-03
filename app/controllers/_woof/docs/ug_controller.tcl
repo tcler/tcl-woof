@@ -40,15 +40,25 @@ oo::class create UgController {
         pagevar set module_subheading "User Guide"
     }
 
-    method _heading {} {
-        set action [my requested_action]
-        set toc_entry [lsearch -inline -index 0 $_toc $action]
+    method _heading {{action ""}} {
+        if {$action eq ""} {
+            set action [my requested_action]
+        }
+        set toc_entry [lsearch -exact -inline -index 0 $_toc $action]
         if {$toc_entry ne ""} {
             return [lindex $toc_entry 1]
         } else {
             string totitle $action
         }
     }
+
+    method _neighbours {} {
+        # Returns the previous and next chapters.
+        set action [my requested_action]
+        set i [lsearch -exact -index 0 $_toc $action]
+        return [list [lindex $_toc [expr {$i-1}]] [lindex $_toc [incr i]]]
+    }
+
     method _missing_action {action} {
         # Empty method as we will just show the templates
     }

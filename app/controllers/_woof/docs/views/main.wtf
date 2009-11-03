@@ -2,3 +2,12 @@
 % if {[page fetch content content]} {
 $content
 % }
+<div class='hnavbox navbox'>
+% lassign [my _neighbours] prev next
+% if {[llength $prev]} {
+   [my link_to [hesc [lindex $prev 1]] -action [lindex $prev 0] -attrs {class leftmost}]
+% }
+% if {[llength $next]} {
+   [my link_to [hesc [lindex $next 1]] -action [lindex $next 0] -attrs {class rightmost}]
+% }
+</div>
