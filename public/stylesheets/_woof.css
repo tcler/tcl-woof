@@ -12,6 +12,8 @@ body{margin:10px;}h1{font-size:138.5%;}h2{font-size:123.1%;}h3{font-size:108%;}h
 
 /* End Yahoo copyright */
 
+/* FYI - The Woof logo main color is #DB7D2A */
+
 h1,h2 {
   color: #888888;
   margin-bottom: 0.5em;
@@ -27,16 +29,23 @@ h1,h2 {
 
 .banner h2 {
     color: #006666;
+    margin: 0px;
+}
+
+.banner h3 {
+    color: #006666;
+    margin: 0px;
 }
 
 #hd .banner {
     font-family: Trebuchet MS, Helvetica, sans-serif;
     font-weight: bold;
-    line-height: 64px;
+    height: 48px;
     background-image: url(../images/woof/_logo.png);
-    background-position: center left;
+    background-position: left top;
     background-repeat: no-repeat;
     text-indent: 100px;
+    margin-top: 20px;
 }
 
 
@@ -92,21 +101,24 @@ div.navbox {
 .navbox ul {
   margin-left: 1.5em;
   margin-top: 0em;
+  margin-bottom: 0em;
 }
 
 .navbox ul li {
   list-style-image: url(../images/woof/_navarrow.png);
+  font-weight: bold;
+  color: #808080;
 }
 
 .navbox li a:link, .navbox li a:visited {
   text-decoration: none;
+  font-weight: normal;
   color: #808080;
 }
 
 .navbox li a:hover {
   font-weight: bold;
 }
-
 
 table {
   margin: 1em;
