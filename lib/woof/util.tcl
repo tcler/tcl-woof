@@ -515,6 +515,75 @@ proc util::memoize {args} {
     return [memoize {*}$args]
 }
 
+
+proc util::remove_left_margin {text args} {
+    # Removes the left margin from the lines in the specified text
+    # text - text string
+    # The command trims leading whitespace from all lines in $text.
+
+    array set opts {
+        -skipleadingempties false
+        -combineempties false
+        -returnlist false
+    }
+    array set opts $args
+
+    set lines {}
+    set state init;             # init -> collecting <-> empty
+    foreach line [split $text \n] {
+        if {[regexp {^\s*$} $line]} {
+            if {$state eq "collecting"} {
+                lappend lines ""
+                set state empty
+            } elseif {$state eq "empty"} {
+                #ruff
+                # -combineempties BOOLEAN - if true, multiple
+                #  blank lines are combined into one. Default is false.
+                if {! $opts(-combineempties)} {
+                    lappend lines ""
+                }
+            } else {
+                #ruff
+                # -skipleadingempties BOOLEAN - if true, leading 
+                #  blank lines are skipped. Default is false.
+                if {! $opts(-skipleadingempties)} {
+                    lappend lines ""
+                    set state empty
+                }
+            }
+            continue
+        }
+
+        #ruff
+        # The very first non empty line determines the margin. This will
+        # be removed from all subsequent lines. Note that this assumes that
+        # if tabs are used for indentation, they are used on all lines
+        # in consistent fashion.
+        if {![info exists prefix]} {
+            regexp {^(\s*)\S} $line dontcare prefix
+            set prefix_len [string length $prefix]
+        }
+        set state collecting
+
+        # Remove the prefix if it exists from the line
+        if {[string match ${prefix}* $line]} {
+            set line [string range $line $prefix_len end]
+        }
+
+        lappend lines $line
+    }
+
+    #ruff
+    # -returnlist BOOLEAN - if true, the command returns a list of lines.
+    #  If false (default), the command returns a string with the
+    #  lines are joined with newlines.
+    if {$opts(-returnlist)} {
+        return $lines
+    } else {
+        return [join $lines \n]
+    }
+}
+
 proc util::export_all {} {
     # Exports all procs in *caller's* namespace that do not begin with an underscore
 
