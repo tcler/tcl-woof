@@ -331,7 +331,8 @@ oo::class create Controller {
         #  this option is not specified, but the -controller is, then this
         #  defaults to the application default action.
         # -module MODULE - specifies the module in which the
-        #  controller is defined
+        #  controller is defined. Ignored unless controller is also
+        #  specified.
         # -anchor ANCHOR - specifies the anchor to be included in the URL
         # -query QUERYLIST - specifies the query component of the URL. This
         #  should be specified as a key value list.
@@ -348,28 +349,33 @@ oo::class create Controller {
                 set url [file join [::woof::config url_root] $url]
             }
         } else {
+            # The URL will be built using defaults from the current URL
+            # as stored in _dispatchinfo. $modifiers collects
+            # the components of that which need to be modified.
             set modifiers {}
             if {[dict exists $args -controller]} {
                 lappend modifiers -controller [dict get $args -controller]
-                if {![dict exists $args -action]} {
+                if {[dict exists $args -action]} {
+                    lappend modifiers -action [dict get $args -action]
+                } else {
                     # If action is not defined, but the controller is,
                     # we stick in the default action.
                     lappend modifiers -action \
                         [config get app_default_action index]
                 }
+                if {[dict exists $args -module]} {
+                    set module [split [string map {:: " "} [dict get $args -module]] " "]
+                    lappend modifiers -module $module
+                }
+            } elseif {[dict exists $args -action]} {
+                # Controller not defined, but action is. Assume common
+                # case of action-only relative URL
+                set url [dict get $args -action]
             }
-
-            if {[dict exists $args -action]} {
-                lappend modifiers -action [dict get $args -action]
-            }
-
-            if {[dict exists $args -module]} {
-                set module [split [string map {:: " "} [dict get $args -module]] " "]
-                lappend modifiers -module $module
-            }
-
-            set url [::woof::url_build $_dispatchinfo {*}$modifiers]
         }
+
+        # At this point url is defined IFF -action WAS specified AND
+        # -controller WAS NOT (which causes -module to not matter)
 
         if {[dict exists $args -anchor]} {
             set anchor #[dict get $args -anchor]
@@ -389,19 +395,25 @@ oo::class create Controller {
             set query ""
         }
 
-        set url "$url$anchor$query"
-
-        # If protocol, host and port are unspecified, return the relative URL
+        # As a short cut to processing, if only action is specified,
+        # we have a relative url in $url, return it as we have no need
+        # for computing a full URL if
+        # protocol, host and port are unspecified.
         if {![dict exists $args -protocol] &&
             ![dict exists $args -host] &&
             ![dict exists $args -port]} {
-            return $url
+            if {[info exists url]} {
+                return "$url$anchor$query"
+            }
         }
+
+        set url "[::woof::url_build $_dispatchinfo {*}$modifiers]$anchor$query"
+
 
         if {[dict exists $args -protocol]} {
             set protocol [dict get $args -protocol]
         } else {
-            set protocol http
+            set protocol [request protocol]
         }
 
         if {[dict exists $args -host]} {
