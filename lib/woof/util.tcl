@@ -593,6 +593,38 @@ proc util::tag_attr_fragment {attrlist} {
     return [join $attrs " "]
 }
 
+proc util::dict_get {dict key default_value} {
+    # Returns the value for a key from a dictionary and a default if 
+    # the key is not present
+    # dict - the dictionary
+    # key - the key to retrieve. Nested keys are not supported
+    # default_value - default value to return if key is not present
+
+    if {[dict exists $dict $key]} {
+        return [dict get $dict $key]
+    } else {
+        return $default_value
+    }
+}
+
+proc util::dict_pop {vdict key default_value} {
+    # Removes and returns the value for a key from a dictionary and a default if 
+    # the key is not present.
+    # vdict - the name of the variable containing the dictionary
+    # key - the key to retrieve. Nested keys are not supported
+    # default_value - default value to return if key is not present
+
+    upvar 1 $vdict dict
+
+    if {[dict exists $dict $key]} {
+        set val [dict get $dict $key]
+        dict unset dict $key
+        return $val
+    } else {
+        return $default_value
+    }
+}
+
 proc util::export_all {} {
     # Exports all procs in *caller's* namespace that do not begin with an underscore
 
