@@ -30,7 +30,7 @@ h1,h2 {
     font-family: Trebuchet MS, Helvetica, sans-serif;
     font-weight: bold;
     height: 48px;
-    background-image: url(../images/woof/_logo.png);
+    background-image: url(../images/_woof/logo.png);
     background-position: left top;
     background-repeat: no-repeat;
     text-indent: 100px;
@@ -94,7 +94,7 @@ div.navbox {
 }
 
 .navbox li {
-  list-style-image: url(../images/woof/_navarrowright.png);
+  list-style-image: url(../images/_woof/navarrowright.png);
   font-weight: bold;
   color: #808080;
 }
@@ -120,7 +120,7 @@ div.navbox {
   display: block;
   float: left;
   text-align: left;
-  background-image: url(../images/woof/_navarrowleft.png);
+  background-image: url(../images/_woof/navarrowleft.png);
   background-position: left center;
   background-repeat: no-repeat;
   padding-left: 15px; /* So image does not overlap */
@@ -130,7 +130,7 @@ div.navbox {
   display: block;
   float: right;
   text-align: right;
-  background-image: url(../images/woof/_navarrowright.png);
+  background-image: url(../images/_woof/navarrowright.png);
   background-position: right center;
   background-repeat: no-repeat;
   padding-right: 15px; /* So image does not overlap */
