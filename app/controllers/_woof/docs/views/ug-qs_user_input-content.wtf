@@ -1,0 +1,111 @@
+<p>Now that we have the blown away the competition on the look and
+feel front&nbsp;(!), let us turn our attention to enhancing
+functionality. If the user wants the first 30 numbers in the sequence,
+we should provide a way to do that without clicking repeatedly. What
+we want is the following Web page:</p>
+
+<p class="woof_center">
+  [my include_image qs_form.png alt "Quick Start Example Form"]</p>
+
+<p>There is now an entry box for the user to enter the length of the
+sequence desired. To implement this, we first modify the page template in
+<span class="woof_filename">app/controllers/views/fibonacci-generate-main.wtf </span>as below:</p>
+[my _code_sample {
+    <p>
+    The first [llength $seq] numbers in the 
+    Fibonacci sequence are shown below:</p>
+    <table>
+    <tr><th>Position</th><th>Value</th></tr>
+    % set index 0
+    % foreach number $seq {
+        <tr style='background-color: [expr {$index &amp; 1 ? "#cccccc" : "white"}];'>
+        <td>[incr index]</td>
+        <td>$number</td>
+        </tr>
+        % }
+    </table>
+    <p><a href='[request url]'>More</a>
+    <hr>
+    <form method='POST'>
+    Generate the first
+    <input type='text' name='numfibos' value='[incr index]' size='3'>
+    numbers.
+    <input type='submit' value='Generate!'>
+    </form>
+}]
+<p>The only significant change made is that we have added a form
+element at the bottom to allow the user to enter the desired length of
+the generated sequence. We have named this field
+as <code>numfibos</code>. When
+the <span class="woof_demotext">Generate</span> button is clicked, the
+form will be submitted to the same URL resulting in
+the <code>generate </code>method being called.</p>
+
+<p>We now have to modify the generate method in
+the <span class="woof_filename">fibonacci_controller.tcl</span> file
+accordingly. It now needs to handle the original request as well as
+the requests posted through the <code>Generate</code>
+button. Moreover, we will also add some simple validation to
+demonstrate redirection and use of the <code>flash</code> object.</p>
+[my _code_sample {
+method generate {} {
+  # Generate the next number in the sequence. The sequence generated
+  # so far is stored in the session.
+
+  # Declare a member variable sequence to hold the Fibonacci sequence.
+  # All member variables are automatically available for use in
+  # the view templates.
+  my variable seq
+
+  # If the user has specified the length of the desired sequence,
+  # use it, else use what we have in the session storage, else
+  # initialize to the first two elements in sequence.
+  if {![params exists numfibos num_fibos]} {
+    # User has not specified length to generate
+    if {[session exists num_fibos num_fibos]} {
+      incr num_fibos; # One more than last time
+      if {$num_fibos > 50} {
+        set num_fibos 50
+      }
+    } else {
+      # Not in session storage either (first call)
+      set num_fibos 2
+    }
+  }
+
+  if {(![string is integer -strict $num_fibos]) ||
+      $num_fibos > 50 ||
+      $num_fibos < 1} {
+    flash set error_message "The length of the requested sequence must be an integer between 1 and 50."
+    my redirect -action showerror
+    return
+  }
+
+  if {$num_fibos == 1} {
+    set seq {0}
+  } else {
+    set seq {0 1}
+    for {set i 2} {$i < $num_fibos} {incr i} {
+      lappend seq [expr {[lindex $seq end-1]+[lindex $seq end]}]
+    }
+  }
+
+  # Store last number back in the session for the next request
+  session set num_fibos $num_fibos
+}
+}]
+<p>There are a number of changes here, so let us go through them one
+by one.</p>
+<p>We detect whether the user has clicked the Generate button by
+checking the <code>params</code> object for the presence of the
+key <code>numfibos</code>. The <code>params</code> object in Woof!
+holds all parameters received in the HTTP request through either
+a query string in an HTTP GET request, or through an
+HTTP POST request. If the parameter is present, we use its value
+as the requested size of the sequence to be generated. Otherwise, we
+maintain the original behaviour.</p>
+<p>If the user input is invalid, we redirect them to an error
+page. The <code>redirect</code> method, like the <code>url_for</code>
+method we saw earlier, takes an <code>-action</code> argument which
+generates a HTTP redirect to the
+method <code>showerror</code>.</p>

@@ -1,0 +1,41 @@
+<p>Now that we have the most easily navigable site in Fibonacci's
+world, let us pretty up the interface (ok, perhaps the end result
+will not be so good
+looking, but we want to illustrate a marginally more sophisticated
+view template). Instead of displaying the generated sequence as a
+list, we will display it in tabular form along with the index of each
+number in the sequence. We will also shade alternate rows in the
+table. As an aside, we could write this as a single command using the
+Tcl libraries but we won't as the purpose is to give a flavor for the
+WTF syntax. Here is the modified template
+in <span class="woof_filename">app/controllers/views/fibonacci-generate-main.wtf</span>:</p>
+[my _code_sample {
+ <p>
+  The first [llength $seq] numbers in the 
+  Fibonacci sequence are shown below:</p>
+ <table>
+ % set index 0
+ % foreach number $seq {
+ <tr style='background-color: [expr {$index &amp; 1 ? "#cccccc" : "white"}];'>
+  <td style='padding: 5px;'>[incr index]</td>
+  <td style='padding: 5px;'>$number</td>
+ </tr>
+ % }
+ </table>
+ <p>
+  <a href='[request url]'>Show first [incr index] in sequence</a>
+ </p>
+}]
+
+<p>The main thing to note about this template is that lines beginning
+with the <code>%</code> character are treated as Tcl code. In the
+above template, the <code>foreach</code> loop encloses the HTML for a
+single row in the table and each iteration of the loop adds one row to
+the output. The result looks like this:</p>
+<p class="woof_center">
+[my include_image qs_table.png alt "Quick Start Example Navigation"]
+</p>
+
+<p>We are getting close to the finish line. But there is one important
+  basic task we have not covered - getting input from the user. We do that
+  next.</p>

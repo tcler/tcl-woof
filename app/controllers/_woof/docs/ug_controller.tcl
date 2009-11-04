@@ -18,6 +18,15 @@ oo::class create UgController {
             {qs_first_steps "First Steps" 2}
             {qs_stubs_generate "Generating Stubs" 2}
             {qs_stubs_implement "Implementing the Stubs" 2}
+            {qs_session "Maintaining State with Sessions" 2}
+            {qs_page_display "Displaying the Page" 2}
+            {qs_enhancements "Enhancing the Application" 2}
+            {qs_page_layout "Laying out a Page" 2}
+            {qs_story_so_far "The Story So Far" 2}
+            {qs_wtf_syntax "Web Template File Syntax" 2}
+            {qs_user_input "Getting User Input" 2}
+            {page_generation "Page Generation"}
+            {wtf "Woof! Template Files"}
             {recommended_reading "Recommended Reading"}
         }
 

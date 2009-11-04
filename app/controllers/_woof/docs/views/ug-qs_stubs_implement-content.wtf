@@ -22,11 +22,11 @@ it in an editor and replace its content with the following text:</p>
 <p>Now browsing to the URL
 <span class="woof_filename">http://localhost:8015/fibonacci/help</span>
 brings up the following page in the browser.</p>
-<p class="rtecenter"><img align="middle" alt="Quick Start Example Help page" src="/sites/default/files/woof_ug/quick_start_help_plain.png" /></p>
+<p class="woof_center">[my include_image qs_help_plain.png alt "Quick Start Example Help page"]</p>
 <p>No big deal, that's not much different from a static HTML page
-except that it is a HTML fragment as opposed to a full HTML page. So
-now let us implement something a little more dynamic -
-the <span class="woof_filename">generate</span> page.</p>
+except that it is a HTML fragment as opposed to a full HTML page. We will
+implement something a little more dynamic -
+the <span class="woof_filename">generate</span> page - in just a bit.</p>
 <p>Before we do that however, let us imagine our application was a
 little larger and we had generated more than two
 stubs. The <code>stubs verify</code> command helps us locate stubs
@@ -39,5 +39,6 @@ FibonacciController:
     View stubs
         app/controllers/views/fibonacci-generate-main.wtf
 }]
-<p>As we can see, the method <code>generate</code>and the
-corresponding view have still to be generated.</p>
+<p>As we can see, the method <code>generate</code> and the
+corresponding view have still to be implemented. We will now go ahead
+and do just that.</p>

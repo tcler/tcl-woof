@@ -1,0 +1,55 @@
+<p>For navigation, we will put links in a column on the left of the
+main area. Both pages will contain the same navigation links. For this
+purpose, create the file
+<span class="woof_filename">app/controllers/views/fibonacci-sidebar.wtf</span>
+with the following contents:</p>
+[my _code_sample {
+<a href='[my url_for -action generate]'>Generate</a>
+<br/>
+<a href='[my url_for -action help]'>Help</a>
+}]
+
+<p>This is not the best HTML for navigation menus but it will do for
+our purposes. Note the use of the <code>url_for</code> method to
+generate the links instead of hardcoding to something
+like <span class="woof_filename">/fibonacci/help</span>. Unlike
+hard-coded links, links generated in this manner will not need to be
+changed if somewhere down the road we change the URL to
+be <span class="woof_filename">/mathsequences/fibonacci/help</span>.</p>
+
+<p>In addition to the navigation menu, let us add a header as well to
+brand our fibonacci generator. Create the file
+<span class="woof_filename">app/controllers/views/fibonacci-header.wtf</span>
+with the following contents:</p>
+[my _code_sample {
+<div style='padding: 10px;'>
+ [my include_image /images/_woof/logo.png' style "float: left;"]
+ <h2 style='line-height: 3em; margin-left: 160px;'>Fibonacci Generator</h2>
+</div>
+[my include_image /images/_woof/banner_separator.png']
+}]
+
+<p>Again, the HTML leaves something to be desired, and we are being
+lazy in reusing some Woof images for illustrative purposes. The result
+is shown in the browser below:</p>
+
+<p class="woof_center">
+[my include_image qs_nav.png alt "Quick Start Example Navigation page"]
+</p>
+
+<p>Let us now take a step back and look at how Woof! picked up the
+contents of the files we created. The gory details are available in
+the [my _chapter_link page_generation] chapter
+but here is a short summary.</p>
+
+<p>Woof! divides the displayed Web page into
+several areas or <em>page sections</em>. Each page section is
+generated from a template file (actually, this is only one of the ways
+to generate a page section) and the various generated sections are
+merged based on a <em>layout file</em>. All sections are of course
+optional and the layout adjusts automatically for missing
+sections. The logical page sections, placement in layout etc. are all
+of course customizable and you can even create your own sections
+but we will not go into that here. It is
+expected however, that the default layout will suffice for most
+purposes.</p>

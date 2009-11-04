@@ -1,0 +1,16 @@
+<p>Let us revisit how we developed our Fibonacci generator. When we created the
+<span class="woof_filename">app/controllers/views/fibonacci-help-main.wtf</span>
+file, we were implicitly creating the content of the <em>main</em> page section
+for the <span class="woof_filename">/fibonacci/help</span> URL. The
+naming convention should be obvious. Since no other page sections were
+defined at the time, the main section took up the entire web page.</p>
+
+<p>We could similarly have created a file
+<span class="woof_filename">app/controllers/views/fibonacci-help-header.wtf</span>
+to contain the <em>header</em> page section. However, we want a common header
+to be shared among all the pages for the Fibonacci generator so we
+made use of Woof!'s facility for inheriting templates by instead
+creating the file
+<span class="woof_filename">app/controllers/views/fibonacci-header.wtf</span>
+which will be used as the header for any page within the Fibonacci
+URL tree that does not have its own page header defined.</p>
