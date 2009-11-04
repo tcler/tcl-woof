@@ -546,12 +546,10 @@ oo::class create Controller {
         # Generates a HTML image tag
         # image - identifies the image, may be a file name, relative url
         #  or absolute (see url_for_static)
-        # -attrs ATTRLIST - list of attribute value pairs for the tag
+        # args - list of attribute value pairs for the tag
 
         set attrs [::woof::util::tag_attr_fragment \
-                       [dict merge \
-                            {alt Image} \
-                            [::woof::util::dict_get $args -attrs {}]]]
+                       [dict merge {alt Image} $args]]
         return "<img src='[my url_for_static $image -subdir images]' $attrs>"
     }
 
@@ -559,12 +557,10 @@ oo::class create Controller {
         # Generates a stylesheet link
         # stylesheet - identifies the stylesheet, may be a file name, relative 
         #  or absolute url (see url_for_static)
-        # -attrs ATTRLIST - list of attribute value pairs for the tag
+        # args - list of attribute value pairs for the tag
 
         set attrs [::woof::util::tag_attr_fragment \
-                       [dict merge \
-                            {rel stylesheet type text/css} \
-                            [::woof::util::dict_get $args -attrs {}]]]
+                       [dict merge {rel stylesheet type text/css} $args]]
         return "<link href='[my url_for_static $stylesheet -subdir stylesheets]' $attrs>"
     }
 
@@ -575,9 +571,7 @@ oo::class create Controller {
         # -attrs ATTRLIST - list of attribute value pairs for the tag
 
         set attrs [::woof::util::tag_attr_fragment \
-                       [dict merge \
-                            {type text/javascript} \
-                            [::woof::util::dict_get $args -attrs {}]]]
+                       [dict merge {type text/javascript} $args]]
         return "<script href='[my url_for_static $js -subdir javascript]' $attrs>"
     }
 
@@ -617,72 +611,6 @@ oo::class create Controller {
         }
 
         set _output_done true
-    }
-
-    method OBSOLETEmake_resource_links {resources type} {
-        # Constructs link tags corresponding to the given resource files.
-        # resources - nested list of pairs containing the resource locations
-        # type - one of "stylesheet", "script"
-        # Returns the HTML containing the links tags for the resources.
-
-        # Search path for resource
-
-        set links {}
-        switch -exact -- $type {
-            stylesheet {
-                set subdir stylesheets
-            }
-            javascript {
-                set subdir js
-            }
-            default {
-                ::woof::errors::exception "Unknown resource type '$type'."
-            }
-        }
-        foreach pair $resources {
-            #ruff
-            # A resource may be a URL or a file. Each pair in $resources
-            # consists of a format field followed by the location.
-            #
-            # If the format field is 'url', the location field is
-            # used directly as the target for the link tag.
-            #
-            # If the format field is 'relativeurl', it is taken to be a
-            # relative url below the root URL.
-            # 
-            # If the format field is 'file', it is taken to be
-            # the name of a file which is searched for in the search
-            # directory path for the controller under the public
-            # directory under the Woof root. The corresponding
-            # URL is used as the target for the link tag.
-            lassign $pair format loc
-            set loc [my url_for_static $loc $format -subdir $subdir]
-
-            if {$type eq "javascript"} {
-                lappend links "<script type='text/javascript' href='[hesc $loc]' />"
-            } else {
-                lappend links "<link rel='stylesheet' type='text/css' href='[hesc $loc]' />"
-            }
-        }
-        return [join $links \n]
-    }
-
-    method OBSOLETEmake_style_links {styles} {
-        # Constructs link tags corresponding to the given styles
-        # styles - nested list of pairs containing the style locations
-        # Returns the HTML containing the links tags for the style.
-        # This is a wrapper around make_resource_links for stylesheet
-        # resources. Refer to that method for details.
-        return [my make_resource_links $styles stylesheet]
-    }
-
-    method OBSOLETEmake_javascript_links {scripts} {
-        # Constructs link tags corresponding to the given scripts
-        # scripts - nested list of pairs containing the script locations
-        # Returns the HTML containing the script tags linking to the scripts.
-        # This is a wrapper around make_resource_links
-        # resources. Refer to that method for details.
-        return [my make_resource_links $scripts javascript]
     }
 
     method redirect {args} {
