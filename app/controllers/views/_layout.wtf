@@ -74,7 +74,9 @@
 <html>
   <head>
     <title>[pagevar get title [config :app_name]]</title>
-        [my make_style_links [pagevar get styles {}]]
+% foreach ss [pagevar get styles [list _yui-2-8-0r4-reset-fonts-grids.css]] {
+    [my include_stylesheet $ss]
+% }
 %# Note the no_margin modification only applies to #doc3, NOT other doc*
 % if {$no_margin} {
     <style>#doc3 {margin:auto;}</style>

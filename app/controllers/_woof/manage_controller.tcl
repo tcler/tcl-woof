@@ -16,9 +16,9 @@ oo::class create ManageController {
             yui_main_percent 75%
             
         pagevar set styles {
-            {relativeurl stylesheets/_yui-2-8-0r4-reset-fonts-grids.css}
-            {relativeurl stylesheets/_yui-2-8-0r4-base-min.css}
-            {file _woof.css}
+            stylesheets/_yui-2-8-0r4-reset-fonts-grids.css
+            stylesheets/_yui-2-8-0r4-base-min.css
+            _woof.css
         }
         set woof_url(user_guide) "http://woof.magicsplat.com/woof_guide"
         set woof_url(quick_start) "http://woof.magicsplat.com/woof_guide/quick_start"

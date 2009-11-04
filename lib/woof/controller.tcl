@@ -322,6 +322,9 @@ oo::class create Controller {
     method url_for args {
         # Constructs a URL based on the passed options and current
         # request.
+        # args - may be either a variable number of option value
+        #  pairs or a single argument containing the option value
+        #  pairs
         # -protocol PROTOCOL - specifies the protocol component
         # -host HOST - specifies the host component
         # -port PORT - specifies the port component
@@ -342,17 +345,25 @@ oo::class create Controller {
         #  If URLPATH begins with '/', it is taken to be the entire URL
         #  after the host and port. Otherwise, it is assumed to be relative
         #  to the application's root URL.
+        # -fullyqualify BOOLEAN - if true, a fully qualified URL (includes
+        #  scheme and host) is returned in all cases. Default is false.
 
+        if {[llength $args] == 1} {
+            # Options passed as a single argument
+            set args [lindex $args 0]
+        }
+
+        # The URL will be built using defaults from the current URL
+        # as stored in _dispatchinfo. $modifiers collects
+        # the components of that which need to be modified.
+        set modifiers {}
         if {[dict exists $args -urlpath]} {
+            # If URL specified, all modifiers ignored.
             set url [dict get $args -urlpath]
             if {[string index $url 0] ne "/"} {
                 set url [file join [::woof::config url_root] $url]
             }
         } else {
-            # The URL will be built using defaults from the current URL
-            # as stored in _dispatchinfo. $modifiers collects
-            # the components of that which need to be modified.
-            set modifiers {}
             if {[dict exists $args -controller]} {
                 lappend modifiers -controller [dict get $args -controller]
                 if {[dict exists $args -action]} {
@@ -371,6 +382,7 @@ oo::class create Controller {
                 # Controller not defined, but action is. Assume common
                 # case of action-only relative URL
                 set url [dict get $args -action]
+                lappend modifiers -action $url; # In case we need to build full URL
             }
         }
 
@@ -396,19 +408,27 @@ oo::class create Controller {
         }
 
         # As a short cut to processing, if only action is specified,
+        # or -urlpath was specified,
         # we have a relative url in $url, return it as we have no need
         # for computing a full URL if
-        # protocol, host and port are unspecified.
-        if {![dict exists $args -protocol] &&
-            ![dict exists $args -host] &&
-            ![dict exists $args -port]} {
-            if {[info exists url]} {
-                return "$url$anchor$query"
+        # protocol, host and port are unspecified unless we want a
+        # fully qualified URL
+        if {!([dict exists $args -fullyqualify] && [dict get $args -fullyqualify])} {
+            if {![dict exists $args -protocol] &&
+                ![dict exists $args -host] &&
+                ![dict exists $args -port]} {
+                if {[info exists url]} {
+                    return "$url$anchor$query"
+                }
             }
         }
 
-        set url "[::woof::url_build $_dispatchinfo {*}$modifiers]$anchor$query"
-
+        if {[dict exists $args -urlpath]} {
+            # If urlpath is specified, do not go build the whole url
+            append url "$anchor$query"
+        } else {
+            set url "[::woof::url_build $_dispatchinfo {*}$modifiers]$anchor$query"
+        }
 
         if {[dict exists $args -protocol]} {
             set protocol [dict get $args -protocol]
@@ -452,19 +472,115 @@ oo::class create Controller {
         #  is not escaped by the command.
         # args - list of options passed to the url_for method to generate
         #  the corresponding URL.
-        # -attrs ATTRLIST - list of attribute value pairs for the link tag
+        # -attrs ATTRLIST - list of attribute value pairs for the tag
         # 
         set attrs ""
         if {[dict exists $args -attrs]} {
             set attrs [::woof::util::tag_attr_fragment [dict get $args -attrs]]
             dict unset args "-attr"
         }
-        return "<a $attrs href='[my url_for {*}$args]'>$html</a>"
+        return "<a $attrs href='[my url_for $args]'>$html</a>"
     }
 
-    method link_to_image {loc loctype {attrs {}}} {
-        return "<img src='[my url_for_static $loc $loctype images]' [tag_attr_fragment $attrs]>"
+    method url_for_static {resource args} {
+        # Constructs URL for a static resource such as an image.
+        # resource - name of resource, may be a file name or URL
+        # Returns the URL for the resource
+
+        #ruff
+        # If $resource contains any '/' characters, it is treated as
+        # a URL, else it is assumed to be the name of a file.
+        set slash_pos [string first / $resource]
+        if {$slash_pos < 0} {
+            # File. Locate it.
+
+            #ruff
+            # -subdir RELATIVEDIR - subdirectory under the public directory
+            #  that should be the root of the search. Only used if $resource
+            #  is a file.
+            if {[dict exists $args -subdir]} {
+                set relroot [file join [config get public_dir] [dict get $args -subdir]]
+            } else {
+                set relroot [config get public_dir]
+            }
+
+            #ruff
+            # If the resource is a file, it is searched for in the search            
+            # directory path for the controller. The root for all relative
+            # directories in the search path is the public
+            # directory under the Woof root unless the -subdir option is
+            # specified in which case that is used.
+            set path [::woof::filecache_locate $resource \
+                          -dirs [dict get $_dispatchinfo search_dirs] \
+                          -relativeroot $relroot]
+            if {$path ne ""} {
+                set resource [::woof::url_for_file $path $resource]
+            } else {
+                exception WOOF MissingFile "Resource $resource not found."
+            }
+        }
+
+        #ruff
+        # If the resource is a URL, it may be a a relative or an absolute
+        # URL. A relative URL is qualified with the URL root for the Woof
+        # application. An absolute URL is returned as is.
+
+        # TBD - would it be faster to store the regexp in a persistent variable 
+        # so regexp is not recompiled every time
+        if {![regexp -- {^[a-z0-9+.-][a-z0-9+.-]*:|^/} $resource]} {
+            set resource [file join [config get url_root] $resource]
+        }
+
+        #ruff
+        # -fullyqualify BOOLEAN - if true, a fully qualified URL (includes
+        #  scheme and host) is returned in all cases.
+        #  
+        if {[::woof::util::dict_get $args -fullyqualify true]} {
+            return [my url_for -urlpath $resource -fullyqualify true]
+        } else {
+            return $resource
+        }
     }
+
+    method include_image {image args} {
+        # Generates a HTML image tag
+        # image - identifies the image, may be a file name, relative url
+        #  or absolute (see url_for_static)
+        # -attrs ATTRLIST - list of attribute value pairs for the tag
+
+        set attrs [::woof::util::tag_attr_fragment \
+                       [dict merge \
+                            {alt Image} \
+                            [::woof::util::dict_get $args -attrs {}]]]
+        return "<img src='[my url_for_static $image -subdir images]' $attrs>"
+    }
+
+    method include_stylesheet {stylesheet args} {
+        # Generates a stylesheet link
+        # stylesheet - identifies the stylesheet, may be a file name, relative 
+        #  or absolute url (see url_for_static)
+        # -attrs ATTRLIST - list of attribute value pairs for the tag
+
+        set attrs [::woof::util::tag_attr_fragment \
+                       [dict merge \
+                            {rel stylesheet type text/css} \
+                            [::woof::util::dict_get $args -attrs {}]]]
+        return "<link href='[my url_for_static $stylesheet -subdir stylesheets]' $attrs>"
+    }
+
+    method include_javascript {js args} {
+        # Generates a javascript script link
+        # js - identifies the stylesheet, may be a file name, relative url
+        #  or absolute (see url_for_static)
+        # -attrs ATTRLIST - list of attribute value pairs for the tag
+
+        set attrs [::woof::util::tag_attr_fragment \
+                       [dict merge \
+                            {type text/javascript} \
+                            [::woof::util::dict_get $args -attrs {}]]]
+        return "<script href='[my url_for_static $js -subdir javascript]' $attrs>"
+    }
+
 
     method render {} {
         # Generates content for the web page.
@@ -503,65 +619,7 @@ oo::class create Controller {
         set _output_done true
     }
 
-    method url_for_static {resource format args} {
-        # Constructs URL for a static resource such as an image.
-        # resource - name of resource (e.g. filename)
-        # format - format of the resource name, must be one of 'url',
-        #   'relativeurl' or 'file'
-        # -subdir RELATIVEDIR - subdirectory under the public directory
-        #  that should be the root of the search. Only used if $format
-        #  is 'file'.
-        # Returns the URL for the resource
-
-        # Search path for resource
-        set dirs [dict get $_dispatchinfo search_dirs]
-
-        #ruff
-        # A resource may be a URL or a file. 
-        # If $format is 'url', the location field is used directly
-        # as the target for the link tag.
-        #
-        # If the format field is 'relativeurl', it is taken to be a
-        # relative url below the root URL.
-        # 
-        # If the format field is 'file', it is taken to be
-        # the name of a file which is searched for in the search
-        # directory path for the controller. The root for all relative
-        # directories in the search path is the public
-        # directory under the Woof root unless the -subdir option is
-        # specified in which case that is used.
-
-        if {[dict exists $args -subdir]} {
-            set relroot [file join [config get public_dir] [dict get $args -subdir]]
-        } else {
-            set relroot [config get public_dir]
-        }
-        switch -exact -- $format {
-            file {
-                set path [::woof::filecache_locate $resource \
-                              -dirs $dirs \
-                              -relativeroot $relroot]
-                if {$path ne ""} {
-                    set resource [my url_for -urlpath [::woof::url_for_file $path $resource]]
-                } else {
-                    exception WOOF MissingFile "Resource $resource not found."
-                }
-            }
-            relativeurl {
-                set resource [file join [config get url_root] $resource]
-            }
-            url {
-                # Take as is
-            }
-            default {
-                exception WOOF Bug "Unknown resource link format '$format'."
-            }
-        }
-
-        return $resource
-    }
-
-    method make_resource_links {resources type} {
+    method OBSOLETEmake_resource_links {resources type} {
         # Constructs link tags corresponding to the given resource files.
         # resources - nested list of pairs containing the resource locations
         # type - one of "stylesheet", "script"
@@ -609,7 +667,7 @@ oo::class create Controller {
         return [join $links \n]
     }
 
-    method make_style_links {styles} {
+    method OBSOLETEmake_style_links {styles} {
         # Constructs link tags corresponding to the given styles
         # styles - nested list of pairs containing the style locations
         # Returns the HTML containing the links tags for the style.
@@ -618,7 +676,7 @@ oo::class create Controller {
         return [my make_resource_links $styles stylesheet]
     }
 
-    method make_javascript_links {scripts} {
+    method OBSOLETEmake_javascript_links {scripts} {
         # Constructs link tags corresponding to the given scripts
         # scripts - nested list of pairs containing the script locations
         # Returns the HTML containing the script tags linking to the scripts.
