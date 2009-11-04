@@ -584,9 +584,12 @@ proc util::remove_left_margin {text args} {
     }
 }
 
-proc util::tag_attr_fragment {attrlist} {
+proc util::tag_attr_fragment {args} {
+    if {[llength $args] == 1} {
+        set args [lindex $args 0]
+    }
     set attrs ""
-    foreach {attr val} $attrlist {
+    foreach {attr val} $args {
         # TBD - what needs to be hesc'ed ?
         lappend attrs "${attr}='$val'"
     }

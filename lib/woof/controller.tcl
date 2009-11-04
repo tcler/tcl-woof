@@ -470,10 +470,17 @@ oo::class create Controller {
         # Generate a HTML link tag for a URL based on the given arguments
         # html - the HTML text to display. Note this is the raw HTML and
         #  is not escaped by the command.
-        # args - list of options passed to the url_for method to generate
-        #  the corresponding URL.
+        # args - may be either a variable number of option value
+        #  pairs or a single argument containing the option value
+        #  pairs. All options except -attrs are passed to url_for.
         # -attrs ATTRLIST - list of attribute value pairs for the tag
         # 
+
+        if {[llength $args] == 1} {
+            # Options passed as a single argument
+            set args [lindex $args 0]
+        }
+
         set attrs ""
         if {[dict exists $args -attrs]} {
             set attrs [::woof::util::tag_attr_fragment [dict get $args -attrs]]
@@ -485,7 +492,15 @@ oo::class create Controller {
     method url_for_static {resource args} {
         # Constructs URL for a static resource such as an image.
         # resource - name of resource, may be a file name or URL
+        # args - may be either a variable number of option value
+        #  pairs or a single argument containing the option value
+        #  pairs
         # Returns the URL for the resource
+
+        if {[llength $args] == 1} {
+            # Options passed as a single argument
+            set args [lindex $args 0]
+        }
 
         #ruff
         # If $resource contains any '/' characters, it is treated as
@@ -546,7 +561,13 @@ oo::class create Controller {
         # Generates a HTML image tag
         # image - identifies the image, may be a file name, relative url
         #  or absolute (see url_for_static)
-        # args - list of attribute value pairs for the tag
+        # args - may be either a variable number of alternating attribute
+        #  and value elements or a single list argument containing them
+
+        if {[llength $args] == 1} {
+            # Options passed as a single argument
+            set args [lindex $args 0]
+        }
 
         set attrs [::woof::util::tag_attr_fragment \
                        [dict merge {alt Image} $args]]
@@ -557,7 +578,13 @@ oo::class create Controller {
         # Generates a stylesheet link
         # stylesheet - identifies the stylesheet, may be a file name, relative 
         #  or absolute url (see url_for_static)
-        # args - list of attribute value pairs for the tag
+        # args - may be either a variable number of alternating attribute
+        #  and value elements or a single list argument containing them
+
+        if {[llength $args] == 1} {
+            # Options passed as a single argument
+            set args [lindex $args 0]
+        }
 
         set attrs [::woof::util::tag_attr_fragment \
                        [dict merge {rel stylesheet type text/css} $args]]
@@ -568,7 +595,13 @@ oo::class create Controller {
         # Generates a javascript script link
         # js - identifies the stylesheet, may be a file name, relative url
         #  or absolute (see url_for_static)
-        # -attrs ATTRLIST - list of attribute value pairs for the tag
+        # args - may be either a variable number of alternating attribute
+        #  and value elements or a single list argument containing them
+
+        if {[llength $args] == 1} {
+            # Options passed as a single argument
+            set args [lindex $args 0]
+        }
 
         set attrs [::woof::util::tag_attr_fragment \
                        [dict merge {type text/javascript} $args]]
