@@ -31,7 +31,9 @@ oo::class create UgController {
             {installation "Installation"}
             {install_under_bowwow "Woof! under BowWow" 2}
             {install_under_apache "Woof! under Apache 2" 2}
-            {apache_cgi_dedicated "Dedicated CGI Apache" 3}
+            {apache_cgi_dedicated "Dedicated CGI on Apache" 3}
+            {apache_cgi_shared "Shared CGI on Apache" 3}
+            {apache_scgi "SCGI on Apache" 3}
             {install_final_steps "Verifying the Installation" 2}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 2}
