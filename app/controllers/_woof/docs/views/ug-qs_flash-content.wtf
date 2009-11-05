@@ -1,0 +1,28 @@
+<p>We also need some mechanism to pass the error message to be
+displayed to the error page. Remember that each HTTP request is
+independent and may not even be processed by the same interpreter. We
+have to therefore pass the error message from the invocation
+of <code>generate</code> to the invocation of <code>showerror</code>
+through some persistent storage. We could use the <code>session</code>
+object we described earlier but there is a slightly more convenient
+mechanism. The <code>flash</code> object is similar (and in fact built
+on top of the <code>session</code> object) with the difference that
+data is stored in it only for the duration of an additional request
+and automatically deleted afterwards. This makes it convenient to
+store messages or any other data that only needs to be kept around for
+the next request.</p>
+
+<p>The last thing to note is that we did not create a view template
+for the <code>FibonacciController.showerror</code> method. Instead we
+directly set the content of the main section through
+the <code>page</code> object. Here is the code.</p>
+[my _code_sample {
+  method showerror {} {
+    page store main "<p style='color: red; font-weight: bold;'>[flash get error_message {An error has occured!}]</p>"
+  }
+}]
+
+<p>This not the preferred way to create page content as it breaks
+the separation between display and program logic. However, for simpler
+cases it can be convenient and avoids cluttering the application with
+trivial template files.</p>

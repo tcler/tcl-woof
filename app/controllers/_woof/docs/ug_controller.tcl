@@ -23,8 +23,11 @@ oo::class create UgController {
             {qs_enhancements "Enhancing the Application" 2}
             {qs_page_layout "Laying out a Page" 2}
             {qs_story_so_far "The Story So Far" 2}
-            {qs_wtf_syntax "Web Template File Syntax" 2}
+            {qs_wtf_syntax "Writing Page Templates" 2}
             {qs_user_input "Getting User Input" 2}
+            {qs_flash "Using the Flash" 2}
+            {qs_default_page "Configuring the Default Home Page" 2}
+            {qs_finish "Finishing Up" 2}
             {page_generation "Page Generation"}
             {wtf "Woof! Template Files"}
             {recommended_reading "Recommended Reading"}
