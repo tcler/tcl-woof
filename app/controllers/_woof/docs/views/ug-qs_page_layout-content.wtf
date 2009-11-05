@@ -1,7 +1,7 @@
 <p>For navigation, we will put links in a column on the left of the
 main area. Both pages will contain the same navigation links. For this
 purpose, create the file
-<span class="woof_filename">app/controllers/views/fibonacci-sidebar.wtf</span>
+<span class="wf_filename">app/controllers/views/fibonacci-sidebar.wtf</span>
 with the following contents:</p>
 [my _code_sample {
 <a href='[my url_for -action generate]'>Generate</a>
@@ -12,14 +12,14 @@ with the following contents:</p>
 <p>This is not the best HTML for navigation menus but it will do for
 our purposes. Note the use of the <code>url_for</code> method to
 generate the links instead of hardcoding to something
-like <span class="woof_filename">/fibonacci/help</span>. Unlike
+like <span class="wf_filename">/fibonacci/help</span>. Unlike
 hard-coded links, links generated in this manner will not need to be
 changed if somewhere down the road we change the URL to
-be <span class="woof_filename">/mathsequences/fibonacci/help</span>.</p>
+be <span class="wf_filename">/mathsequences/fibonacci/help</span>.</p>
 
 <p>In addition to the navigation menu, let us add a header as well to
 brand our fibonacci generator. Create the file
-<span class="woof_filename">app/controllers/views/fibonacci-header.wtf</span>
+<span class="wf_filename">app/controllers/views/fibonacci-header.wtf</span>
 with the following contents:</p>
 [my _code_sample {
 <div style='padding: 10px;'>
@@ -33,7 +33,7 @@ with the following contents:</p>
 lazy in reusing some Woof images for illustrative purposes. The result
 is shown in the browser below:</p>
 
-<p class="woof_center">
+<p class="wf_center">
 [my include_image qs_nav.png alt "Quick Start Example Navigation page"]
 </p>
 

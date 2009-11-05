@@ -19,19 +19,19 @@ stub generation, differs between BowWow and the other web server
 configurations. In the former case, because the BowWow executable is
 entirely self-contained, it is used to invoke various commands. For
 example,</p>
-<pre class="woof_console_session">
+<pre class="wf_console_session">
 &gt; bowwow stubs url fibonacci/generate fibonacci/help
 </pre>
 <p>On the other hand, for the other web servers, the Tcl shell program
 has to be run for the same purpose, invoking
 the [my _chapter_link woofus]. For example,</p>
-<pre class="woof_console_session">
+<pre class="wf_console_session">
 &gt; tclsh scripts/woofus.tcl stubs url fibonacci/generate fibonacci/help
 </pre>
 <p>Here it is assumed the command is run from the Woof! root
 directory. If on Unix/Linux, you may also directly invoke the script
 itself</p>
-<pre class="woof_console_session">
+<pre class="wf_console_session">
 &gt; scripts/woofus.tcl stubs url fibonacci/generate fibonacci/help
 </pre>
 <p>Both forms of the commands are shown in this guide. However, the

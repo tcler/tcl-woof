@@ -1,4 +1,4 @@
-<div class='banner'>
+<div class='wf_banner'>
 <div>
 <h2>Web Oriented Object Framework</h2>
 %if {[pagevar exists module_subheading module_subheading]} {

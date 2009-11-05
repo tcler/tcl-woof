@@ -24,7 +24,7 @@ method generate {} {
 }
 }]
 <p>The first time a user browses to
-the <span class="woof_filename">fibonacci/generate</span> link, we
+the <span class="wf_filename">fibonacci/generate</span> link, we
 want to display the starting two numbers in the sequence. Then for
 subsequent visits to the page within the same browser session, we want
 to include the next number in the sequence. To do that we need to be
@@ -43,7 +43,7 @@ the current sequence, it is adequate.</p>
 
 <p>In the <code>generate </code>method above, we check if
 the <code>session </code>object contains the
-key <span class="woof_filename">fibonacci </span>which holds the
+key <span class="wf_filename">fibonacci </span>which holds the
 sequence generated so far. If so, we add the next number in the
 sequence and if not, we initialize the sequence with the first two
 numbers. We then store the new sequence back in

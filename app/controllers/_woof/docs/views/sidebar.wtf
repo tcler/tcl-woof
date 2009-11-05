@@ -1,6 +1,7 @@
-<div class='navbox'>
+<div class='wf_navbox'>
 <h2>Table of Contents</h2>
 %(
+# TBD - make this a reusable proc
 set requested_action [my action]
 # Figure out which action is being displayed and only
 # show subheadings for that action or its parent

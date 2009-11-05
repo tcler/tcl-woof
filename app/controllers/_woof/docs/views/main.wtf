@@ -1,9 +1,20 @@
-<h2>[hesc [my _heading]]</h2>
-% if {[page fetch content content]} {
-$content
-% }
-<div class='hnavbox navbox'>
 % lassign [my _neighbours] prev next
+<div class='wf_hnavbox wf_navbox'>
+% if {[llength $prev]} {
+   [my link_to [hesc [lindex $prev 1]] -action [lindex $prev 0] -attrs {class leftmost}]
+% }
+% if {[llength $next]} {
+   [my link_to [hesc [lindex $next 1]] -action [lindex $next 0] -attrs {class rightmost}]
+% }
+</div>
+<h2>[hesc [my _heading]]</h2>
+%(
+  if {![page fetch content content]} {
+    set content "<p>The page you were looking for was not found. Please select a chapter from the Table of Contents in the left pane.</p>"
+  }
+%)
+$content
+<div class='wf_hnavbox wf_navbox'>
 % if {[llength $prev]} {
    [my link_to [hesc [lindex $prev 1]] -action [lindex $prev 0] -attrs {class leftmost}]
 % }

@@ -8,7 +8,7 @@ number in the sequence. We will also shade alternate rows in the
 table. As an aside, we could write this as a single command using the
 Tcl libraries but we won't as the purpose is to give a flavor for the
 WTF syntax. Here is the modified template
-in <span class="woof_filename">app/controllers/views/fibonacci-generate-main.wtf</span>:</p>
+in <span class="wf_filename">app/controllers/views/fibonacci-generate-main.wtf</span>:</p>
 [my _code_sample {
  <p>
   The first [llength $seq] numbers in the 
@@ -32,7 +32,7 @@ with the <code>%</code> character are treated as Tcl code. In the
 above template, the <code>foreach</code> loop encloses the HTML for a
 single row in the table and each iteration of the loop adds one row to
 the output. The result looks like this:</p>
-<p class="woof_center">
+<p class="wf_center">
 [my include_image qs_table.png alt "Quick Start Example Navigation"]
 </p>
 

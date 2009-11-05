@@ -2,7 +2,7 @@
 
 oo::class create UgController {
     superclass ApplicationController
-    variable _toc
+    variable _toc _dispatchinfo
     constructor args {
         # Very important to pass arguments to parent
         next {*}$args
@@ -26,7 +26,7 @@ oo::class create UgController {
             {qs_wtf_syntax "Writing Page Templates" 2}
             {qs_user_input "Getting User Input" 2}
             {qs_flash "Using the Flash" 2}
-            {qs_default_page "Configuring the Default Home Page" 2}
+            {qs_default_page "Configuring the Default Page" 2}
             {qs_finish "Finishing Up" 2}
             {page_generation "Page Generation"}
             {wtf "Woof! Template Files"}
@@ -75,7 +75,9 @@ oo::class create UgController {
     }
 
     method _missing_action {action} {
-        # Empty method as we will just show the templates
+        # Called for all actions that are not defined.
+        # Does nothing since the appropriate template is automatically
+        # picked up.
     }
 
     method _chapter_link {action {display ""}} {

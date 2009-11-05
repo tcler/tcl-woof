@@ -4,12 +4,12 @@ functionality. If the user wants the first 30 numbers in the sequence,
 we should provide a way to do that without clicking repeatedly. What
 we want is the following Web page:</p>
 
-<p class="woof_center">
+<p class="wf_center">
   [my include_image qs_form.png alt "Quick Start Example Form"]</p>
 
 <p>There is now an entry box for the user to enter the length of the
 sequence desired. To implement this, we first modify the page template in
-<span class="woof_filename">app/controllers/views/fibonacci-generate-main.wtf </span>as below:</p>
+<span class="wf_filename">app/controllers/views/fibonacci-generate-main.wtf </span>as below:</p>
 [my _code_sample {
     <p>
     The first [llength $seq] numbers in the 
@@ -37,12 +37,12 @@ sequence desired. To implement this, we first modify the page template in
 element at the bottom to allow the user to enter the desired length of
 the generated sequence. We have named this field
 as <code>numfibos</code>. When
-the <span class="woof_demotext">Generate</span> button is clicked, the
+the <span class="wf_demotext">Generate</span> button is clicked, the
 form will be submitted to the same URL resulting in
 the <code>generate </code>method being called.</p>
 
 <p>We now have to modify the generate method in
-the <span class="woof_filename">fibonacci_controller.tcl</span> file
+the <span class="wf_filename">fibonacci_controller.tcl</span> file
 accordingly. It now needs to handle the original request as well as
 the requests posted through the <code>Generate</code>
 button. Moreover, we will also add some simple validation to

@@ -1,5 +1,5 @@
 /* Woof User Guide CSS - assumes _woof.css loaded */
-.woof_console_session {
+.wf_console_session {
    margin: 10px 30px;
    font-size: 83%;
    font-family: "Courier New", Courier, monospace;
@@ -8,21 +8,22 @@
    line-height: 1em;
 }
 
-.woof_filename {
+.wf_filename {
    font-size: 83%;
    font-family: "Courier New", Courier, monospace;
 }
 
-.woof_demotext {
+.wf_demotext {
    font-size: 83%;
    font-family: "Courier New", Courier, monospace;
 }
 
-.woof_center {
+.wf_center {
    text-align: center;
 }
 
-.woof_code {
+.wf_code {
    font-family: "Courier New", Courier, monospace;
    font-size: 83%;
 }
+

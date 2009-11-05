@@ -728,9 +728,8 @@ oo::class create Controller {
     }
 
     method action {} {
-        # Returns the name of the action specified in the current request.
-        # Note this is not necessarily the same as the action actually
-        # being executed.
+        # Returns the name of the action specified in the current 
+        # request.
         return [dict get $_dispatchinfo action]
     }
 }

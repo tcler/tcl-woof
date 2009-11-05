@@ -1,4 +1,4 @@
-<div class='navbox'>
+<div class='wf_navbox'>
 <h2>Site management</h2>
 <ul>
 % foreach {label action} {
