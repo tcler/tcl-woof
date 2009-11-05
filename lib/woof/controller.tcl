@@ -727,7 +727,10 @@ oo::class create Controller {
         exception WOOF_USER InvalidRequest
     }
 
-    method requested_action {} {
+    method action {} {
+        # Returns the name of the action specified in the current request.
+        # Note this is not necessarily the same as the action actually
+        # being executed.
         return [dict get $_dispatchinfo action]
     }
 }
