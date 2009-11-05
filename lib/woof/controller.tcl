@@ -359,9 +359,10 @@ oo::class create Controller {
         set modifiers {}
         if {[dict exists $args -urlpath]} {
             # If URL specified, all modifiers ignored.
+            # TBD - enhance to support fully qual'ed URL's ?
             set url [dict get $args -urlpath]
             if {[string index $url 0] ne "/"} {
-                set url [file join [::woof::config url_root] $url]
+                set url [file join [::woof::config get url_root] $url]
             }
         } else {
             if {[dict exists $args -controller]} {
