@@ -57,7 +57,7 @@ oo::class create UgController {
 
     method _heading {{action ""}} {
         if {$action eq ""} {
-            set action [my requested_action]
+            set action [my action]
         }
         set toc_entry [lsearch -exact -inline -index 0 $_toc $action]
         if {$toc_entry ne ""} {
@@ -69,7 +69,7 @@ oo::class create UgController {
 
     method _neighbours {} {
         # Returns the previous and next chapters.
-        set action [my requested_action]
+        set action [my action]
         set i [lsearch -exact -index 0 $_toc $action]
         return [list [lindex $_toc [expr {$i-1}]] [lindex $_toc [incr i]]]
     }
