@@ -1,4 +1,4 @@
-<h2>Welcome to Woof!</h2>
+<h2 class='wf_first'>Welcome to Woof!</h2>
 <p>
   It appears your Woof! installation was actually successful.
 </p>

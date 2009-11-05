@@ -67,12 +67,19 @@ dt, dd {
 #bd {
   font-family: Verdana;
   font-size: 108%;
+  margin-top: 10px;
+}
+
+#bd h2.wf_first {
+  margin-top: 0px;
+  padding-top: 0px;
 }
 
 .wf_linkbox h2 {
   color: #177f75; /* #21b6a8; */
   margin-bottom: 0.2em;
-  margin-top: 1.5em;
+  /* margin-top: 1.5em; */
+  margin-top: 0em;
   font-size: 93%;
 }
 
@@ -110,7 +117,7 @@ div.wf_navbox {
 .wf_navbox h2 {
   font-size: 93%;
   margin-bottom: 0.2em;
-  margin-top: 3.0em;
+  margin-top: 0em;
   color: #808080;
 }
 
@@ -137,7 +144,7 @@ div.wf_navbox {
 }
 
 .wf_hnavbox {
-  padding:0.5em;
+  padding-bottom:0.5em;
   text-align:center;
   display: block;
 }
