@@ -1,22 +1,84 @@
 <div class='navbox'>
 <h2>Table of Contents</h2>
-<ul>
-% set current_level 1
-% foreach toc_entry $_toc {
-%   lassign $toc_entry action label level
-%   if {$level eq ""} {set level 1}
-%   if {$level != $current_level} {
-      [expr {$level > $current_level ? "<ul>" : "</ul>"}]
-%     set current_level $level
-%   }
-    <li>
-%   if {[my requested_action] eq $action} {
-      [hesc $label]
-%   } else {
-      [my link_to [hesc $label] -action $action]
-%   }
-    </li>
-% }
-</ul>
-</div>
+%(
+set requested_action [my action]
+# Figure out which action is being displayed and only
+# show subheadings for that action or its parent
+# To do that we need to know the parent of the current
+# action.
+set current_level 1
+set current_toplevel ""
+set toplevel_of_request ""
+# $html collects the html to be displayed
+set html "<ul>"
+# $sublevel_html collects the html from sublevels that *may* be displayed
+# (if they are in the same tree as requested items)
+set sublevel_html ""
+foreach toc_entry $_toc {
+    lassign $toc_entry action label level
+    if {$level eq ""} {set level 1}
 
+    # There are two things we have to keep track of. The first is
+    # Whether the item is to be output or not. Items are output
+    # if either they are a toplevel item or if they reside under
+    # subtree of the toplevel item that is the ancestor of the
+    # currently selected action.
+    #
+    # The second thing to keep track of is the nesting level
+    # for second level items.
+    # 
+    # The final output is maintained in $html. Top level items
+    # are directly stored there. Sublevel items are stored in
+    # $sublevel_html. Only if they reside under the appropriate
+    # toplevel item are they appended to $html. Note that
+    # we do not always know at the time we encounter a sublevel
+    # whether it should be displayed or not since the selected
+    # action may be its sibling lower in the order. Hence the
+    # reason for the temporary $sublevel_html. Also, for
+    # simplicity we always store in sublevel_html without
+    # checking whether it is really necessary.
+
+    # If the level has changed add <ul> or </ul> as appropriate.
+    if {$level != $current_level} {
+        # Nested list tags will always show up only in sublevels
+        append sublevel_html [expr {$level > $current_level ? "<ul>" : "</ul>"}]
+        set current_level $level
+    }
+
+    if {$level == 1} {
+        # New top level heading. If the existing top level was
+        # the parent of the requested action, append the sublevel
+        # html to the output html
+        if {$current_toplevel eq $toplevel_of_request} {
+            append html $sublevel_html
+        }
+        set current_toplevel $action; # Current toplevel item
+        set sublevel_html "";         # Reset for collecting sublevels
+        # Add to menu
+        if {$requested_action eq $action} {
+            set toplevel_of_request $current_toplevel
+            # Current action is selected so not a link
+            append html "<li>[hesc $label]</li>"
+        } else {
+            append html "<li>[my link_to [hesc $label] -action $action]</li>"
+        }
+    } else {
+        # Sublevel
+        if {$requested_action eq $action} {
+            # Remember which toplevel we have to display subheadings for.
+            set toplevel_of_request $current_toplevel
+            append sublevel_html "<li>[hesc $label]</li>"
+        } else {
+            append sublevel_html "<li>[my link_to [hesc $label] -action $action]</li>"
+        }
+    }
+}
+# Before terminating, output any collected sublevel items
+if {$current_toplevel eq $toplevel_of_request} {
+    append html $sublevel_html
+}
+
+append html "</ul>"
+%)
+$html
+</div>
