@@ -1,0 +1,51 @@
+<p>The steps required to install Woof! depend on multiple factors such
+as the specific web server, its configuration and the hosting
+environment. The common steps required to install Woof! are described
+below. Subsequent sections describe installing and configuring Woof!
+in several different server-specific scenarios.</p>
+
+<p>It is assumed that you already have Tcl 8.6 or later, and one of
+the supported web servers installed on the system.</p>
+
+<h3>Downloading the distribution</h3>
+<p>Woof! can be downloaded from
+<a href='http://sourceforge.net/project/showfiles.php?group_id=250256'>SourceForge</a>.
+It is is distributed in tar/gzip
+(<span class="woof_filename">.tar.gz</span>) format for Unix/Linux,
+and in zipped (<span class="woof_filename">.zip</span>) format for
+Windows. The content of both archives are identical except for end of line
+conventions. After
+downloading, unpack the archive in a suitable directory. This
+directory may be the same as the final location you want the Woof!
+code to reside, or a temporary location. The installation step will
+take care of both cases. Woof! itself only uses relative paths so it
+can always be moved later. However, you will need to change the web
+server configuration files accordingly.</p>
+<p>There is one very important aspect to keep in mind - <em>the
+final location for Woof! should lie outside the web server's document
+tree</em>. Not following this recommendation requires careful
+configuration of the web server to not expose your application source
+code over the web.</p>
+<h3>Installing the distribution</h3>
+<p>After unpacking the distribution, running the 
+<span class='wf_code'>installer</span>
+script installs the
+Woof! components for the specified web server and interface. For
+example, the following command, executed from the woof distribution
+directory, will install and configure Woof! components for Apache
+using the SCGI interface.</p>
+[my _code_sample {
+woof-dist> tclsh86 scripts/installer.tcl install apache scgi
+}]
+<p>In the above example, the script assumes that Woof! is to be
+installed in-place - i.e. woof-dist is the final location for Woof!
+components. The following command, on the other hand, will install
+Woof! in a different location.</p>
+[my _code_sample {
+woof-dist> tclsh86 scripts/installer.tcl install apache scgi -installdir ~/web-dev/woof
+}]
+<p>Note that the <code>installer.tcl</code> script only configures Woof! itself. The web
+server configuration has to be modified separately. Examples are given
+in the server specific configuration sections that
+follow. The [my _chapter_link installer] details specifics of
+the install command.</p>

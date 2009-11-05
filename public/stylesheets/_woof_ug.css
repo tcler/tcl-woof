@@ -22,8 +22,10 @@
    text-align: center;
 }
 
-.wf_code {
+code, .wf_code {
    font-family: "Courier New", Courier, monospace;
    font-size: 83%;
 }
+
+
 

@@ -28,6 +28,14 @@ oo::class create UgController {
             {qs_flash "Using the Flash" 2}
             {qs_default_page "Configuring the Default Page" 2}
             {qs_finish "Finishing Up" 2}
+            {installation "Installation"}
+            {install_under_bowwow "Woof! under BowWow" 2}
+            {install_under_apache "Woof! under Apache 2" 2}
+            {apache_cgi_dedicated "Dedicated CGI Apache" 3}
+            {install_final_steps "Verifying the Installation" 2}
+            {tools "Tools and Utilities"}
+            {installer "installer - Installation Utility" 2}
+            {bowwow "bowwow - a Lightweight Web Server" 2}
             {page_generation "Page Generation"}
             {wtf "Woof! Template Files"}
             {recommended_reading "Recommended Reading"}
