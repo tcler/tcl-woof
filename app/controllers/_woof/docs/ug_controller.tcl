@@ -34,6 +34,9 @@ oo::class create UgController {
             {apache_cgi_dedicated "Dedicated CGI on Apache" 3}
             {apache_cgi_shared "Shared CGI on Apache" 3}
             {apache_scgi "SCGI on Apache" 3}
+            {apache_websh "Running as an Apache module" 3}
+            {install_under_iis "Woof! under Microsoft IIS" 2}
+            {iis_scgi "SCGI on IIS" 3}
             {install_final_steps "Verifying the Installation" 2}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 2}
