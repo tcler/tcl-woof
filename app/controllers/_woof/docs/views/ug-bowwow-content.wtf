@@ -1,0 +1,57 @@
+<p>BowWow is a single file executable for Windows that contains everything
+you need to try Woof! or to use as a development web server. It includes
+a very basic web server as well as the Tcl interpreter and all required
+libraries.
+</p>
+
+<h3>Running BowWow</h3>
+
+<p>To run BowWow, simply type its name on the command line. Or as seen
+in the screenshot below, type <code>start bowwow</code> to start it in
+a separate console window.</p>
+[my _code_sample {
+C:\bowwow>ls
+bowwow.exe
+
+C:\bowwow>start bowwow.exe
+
+C:\bowwow>ls
+app  bowwow.exe  bowwow.pid  config  public  temp
+
+C:\bowwow>
+}]
+
+<p>As seen in the directory listing above, several new directories
+appear after BowWow is
+started. The <span class="wf_filename">app</span> directory will
+contain your application code and
+templates. The <span class="wf_filename">config</span> directory
+will contain configuration settings for the installation. The public
+directory contains files such as stylesheets and
+images.The <span class="wf_filename">temp </span>directory is the
+default location for log files, session state, and other miscelleneous
+files.</p>
+
+<p>The above commands will start up BowWow in a separate console
+window as shown below.</p>
+
+[my _code_sample {
+BowWow 0.1
+Server started on port 8015
+Enter Ctrl-C to exit...
+}]
+
+<p>The window shows the BowWow V0.1 server running on port 8015, which
+is the BowWow default. You can run the server on a different port by
+specifying the <code>-port <em>PORTNUMBER</em></code> command line
+option when starting the server. After starting BowWow, browsing to
+URL <span class='wf_filename'>http://localhost:8015</span>
+should bring up the web page below.</p>
+
+<p class="wf_center">
+[my include_image bowwow_welcome.png alt "BowWow Welcome Page"]
+</p>
+<p>The BowWow installation is now ready and we can start building the
+application.</p>
+
+% # TBD - option details, ptr to quick start. Running built-in scripts.

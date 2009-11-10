@@ -1,0 +1,11 @@
+<p>Woof! reuses code, design and ideas from all over. Below is
+  a list, <strong>still incomplete</strong>. Woof! to all of them.</p>
+<ul>
+  <li>John Ousterhout for Tcl, of course, and the
+    current <a href="http://wiki.tcl.tk/977">Tcl Core Team</a> for 8.6
+    in particular</li>
+  <li><a href="http://tcl.activestate.com">ActiveState</a> which provides the most widely used Tcl binary distributions</li>
+  <li>The Rails/Pylons/Symfony folks for concepts and ideas</li>
+  <li>Ronnie Brunner for the <a href="http://tcl.apache.org/websh/">mod_websh</a> Apache interface</li>
+  <li>Various Tcllib and Tcl Wiki authors, too many to enumerate</li>
+</ul>

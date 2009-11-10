@@ -81,10 +81,15 @@ oo::class create UgController {
             {wtf "Woof! Template Files" 2}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 2}
+            {woofus "woofus - Woof! Utility Script" 2}
+            {generating_stubs "Generating controller stubs" 3}
+            {verifying_stubs "Verifying controller stubs" 3}
             {bowwow "bowwow - a Lightweight Web Server" 2}
+            {console "console - Interactive Console" 2}
+            {ruffian "ruffian - Documentation Generator" 2}
             {scgi_winservice "scgi_winservice - Woof! Windows Service" 2}
-            {wtf "Woof! Template Files"}
             {recommended_reading "Recommended Reading"}
+            {acknowledgements "Acknowledgements"}
         }
 
         # Only use Woof default section layout, not something user might
