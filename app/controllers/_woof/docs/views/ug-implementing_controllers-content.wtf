@@ -58,7 +58,7 @@ oo::define MathController {
 method definitions. Naturally, all these stubs could be created
 manually as well. Using the script only saves a bit of typing.</p>
 
-<h2>Writing an action method</h2>
+<h3>Writing an action method</h3>
 
 <p>The index method is the default method callled when a request is
 made that does not contain an explicit action method name for the

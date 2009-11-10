@@ -1,0 +1,25 @@
+<p>Web pages within a site generally follow a specific pattern. For
+example, all pages might have a navigation bar on the top, the main
+content in the middle and legal or contact information at the
+bottom. For the most part, the top and bottom areas might be almost
+the same or with little variation across all pages with only the main
+content being specific to a page.</p>
+
+<p>Moreover, the main content itself often follows some boilerplate
+format, for example shopping cart where only the line items differ
+between page views. In such cases, the page needs to be constructed
+from a combination of static content and data dynamically retrieved
+from some source such as a database.</p>
+
+<p>Woof! provides mechanisms to simplify implementation of web pages
+that follow the above pattern. Conceptually, Woof! constructs a Web
+page from [my _chapter_link page_sections "<em>page sections</em>"],
+each identified by a name, that
+correspond to the various areas within the page. These page sections
+are rendered using templates that combine static content and
+HTML markup with Tcl code that generates the dynamic
+content. They are then positioned within a page as specified by
+a [my _chapter_link page_layout "<em>page layout</em>"]
+template, which again can be a combination of
+Tcl code and HTML positioning markup.</p>
+<p>This chapter describes this whole process.</p>

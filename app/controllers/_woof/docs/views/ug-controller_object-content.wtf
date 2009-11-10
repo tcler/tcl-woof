@@ -6,7 +6,7 @@ appropriately handle the request. It is the responsibility of the
 application writer to implement the specific action methods for a
 controller.</p>
 
-<h2>The <span class='wf_code'>Controller</span> class tree</h2>
+<h3>The <span class='wf_code'>Controller</span> class tree</h3>
 
 <p>When an incoming request is [my _chapter_link url_dispatcher "mapped"]
 to a controller class and action method, Woof! instantiates a controller
@@ -21,7 +21,7 @@ Woof! updates. Instead, if common enhanced functions are to be added
 to all controllers in the application, the changes should be made to
 class <span class='wf_code'>ApplicationController</span>.</p>
 
-<h2>The controller object execution context</h2>
+<h3>The controller object execution context</h3>
 
 <p>When a controller object is instantiated for a request, the
 base <span class='wf_code'>Controller</span> class constructor sets up an execution
@@ -108,7 +108,7 @@ the <span class='wf_code'>Controller</span> class provides several other utility
 methods. Refer to its
 [my _manpage_link ::woof::Controller "reference pages"] for more details.</p>
 
-<h2>The <span class='wf_code'>ApplicationController</span> class</h2>
+<h3>The <span class='wf_code'>ApplicationController</span> class</h3>
 
 <p>The <span class='wf_code'>ApplicationController</span> class is defined to allow
 the application programmer to add controller behaviours that are

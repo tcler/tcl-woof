@@ -3,8 +3,13 @@
 
 /* FYI - The Woof logo main color is #DB7D2A */
 
-h1,h2,h3,h4 {
+h1,h2 {
   color: #888888;
+  margin-bottom: 0.5em;
+}
+
+h3,h4 {
+  color: #777777;
   margin-bottom: 0.5em;
 }
 

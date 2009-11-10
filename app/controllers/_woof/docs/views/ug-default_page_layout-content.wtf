@@ -1,0 +1,26 @@
+<p>The default Woof! page layout is defined by the
+file <span class="wf_filename">app/controllers/views/layout.wtf</span>. This
+layout divides a Web page into five page sections:</p>
+<ul>
+  <li>The <span class='wf_code'>header</span> section which contains
+  content, such as a banner, that pat the top of a page.</li>
+  <li>Similarly, the <span class='wf_code'>footer</span> section
+  contains content that is to appear at the bottom of a page.</li>
+  <li>The <span class='wf_code'>sidebar</span> contains elements such
+  as navigation links that appear alongside the main content.</li>
+  <li>The <span class='wf_code'>main</span> section
+  contains the primary content of the main page.</li>
+  <li>The <span class='wf_code'>supplement</span> section contains
+  content related to the main content, such as additional related
+  links, advertising.</li>
+</ul>
+
+<p>When using the default layout, all sections are optional. Sections
+that are empty are omitted from the generated Web page with the
+exception of the main section which is always generated. Section
+content may be generated either through template files or directly
+created by application code.</p>
+
+<p>Note that even with the default layout, the size and location of
+sections are controllable. For example, the sidebar may appear either
+on the left or the right and may be of different width.</p>

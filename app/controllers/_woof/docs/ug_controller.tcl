@@ -69,11 +69,20 @@ oo::class create UgController {
             {response_headers "Adding HTTP Response Headers" 2}
             {sending_files "Sending Files and Non-HTML Data" 2}
             {ocookies_object "The <span class='wf_code'>ocookies</span> Object" 2}
+            {page_generation "Page Generation"}
+            {page_layout "Page Layout" 2}
+            {default_page_layout "Default Page Layout" 3}
+            {custom_page_layout "Custom Page Layout" 3}
+            {page_sections "Page Sections" 2}
+            {page_section_templates "Template Based Page Sections" 3}
+            {page_section_direct "Directly Generated Page Sections" 3}
+            {using_stylesheets "Using Stylesheets" 2}
+            {using_images "Using Images" 2}
+            {wtf "Woof! Template Files" 2}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 2}
             {bowwow "bowwow - a Lightweight Web Server" 2}
             {scgi_winservice "scgi_winservice - Woof! Windows Service" 2}
-            {page_generation "Page Generation"}
             {wtf "Woof! Template Files"}
             {recommended_reading "Recommended Reading"}
         }

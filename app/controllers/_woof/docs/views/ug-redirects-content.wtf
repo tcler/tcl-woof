@@ -65,7 +65,7 @@ method create {} {
 the HTTP response code and text (which is not generally displayed
 in the browser).</p>
 
-<h2>Redirects and rendering</h2>
+<h3>Redirects and rendering</h3>
 <p>Note that because only one response can be sent back to the client,
 an application cannot redirect a request and simultaneously generate a
 Web page as a response. Therefore, using <span class='wf_code'>redirect</span>

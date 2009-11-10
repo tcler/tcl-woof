@@ -1,0 +1,21 @@
+<p>In lieu of template files, the content for a page section may be
+directly stored into the page object by the action method of a
+controller. In this case, when the layout template retrieves the page
+section from the object, it will not search for a template file for
+the page section but instead directly include the stored
+HTML instead. The stored content for the page section must be
+properly encoded, valid HTML content as no further processing,
+substitution or encoding is done on it.</p>
+
+<p>The store method of the page object will store any specified
+content as the content of the named page section. For example,</p>
+
+[my _code_sample {
+  page store main "<p>This is the content for the main page section.</p>"
+}]
+
+<p>sets the content for the main page section of the web page.</p>
+
+<p>As a general rule, it is not recommended setting page section
+content in this manner except in some simple cases as it violates the
+principle of separation of program logic from presentation.</p>
