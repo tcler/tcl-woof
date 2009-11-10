@@ -1,0 +1,121 @@
+<p>In a [my _chapter_link mvc MVC] architecture, the controller is
+responsible for handling user generated events and requests. Each type
+of request is mapped to a specific method - an <em>action</em> - of a
+controller. The action method contains the application logic to
+appropriately handle the request. It is the responsibility of the
+application writer to implement the specific action methods for a
+controller.</p>
+
+<h2>The <span class='wf_code'>Controller</span> class tree</h2>
+
+<p>When an incoming request is [my _chapter_link url_dispatcher "mapped"]
+to a controller class and action method, Woof! instantiates a controller
+object of that class. All controller classes should be derived from
+the [my _manpage_link ::woof::ApplicationController]
+class. This is in turn derived from
+[my _manpage_link ::woof::ApplicationController]
+which encapsulates all the common functionality required of a
+controller. Application writers should never directly
+modify <span class='wf_code'>Controller</span> since that will cause conflicts with
+Woof! updates. Instead, if common enhanced functions are to be added
+to all controllers in the application, the changes should be made to
+class <span class='wf_code'>ApplicationController</span>.</p>
+
+<h2>The controller object execution context</h2>
+
+<p>When a controller object is instantiated for a request, the
+base <span class='wf_code'>Controller</span> class constructor sets up an execution
+context for the methods implementing the actions. It provides simple
+means for extracting parameters from the request, managing session
+context, cookie handling and generating HTTP headers. It also provides
+several procedures for common tasks such as URL generation and
+redirection. </p>
+
+<p>The objects and commands that are made available in the execution
+context are summarized below and detailed in later sections.</p>
+
+<h4><span class='wf_code'>request</span></h4>
+
+<p>The [my _chapter_link request_object "<span class='wf_code'>request</span>"]
+ object encapsulates the attributes of the received request and provides
+  methods to retrieve them.</p>
+
+<h4><span class='wf_code'>response</span></h4>
+
+<p>Conversely,  the
+[my _chapter_link response_object "<span class='wf_code'>response</span>"]
+object is used to build the response to be sent back to the
+client. The application should generally not directly manipulate this
+object.</p>
+
+<h4><span class='wf_code'>page</span></h4>
+
+<p>The [my _chapter_link page_sections "<span class='wf_code'>page</span>"] 
+object holds the content of the web page and may be built either directly 
+or through Woof! templates.</p>
+
+<h4><span class='wf_code'>session</span></h4>
+
+<p>Session data, which supplies context that distinguishes between
+interactions with different clients, is maintained in
+[my _chapter_link session_object "<span class='wf_code'>session</span>"]
+object.</p>
+
+<h4><span class='wf_code'>params</span></h4>
+
+<p>Parameters passed in the client request are accessible through the 
+[my _chapter_link params_object "<span class='wf_code'>params</span>"]
+object.</p>
+
+<h4><span class='wf_code'>icookies</span></h4>
+
+<p>Any HTTP cookies sent in the client request can be retrieved through the 
+[my _chapter_link icookies_object "<span class='wf_code'>icookies</span>"]
+object.</p>
+
+<h4><span class='wf_code'>ocookies</span></h4>
+
+<p>The 
+[my _chapter_link ocookies_object "<span class='wf_code'>ocookies</span>"]
+object contains the output cookies that are to be returned in the response to
+the client.</p>
+
+<h4><span class='wf_code'>flash</span></h4>
+
+<p>The 
+[my _chapter_link flash_object "<span class='wf_code'>flash</span>"] object
+is used as transient storage to hold data that needs to persist only between
+consecutive client requests.</p>
+
+<h4><span class='wf_code'>env</span></h4>
+
+<p>The [my _chapter_link env_object "<span class='wf_code'>env</span>"]
+object stores the environment passed in by the Web server. Generally,
+applications should use the methods of the
+[my _chapter_link request_object "<span class='wf_code'>request</span>"]
+object as it hides differences between web servers.</p>
+
+<h4><span class='wf_code'>headers</span></h4>
+
+<p>The [my _chapter_link headers_object "<span class='wf_code'>headers</span>"]
+object contains the HTTP headers that will sent in the response to the
+client.</p>
+
+<p>The above objects are available within the action methods as well
+as in the [my _chapter_link wtf "templates"] since the latter also execute in
+the context of the controller object. In addition,
+the <span class='wf_code'>Controller</span> class provides several other utility
+methods. Refer to its
+[my _manpage_link ::woof::Controller "reference pages"] for more details.</p>
+
+<h2>The <span class='wf_code'>ApplicationController</span> class</h2>
+
+<p>The <span class='wf_code'>ApplicationController</span> class is defined to allow
+the application programmer to add controller behaviours that are
+common to all application controllers without having the modify
+the <span class='wf_code'>Controller</span> class. Woof! itself does not add any new
+variables or methods in this class and promises not to modify it in
+future releases. Application writers should define all their
+controllers to inherit from this
+class. The [my _chapter_link woofus "woofus"] stubs generator
+also generates stubs that follows this rule.</p>

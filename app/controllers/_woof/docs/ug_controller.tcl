@@ -43,6 +43,24 @@ oo::class create UgController {
             {start_scgi_linux "SCGI on Linux" 3}
             {start_scgi_windows "SCGI on Windows" 3}
             {install_final_steps "Verifying the Installation" 2}
+            {basics "Woof! Basics"}
+            {mvc "The Model-View-Controller Architecture" 2}
+            {interpreter "The Woof! Interpreter" 2}
+            {filesystem_layout "File System Layout" 2}
+            {directory_structure "Directory Structure" 3}
+            {file_naming  "File Naming and Ownership" 3}
+            {configuration "Configuration Settings" 2}
+            {development_aids "Development Aids" 2}
+            {request_handling "Request Handling"}
+            {url_dispatcher "URL Dispatching" 2}
+            {controller_object "The <span class='wf_code'>controller</span> Object" 2}
+            {implementing_controllers "Implementing Controllers and Actions" 3}
+            {request_object "The <span class='wf_code'>request</span> Object" 2}
+            {session_object "The <span class='wf_code'>session</span> Object" 2}
+            {icookies_object "The <span class='wf_code'>icookies</span> Object" 2}
+            {flash_object "The <span class='wf_code'>flash</span> Object" 2}
+            {params_object "The <span class='wf_code'>params</span> Object" 2}
+            {env_object "The <span class='wf_code'>env</span> Object" 2}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 2}
             {bowwow "bowwow - a Lightweight Web Server" 2}
@@ -104,12 +122,20 @@ oo::class create UgController {
         if {$display eq ""} {
             set display [my _heading $action]
         }
-        return [my link_to [hesc $display] -action $action]
+        return [my link_to $display -action $action]
     }
 
     method _code_sample {text} {
         # Returns a code sample
-        return "<pre class='woof_console_session'>[::woof::util::remove_left_margin $text]</pre>"
+        return "<pre class='wf_console_session'>[hesc [::woof::util::remove_left_margin $text]]</pre>"
+    }
+
+    method _manpage_link {name {display ""}} {
+        # Generates a link to manpage for a class or proc
+        if {$display eq ""} {
+            set display "<span class='wf_code'>[hesc [namespace tail $name]]</span>"
+        }
+        return "<a href='http://woof.magicsplat.com/manuals/woof/index.html#$name'>$display</a>"
     }
 
 }

@@ -42,7 +42,7 @@ served by Lighttpd without going through Woof! as detailed below.</p>
 for Lighttpd must be changed to point to the Woof! public directory by
 editing <span class="wf_filename">lighttpd.conf</span>.</p>
 [my _code_sample {
-server.document-root = &quot;/var/myapp/public&quot;
+server.document-root = "/var/myapp/public"
 }]
 <p>Note that the document root points to
 the <span class="wf_filename">public</span> subdirectory, <em>not</em>
@@ -53,9 +53,9 @@ locate URL resources.</p>
 <p>Next, SCGI has to be configured and enabled in Lighttpd. First, look for the definition of <code>server.modules</code> and add <code>mod_scgi</code> to enable SCGI. The definition will look similar to the following depending on what other modules you have configured:</p>
 [my _code_sample {
 server.modules = (
-                    &quot;mod_access&quot;
-                    &quot;mod_scgi&quot;,
-                    &quot;mod_accesslog&quot; )
+                    "mod_access"
+                    "mod_scgi",
+                    "mod_accesslog" )
 }]
 <p>Next we add the following SCGI configuration.</p>
 [my _code_sample {

@@ -1,0 +1,37 @@
+<p>HTTP is a stateless protocol, and yet applications need to maintain
+state on the server related to the interactions of a particular
+user. For example, in a shopping cart application, requests from
+multiple users must be distinguished so that the views they see
+reflect <em>all</em> their previous requests, and only
+their <em>own</em> prior requests. This requires a mechanism for
+implementing stateful interactions layered on top of the stateless
+HTTP transport protocol.</p>
+
+<p>Most Web frameworks use the <em>session</em> concept to allow
+applications to maintain state associated with requests from a
+specific client. This is generally implemented by storing
+a <em>session identifier</em> on each client that is passed back with
+every request and can then be used on the server side as a key to a
+lookup table that contains the state for the client.</p>
+
+<p>Woof! provides this feature through the <code>session</code>
+object. When a request comes in, Woof! creates an object of class
+[my _manpage_link ::woof::Session],
+which may correspond to a new session or contain content of an
+existing session to which the request has been mapped. Application
+code may access and store items in this session using the standard
+[my _manpage_link ::woof::util::Map],
+interfaces. Internally, Woof! implements sessions through the use of
+HTTP cookies on the client to store the session identifier.</p>
+
+<p>When the request is handled, the contents of
+the <code>session</code> object are automatically stored by Woof! and
+restored when the next request is received from the same client.</p>
+
+<p>In Woof! 0.3 and later, because storage/retrieval has a non-trivial
+cost, sessions are created in lazy fashion. If the application does
+not store data in the session, no overhead is imposed.</p>
+
+<p>Refer to the sample application in the chapter
+[my _chapter_link quick_start]
+for an example of using the session to store state.</p>

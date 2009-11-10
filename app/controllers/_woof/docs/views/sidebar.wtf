@@ -59,18 +59,18 @@ foreach toc_entry $_toc {
         if {$requested_action eq $action} {
             set toplevel_of_request $current_toplevel
             # Current action is selected so not a link
-            append html "<li>[hesc $label]</li>"
+            append html "<li>$label</li>"
         } else {
-            append html "<li>[my link_to [hesc $label] -action $action]</li>"
+            append html "<li>[my link_to $label -action $action]</li>"
         }
     } else {
         # Sublevel
         if {$requested_action eq $action} {
             # Remember which toplevel we have to display subheadings for.
             set toplevel_of_request $current_toplevel
-            append sublevel_html "<li>[hesc $label]</li>"
+            append sublevel_html "<li>$label</li>"
         } else {
-            append sublevel_html "<li>[my link_to [hesc $label] -action $action]</li>"
+            append sublevel_html "<li>[my link_to $label -action $action]</li>"
         }
     }
 }
