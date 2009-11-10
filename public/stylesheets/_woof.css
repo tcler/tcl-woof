@@ -3,9 +3,13 @@
 
 /* FYI - The Woof logo main color is #DB7D2A */
 
-h1,h2,h3 {
+h1,h2,h3,h4 {
   color: #888888;
   margin-bottom: 0.5em;
+}
+
+h4 {
+  font-size: smaller;
 }
 
 table {
@@ -140,7 +144,9 @@ div.wf_navbox {
 }
 
 .wf_navbox a:hover {
-  font-weight: bold;
+  /* font-weight: bold; */
+  /* text-decoration: underline; */
+  color: #db7d2a;
 }
 
 .wf_hnavbox {
