@@ -37,10 +37,16 @@ oo::class create UgController {
             {apache_websh "Running as an Apache module" 3}
             {install_under_iis "Woof! under Microsoft IIS" 2}
             {iis_scgi "SCGI on IIS" 3}
+            {install_under_lighttpd "Woof! under Lighttpd" 2}
+            {lighttpd_scgi "SCGI on Lighttpd" 3}
+            {start_scgi "Running as an SCGI server" 2}
+            {start_scgi_linux "SCGI on Linux" 3}
+            {start_scgi_windows "SCGI on Windows" 3}
             {install_final_steps "Verifying the Installation" 2}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 2}
             {bowwow "bowwow - a Lightweight Web Server" 2}
+            {scgi_winservice "scgi_winservice - Woof! Windows Service" 2}
             {page_generation "Page Generation"}
             {wtf "Woof! Template Files"}
             {recommended_reading "Recommended Reading"}
@@ -103,7 +109,7 @@ oo::class create UgController {
 
     method _code_sample {text} {
         # Returns a code sample
-        return "<pre class='woof_console_session'>[hesc [::woof::util::remove_left_margin $text]]</pre>"
+        return "<pre class='woof_console_session'>[::woof::util::remove_left_margin $text]</pre>"
     }
 
 }

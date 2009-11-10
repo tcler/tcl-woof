@@ -1,0 +1,92 @@
+<p>The <a href="http://python.ca/scgi/protocol.txt">Simple Common
+Gateway Interface</a> (SCGI) is a standard for communication between
+web servers and application servers on the back end. It has several
+performance advantages over CGI. This chapter describes configuration
+of Lighttpd to use SCGI to communicate with a Woof! application
+server on the back end. The process of running Woof! as a
+SCGI application server is described in
+the chapter [my _chapter_link start_scgi].</p>
+<p>SCGI is a standard part of the Lighttpd distribution although you
+may need to enable it as shown below.</p>
+<h3>Assumptions</h3>
+<p>This scenario makes the following assumptions:</p>
+<ul>
+    <li>This is a dedicated server and you have full control over the
+    Lighttpd configuration files.</li>
+    <li>The server only hosts the Woof! application and nothing else.</li>
+    <li>The application is rooted at the top level,
+    i.e. <span class="wf_filename">http://www.mysite.com</span> is the
+    entry point into the application.</li>
+    <li>You have the means to modify the system configuration so that
+    the Woof! SCGI server is started automatically either at boot time
+    or when Lighttpd is started.</li>
+</ul>
+<h3>Step 1 - install Woof!</h3>
+<p>The next step is to install Woof! for Lighttpd and SCGI
+using the [my _chapter_link installer "installer script"].
+[my _code_sample {
+~/woof-dist> tclsh86 scripts/installer.tcl install lighttpd scgi -installdir /var/myapp
+}]
+<p>The above command will create the
+Woof! <a href="directory_structure">directory structure</a>
+under <span class="wf_filename">/var/myapp</span>. In particular,
+the <span class="wf_filename">/var/myapp/public</span> will contain
+the publically accessible directory tree that will be the document
+root for the dedicated web server. The
+file <span class="wf_filename">scgi_server.tcl</span> in that
+directory implements the Woof! CGI interface. The other files in the
+directory, including subdirectories, are intended to be directly
+served by Lighttpd without going through Woof! as detailed below.</p>
+<h3>Step 2 - set the document root</h3>
+<p>Since this is the only application on the server, the document root
+for Lighttpd must be changed to point to the Woof! public directory by
+editing <span class="wf_filename">lighttpd.conf</span>.</p>
+[my _code_sample {
+server.document-root = &quot;/var/myapp/public&quot;
+}]
+<p>Note that the document root points to
+the <span class="wf_filename">public</span> subdirectory, <em>not</em>
+the Woof! root directory. By default, Lighttpd will now look under
+the <span class="wf_filename">/var/myapp/public</span> directory to
+locate URL resources.</p>
+<h3>Step 3 - configure SCGI</h3>
+<p>Next, SCGI has to be configured and enabled in Lighttpd. First, look for the definition of <code>server.modules</code> and add <code>mod_scgi</code> to enable SCGI. The definition will look similar to the following depending on what other modules you have configured:</p>
+[my _code_sample {
+server.modules = (
+                    &quot;mod_access&quot;
+                    &quot;mod_scgi&quot;,
+                    &quot;mod_accesslog&quot; )
+}]
+<p>Next we add the following SCGI configuration.</p>
+[my _code_sample {
+$HTTP["url"] !~ "\.[^.]+$" {
+  scgi.server = (
+                  "/" =>
+                    ( "127.0.0.1" =>
+                      (
+                        "host" => "127.0.0.1",
+                        "port" => 9999,
+                        "check-local" => "disable"
+                      )
+                    )
+                )
+}
+}]
+<p>The first line enables SCGI only if the requested URL does not have
+an extension. The purpose of this is to serve stylesheets and images
+directly without going through SCGI and Woof!. There are better ways
+of doing this in Lighttpd 1.5 but that has not released as yet.</p>
+<p>The remaining lines configure the host and port that the Woof! SCGI server is running on.</p>
+<h3>Step 4 - starting the SCGI server</h3>
+<p>The Woof! SCGI server script that handles connections passed by
+Apache needs to be started whenever Apache runs. This step is actually
+independent of the web server and is described
+in [my _chapter_link start_scgi].</p>
+<p><em>NOTE: Lighttpd has a mechanism to start the SCGI server through the bin-path attribute in the scgi.server definition. This mechanism will not work with the Woof! SCGI server as Lighttpd in this case will create the listening socket and pass it to the created process as file descriptor 0. Woof! on the other hand expects to create the socket itself.</em></p>
+<h3>Completing the installation</h3>
+<p>Once the steps described there are done, configuration is
+complete. You can now move on to
+[my _chapter_link installation_final_steps "completing the installation"].</p>
+<h3><a name="cgi2scgi">Using SCGI in a shared hosting
+environment</a></h3>
+<p>Using SCGI as described above is not possible in a shared hosting environment if your service provider is not willing to add the SCGI module to the web server configuration. <strong><em>TBD - Document the cgi2scgi adapter</em></strong></p>
