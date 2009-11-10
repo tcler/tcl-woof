@@ -1,0 +1,7 @@
+<p>Generally, Woof! automatically adds the required HTTP headers
+to the response sent to the client and the application does not need
+to explicitly set header values. Under special circumstances,
+applications may set header values through the 
+<span class='wf_code'>response</span> object methods. See the
+[my _manpage_link ::woof::Response "API reference"]
+for more details.</p>

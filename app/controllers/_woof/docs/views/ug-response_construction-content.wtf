@@ -1,0 +1,23 @@
+<p>At some point in handling the request, the application must send a
+response back to the client. In the context of [my _chapter_link mvc "MVC"],
+this corresponds to the View component.</p>
+
+<p>The response may take one of several different forms:</p>
+<ul>
+  <li>In the most common case, the request is successfully completed
+  and the client is sent back a dynamically generated
+  HTML page.</li>
+  <li>Content other than a HTML&nbsp;Web page has to be returned to
+  the client, for example a MP3 audio file.</li>
+  <li>The client request cannot be handled completely by the current
+  URL handler and the client is redirected to a different URL.</li>
+  <li>Errors were encountered in handling the request and an error
+  page needs to be displayed to the client.</li>
+</ul>
+
+<p>Each of these forms is discussed in subsequent sections, but it is
+important to keep in mind that <strong>every client request must
+result in exactly one response being returned</strong>. An error is
+generated if, for example, a redirect response is attempted in
+conjunction with returning of a Web page during the handling of a
+single request.</p>

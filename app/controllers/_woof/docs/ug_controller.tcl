@@ -61,6 +61,14 @@ oo::class create UgController {
             {flash_object "The <span class='wf_code'>flash</span> Object" 2}
             {params_object "The <span class='wf_code'>params</span> Object" 2}
             {env_object "The <span class='wf_code'>env</span> Object" 2}
+            {response_construction "Response construction"}
+            {response_object "The <span class='wf_code'>response</span> Object" 2}
+            {normal_response "Returning a Normal Response" 2}
+            {redirects "Redirecting a Request" 2}
+            {error_responses "Sending Error Responses" 2}
+            {response_headers "Adding HTTP Response Headers" 2}
+            {sending_files "Sending Files and Non-HTML Data" 2}
+            {ocookies_object "The <span class='wf_code'>ocookies</span> Object" 2}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 2}
             {bowwow "bowwow - a Lightweight Web Server" 2}

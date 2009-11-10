@@ -1,0 +1,27 @@
+<p>The HTTP cookie facility allows web servers to store key value
+pairs on the client side and have the client send them back with every
+request. These cookies are used to store data that is specific to that
+client instance. For example, in Woof! the
+[my _chapter_link session_object "session"] identifier is
+stored as a cookie.</p>
+
+<p>The cookie values are sent by the client as part of the
+HTTP headers and are made available to action methods and
+templates in Woof! through the <span class='wf_code'>icookies</span> 
+object. This object, of class [my _manpage_link ::woof::CookiesIn] provides a
+standard [my _manpage_link ::woof::Map]
+interface for retrieving the values associated with cookies. For
+example, the following [my _chapter_link wtf WTF] fragment will
+generate a table of all cookie values received in the current
+request.</p>
+
+[my _code_sample {
+  <table>
+  % foreach {cookie value} [icookies get] {
+    <tr><td>$cookie</td><td>$value</td></tr>
+  % }
+  </table>
+}]
+
+<p>For information on manipulating cookie values on the client, see
+the section [my _chapter_link ocookies_object].</p>
