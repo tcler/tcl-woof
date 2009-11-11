@@ -15,6 +15,7 @@ set html "<ul>"
 # $sublevel_html collects the html from sublevels that *may* be displayed
 # (if they are in the same tree as requested items)
 set sublevel_html ""
+my variable _toc
 foreach toc_entry $_toc {
     lassign $toc_entry action label level
     if {$level eq ""} {set level 1}

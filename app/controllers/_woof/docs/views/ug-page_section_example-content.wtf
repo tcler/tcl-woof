@@ -1,0 +1,10 @@
+<p><b>This page not yet done.h</b></p>
+<h3>A Layout Example</h3>
+<p>The following example illustrates some of the above principles
+  described above. We use the simple example layout shown above.</p>
+<p>Assume you are designing an application for a school, that contains
+two controllers <span class="wf_code">teacher</span> and
+<span class="wf_code">student</span>. Since there may be other applications
+on the site, we create both these under <span class="wf_code">school</span>
+module.</p>
+

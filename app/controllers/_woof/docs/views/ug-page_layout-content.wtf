@@ -25,14 +25,14 @@ positions the various page sections within the body.</p>
   </html>
 }]
 
-<p>The above layout is defined in
-[my _chapter_link wtf] (WTF) containing a mixture of Tcl code and HTML 
+<p>The above layout is defined in [my _chapter_link wtf] (WTF) format
+containing a mixture of Tcl code and HTML 
 markup. It starts with defining the standard HTML page headers. Within the body
 element, the layout defines three sections - the header, the main
 content and the footer. The contents of each section, if defined, are
 expected to be in the <span class='wf_code'>page</span> object. Note
 that the layout makes use of conditional Tcl statements to insert each
-section only if they exist. The <span class='wf_code'>fetch</span>
+section only if it exists. The <span class='wf_code'>fetch</span>
 method returns true if the page section exists and stores it in the
 variable <span class='wf_code'>content</span>.
 The [my _chapter_link page_object "<span class='wf_code'>page</span>"]
@@ -46,8 +46,11 @@ Woof! itself does not impose any restrictions on the number and names
 of the sections, or how they are positioned. The page object will
 attempt to retrieve the content of each section based on the
 controller and action specified in the client request and the name of
-the section. The corresponding section content is either supplied by
-the action method or generated from a page section template. It is up
+the section. The corresponding section content is either 
+[my _chapter_link page_section_direct "directly stored"]
+by the action method or 
+[my _chapter_link page_section_templates "generated from a template"].
+It is up
 to the application writer to ensure the appropriate named sections can
 be generated.</p>
 
@@ -62,29 +65,81 @@ the <span class='wf_code'>page</span> object
 to retrieve the various page sections that contain the actual data,
 both static and dynamically retrieved from a controller.</p>
 
-<p>However, there is nothing that prevents a layout from containing
+<p>However, <em>there is nothing that prevents a layout from containing
 pure static HTML content, or directly accessing a controller's dynamic
-content. This practice is not recommended but might be occasionally
+content</em>. It does not have to use the <span class="wf_code">page</span>
+object. Nor does it does not have to be implemented in terms of page
+sections at all. However, as we will see, using page sections offers
+great flexibility and reuse so
+this practice is not recommended. It might be occasionally
 used when a particular page does not follow a site's standard layout
 and is simple enough that adding separate layout and page section
 templates is not worthwhile.</p>
 
 <h3>Locating layout templates</h3>
 
+<p>An application's web pages may not be layed out in a single format.
+Woof! allows for this by using a search path to locate the layout to
+use for a particular controller and action. This search path allows
+for both sharing as well as specialization.</p>
+
 <p>When Woof! receives a client request with a URL that is mapped to a
 controller <span class='wf_code'><em>CONTROLLER</em> </span>and
-action <span class='wf_code'><em>ACTION</em></span>, it checks for the
-existence of the
-files <span class="woof_filename"><em>CONTROLLER-ACTION</em>-layout.wtf</span>
-and <span class="woof_filename"><em>CONTROLLER</em>-layout.wtf</span>
-in the <span class="woof_filename">views</span> subdirectory of the
-directory where the controller module is located. If neither is found,
-Woof! searches for a
-file <span class="woof_filename">layout.wtf</span> in
-all <span class="woof_filename">views </span>subdirectories starting
-with the controller module directory and working upwards through all
-parent module directories of the controller. The first file found is
-used as the template for the layout.</p>
+action <span class='wf_code'><em>ACTION</em></span>,</p>
+<ul>
+  <li>It first checks for the existence of the
+    file <span class="wf_filename"><em>CONTROLLER-ACTION</em>-layout.wtf</span>
+    in the <span class="wf_filename">views</span> subdirectory of the
+    directory where the controller module is located. This would
+    correspond to a case where the layout was specific to that controller
+    action.</li>
+  <li>If the file does not exist, it then looks for the file
+    <span class="wf_filename"><em>CONTROLLER</em>-layout.wtf</span> in that
+    same <span class="wf_filename">views</span> subdirectory. This corresponds
+    to a layout that is shared among all actions of the controller that
+    do not themselves have an action-specific layout.</li>
+  <li>If neither is found, Woof! looks for a file
+    <span class="wf_filename">layout.wtf</span> in that
+    same <span class="wf_filename">views</span> subdirectory. This corresponds
+    to a layout shared by all controllers within a module that do not
+    themselves have a controller-specific layout.
+  <li>Finally, Woof! searches for a file
+    <span class="wf_filename">layout.wtf</span> in all
+    <span class="wf_filename">views </span>subdirectories
+    working upwards through all
+    parent module directories of the controller. The first file found is
+    used as the template for the layout. This corresponds to the inheritance
+    of a layout from parent modules or the application itself. Note
+    that in this last case, the controller name and action are not used
+    in the search as it makes no sense to propagate controller and
+    action specific names further up the module hierarchy.</li>
+</ul>
+<p>The above algorithm is slightly modified when the client indicates
+a preferred language. Details are given in
+[my _chapter_link language_specific_pages].
+
+<h3>Using layout overrides</h3>
+
+<p>There may be instances where you want to use a specific named
+layout and override the constructed layout file names described
+above. You can do this by setting the 
+[my _chapter_link pagevar pagevar] value 
+<span class='wf_code'>section_layout_alias</span> as follows:</p>
+
+[my _code_sample {
+  pagevar set section_layout_alias special_layout
+}]
+
+<p>Woof! will then use <span class='wf_filename'>special_layout.wtf</span>
+as the name of the layout file and look for it in the search path as described
+above.</p>
+
+<p>This kind of layout override may be done at any time before the page
+is rendered. If the above statement was executed within the constructor
+for the controller, <span class='wf_filename'>special_layout.wtf</span>
+would be used for all action methods in the controller (unless they in turn
+overrode it). If it was executed within an action method, only the layout
+for that action method would be overridden.
 
 <h3>Sharing layout templates</h3>
 
@@ -97,4 +152,5 @@ within a controller and even across multiple controllers.</p>
 sharing of common layouts within, and between, controllers and
 controller trees while simultaneously allowing special layouts for
 specific controllers or even actions within a controller.</p>
+
 
