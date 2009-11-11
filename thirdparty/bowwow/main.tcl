@@ -55,9 +55,9 @@ proc bowwow {args} {
     ::woof::webservers::wibble::main $::env(WOOF_ROOT) -port $opts(-port) -urlroot $opts(-urlroot)
 }
 
-if {[lindex $argv 0] eq "stubs"} {
-    source [file join $starkit::topdir scripts woofus.tcl]
-    woofus::main {*}$::argv
+if {[lindex $argv 0] in {controller url verify}} {
+    source [file join $starkit::topdir scripts wag.tcl]
+    wag::main {*}$::argv
 } else {
     if {[catch {bowwow {*}$::argv} msg]} {
         puts stderr $msg
