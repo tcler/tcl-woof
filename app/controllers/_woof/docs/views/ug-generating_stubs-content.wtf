@@ -1,5 +1,5 @@
-<p>The <span class='wf_code'>woofus</span>
-script's <span class='wf_code'>stubs url</span> command can be used to
+<p>The <span class='wf_code'>wag</span>
+script's <span class='wf_code'>url</span> command can be used to
 generate the common boilerplate code that is contained in Woof!
 controllers as was illustrated in the 
 [my _chapter_link implementing_controllers] section of the
@@ -7,7 +7,7 @@ controllers as was illustrated in the
 The general form of the command is</p>
 
 [my _code_sample {
-  tclsh86 scripts/woofus.tcl stubs url ?-excludeviews BOOLEAN? ?list of urls?
+  tclsh86 scripts/wag.tcl url ?-excludeviews BOOLEAN? ?list of urls?
 }]
 
 <p>For each URL specified as an argument, the command will check if
@@ -27,7 +27,7 @@ controllers.</p>
 [my _chapter_link implementing_controllers "aforementioned chapter"].</p>
 
 [my _code_sample {
-> tclsh86 scripts/woofus.tcl stubs url /math/add /math/multiply
+> tclsh86 scripts/wag.tcl url /math/add /math/multiply
 Controller MathController:
          File app/controllers/math_controller.tcl will be modified.
          Class MathController will be modified.

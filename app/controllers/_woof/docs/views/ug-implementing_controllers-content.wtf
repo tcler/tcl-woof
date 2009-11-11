@@ -2,10 +2,10 @@
 action methods corresponding to the URL's through which the client
 will access the application. Although these can be implemented
 manually, the stubs generator of
-[my _chapter_link woofus "woofus"] saves us a bit of typing.</p>
+[my _chapter_link wag "wag"] saves us a bit of typing.</p>
 
 [my _code_sample {
-> tclsh86 scripts/woofus.tcl stubs url /math/index /math/add
+> tclsh86 scripts/wag.tcl stubs url /math/index /math/add
 Controller MathController:
          File app/controllers/math_controller.tcl will be created.
          Class MathController will be created.

@@ -117,5 +117,5 @@ the <span class='wf_code'>Controller</span> class. Woof! itself does not add any
 variables or methods in this class and promises not to modify it in
 future releases. Application writers should define all their
 controllers to inherit from this
-class. The [my _chapter_link woofus "woofus"] stubs generator
+class. The [my _chapter_link wag "wag"] stubs generator
 also generates stubs that follows this rule.</p>

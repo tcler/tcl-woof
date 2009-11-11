@@ -17,7 +17,7 @@ the [my _chapter_link console_server "console server"].</p>
 code. In order to reduce repetitive typing, Woof! provides a means for
 scaffolding - automatic generation of the controller and view
 template boilerplate text corresponding to URL's through
-the [my _chapter_link woofus "woofus"] <code>stubs</code>
+the [my _chapter_link wag "wag"] <code>stubs</code>
 command.</p>
 
 <h3>Run modes</h3>

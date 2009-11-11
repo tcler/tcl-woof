@@ -1,7 +1,13 @@
-<p>Our simple web site will have only two pages - one to generate the Fibonacci number sequence and a help page.</p>
-<p>Although we could create all the required files manually, we'll save a bit of work by using the Woof! stubs generator. If you are using BowWow,</p>
+<p>Our simple web site will have only two pages - one to generate the
+Fibonacci number sequence and a help page.</p>
+
+<p>Although we could create all the required files manually, we'll
+save a bit of work by using the Woof! application generator, 
+[my _chapter_link wag wag]. If you are
+using BowWow,</p>
+
 [my _code_sample {
-C:\bowwow> bowwow stubs url fibonacci/generate fibonacci/help
+C:\bowwow> bowwow url fibonacci/generate fibonacci/help
 Controller FibonacciController:
          File app/controllers/fibonacci_controller.tcl will be created.
          Class FibonacciController will be created.
@@ -11,13 +17,38 @@ Controller FibonacciController:
                 app/controllers/views/fibonacci-help-main.wtf
 Do you want to continue? [YN] y
 }]
-<p>Using Woof! with other web servers, the equivalent command would be</p>
+
+<p>Using Woof! with other web servers, the equivalent command would
+be</p>
+
 [my _code_sample {
-C:\bowwow> tclsh scripts/woofus.tcl stubs url fibonacci/generate fibonacci/help
+C:\bowwow> tclsh scripts/wag.tcl url fibonacci/generate fibonacci/help
 }]
-<p>The command <span class="wf_filename">stubs </span>is used for generating boilerplate stubs for handling requests. The <span class="wf_filename">url </span>parameter indicates that relative URL format will be used to indicate what stubs are to be generated. So the above commands will generate stubs for Web pages that can be accessed through the URL's <span class="wf_filename">http://localhost:8015/fibonacci/generate</span> and <span class="wf_filename">http://localhost:8015/fibonacci/help</span> respectively.</p>
-<p>The command will first display the actions it will take in creating the stubs, and then prompt for the go-ahead to actually do so. In this Quick Start chapter, we will ignore the MVC-based naming conventions being used when generating the stubs. It suffices to know that the stub generator will create a class <code>FibonacciController</code> whose methods will be called to handle URL's that are prefixed with <span class="wf_filename">/fibonacci</span>. The stub generator also creates two methods - <code>generate </code>and <code>help </code>- corresponding to the two URL's we specified on the command line.</p>
-<p>If you edit the file <span class="wf_filename">app/controllers/fibonacci_controller.tcl</span> under your BowWow directory, you will see the following contents:</p>
+
+<p>
+The <span class="wf_filename">url</span> command generates stubs for
+the specified relative URL(s).
+So the above commands will generate stubs for Web pages
+that can be accessed through the
+URL's <span class="wf_filename">http://localhost:8015/fibonacci/generate</span>
+and <span class="wf_filename">http://localhost:8015/fibonacci/help</span>
+respectively.</p>
+
+<p>The command will first display the actions it will take in creating
+the stubs, and then prompt for the go-ahead to actually do so. In this
+Quick Start chapter, we will ignore the MVC-based naming conventions
+being used when generating the stubs. It suffices to know that the
+stub generator will create a class <span class='wf_code'>FibonacciController</span>
+whose methods will be called to handle URL's that are prefixed
+with <span class="wf_filename">/fibonacci</span>. The stub generator
+also creates two methods
+- <span class='wf_code'>generate</span> and <span class='wf_code'>help</span> - corresponding to the
+two URL's we specified on the command line.</p>
+
+<p>If you edit the file
+<span class="wf_filename">app/controllers/fibonacci_controller.tcl</span>
+under your BowWow directory, you will see the following contents:</p>
+
 [my _code_sample {
     oo::class create FibonacciController {
         superclass ApplicationController
@@ -37,4 +68,8 @@ C:\bowwow> tclsh scripts/woofus.tcl stubs url fibonacci/generate fibonacci/help
         }
     }
 }]
-<p>As you can see, the stubs will generate exceptions if invoked. For example, navigating to <span class="wf_filename">http://localhost:8015/fibonacci/help</span> will result in an error page being displayed in the browser.</p>
+
+<p>As you can see, the stubs will generate exceptions if invoked. For
+example, navigating
+to <span class="wf_filename">http://localhost:8015/fibonacci/help</span>
+will result in an error page being displayed in the browser.</p>

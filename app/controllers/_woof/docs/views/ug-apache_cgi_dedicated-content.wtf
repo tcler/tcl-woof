@@ -1,12 +1,13 @@
 <h3>Assumptions</h3>
 <p>This scenario makes the following assumptions:</p>
 <ul>
-    <li>This is a dedicated server and you have full control over the Apache configuration files.</li>
-    <li>The server only hosts the Woof! application and nothing else.</li>
-    <li>The application is rooted at the top level, i.e.
-      <span class="wf_filename">http://www.mysite.com</span> is the
-      entry point into the application.</li>
+  <li>This is a dedicated server and you have full control over the Apache configuration files.</li>
+  <li>The server only hosts the Woof! application and nothing else.</li>
+  <li>The application is rooted at the top level, i.e.
+    <span class="wf_filename">http://www.mysite.com</span> is the
+    entry point into the application.</li>
 </ul>
+
 <p>The <a href="http://hoohoo.ncsa.illinois.edu/cgi/overview.html">Common
 Gateway Interface</a> (CGI) adapter is used as it does not require any
 additional modules for Apache that are not part of the standard Apache
@@ -14,7 +15,9 @@ distribution. This is the simplest possible configuration but one you
 should normally not use for performance reasons unless your site
 traffic is low volume. We describe it here as a basic introduction to
 the configuration process.</p>
+
 <h3>Step 1 - install Woof!</h3>
+
 <p>The first step is to install Woof! for Apache and CGI using
 [my _chapter_link installer].</p>
 [my _code_sample {
@@ -38,7 +41,7 @@ your system is configured for) in the Apache directory tree.</p>
 
 <p>Since this is the only application on the server, the document root
 for Apache must be changed to point to the Woof! public directory by
-editing the definition of <code>DocumentRoot</code> in 
+editing the definition of <span class='wf_code'>DocumentRoot</span> in 
 <span class='wf_filename'>httpd.conf</span>.</p>
 
 [my _code_sample {
@@ -52,7 +55,7 @@ the <span class="wf_filename">/var/myapp/public</span> directory to
 locate URL resources.</p>
 
 <h3>Step 3 - configure CGI</h3>
-<p>We now add a <code>Directory</code> section
+<p>We now add a <span class='wf_code'>Directory</span> section
 to <span class="wf_filename">httpd.conf</span>:</p>
 [my _code_sample {
 <Directory "/var/myapp/public">
@@ -66,25 +69,25 @@ to <span class="wf_filename">httpd.conf</span>:</p>
 </Directory>
 }]
 
-<p>The <code>Options</code> line enables CGI for the directory tree
-under public. Together with the <code>AddHandler</code> line, it will
+<p>The <span class='wf_code'>Options</span> line enables CGI for the directory tree
+under public. Together with the <span class='wf_code'>AddHandler</span> line, it will
 allow the <span class="wf_filename">public/cgi_server.tcl</span> file
 to be run as a CGI script as opposed to being returned as a web
 page.</p>
 
-<p>The <code>Rewrite</code> directives are needed because we want all
+<p>The <span class='wf_code'>Rewrite</span> directives are needed because we want all
 requests to be handled by the Woof! CGI handler without having to
 specify the handler in the request URL. Without these directives,
 URL's of the
 form <span class="wf_filename">http://www.mysite.com/cgi_server.tcl/...</span>
 would have to be used to access the Woof!
-application. The <code>RewriteEngine</code> directive enables URL
-rewriting. The <code>RewriteRule</code> directive is what channels all
+application. The <span class='wf_code'>RewriteEngine</span> directive enables URL
+rewriting. The <span class='wf_code'>RewriteRule</span> directive is what channels all
 URL's to our Woof! CGI server. However, we need to make one exception
 - images, stylesheets and other static files should be served without
 going through the additional Woof!
-overhead. The <code>RewriteCond</code> directive takes care of this
-situation. It stipulates that the following <code>RewriteRule</code>
+overhead. The <span class='wf_code'>RewriteCond</span> directive takes care of this
+situation. It stipulates that the following <span class='wf_code'>RewriteRule</span>
 will only have effect if the requested file name does not exist. Thus
 requests for files within the public directory tree will be served
 without Woof! being invoked. For more details on how rewriting works,

@@ -81,7 +81,7 @@ oo::class create UgController {
             {wtf "Woof! Template Files" 2}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 2}
-            {woofus "woofus - Woof! Utility Script" 2}
+            {wag "wag - Woof! Application Generator" 2}
             {generating_stubs "Generating controller stubs" 3}
             {verifying_stubs "Verifying controller stubs" 3}
             {bowwow "bowwow - a Lightweight Web Server" 2}

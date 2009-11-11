@@ -1,9 +1,9 @@
-<p>The <span class="wf_filename">woofus.tcl</span> script, located
+<p>The <span class="wf_filename">wag.tcl</span> script, located
 in the <span class="wf_filename">scripts</span> subdirectory under
 the Woof! root, implements some features that are useful in the
 process of developing applications. The general form of the command
 when invoked from the Woof! root directory is:</p>
 [my _code_sample {
-tclsh86 scripts/woofus.tcl COMMAND ?arguments?
+tclsh86 scripts/wag.tcl COMMAND ?arguments?
 }]
 <p>The next sections describe these commands in detail.</p>

@@ -44,9 +44,9 @@ to load the module.</p>
 LoadModule websh_module modules/mod_websh.so
 }]
 <h3>Step 2 - install Woof!</h3>
-<p>The next step is to install Woof! for Apache and SCGI using <a href="woofus"><code>woofus</code></a>.</p>
+<p>The next step is to install Woof! for Apache and SCGI using <a href="wag"><code>wag</code></a>.</p>
 [my _code_sample {
-~/woof-dist> tclsh86 scripts/woofus.tcl install apache websh -installdir /var/myapp
+~/woof-dist> tclsh86 scripts/wag.tcl install apache websh -installdir /var/myapp
 }]
 <p>This will create the Woof!
 <a href="directory_structure">directory structure</a> under 

@@ -15,12 +15,12 @@ if {! [package vsatisfies [info tclversion] 8.6]} {
 # safe interpreter so the right context and packages are loaded.
 if {[llength [info commands ::woof::source_file]] == 0} {
     # We are not inside the Woof interpreter. Create it and resource ourselves.
-    namespace eval ::woof::webservers::woofus {}
-    namespace eval woofus {
+    namespace eval ::woof::webservers::wag {}
+    namespace eval wag {
         variable winterp;       # Where Woof! is actually loaded (slave)
     }
 
-    proc ::woof::webservers::woofus::init {args} {
+    proc ::woof::webservers::wag::init {args} {
         # Called back from the Woof! master interpreter
 
         # The Woof! interp always needs a dummy webserver so we create one.
@@ -33,7 +33,7 @@ if {[llength [info commands ::woof::source_file]] == 0} {
         }
     }        
 
-    proc woofus::usage {{msg ""} {code ""}} {
+    proc wag::usage {{msg ""} {code ""}} {
         # Prints a usage description and exits
         # msg - optional message to print
         # code - exit code
@@ -53,42 +53,42 @@ if {[llength [info commands ::woof::source_file]] == 0} {
             set exe [file rootname $exe]
         }
         puts stderr "Usage:"
-        puts stderr "\t$exe $argv0 stubs url ?-excludeviews? ?URL ...?"
-        puts stderr "\t$exe $argv0 stubs controller ?-excludeviews? CONTROLLER_NAME ?ACTION ...?"
-        puts stderr "\t$exe $argv0 stubs verify ?-excludeviews? ?URL ...?"
+        puts stderr "\t$exe $argv0 url ?-excludeviews? ?URL ...?"
+        puts stderr "\t$exe $argv0 controller ?-excludeviews? CONTROLLER_NAME ?ACTION ...?"
+        puts stderr "\t$exe $argv0 verify ?-excludeviews? ?URL ...?"
 
         exit $code
     }
 
     if {[llength $::argv] == 0} {
-        woofus::usage
+        wag::usage
     }
 
     # Set up the Woof! slave interpreter
     source [file join [file dirname [info script]] .. lib woof master.tcl]
     # Init it, allowing access to the script directory
-    set ::woofus::winterp [::woof::master::init woofus \
+    set ::wag::winterp [::woof::master::init wag \
                                [file normalize [file join [file dirname [info script]] ..]] \
                                -jails [list [file dirname [info script]]]]
 
     # We need to expose certain hidden commands that are should not be
     # available when Woof! is running as a real web server
-    $::woofus::winterp expose open
-    $::woofus::winterp expose pwd
-    $::woofus::winterp expose cd
-    $::woofus::winterp expose glob
-    $::woofus::winterp alias ::woofus::usage ::woofus::usage
-    interp share {} stdout $::woofus::winterp
-    interp share {} stderr $::woofus::winterp
-    interp share {} stdin $::woofus::winterp
-    $::woofus::winterp alias file ::file
+    $::wag::winterp expose open
+    $::wag::winterp expose pwd
+    $::wag::winterp expose cd
+    $::wag::winterp expose glob
+    $::wag::winterp alias ::wag::usage ::wag::usage
+    interp share {} stdout $::wag::winterp
+    interp share {} stderr $::wag::winterp
+    interp share {} stdin $::wag::winterp
+    $::wag::winterp alias file ::file
 
     # Source ourselves again inside the Woof! interpreter
-    $::woofus::winterp eval [list ::woof::source_file [info script]]
+    $::wag::winterp eval [list ::woof::source_file [info script]]
 
     # Now run the actual command
     if {[catch {
-        set code [$::woofus::winterp eval [list ::woofus::main {*}$argv]]
+        set code [$::wag::winterp eval [list ::wag::main {*}$argv]]
     } msg]} {
         puts stderr $msg
         set code 1
@@ -100,7 +100,7 @@ if {[llength [info commands ::woof::source_file]] == 0} {
 
 # All code from this point on only runs inside the Woof! interpreter.
 
-namespace eval woofus {
+namespace eval wag {
 
     # Woof! version
     variable woof_version
@@ -113,7 +113,7 @@ namespace eval woofus {
 }
 
 
-proc woofus::delta {controller_class controller file actions {view_dir ""}} {
+proc wag::delta {controller_class controller file actions {view_dir ""}} {
     # Generates change information for a controller class and action
     # controller_class - name of the controller class
     # controller - name of the controller as appears in the url
@@ -196,7 +196,7 @@ proc woofus::delta {controller_class controller file actions {view_dir ""}} {
     return $change
 }
 
-proc woofus::write_stubs {change} {
+proc wag::write_stubs {change} {
 
     variable view_stub_text 
 
@@ -260,7 +260,7 @@ proc woofus::write_stubs {change} {
     return
 }
 
-proc woofus::generate {urls args} {
+proc wag::generate {urls args} {
     # Generates the code corresponding to specified URLs
     # urls - list of URLs for which code is to be generated
     # -excludeviews BOOLEAN - if true, view stubs are also generated
@@ -390,7 +390,7 @@ proc woofus::generate {urls args} {
     return
 }
 
-proc woofus::stub_check {path controller_class controller} {
+proc wag::stub_check {path controller_class controller} {
     # Checks for stub methods in a controller
     # path - path to the file containing the controller class
     # controller_class - name of the controller class
@@ -439,7 +439,7 @@ proc woofus::stub_check {path controller_class controller} {
 
 }
 
-proc woofus::verify {{urls {}} args} {
+proc wag::verify {{urls {}} args} {
     # Verifies that actions corresponding to URL's are implemented.
     # urls - list of urls to be verified. Only the controller portion
     #   of the URL's are relevant.
@@ -502,7 +502,7 @@ proc woofus::verify {{urls {}} args} {
     return
 }
 
-proc woofus::stubs {command args} {
+proc wag::main {command args} {
     # Generates and manages stubs for Woof components.
     # command - one of 'controller', 'url', 'verify'
     # args - additional arguments to the command depending on $command
@@ -525,9 +525,7 @@ proc woofus::stubs {command args} {
     # there are any arguments specified, they are treated as URL's and only
     # the corresponding paths are verified.
 
-    # Woof commands require config and filecache
-    #::woof::Configuration create ::woofus::config [file dirname [file normalize [file dirname [info script]]]]
-    # ::woof::FileCache create ::filecache
+    variable exit_code
 
     set optdefs {
         {excludeviews "Specify to exclude view stubs when generating or verifying controllers and actions"}
@@ -562,32 +560,6 @@ proc woofus::stubs {command args} {
         }
         default {
             error "Unknown subcommand '$command'"
-        }
-    }
-}
-
-
-################################################################
-# Main routine
-
-proc woofus::main {command args} {
-    variable exit_code
-
-    # Utility for managing Woof deployments and installations
-    # command - the command to carry out, must be one of 'stubs',
-    #  'distribute', or 'install'.
-    # args - arguments specific to the command to be executed.
-    #
-    # The program invokes one of several different functions as
-    # indicated by the $command parameter. Refer to the documentation
-    # of the specific command for more information.
-
-    switch -exact -- $command {
-        stubs {
-            woofus::$command {*}$args
-        }
-        default {
-            error "Unknown command '$command'"
         }
     }
 

@@ -9,31 +9,38 @@
   out Woof! and the application can be easily moved later to a
   different web server with no changes.</li>
 </ul>
+
 <p>In both cases, remember to follow
 the [my _chapter_link installation_final_steps "installation verification"]
 steps to ensure Woof! and the web server are installed and configured
 correctly.</p>
+
 <p>Although the application code runs unchanged between various web
 servers, the commands for invoking various Woof! utilities, such as
 stub generation, differs between BowWow and the other web server
 configurations. In the former case, because the BowWow executable is
 entirely self-contained, it is used to invoke various commands. For
 example,</p>
-<pre class="wf_console_session">
-&gt; bowwow stubs url fibonacci/generate fibonacci/help
-</pre>
+
+[my _code_sample {
+> bowwow url fibonacci/generate fibonacci/help
+}]
+
 <p>On the other hand, for the other web servers, the Tcl shell program
 has to be run for the same purpose, invoking
-the [my _chapter_link woofus]. For example,</p>
-<pre class="wf_console_session">
-&gt; tclsh scripts/woofus.tcl stubs url fibonacci/generate fibonacci/help
-</pre>
+the [my _chapter_link wag]. For example,</p>
+
+[my _code_sample {
+> tclsh scripts/wag.tcl url fibonacci/generate fibonacci/help
+}]
+
 <p>Here it is assumed the command is run from the Woof! root
 directory. If on Unix/Linux, you may also directly invoke the script
 itself</p>
-<pre class="wf_console_session">
-&gt; scripts/woofus.tcl stubs url fibonacci/generate fibonacci/help
-</pre>
+[my _code_sample {
+> scripts/wag.tcl url fibonacci/generate fibonacci/help
+}]
+
 <p>Both forms of the commands are shown in this guide. However, the
 URL's used in the examples assume you are running the web server on
 port 8015 (which is the default BowWow port) and the Woof! application
