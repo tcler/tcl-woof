@@ -10,7 +10,7 @@
 <h2>[my _heading]</h2>
 %(
   if {![page fetch content content]} {
-    set content "<p>The page you were looking for was not found. Please select a chapter from the Table of Contents in the left pane.</p>"
+    set content "<p>This section is still to be written.</p>"
   }
 %)
 $content

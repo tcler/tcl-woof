@@ -255,7 +255,7 @@ proc installer::distribute {target_dir args} {
         # TBD - change path to icon
         set fd [open $rc_file w]
         puts $fd [format {
-TCLSH ICON "public/images/woof/_woof_icon.ico"
+TCLSH ICON "public/images/_woof/woof_icon.ico"
 1 VERSIONINFO
 FILEVERSION %1$d, %2$d, 0, 0
 PRODUCTVERSION %1$d, %2$d, 0, 0
