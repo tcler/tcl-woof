@@ -18,62 +18,13 @@ page section that has not already been stored in the object, it
 searches the file system for a suitable template from which the
 requested page section can be generated.</p>
 
-<p>If the client request URL is mapped to a controller
-<span class='wf_code'><em>CONTROLLER</em></span> and
-action <span class='wf_code'><em>ACTION</em></span>, and the name of the page section
-to be generated is <span class='wf_code'><em>SECTION</em></span>, the method checks in
-turn for the existence of the
-files <span class="wf_filename"><em>CONTROLLER-ACTION</em>-<em>SECTION</em>.wtf</span>, 
-<span class="wf_filename"><em>CONTROLLER-</em><em>SECTION</em>.wtf</span> 
-and <em><span class="wf_filename">SECTION</span></em><span class="wf_filename">.wtf</span>
-in the <span class="wf_filename">views</span> subdirectory of the
-directory where the controller module is located. If none of them is
-found, Woof! searches for a file
-<em><span class="wf_filename">SECTION</span></em><span class="wf_filename">.wtf</span>
-in all <span class="wf_filename">views</span> subdirectories starting
-with the controller module directory and working upwards through all
-parent module directories of the controller. The first file found is
-used as the template for the page section.</p>
-
-<h3>Sharing section templates</h3>
-
-<p>The above search mechanism for templates allows page sections to be
-easily shared. For example, a common header page section for the
-entire site can be defined by the contents of the
-file <span class="wf_filename">app/controllers/views/header.wtf</span>. All
-URL's for the site will automatically show its contents wherever the
-layout file inserts the page section named <span class='wf_code'>header</span>. A
-different header section can be defined for a particular controller,
-say <span class="wf_filename">blogs</span>, by creating the
-file <span class="wf_filename">app/controllers/views/blogs-header.wtf</span>
-with the appropriate content.</p>
-
-<p>As another example, imagine the website has a separate
-module, <span class='wf_code'>site::admin</span>, that is used for managing the
-website itself. So the URL
-<span class="wf_filename">http://www.mywebsite.com/site/admin/user/show</span>
-(for example) would be mapped to the <span class='wf_code'>show</span> action method
-in the controller <span class='wf_code'>user</span> (implemented in
-class <span class='wf_code'>UserController</span>) in the <span class='wf_code'>site::admin</span>
-module. To render the <span class='wf_code'>main</span> page section, Woof! will look
-in order for one of the files
-<span class="wf_filename">user-show-main.wtf</span>,
-<span class="wf_filename">user-main.wtf</span>
-and <span class="wf_filename">main.wtf</span> in the
-directory <span class="wf_filename">app/controllers/site/admin/views</span>.
-If none of these are found, it will then look
-for <span class="wf_filename">main.wtf</span> in
-the <span class="wf_filename">app/controllers/site/views</span>
-directory followed
-by <span class="wf_filename">app/controllers/views</span>.</p>
-
-<p>Note that when searching up the directory hierarchy, Woof! only
-uses the section name and does not look for the controller and action
-specific templates (such
-as <span class="wf_filename">user-show-main.wtf</span>
-or <span class="wf_filename">user-main.wtf</span>). This is by design
-as it does not make sense for a file specific for a controller and/or
-action to show up outside the controller content directory.</p>
+<p>The algorithm of locating a layout for a page is the same as
+that used for page sections and is detailed in
+[my _chapter_link locating_templates].
+The method described there allows flexible
+sharing of page sections within, and between, controllers and
+controller trees while simultaneously allowing specialization for
+specific controllers or even actions within a controller.</p>
 
 <h3>Page template processing</h3>
 <p>The syntax used in the template depends on the template

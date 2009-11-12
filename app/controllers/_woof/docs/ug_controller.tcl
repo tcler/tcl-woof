@@ -75,9 +75,10 @@ oo::class create UgController {
             {custom_page_layout "Custom Page Layout" 3}
             {page_sections "Page Sections" 2}
             {page_section_templates "Template Based Page Sections" 3}
-            {language_specific_pages "Language-Specific Pages" 3}
             {page_section_direct "Directly Generated Page Sections" 3}
             {page_section_example "Page Section Layout Example" 3}
+            {locating_templates "Locating Templates" 2}
+            {language_specific_pages "Language-Specific Pages" 2}
             {pagevar "The <span class='wf_code'>pagevar</span> Object" 2}
             {using_stylesheets "Using Stylesheets" 2}
             {using_images "Using Images" 2}
