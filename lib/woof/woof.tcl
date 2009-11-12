@@ -23,6 +23,7 @@ apply {dir {
     source [file join $dir controller.tcl]
     source [file join $dir page.tcl]
     source [file join $dir wtf.tcl]
+    source [file join $dir hutil.tcl]
 } ::woof} [file dirname [info script]]
 
 namespace eval ::woof {
