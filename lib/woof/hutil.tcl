@@ -95,9 +95,9 @@ proc hutil::make_navigation_links {linkdefs selection args} {
                 append html "<li>[lindex $item 1]</li>"
             } else {
                 if {[dict exists $args -hrefcmd]} {
-                    append html "<li><a href='[{*}[dict get $args -hrefcmd] [lindex $path end]]'>[lindex $item 1]</li>"
+                    append html "<li><a href='[{*}[dict get $args -hrefcmd] [lindex $path end]]'>[lindex $item 1]</a></li>"
                 } else {
-                    append html "<li><a href='[lindex $path end]'>[lindex $item 1]</li>"
+                    append html "<li><a href='[lindex $path end]'>[lindex $item 1]</a></li>"
                 }
             }
         }
