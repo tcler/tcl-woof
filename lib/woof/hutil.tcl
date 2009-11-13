@@ -26,42 +26,54 @@ proc hutil::_flatten_navigation {linkdefs {ancestors {}}} {
 
 proc hutil::make_navigation_links {linkdefs selection args} {
     # Generates HTML for a list based navigation tree
-    # linkdefs - a tree of link definitions.
+    # linkdefs - a list of link definitions.
     # selection - the selected link, if any, from $linkdefs
     # -hrefcmd COMMANDPREFIX - if specified, COMMANDPREFIX is executed
     #  with an argument specifying the link reference and should return
     #  the URL to use for the link.
-    # $linkdefs is a flat list of triples, the first element in each
+    # $linkdefs is a list of triples, the first element in each
     # triple being the link reference, the second being the raw HTML text to
-    # be displayed, and the third being a nested list of children in the
-    # same format.
+    # be displayed, and the optional third element being the nesting level.
     #
-    # The returned HTML is not styled in any fashion. It is up to the
-    # caller to appropriately use stylesheets for layout
-    # and appearance.
-
-    set items [_flatten_navigation $linkdefs]
 
     # Locate the selection
-    set selection_path {}
-    foreach item $items { 
-        # First element in $item is the path to the link. The selection
-        # is matched against the last item in the path.
-        if {[lindex [lindex $item 0] end] eq $selection} {
-            # Matched. As an aside, note we assume each link appears
-            # only once or if not, then the first match is to be used.
-            set selection_path [lindex $item 0]
-            break
+    # Calculate the "path" to the selected item. We basically
+    # need this to figure out what the siblings are.
+    set sel_path ""
+    set index [lsearch -index 0 $linkdefs $selection]
+    if {$index >= 0} {
+        set sel_path [list [lindex $linkdefs $index 0]]
+        set current_level [lindex $linkdefs $index 2]
+        if {$current_level == ""} {
+            set current_level 0
+        }
+        while {[incr index -1] >= 0 && $current_level > 0} {
+            set level [lindex $linkdefs $index 2]
+            if {$level eq ""} {
+                set level 0
+            }
+            if {$level < $current_level} {
+                lappend sel_path [lindex $linkdefs $index 0]
+                set current_level $level
+            }
         }
     }
+        
+    set sel_path [lreverse $sel_path]
 
     # Now generate the list
-    set html ""
-
+    set html "<ul>"
     set current_level 0
-    foreach item $items {
+    set path {}
+    foreach def $linkdefs {
         set include false;         # Whether to display this
-        set path [lindex $item 0]; # Hierarchical path to this item
+
+        lassign $def href label new_level
+        if {$new_level eq ""} {
+            set new_level 0
+        }
+        set path [lrange $path 0 $new_level]
+        lset path $new_level $href; # Hierarchical path to this item
 
         #ruff
         # The returned HTML is a hierarchical unnumbered list. Each item
@@ -75,14 +87,13 @@ proc hutil::make_navigation_links {linkdefs selection args} {
         #  - it is a sibling of the selected item
 
         # Each test below matches the above criteria in order
-        if {([llength $path] == 1) ||
-            ($path eq $selection_path) ||
-            [string match "${path}*" [lrange $selection_path 0 end-1]] ||
-            [string equal [lrange $path 0 end-1] $selection_path] ||
-            [string equal [lrange $path 0 end-1] [lrange $selection_path 0 end-1]]} {
+        if {$new_level == 0 ||
+            $href eq $selection ||
+            [string match "${path}*" [lrange $sel_path 0 end-1]] ||
+            [string equal [lrange $path 0 end-1] $sel_path] ||
+            [string equal [lrange $path 0 end-1] [lrange $sel_path 0 end-1]]} {
             # Should display this item. Figure out if we need
             # to either nest or remove nesting
-            set new_level [llength $path]
             if {$new_level > $current_level} {
                 append html [string repeat <ul> [expr {$new_level-$current_level}]]
             } elseif {$new_level < $current_level} {
@@ -90,18 +101,24 @@ proc hutil::make_navigation_links {linkdefs selection args} {
             }
             set current_level $new_level
 
+            #ruff
+            # The returned HTML is not styled in any fashion. It is up to the
+            # caller to appropriately use stylesheets for layout
+            # and appearance.
+
             # Now display. If not the selected item, display as link
-            if {$path eq $selection_path} {
-                append html "<li>[lindex $item 1]</li>"
+            if {$href eq $selection} {
+                append html "<li>$label</li>"
             } else {
                 if {[dict exists $args -hrefcmd]} {
-                    append html "<li><a href='[{*}[dict get $args -hrefcmd] [lindex $path end]]'>[lindex $item 1]</a></li>"
+                    append html "<li><a href='[{*}[dict get $args -hrefcmd] $href]'>$label</a></li>"
                 } else {
-                    append html "<li><a href='[lindex $path end]'>[lindex $item 1]</a></li>"
+                    append html "<li><a href='$href'>$label</a></li>"
                 }
             }
         }
     }
 
-    append html [string repeat "</ul>" $current_level]
+    append html [string repeat "</ul>" [incr current_level]]
+    return $html
 }

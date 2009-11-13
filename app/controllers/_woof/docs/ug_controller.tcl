@@ -15,84 +15,84 @@ oo::class create UgController {
             {preface Preface}
             {system_requirements "System Requirements"}
             {quick_start "Quick Start"}
-            {qs_first_steps "First Steps" 2}
-            {qs_stubs_generate "Generating Stubs" 2}
-            {qs_stubs_implement "Implementing the Stubs" 2}
-            {qs_session "Keeping State" 2}
-            {qs_page_display "Displaying the Page" 2}
-            {qs_enhancements "Enhancing the Application" 2}
-            {qs_page_layout "Laying out a Page" 2}
-            {qs_story_so_far "The Story So Far" 2}
-            {qs_wtf_syntax "Writing Page Templates" 2}
-            {qs_user_input "Getting User Input" 2}
-            {qs_flash "Using the Flash" 2}
-            {qs_default_page "Configuring the Default Page" 2}
-            {qs_finish "Finishing Up" 2}
+            {qs_first_steps "First Steps" 1}
+            {qs_stubs_generate "Generating Stubs" 1}
+            {qs_stubs_implement "Implementing the Stubs" 1}
+            {qs_session "Keeping State" 1}
+            {qs_page_display "Displaying the Page" 1}
+            {qs_enhancements "Enhancing the Application" 1}
+            {qs_page_layout "Laying out a Page" 1}
+            {qs_story_so_far "The Story So Far" 1}
+            {qs_wtf_syntax "Writing Page Templates" 1}
+            {qs_user_input "Getting User Input" 1}
+            {qs_flash "Using the Flash" 1}
+            {qs_default_page "Configuring the Default Page" 1}
+            {qs_finish "Finishing Up" 1}
             {installation "Installation"}
-            {install_under_bowwow "Woof! under BowWow" 2}
-            {install_under_apache "Woof! under Apache 2" 2}
-            {apache_cgi_dedicated "Dedicated CGI on Apache" 3}
-            {apache_cgi_shared "Shared CGI on Apache" 3}
-            {apache_scgi "SCGI on Apache" 3}
-            {apache_websh "Running as an Apache module" 3}
-            {install_under_iis "Woof! under Microsoft IIS" 2}
-            {iis_scgi "SCGI on IIS" 3}
-            {install_under_lighttpd "Woof! under Lighttpd" 2}
-            {lighttpd_scgi "SCGI on Lighttpd" 3}
-            {start_scgi "Running as an SCGI server" 2}
-            {start_scgi_linux "SCGI on Linux" 3}
-            {start_scgi_windows "SCGI on Windows" 3}
-            {install_final_steps "Verifying the Installation" 2}
+            {install_under_bowwow "Woof! under BowWow" 1}
+            {install_under_apache "Woof! under Apache 2" 1}
+            {apache_cgi_dedicated "Dedicated CGI on Apache" 2}
+            {apache_cgi_shared "Shared CGI on Apache" 2}
+            {apache_scgi "SCGI on Apache" 2}
+            {apache_websh "Running as an Apache module" 2}
+            {install_under_iis "Woof! under Microsoft IIS" 1}
+            {iis_scgi "SCGI on IIS" 2}
+            {install_under_lighttpd "Woof! under Lighttpd" 1}
+            {lighttpd_scgi "SCGI on Lighttpd" 2}
+            {start_scgi "Running as an SCGI server" 1}
+            {start_scgi_linux "SCGI on Linux" 2}
+            {start_scgi_windows "SCGI on Windows" 2}
+            {install_final_steps "Verifying the Installation" 1}
             {basics "Woof! Basics"}
-            {mvc "The Model-View-Controller Architecture" 2}
-            {interpreter "The Woof! Interpreter" 2}
-            {filesystem_layout "File System Layout" 2}
-            {directory_structure "Directory Structure" 3}
-            {file_naming  "File Naming and Ownership" 3}
-            {configuration "Configuration Settings" 2}
-            {development_aids "Development Aids" 2}
+            {mvc "The Model-View-Controller Architecture" 1}
+            {interpreter "The Woof! Interpreter" 1}
+            {filesystem_layout "File System Layout" 1}
+            {directory_structure "Directory Structure" 2}
+            {file_naming  "File Naming and Ownership" 2}
+            {configuration "Configuration Settings" 1}
+            {development_aids "Development Aids" 1}
             {request_handling "Request Handling"}
-            {url_dispatcher "URL Dispatching" 2}
-            {controller_object "The <span class='wf_code'>controller</span> Object" 2}
-            {implementing_controllers "Implementing Controllers and Actions" 3}
-            {request_object "The <span class='wf_code'>request</span> Object" 2}
-            {session_object "The <span class='wf_code'>session</span> Object" 2}
-            {icookies_object "The <span class='wf_code'>icookies</span> Object" 2}
-            {flash_object "The <span class='wf_code'>flash</span> Object" 2}
-            {params_object "The <span class='wf_code'>params</span> Object" 2}
-            {env_object "The <span class='wf_code'>env</span> Object" 2}
+            {url_dispatcher "URL Dispatching" 1}
+            {controller_object "The <span class='wf_code'>controller</span> Object" 1}
+            {implementing_controllers "Implementing Controllers and Actions" 2}
+            {request_object "The <span class='wf_code'>request</span> Object" 1}
+            {session_object "The <span class='wf_code'>session</span> Object" 1}
+            {icookies_object "The <span class='wf_code'>icookies</span> Object" 1}
+            {flash_object "The <span class='wf_code'>flash</span> Object" 1}
+            {params_object "The <span class='wf_code'>params</span> Object" 1}
+            {env_object "The <span class='wf_code'>env</span> Object" 1}
             {response_construction "Response construction"}
-            {response_object "The <span class='wf_code'>response</span> Object" 2}
-            {normal_response "Returning a Normal Response" 2}
-            {redirects "Redirecting a Request" 2}
-            {error_responses "Sending Error Responses" 2}
-            {response_headers "Adding HTTP Response Headers" 2}
-            {sending_files "Sending Files and Non-HTML Data" 2}
-            {ocookies_object "The <span class='wf_code'>ocookies</span> Object" 2}
+            {response_object "The <span class='wf_code'>response</span> Object" 1}
+            {normal_response "Returning a Normal Response" 1}
+            {redirects "Redirecting a Request" 1}
+            {error_responses "Sending Error Responses" 1}
+            {response_headers "Adding HTTP Response Headers" 1}
+            {sending_files "Sending Files and Non-HTML Data" 1}
+            {ocookies_object "The <span class='wf_code'>ocookies</span> Object" 1}
             {page_generation "Page Generation"}
-            {page_layout "Page Layout" 2}
-            {default_page_layout "Default Page Layout" 3}
-            {custom_page_layout "Custom Page Layout" 3}
-            {page_sections "Page Sections" 2}
-            {page_section_templates "Template Based Page Sections" 3}
-            {page_section_direct "Directly Generated Page Sections" 3}
-            {page_section_example "Page Section Layout Example" 3}
-            {locating_templates "Locating Templates" 2}
-            {language_specific_pages "Language-Specific Pages" 2}
-            {pagevar "The <span class='wf_code'>pagevar</span> Object" 2}
-            {using_stylesheets "Using Stylesheets" 2}
-            {using_images "Using Images" 2}
-            {wtf "Woof! Template Files" 2}
-            {wtf_mistakes "Common WTF errors" 3}
+            {page_layout "Page Layout" 1}
+            {default_page_layout "Default Page Layout" 2}
+            {custom_page_layout "Custom Page Layout" 2}
+            {page_sections "Page Sections" 1}
+            {page_section_templates "Template Based Page Sections" 2}
+            {page_section_direct "Directly Generated Page Sections" 2}
+            {page_section_example "Page Section Layout Example" 2}
+            {locating_templates "Locating Templates" 1}
+            {language_specific_pages "Language-Specific Pages" 1}
+            {pagevar "The <span class='wf_code'>pagevar</span> Object" 1}
+            {using_stylesheets "Using Stylesheets" 1}
+            {using_images "Using Images" 1}
+            {wtf "Woof! Template Files" 1}
+            {wtf_mistakes "Common WTF errors" 2}
             {tools "Tools and Utilities"}
-            {installer "installer - Installation Utility" 2}
-            {wag "wag - Woof! Application Generator" 2}
-            {generating_stubs "Generating controller stubs" 3}
-            {verifying_stubs "Verifying controller stubs" 3}
-            {bowwow "bowwow - a Lightweight Web Server" 2}
-            {console "console - Interactive Console" 2}
-            {ruffian "ruffian - Documentation Generator" 2}
-            {scgi_winservice "scgi_winservice - Woof! Windows Service" 2}
+            {installer "installer - Installation Utility" 1}
+            {wag "wag - Woof! Application Generator" 1}
+            {generating_stubs "Generating controller stubs" 2}
+            {verifying_stubs "Verifying controller stubs" 2}
+            {bowwow "bowwow - a Lightweight Web Server" 1}
+            {console "console - Interactive Console" 1}
+            {ruffian "ruffian - Documentation Generator" 1}
+            {scgi_winservice "scgi_winservice - Woof! Windows Service" 1}
             {recommended_reading "Recommended Reading"}
             {acknowledgements "Acknowledgements"}
         }
