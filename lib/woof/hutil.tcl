@@ -34,7 +34,7 @@ proc hutil::make_navigation_links {linkdefs selection args} {
     # $linkdefs is a list of triples, the first element in each
     # triple being the link reference, the second being the raw HTML text to
     # be displayed, and the optional third element being the nesting level.
-    #
+    # The link references are assumed to be unique.
 
     # Locate the selection
     # Calculate the "path" to the selected item. We basically
@@ -43,10 +43,11 @@ proc hutil::make_navigation_links {linkdefs selection args} {
     set index [lsearch -index 0 $linkdefs $selection]
     if {$index >= 0} {
         set sel_path [list [lindex $linkdefs $index 0]]
-        set current_level [lindex $linkdefs $index 2]
-        if {$current_level == ""} {
-            set current_level 0
+        set sel_level [lindex $linkdefs $index 2]
+        if {$sel_level == ""} {
+            set sel_level 0
         }
+        set current_level $sel_level
         while {[incr index -1] >= 0 && $current_level > 0} {
             set level [lindex $linkdefs $index 2]
             if {$level eq ""} {
@@ -60,7 +61,7 @@ proc hutil::make_navigation_links {linkdefs selection args} {
     }
         
     set sel_path [lreverse $sel_path]
-    set sel_toplevel [lindex $sel_path 0]
+    set sel_top [lindex $sel_path 0]
     set sel_parent [lindex $sel_path end-1]
 
     # Now generate the list
@@ -90,15 +91,16 @@ proc hutil::make_navigation_links {linkdefs selection args} {
 
         # Each test below matches the above criteria in order
 
-        # Special case test for common case for speedup - if the toplevel
+        # Special case test for common case for speedup - if the top
         # of this path is not same as selection, item does not match except
         # that all toplevel items are included.
-        if {$new_level != 0 && [lindex $path 0] ne $sel_toplevel} {
+        if {$new_level != 0 && [lindex $path 0] ne $sel_top} {
             continue
         }
         
         if {$new_level == 0 ||
             $href in $sel_path ||
+            $new_level < $sel_level ||
             [lindex $path end-1] eq $selection  ||
             [lindex $path end-1] eq $sel_parent
         } {
