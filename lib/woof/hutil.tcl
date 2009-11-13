@@ -60,6 +60,8 @@ proc hutil::make_navigation_links {linkdefs selection args} {
     }
         
     set sel_path [lreverse $sel_path]
+    set sel_toplevel [lindex $sel_path 0]
+    set sel_parent [lindex $sel_path end-1]
 
     # Now generate the list
     set html "<ul>"
@@ -72,8 +74,9 @@ proc hutil::make_navigation_links {linkdefs selection args} {
         if {$new_level eq ""} {
             set new_level 0
         }
-        set path [lrange $path 0 $new_level]
-        lset path $new_level $href; # Hierarchical path to this item
+
+        set path [lrange $path 0 [expr {$new_level-1}]]
+        lappend path $href ; # Hierarchical path to this item
 
         #ruff
         # The returned HTML is a hierarchical unnumbered list. Each item
@@ -81,17 +84,24 @@ proc hutil::make_navigation_links {linkdefs selection args} {
         # An item from $linkdefs is included if it matches one of the
         # following criteria:
         #  - it is a top level item
-        #  - it is the selected item, 
-        #  - it is an ancestor of the selected item
+        #  - it is the selected item itself or an ancestor
         #  - it is a child (not any descendent) of the selected item
         #  - it is a sibling of the selected item
 
         # Each test below matches the above criteria in order
+
+        # Special case test for common case for speedup - if the toplevel
+        # of this path is not same as selection, item does not match except
+        # that all toplevel items are included.
+        if {$new_level != 0 && [lindex $path 0] ne $sel_toplevel} {
+            continue
+        }
+        
         if {$new_level == 0 ||
-            $href eq $selection ||
-            [string match "${path}*" [lrange $sel_path 0 end-1]] ||
-            [string equal [lrange $path 0 end-1] $sel_path] ||
-            [string equal [lrange $path 0 end-1] [lrange $sel_path 0 end-1]]} {
+            $href in $sel_path ||
+            [lindex $path end-1] eq $selection  ||
+            [lindex $path end-1] eq $sel_parent
+        } {
             # Should display this item. Figure out if we need
             # to either nest or remove nesting
             if {$new_level > $current_level} {
