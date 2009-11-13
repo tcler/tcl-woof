@@ -14,8 +14,9 @@ configuration by executing the files
 <span class="wf_filename">application.cfg</span>
 and <span class="wf_filename">_woof.cfg</span>, in that order, in a
 special namespace. A configuration variable is any variable that is
-set in either file that does not begin with an underscore (_). Note
-that <span class="wf_filename">_woof.cfg</span> sets variables using
+set in either file that does not begin with an underscore (_). </p>
+
+<p>Note that <span class="wf_filename">_woof.cfg</span> sets variables using
 the <code>init</code> command which will only set the variable if it
 has not already been set. This ensures
 that <span class="wf_filename">_woof.cfg</span> does not override

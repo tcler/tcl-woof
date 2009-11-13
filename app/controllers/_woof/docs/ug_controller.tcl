@@ -46,6 +46,7 @@ oo::class create UgController {
             {basics "Woof! Basics"}
             {mvc "The Model-View-Controller Architecture" 1}
             {interpreter "The Woof! Interpreter" 1}
+            {loading_packages "Loading Packages" 2}
             {filesystem_layout "File System Layout" 1}
             {directory_structure "Directory Structure" 2}
             {file_naming  "File Naming and Ownership" 2}

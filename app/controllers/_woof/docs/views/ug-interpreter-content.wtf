@@ -1,0 +1,24 @@
+<p>The Tcl language allows multiple interpreters within a single
+  program and moreover provides for the ability to run code inside a
+  <a href="http://www.tcl.tk/man/tcl8.6/TclCmd/interp.htm#M43">safe</a>
+  interpreter that, for security reasons, can be restricted in terms
+  of the commands it can execute. For example, commands that execute
+  programs or write to disk can be either disabled or enabled with
+  restrictions. The purpose of running code in a safe interpreter is
+  to make it harder for an attacker to penetrate or damage the system even
+  in the presence of programming bugs and security holes. See
+  [my _chapter_link security] for more details.</p>
+
+<p>Woof! makes use of this very useful Tcl capability by running all
+  application code inside a safe interpreter. When Woof! is started, a
+  master interpreter is created. This in turn reads the configuration,
+  initializes the web server interfaces, creates the safe interpreter
+  for executing application code and loads various packages into it,
+  including the <span class="wf_code">woof</span> package.</p>
+
+<p>When a client request arrives, the master interpreter receives it
+  from the web server and passes it into the safe application
+  interpreter as a [my _chapter_link request_object request]
+  object. It then retrieves the [my _chapter_link response_object response]
+  object from the application interpreter and passes it on to the web
+  server to be sent back to the client.</p>
