@@ -73,8 +73,55 @@ proc ::woof::safe::package_loader {ip name args} {
     }
 }
 
+proc ::woof::safe::source_alias {ip args} {
+    # Safe alias for the Tcl source command
+    # ip - safe interpreter invoking the source command
+    # args - arguments passed on to the Tcl source command
+    #
+    # The command invokes the Tcl source command in the interpreter $ip
+    # after verifying that the file is being from a permitted area.
+    
+    # Following code modified from the AliasSource command in the Tcl Safe
+    # package
+
+    set argc [llength $args]
+    # Extended for handling of Tcl Modules to allow not only "source
+    # filename", but "source -encoding E filename" as well.
+    if {[lindex $args 0] eq "-encoding"} {
+        incr argc -2
+        set encoding [lrange $args 0 1]
+        set at 2
+    } else {
+	    set at 0
+        set encoding {}
+    }
+    if {$argc != 1} {
+        set msg "wrong # args: should be \"source ?-encoding E? fileName\""
+        ::woof::master::log err "$msg ($args)"
+        return -code error $msg
+    }
+
+    # TBD - should we specify any -cachecontrol options ?
+    set file [::woof::master::filecache locate [lindex $args $at]]
+    if {$file eq ""} {    
+        ::woof::master::log err "Attempt to source file '[lindex $args $at]' failed, either not found or not permitted."
+        return -code error "not found"
+    }
+	
+    # Allowed, source it in slave
+    if {[catch {
+        # We use catch here because we want to catch non-error/ok too
+        ::interp invokehidden $ip source {*}$encoding $file
+    } msg]} then {
+        ::woof::master::log err $msg
+        return -code error "script error"
+    }
+
+    return $msg
+}
+
 proc ::woof::safe::file_alias {subcommand args} {
-    # Safe alias for the global file command
+    # Safe alias for the Tcl file command
     # subcommand - subcommand of the file command
     # args - any additional arguments to be passed to the file command
     # Only the syntactic file name manipulation commands are allowed
@@ -226,8 +273,9 @@ proc ::woof::master::create_web_interp {} {
         interp hide $ip $cmd
     }
 
-    # Now enable the safe version of file command
+    # Now enable the safe version of file command and source commands
     $ip alias ::file ::woof::safe::file_alias
+    $ip alias ::source ::woof::safe::source_alias $ip
 
     # Misc aliases
     $ip alias ::woof::map_file_to_url ::woof::safe::map_file_to_url_alias
@@ -318,7 +366,10 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     # -jails DIRLIST - list of directory paths. If specified and not empty,
     #  files under one of these paths can also be accessed through the cache.
     #  This is in addition to the files in the public and app directories.
-    set jails [list [configuration get public_dir] [configuration get app_dir]]
+    set jails [list [configuration get public_dir] \
+                   [configuration get app_dir] \
+                   {*}[configuration get lib_dirs]]
+
     if {[dict exists $args -jails]} {
         lappend jails {*}[dict get $args -jails]
     }
