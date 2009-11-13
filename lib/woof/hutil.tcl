@@ -86,6 +86,7 @@ proc hutil::make_navigation_links {linkdefs selection args} {
         # following criteria:
         #  - it is a top level item
         #  - it is the selected item itself or an ancestor
+        #  - it shares part of the selected items ancestral path
         #  - it is a child (not any descendent) of the selected item
         #  - it is a sibling of the selected item
 
@@ -99,12 +100,21 @@ proc hutil::make_navigation_links {linkdefs selection args} {
         }
         
         # At this point, this item is definitely under the same toplevel item
-        # as the selected item
+        # as the selected item.
+
+        # Because hrefs are unique, the criteria above can be boiled down
+        # to the following:
+        # - it is a top level item.
+        # - its at a higher or same level than selection AND shares ancestors
+        #   (also covers the selection itself, its ancestors)
+        # - it is a child of selection
+        set parent [lindex $path end-1]
         if {$new_level == 0 ||
-            (($new_level < $sel_level) && ([lindex $path end-1] in $sel_path)) ||
-            [lindex $path end-1] eq $selection  ||
-            [lindex $path end-1] eq $sel_parent
+            (($new_level <= $sel_level) && ($parent in $sel_path)) ||
+            $parent eq $selection
         } {
+
+
             # Should display this item. Figure out if we need
             # to either nest or remove nesting
             if {$new_level > $current_level} {
