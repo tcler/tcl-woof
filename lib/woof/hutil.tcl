@@ -98,9 +98,10 @@ proc hutil::make_navigation_links {linkdefs selection args} {
             continue
         }
         
+        # At this point, this item is definitely under the same toplevel item
+        # as the selected item
         if {$new_level == 0 ||
-            $href in $sel_path ||
-            $new_level < $sel_level ||
+            (($new_level < $sel_level) && ([lindex $path end-1] in $sel_path)) ||
             [lindex $path end-1] eq $selection  ||
             [lindex $path end-1] eq $sel_parent
         } {
