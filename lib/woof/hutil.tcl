@@ -62,7 +62,6 @@ proc hutil::make_navigation_links {linkdefs selection args} {
         
     set sel_path [lreverse $sel_path]
     set sel_top [lindex $sel_path 0]
-    set sel_parent [lindex $sel_path end-1]
 
     # Now generate the list
     set html "<ul>"
@@ -86,7 +85,9 @@ proc hutil::make_navigation_links {linkdefs selection args} {
         # following criteria:
         #  - it is a top level item
         #  - it is the selected item itself or an ancestor
-        #  - it shares part of the selected items ancestral path
+        #  - it shares part of the selected items ancestral path. Intuitively,
+        #    this means the item can be reached from the selection by
+        #    going upward and sideways without any downward steps.
         #  - it is a child (not any descendent) of the selected item
         #  - it is a sibling of the selected item
 
@@ -110,10 +111,7 @@ proc hutil::make_navigation_links {linkdefs selection args} {
         # - it is a child of selection
         set parent [lindex $path end-1]
         if {$new_level == 0 ||
-            (($new_level <= $sel_level) && ($parent in $sel_path)) ||
-            $parent eq $selection
-        } {
-
+            $parent in $sel_path } {
 
             # Should display this item. Figure out if we need
             # to either nest or remove nesting
