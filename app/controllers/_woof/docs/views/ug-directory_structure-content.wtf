@@ -1,5 +1,6 @@
 <p>A Woof! application installation consists of a standard directory
-structure described below.</p>
+structure described below under the installation directory specified for 
+the [my _chapter_link installer "installer"] script.</p>
 
 <h3>Directory <span class="wf_filename">public</span></h3>
 <p>This directory and its subdirectories contain all the files that

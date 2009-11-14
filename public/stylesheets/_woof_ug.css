@@ -37,3 +37,6 @@ h4 .wf_code {
    font-size: 100%;
 }
 
+ul.wf_nobullets li {
+  list-style-type: none;
+}

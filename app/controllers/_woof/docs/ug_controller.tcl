@@ -79,12 +79,14 @@ oo::class create UgController {
             {page_section_direct "Directly Generated Page Sections" 2}
             {page_section_example "Page Section Layout Example" 2}
             {locating_templates "Locating Templates" 1}
-            {language_specific_pages "Language-Specific Pages" 1}
             {pagevar "The <span class='wf_code'>pagevar</span> Object" 1}
             {using_stylesheets "Using Stylesheets" 1}
             {using_images "Using Images" 1}
             {wtf "Woof! Template Files" 1}
             {wtf_mistakes "Common WTF errors" 2}
+            {i18n "Internationalization"}
+            {message_catalogs "Message Catalogs" 1}
+            {language_specific_pages "Language-Specific Page Templates" 1}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 1}
             {wag "wag - Woof! Application Generator" 1}

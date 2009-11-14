@@ -1,20 +1,26 @@
 <p>Woof! configurations settings are stored in the
-subdirectory <span class="wf_filename">config</span> under the Woof!
-root directory. The configuration is stored in two files
-- <span class="wf_filename">_woof.cfg</span>
-and <span class="wf_filename">application.cfg</span>. The former
-contains default Woof! configuration settings and should generally not
-be modified as it is overwritten on Woof! software updates. The latter
-contains site-specific changes that override the settings
-in <span class="wf_filename">_woof.cfg</span> and can be edited as
-desired.</p>
+  subdirectory <span class="wf_filename">config</span> under the Woof!
+  root directory. The configuration is stored in two files:</p>
+
+<table>
+  <tr>
+    <td><span class="wf_filename">_woof.cfg</span></td>
+    <td>This file contains default configuration settings shipped as
+      part of Woof! and generally should not be edited.</td>
+  </tr><tr>
+    <td><span class="wf_filename">application.cfg</span></td>
+    <td>This file contains site-specific configuration settings and
+      can be edited to override the default settings.</td>
+  </tr>
+</table>
 
 <p>Both files are expected to contain Tcl code. Woof! reads its
 configuration by executing the files
 <span class="wf_filename">application.cfg</span>
 and <span class="wf_filename">_woof.cfg</span>, in that order, in a
 special namespace. A configuration variable is any variable that is
-set in either file that does not begin with an underscore (_). </p>
+set in either file that does not begin with an underscore
+(<span class="wf_filename">_</span>).</p>
 
 <p>Note that <span class="wf_filename">_woof.cfg</span> sets variables using
 the <code>init</code> command which will only set the variable if it
