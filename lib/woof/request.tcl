@@ -359,6 +359,13 @@ oo::class create Request {
         # else an empty string.
         return [env get REMOTE_ADDR ""]
     }
+
+    method accept_languages {} {
+        return [::woof::util::memoize \
+                    ::woof::util::http_sorted_header_values \
+                    [env get HTTP_ACCEPT_LANGUAGE {}]]
+    }
+
 }
 
 
