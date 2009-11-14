@@ -1,4 +1,6 @@
-<p>An application may optionally use different templates for different
+% set arrow "&#x2192;"
+<p>An application may optionally use different page section
+  templates for different
   languages. This is supported by Woof! through an minor enhancement
   of the [my _chapter_link locating_templates "template location"]
   algorithm.</p>
@@ -35,9 +37,9 @@
   in order</p>
 <ul class='wf_nobullets'>
   <li><span class="wf_filename">views/fr/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
-  <li><span class="wf_filename">views/de/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
-  <li><span class="wf_filename">views/en/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
-  <li><span class="wf_filename">views/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/de/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/en/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
 </ul>
 <p>under the controller directory.</p>
 
@@ -52,9 +54,9 @@
   <span class="wf_code">de</span>, the search order would be</p>
 <ul class='wf_nobullets'>
   <li><span class="wf_filename">views/fr/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
-  <li><span class="wf_filename">views/en/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
-  <li><span class="wf_filename">views/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
-  <li><span class="wf_filename">views/de/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/en/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/de/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
 </ul>
   
 <p>Note here that not only has the <span class="wf_filename">en</span>
@@ -64,3 +66,4 @@
   configuration setting has a value of <span class="wf_code">en</span>
   by default, and hence the default directory is treated as though it
   has the priority associated with <span class='wf_code'>en</span>.
+

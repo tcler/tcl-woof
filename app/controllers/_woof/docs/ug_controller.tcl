@@ -84,8 +84,9 @@ oo::class create UgController {
             {using_images "Using Images" 1}
             {wtf "Woof! Template Files" 1}
             {wtf_mistakes "Common WTF errors" 2}
-            {i18n "Internationalization"}
-            {message_catalogs "Message Catalogs" 1}
+            {localization "Localization"}
+            {client_language "Client Language Preference" 1}
+            {message_catalogs "Using Message Catalogs" 1}
             {language_specific_pages "Language-Specific Page Templates" 1}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 1}
