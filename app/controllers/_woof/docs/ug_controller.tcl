@@ -55,6 +55,7 @@ oo::class create UgController {
             {request_handling "Request Handling"}
             {url_dispatcher "URL Dispatching" 1}
             {controller_object "The <span class='wf_code'>controller</span> Object" 1}
+            {generate_boilerplate "Generating Controller Boilerplate" 2}
             {implementing_controllers "Implementing Controllers and Actions" 2}
             {request_object "The <span class='wf_code'>request</span> Object" 1}
             {session_object "The <span class='wf_code'>session</span> Object" 1}
@@ -82,7 +83,7 @@ oo::class create UgController {
             {pagevar "The <span class='wf_code'>pagevar</span> Object" 1}
             {using_stylesheets "Using Stylesheets" 1}
             {using_images "Using Images" 1}
-            {wtf "Woof! Template Files" 1}
+            {wtf "Woof! Template Format" 1}
             {wtf_mistakes "Common WTF errors" 2}
             {localization "Localization"}
             {client_language "Client Language Preference" 1}

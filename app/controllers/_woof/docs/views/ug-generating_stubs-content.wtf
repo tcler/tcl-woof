@@ -23,8 +23,8 @@ of the view stubs. Note that stubs for other page sections are not
 generated as they are expected to be shared between actions, and even
 controllers.</p>
 
-<p>The example below continues the one in the 
-[my _chapter_link implementing_controllers "aforementioned chapter"].</p>
+<p>The example below continues the one in the aforementioned
+[my _chapter_link implementing_controllers "chapter"].</p>
 
 [my _code_sample {
 > tclsh86 scripts/wag.tcl url /math/add /math/multiply

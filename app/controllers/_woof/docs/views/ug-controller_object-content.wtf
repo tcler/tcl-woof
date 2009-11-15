@@ -108,14 +108,3 @@ the <span class='wf_code'>Controller</span> class provides several other utility
 methods. Refer to its
 [my _manpage_link ::woof::Controller "reference pages"] for more details.</p>
 
-<h3>The <span class='wf_code'>ApplicationController</span> class</h3>
-
-<p>The <span class='wf_code'>ApplicationController</span> class is defined to allow
-the application programmer to add controller behaviours that are
-common to all application controllers without having the modify
-the <span class='wf_code'>Controller</span> class. Woof! itself does not add any new
-variables or methods in this class and promises not to modify it in
-future releases. Application writers should define all their
-controllers to inherit from this
-class. The [my _chapter_link wag "wag"] stubs generator
-also generates stubs that follows this rule.</p>
