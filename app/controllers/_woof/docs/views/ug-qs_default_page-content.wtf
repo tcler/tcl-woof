@@ -7,6 +7,6 @@ config/application.cfg to include the following lines:</p>
   set app_default_uri fibonacci/generate
 }]
 <p><strong>You need to restart the bowwow
-server to have this configuration change take effect.</strong>Now
-when you browse to http://localhost:8015, you will be redirected to
+server to have this configuration change take effect.</strong> 
+Now when you browse to http://localhost:8015, you will be redirected to
 our Fibonacci generator page.</p>

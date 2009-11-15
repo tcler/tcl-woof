@@ -87,49 +87,14 @@ defined with the fully qualified name
 but this is not recommended.</p>
 
 
-<h3>Exposing controller methods as actions</h3>
 
-<p>By default, all methods exported by a controller class are accessible
-through a URL. Note this refers to the leaf controller class exports
-and not any methods it inherits. Without an explicit
-<span class="wf_code">export</span> statement, exports all methods
-beginning with a lower case letters and no others. Alternatively, you
-can use the Tcl class definition commands
-<span class="wf_code">export</span> and
-<span class="wf_code">unexport</span> to control what methods are
-exported.</p>
-
-<p>However, using Tcl's built-in mechanisms has the problem that
-  un-exporting a method to prevent being accessed from a URL as an
-  action also prevents it from being called by other objects. Woof!
-  provides another mechanism for controlling exposure of methods as
-  actions. A controller can define the method
-  [my _manpage_link ::woof::Controller::_action_methods]. This should
-  return a list of method names that may be accessed as actions. If
-  this list is empty, the default behaviour above, where all exported
-  methods are treated as actions, results.</p>
-
-%# TBD <h3>Defining action methods</h3>
-%# Retrieving parameters - params or normally
-
-
-<h3>Defining a missing action handler</h3>
-
-<p>When Woof! does not find a controller method with the name
-  specified for the action, it invokes the method 
-  <span class="wf_code">_missing_action</span> on the class. The
-  default implementation of this in class
-  <span class="wf_code">Controller</span> generates a <b>Page not
-    found.</b> error page.</p>
-
-<p>A controller may usefully override this method. For example, the
-  controller for this user guide defines this method to simply
-  return. The consequence is that Woof! will then simply pick up and
-  display the appropriate page template for the documentation sections
-  as specified by the action. No separate action method needs to be
-  defined for each section.</p>
 
 %# <h3>The use command</h3>
+
+
+
+
+%# <h3>Constraints</h3>
 
 
 

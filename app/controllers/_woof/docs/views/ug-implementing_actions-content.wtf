@@ -1,0 +1,122 @@
+<h3>Exposing controller methods as actions</h3>
+
+<p>By default, all methods exported by a controller class are accessible
+through a URL. Note this refers to the leaf controller class exports
+and not any methods it inherits. Without an explicit
+<span class="wf_code">export</span> statement, exports all methods
+beginning with a lower case letters and no others. Alternatively, you
+can use the Tcl class definition commands
+<span class="wf_code">export</span> and
+<span class="wf_code">unexport</span> to control what methods are
+exported.</p>
+
+<p>However, using Tcl's built-in mechanisms has the problem that
+  un-exporting a method to prevent being accessed from a URL as an
+  action also prevents it from being called by other objects. Woof!
+  provides another mechanism for controlling exposure of methods as
+  actions. A controller can define the method
+  [my _manpage_link ::woof::Controller::_action_methods]. This should
+  return a list of method names that may be accessed as actions. If
+  this list is empty, the default behaviour above, where all exported
+  methods are treated as actions, results.</p>
+
+
+<h3>Defining an action method</h3>
+<p>As shown below, an action method may be defined within the class
+  definition or outside it:</p>
+
+[my _code_sample {
+oo::class create SampleController {
+    superclass ApplicationController
+    constructor args {
+        # Very important to pass arguments to parent
+        next {*}$args
+
+        ...other initialization code...
+
+    }
+
+    method index {} {
+        # The default method for the controller
+        ...some code here...
+    }
+}
+
+oo::define SampleController {
+    method another_method {} {
+        ...whatever...
+    }
+
+    method one_more_method {} {
+        ...whatever...
+    }
+
+}
+
+}]
+
+<p>There is no real difference between the two styles, though the
+  first may be very marginally faster if a large number of methods are
+  defined.</p>
+
+<h3>Action method parameters</h3>
+
+<p>An action method may retrieve query parameters sent by the client in
+  one of two ways shown in the following two definitions:</p>
+<ul>
+  <li>If the action method is defined without any parameters, Woof!
+    does not pass any. The method has to then retrieve the parameters
+    via the [my _chapter_link params_object <code>params</code>] object.</li>
+  <li>If the action method is defined with parameters, Woof! retrieves
+  query parameters with the same name as the method parameters and
+    passes them as their argument values.</li>
+</ul>
+
+<p>Both methods are shown below.</p>
+{my _code_sample {
+oo::define Sample {
+   method m1 {} {
+      set p1 [params get p1]
+      set p2 [params get p2]
+      ...do something with p1 and p2...
+   }
+
+  method m2 {p1 p2} {
+      ...do something with p1 and p2...
+  }
+
+}]
+
+<p>In the second case, Woof! will send an error to the client if its
+  request does not contain parameters <span class="wf_code">p1</span>
+  and <span class="wf_code">p2</span>. This could be avoided by the
+  standard Tcl default value mechanism for method arguments.
+  Note that the method may still
+  retrieve additional parameters from the
+  <span class="wf_code">params</span> object as appropriate.</p>
+
+<p>If the method has a variable number of parameters, as indicated by
+  a trailing <span class="wf_code">args</span> parameter, Woof! will
+  append all additional query parameters (ie. those not defined as
+  method parameters) to the method call as alternating parameter name
+  and value pairs.</p>
+
+
+<h3>Defining a missing action handler</h3>
+
+<p>When Woof! does not find a controller method with the name
+  specified for the action, it invokes the method 
+  <span class="wf_code">_missing_action</span> on the class. The
+  default implementation of this in class
+  <span class="wf_code">Controller</span> generates a <b>Page not
+    found.</b> error page.</p>
+
+<p>A controller may usefully override this method. For example, the
+  controller for this user guide defines this method to simply
+  return. The consequence is that Woof! will then simply pick up and
+  display the appropriate page template for the documentation sections
+  as specified by the action. No separate action method needs to be
+  defined for each section.</p>
+
+
+

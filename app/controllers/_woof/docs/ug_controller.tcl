@@ -55,8 +55,9 @@ oo::class create UgController {
             {request_handling "Request Handling"}
             {url_dispatcher "URL Dispatching" 1}
             {controller_object "The <span class='wf_code'>controller</span> Object" 1}
-            {generate_boilerplate "Generating Controller Boilerplate" 2}
-            {implementing_controllers "Implementing Controllers and Actions" 2}
+            {controller_example "A Simple Controller Example" 2}
+            {implementing_controllers "Implementing Controllers" 2}
+            {implementing_actions "Implementing Actions" 2}
             {request_object "The <span class='wf_code'>request</span> Object" 1}
             {session_object "The <span class='wf_code'>session</span> Object" 1}
             {icookies_object "The <span class='wf_code'>icookies</span> Object" 1}
@@ -89,6 +90,7 @@ oo::class create UgController {
             {client_language "Client Language Preference" 1}
             {message_catalogs "Using Message Catalogs" 1}
             {language_specific_pages "Language-Specific Page Templates" 1}
+            {error_and_logging "Error Handling and Logging"}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 1}
             {wag "wag - Woof! Application Generator" 1}
