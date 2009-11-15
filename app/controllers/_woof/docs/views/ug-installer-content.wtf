@@ -1,0 +1,63 @@
+<p>The <span class="wf_filename">installer.tcl</span> script in the 
+  <span class="wf_filename">scripts</span> subdirectory implements
+  building and installation of Woof! distributions.</p>
+
+<h3>Building a distribution</h3>
+
+<p>The general form of the command to build a distribution is</p>
+
+[my _code_sample {
+tclsh86 scripts/installer.tcl distribute TARGETDIR ?options?
+}]
+
+<p>This will create multiple format distributions in the specified
+  target directory including</p>
+<table>
+  <tr>
+    <td><span class="wf_filename">woof-<em>VERSION</em>.tar.gz</span></td>
+    <td>Distribution for Unix with Unix line endings.</td>
+  </tr>
+  <tr>
+    <td><span class="wf_filename">woof-<em>VERSION</em>.zip</span></td>
+    <td>Distribution for Windows with Windows style line endings.</td>
+  </tr>
+  <tr>
+    <td><span class="wf_filename">bowwow-<em>VERSION</em>.exe</span></td>
+    <td>Single file [my _chapter_link bowwow BowWow] executable for Windows.</td>
+  </tr>
+</table>
+
+<p>The program will return an error if the target directory
+  exists. Specify the option <span class="wf_code">-force true</span>
+  to overwrite existing directories.
+
+<p>Note that this command makes use of several external programs to
+  build the archives. These must be present in the path.</p>
+
+
+<h3>Installing a distribution</h3>
+
+<p>After a <span class="wf_filename">.tar.gz</span> or
+<span class="wf_filename">.zip</span> distribution is unpacked into
+a directory, the <span class="wf_filename">installer.tcl</span> script
+can then be used to install on the target system. The general syntax
+of the command is</p>
+
+[my _code_sample {
+tclsh86 scripts/installer.tcl install SERVER INTERFACE ?options?
+}]
+
+<p>By default, the script will install in its current
+  location. Specify the
+  <span class="wf_code">-installdir <em>INSTALLDIR</em></span> option
+  to install to directory <span class="wf_code"><em>INSTALLDIR</em></span>
+  instead.
+
+<p>The <span class="wf_code"><em>SERVER</em></span> argument specifies
+  the web server (e.g. Apache).</p>
+
+<p>The <span class="wf_code"><em>INTERFACE</em></span> argument
+  specifies the web server interface to be used, for example SCGI.</p>
+
+<p>See the [my _chapter_link installation] chapter for valid values,
+  usage examples, and details about each supported server and interface.</p>

@@ -7,8 +7,8 @@ controllers as was illustrated in the
 The general form of the command is</p>
 
 [my _code_sample {
-  tclsh86 scripts/wag.tcl url ?-excludeviews BOOLEAN? ?list of urls?
-}]
+  tclsh86 scripts/wag.tcl url ?-excludeviews <em>BOOLEAN</em>? ?list of urls?
+} false]
 
 <p>For each URL specified as an argument, the command will check if
 the controller and action exist, and if not, generate stubs

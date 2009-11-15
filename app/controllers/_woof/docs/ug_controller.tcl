@@ -156,9 +156,13 @@ oo::class create UgController {
         return [my link_to $display -action $action]
     }
 
-    method _code_sample {text} {
+    method _code_sample {text {escape true}} {
         # Returns a code sample
-        return "<pre class='wf_console_session'>[hesc [::woof::util::remove_left_margin $text]]</pre>"
+        if {$escape} {
+            return "<pre class='wf_console_session'>[hesc [::woof::util::remove_left_margin $text]]</pre>"
+        } else {
+            return "<pre class='wf_console_session'>[::woof::util::remove_left_margin $text]</pre>"
+        }
     }
 
     method _manpage_link {name {display ""}} {

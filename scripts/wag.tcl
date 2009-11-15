@@ -67,9 +67,8 @@ if {[llength [info commands ::woof::source_file]] == 0} {
     # Set up the Woof! slave interpreter
     source [file join [file dirname [info script]] .. lib woof master.tcl]
     # Init it, allowing access to the script directory
-    set ::wag::winterp [::woof::master::init wag \
-                               [file normalize [file join [file dirname [info script]] ..]] \
-                               -jails [list [file dirname [info script]]]]
+    set ::wag::winterp [::woof::master::init wag "" \
+                            -jails [list [file dirname [info script]]]]
 
     # We need to expose certain hidden commands that are should not be
     # available when Woof! is running as a real web server

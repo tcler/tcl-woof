@@ -47,5 +47,5 @@ woof-dist> tclsh86 scripts/installer.tcl install apache scgi -installdir ~/web-d
 <p>Note that the <code>installer.tcl</code> script only configures Woof! itself. The web
 server configuration has to be modified separately. Examples are given
 in the server specific configuration sections that
-follow. The [my _chapter_link installer] details specifics of
+follow. The [my _chapter_link installer] chapter details specifics of
 the install command.</p>
