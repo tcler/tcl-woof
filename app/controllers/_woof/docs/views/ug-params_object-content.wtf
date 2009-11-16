@@ -1,0 +1,5 @@
+<p>A [my _manpage_link ::woof::Params "<code>params</code>"] object is instantiated for each
+  request and contains the client request parameters. These include
+  both query parameters in a HTTP GET request as well as form data in
+  a HTTP POST. The parameters can be accessed using the standard
+  [my _manpage_link ::woof::util::Map] interface.</p>

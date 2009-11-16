@@ -26,6 +26,30 @@ sharing of page sections within, and between, controllers and
 controller trees while simultaneously allowing specialization for
 specific controllers or even actions within a controller.</p>
 
+<h3>Nesting page sections</h3>
+
+<p>Page section templates may themselves contain page section
+  templates, just like layouts. For example, this user guide actually
+  uses the default Woof! layout which references <code>main</code>
+  page section. Instead of having a separate <code>main</code>
+  section for each chapter (action), the user guide has only one
+  template <span class="wf_filename">ug-main.wtf</span>. This sets up
+  the previous and next chapter links and then includes the
+  statement</p>
+
+[my _code_sample {
+ % if {![page fetch content content]} {
+     set content "<p>This section is still to be written.</p>"
+ % }
+ $content
+}]
+
+<p>Woof! will then 
+  [my _chapter_link locating_templates "locate"]
+  a page section named <code>content</code>
+  and insert it.</p>
+
+
 <h3>Page template processing</h3>
 <p>The syntax used in the template depends on the template
 processor. Currently, Woof! only supports the syntax defined

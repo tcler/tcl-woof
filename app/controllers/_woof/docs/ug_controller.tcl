@@ -91,6 +91,8 @@ oo::class create UgController {
             {message_catalogs "Using Message Catalogs" 1}
             {language_specific_pages "Language-Specific Page Templates" 1}
             {error_and_logging "Error Handling and Logging"}
+            {woof_library "The Woof! Library"}
+            {yui "The Yahoo User Interface library" 1}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 1}
             {wag "wag - Woof! Application Generator" 1}

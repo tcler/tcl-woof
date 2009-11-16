@@ -15,7 +15,7 @@ exported.</p>
   action also prevents it from being called by other objects. Woof!
   provides another mechanism for controlling exposure of methods as
   actions. A controller can define the method
-  [my _manpage_link ::woof::Controller::_action_methods]. This should
+  <code>_action_methods</code>. This should
   return a list of method names that may be accessed as actions. If
   this list is empty, the default behaviour above, where all exported
   methods are treated as actions, results.</p>
@@ -73,7 +73,7 @@ oo::define SampleController {
 </ul>
 
 <p>Both methods are shown below.</p>
-{my _code_sample {
+[my _code_sample {
 oo::define Sample {
    method m1 {} {
       set p1 [params get p1]
@@ -81,10 +81,10 @@ oo::define Sample {
       ...do something with p1 and p2...
    }
 
-  method m2 {p1 p2} {
+   method m2 {p1 p2} {
       ...do something with p1 and p2...
-  }
-
+   }
+}
 }]
 
 <p>In the second case, Woof! will send an error to the client if its

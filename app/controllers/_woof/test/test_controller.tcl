@@ -15,9 +15,9 @@ oo::class create TestController {
             yui_main_percent 75%
             
         pagevar set styles {
-            {relativeurl stylesheets/_yui-2-8-0r4-reset-fonts-grids.css}
-            {relativeurl stylesheets/_yui-2-8-0r4-base-min.css}
-            {file _woof.css}
+            stylesheets/_yui-2-8-0r4-reset-fonts-grids.css
+            stylesheets/_yui-2-8-0r4-base-min.css
+            _woof.css
         }
     }
 }

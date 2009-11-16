@@ -1,0 +1,19 @@
+<p>A [my _manpage_link ::woof::Env "<code>env</code>"] 
+  object is instantiated for each
+  request and contains the environment passed by the Web server for the request.
+  The actual values present depend on the Web server but usually
+  include the standard environment values included in the CGI
+  specification.</p>
+
+<p>Most environment values that are derived from the request,
+  such as <code>QUERY_STRING</code> or the HTTP headers, such as
+  <code>HTTP_ACCEPT_LANGUAGE</code> are retrievable through other
+  Woof! objects such as
+  [my _chapter_link params_object "<code>params</code>"]
+  or [my _chapter_link request_object "<code>request</code>"].
+  Applications should generally use those objects in preference as
+  they hide differences between web servers and also provide the data
+  in simpler format.</p>
+<p>
+  The contents of <code>env</code> can be accessed using the standard
+  [my _manpage_link ::woof::util::Map] interface.</p>

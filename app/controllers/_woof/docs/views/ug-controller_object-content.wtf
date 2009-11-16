@@ -13,7 +13,7 @@ to a controller class and action method, Woof! instantiates a controller
 object of that class. All controller classes should be derived from
 the [my _manpage_link ::woof::ApplicationController]
 class. This is in turn derived from
-[my _manpage_link ::woof::ApplicationController]
+[my _manpage_link ::woof::Controller]
 which encapsulates all the common functionality required of a
 controller. Application writers should never directly
 modify <span class='wf_code'>Controller</span> since that will cause conflicts with

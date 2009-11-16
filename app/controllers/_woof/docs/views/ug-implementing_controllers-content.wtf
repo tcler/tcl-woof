@@ -54,7 +54,7 @@ created by the base
 <p>The initialization steps may include
   application-specific code as well as some standard Woof!
   code such as setting up
-  [my _chapter_link default_page_layout "default layout parameters"],
+  [my _chapter_link default_page_layout "default layout"] parameters,
   [my _chapter_link using_stylesheets "stylesheets"] and so on.</p>
 
 <h3>Controller classes and namespaces</h3>
@@ -88,13 +88,50 @@ but this is not recommended.</p>
 
 
 
+<h3>The uses command</h3>
+ 
+<p>Controllers may share behaviours through a common base
+  class. To implement this, the common base class must be made available
+  in the source file implementing the controller. To facilitate this,
+  Woof! provides the [my _manpage_link ::woof::uses] command that can be
+  used to import the base class definition. For example, the file
+  <span class="wf_filename">sample_controller.tcl</span> shown above
+  could be modified as shown below:</p>
 
-%# <h3>The use command</h3>
+[my _code_sample {
+ uses BaseController
+ oo::class create SampleController {
+     superclass BaseController
+     constructor args {
+          Very important to pass arguments to parent
+         next {*}$args
+ 
+         ...other initialization code...
+ 
+     }
+ 
+     method index {} {
+          The default method for the controller
+         ...some code here...
+     }
+ }
+ 
+}]
+ 
+<p>Woof! will then look for, and automatically load the file
+  <span class="wf_filename">base_controller.tcl</span>.</p>
+
+<p>The argument provided to the <span class="wf_code">uses</span>
+  command must be either an unqualified class name, in which case the
+  corresponding file is expected to be in the same directory as the
+  controller file calling <span class="wf_code">uses</span>, or it
+  must be qualified with a relative namespace, in which case the
+  corresponding file is located relative to the
+  <span class="wf_filename">app/controllers</span> directory under the
+  Woof! root.</p>
 
 
-
-
-%# <h3>Constraints</h3>
+% #TBD <h3>Constraints</h3>
 
 
 
