@@ -10,13 +10,14 @@ Tcl libraries but we won't as the purpose is to give a flavor for the
 WTF syntax. Here is the modified template
 in <span class="wf_filename">app/controllers/views/fibonacci-generate-main.wtf</span>:</p>
 [my _code_sample {
+ % my variable seq
  <p>
   The first [llength $seq] numbers in the 
   Fibonacci sequence are shown below:</p>
  <table>
  % set index 0
  % foreach number $seq {
- <tr style='background-color: [expr {$index &amp; 1 ? "#cccccc" : "white"}];'>
+ <tr style='background-color: [expr {$index & 1 ? "#cccccc" : "white"}];'>
   <td style='padding: 5px;'>[incr index]</td>
   <td style='padding: 5px;'>$number</td>
  </tr>
