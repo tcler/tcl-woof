@@ -91,7 +91,7 @@ proc ::woof::webservers::wibble::init {args} {
             if {[dict get $request_context method] eq "POST"} {
                 # Copied from wibble query parsing code.
                 # TBD - fix, probably not quite right
-                foreach elem [split [dict get $request_method content] &] {
+                foreach elem [split [dict get $request_context content] &] {
                     regexp {^([^=]*)(?:=(.*))?$} $elem _ key val
                     # TBD - what kind of decoding need be done? URL-decoding
                     # HTML-decoding ?
