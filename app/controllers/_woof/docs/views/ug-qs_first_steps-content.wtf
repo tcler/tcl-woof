@@ -5,9 +5,9 @@
   <li>If you are the impatient sort who cannot be bothered to download
   and install Apache, Tcl and so on so forth just to try out Woof!,
   you can [my _chapter_link install_under_bowwow "download and install"]
-  the self-contained BowWow web server. This is the quickest way to try
+  the self-contained BowWow web server. <strong>This is the quickest way to try
   out Woof! and the application can be easily moved later to a
-  different web server with no changes.</li>
+      different web server with no changes.</strong></li>
 </ul>
 
 <p>In both cases, remember to follow
