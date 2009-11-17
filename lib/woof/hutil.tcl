@@ -8,22 +8,6 @@
 # to whatever namespace they are being sourced into.
 namespace eval hutil {}
 
-proc hutil::_flatten_navigation {linkdefs {ancestors {}}} {
-    # Given a tree of link definitions as accepted by make_navigation_links
-    # returns a flattened list of link definitions where the first element
-    # of each is a list containing the path to that item.
-    set flat {}
-    foreach linkdef $linkdefs {
-        lassign $linkdef link label children
-        set linkpath [concat $ancestors [list $link]]
-        lappend flat [list  $linkpath $label]
-        if {[llength $children]} {
-            lappend flat {*}[_flatten_navigation $children $linkpath]
-        }
-    }
-    return $flat
-}
-
 proc hutil::make_navigation_links {linkdefs selection args} {
     # Generates HTML for a list based navigation tree
     # linkdefs - a list of link definitions.
