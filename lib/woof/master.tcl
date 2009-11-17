@@ -46,6 +46,7 @@ namespace eval ::woof {
 namespace eval ::woof::master {
     source [file join $::woof::master::_script_dir filecache.tcl]
     source [file join $::woof::master::_script_dir configuration.tcl]
+    source [file join $::woof::master::_script_dir file_session.tcl]
 }
 
 # The ::woof::safe namespace is used for commands that are aliased
@@ -277,8 +278,12 @@ proc ::woof::master::create_web_interp {} {
     $ip alias ::file ::woof::safe::file_alias
     $ip alias ::source ::woof::safe::source_alias $ip
 
+    # Map our chosen session manager (currently we only have file :-)
+    $ip alias ::woof::session_manager ::woof::master::file_session
+
     # Misc aliases
     $ip alias ::woof::map_file_to_url ::woof::safe::map_file_to_url_alias
+
 
     return $ip
 }

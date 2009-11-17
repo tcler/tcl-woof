@@ -35,7 +35,6 @@ oo::class create Session {
 
         next;                   # Initialize superclass
 
-        my variable _session_dir; # Where session files are stored
         my variable _id_name;     # name used for session ids
         my variable _new;         # New or existing session?
 
@@ -47,15 +46,6 @@ oo::class create Session {
             set _id_name [dict get $args -id_name]
         } else {
             set _id_name session_id
-        }
-        #ruff
-        # -dir PATH - the path to the directory where session files are
-        #  stored. By default, session files are stored in the current 
-        #  directory.
-        if {[dict exists $args -dir]} {
-            set _session_dir [dict get $args -dir]
-        } else {
-            set _session_dir .
         }
 
         # Check if a persistent session exists and load it.
@@ -72,7 +62,6 @@ oo::class create Session {
     method id {} {
         # Returns the session id for this session.
         my variable _id_name
-        my variable _session_dir
 
         if {![my exists $_id_name id]} {
             # New session so generate a new id and the path
@@ -85,28 +74,15 @@ oo::class create Session {
 
     method load {} {
         # Loads session data from session storage
-        my variable _session_dir
         my variable _id_name
 
         set id [my id]
-        set fd [open [file join $_session_dir ${_id_name}_$id] r]
         try {
-            set data [read $fd]
-            # Make sure our id is in there. Else corrupt
-            if {[dict exists $data $_id_name] &&
-                [dict get $data $_id_name] eq $id} {
-                # OK, fine
-                my set {*}$data
-                my clean;       # Mark as unmodified
-            } else {
-                # This error will be caught and re-raised by on error clause
-                error "Session $id file is missing session id or has a different id value."
-            }
+            my set {*}[::woof::session_manager fetch $id]
+            my clean;       # Mark as unmodified
         } on error msg {
             ::woof::log error "Session data for session $id is unreadable or corrupt. $msg"
             ::woof::errors::exception WOOF CorruptOrMissingData "Session $id has corrupt or missing data. $msg"
-        } finally {
-            close $fd
         }
     }
 
@@ -131,19 +107,11 @@ oo::class create Session {
         set id [my id]
 
         if {$force || [my dirty?]} {
-            my variable _session_dir
-            my variable _id_name
-            set fd [open [file join $_session_dir ${_id_name}_$id] w]
-            try {
-                puts $fd [my get]
-                my clean;       # Mark as unmodified
-            } finally {
-                close $fd
-            }
+            ::woof::session_manager store $id [my get]
+            my clean;       # Mark as unmodified
         }
         return $id
     }
-
 }
 
 namespace eval [namespace current] {
