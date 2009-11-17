@@ -216,6 +216,12 @@ proc wag::write_stubs {change} {
             } else {
                 puts "Created file [::fileutil::stripPath $cwd $path]"
             }
+            puts $fd "# The destroy command allows for resourcing of files during development"
+            puts $fd "catch {[namespace tail ${controller_class}] destroy}"
+            puts $fd ""
+            puts $fd "# Create the controller class. Note the class name is not"
+            puts $fd "# namespace-qualified as the file is automatically sourced"
+            puts $fd "# in the correct namespace."
             puts $fd "oo::class create [namespace tail $controller_class] {"
             puts $fd "    superclass ApplicationController"
             puts $fd "    constructor args {"
