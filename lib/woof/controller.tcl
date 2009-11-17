@@ -190,10 +190,7 @@ oo::class create Controller {
         # The Map object 'pagevar' is created to pass values related
         # to page metadata such as stylesheets, scripts, page titles
         # etc. Concrete controller classes may add to this.
-        ::woof::util::Map create pagevar {
-            styles {}
-        }
-
+        ::woof::util::Map create pagevar {}
     }
 
     method process {{action ""}} {
