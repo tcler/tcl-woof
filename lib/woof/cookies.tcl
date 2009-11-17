@@ -49,11 +49,8 @@ oo::class create CookiesIn {
 
         # Contains expiry etc. for cookies
         my variable _attrs
-        # Duplicate cookie values stored here
-        my variable _duplicates
 
         set _attrs [dict create]
-        set _duplicates [dict create]
 
         # Following parsing code from Libes' cgi.tcl library
         foreach pair [split $raw_cookie ";"] {
@@ -69,12 +66,8 @@ oo::class create CookiesIn {
             set varname [::woof::util::cookie_decode $varname]
             set val     [::woof::util::cookie_decode $val]
                     
-            if {[my exists $varname]} {
-                # TBD - what interface do we make duplicates available ?
-                dict lappend _duplicates $varname $val
-            } else {
-                my set $varname $val
-            }
+            # TBD - how do we deal with duplicates ?
+            my set $varname $val
         }
 
         # Commented out - unnecessary perf cost: my freeze; # No modifications
