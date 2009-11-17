@@ -12,6 +12,7 @@ oo::class create UgController {
         # an action, the display label and optionally
         # the ToC heading level (1 by default)
         set _toc {
+            {index "Detailed Table of Contents"}
             {preface Preface}
             {system_requirements "System Requirements"}
             {quick_start "Quick Start"}
@@ -149,8 +150,8 @@ oo::class create UgController {
 
     method _missing_action {action} {
         # Called for all actions that are not defined.
-        # Does nothing since the appropriate template is automatically
-        # picked up.
+        # The appropriate template is automatically
+        # picked up. Nothing we need do here.
     }
 
     method _chapter_link {action {display ""}} {
@@ -178,5 +179,24 @@ oo::class create UgController {
         return "<a href='http://woof.magicsplat.com/manuals/woof/index.html#$name'>$display</a>"
     }
 
+    method index {} {
+        # Returns the chapter links
+        append content "<div class='wf_navbox'>"
+        set current_level -1
+        foreach sec $_toc {
+            lassign $sec key title level
+            if {$level eq ""} {set level 0}
+            if {$level > $current_level} {
+                append content [string repeat <ul> [expr {$level-$current_level}]]
+            } elseif {$level < $current_level} {
+                append content [string repeat </ul> [expr {$current_level-$level}]]
+            }
+            set current_level $level
+            append content "<li>[my _chapter_link [lindex $sec 0]]</li>"
+        }
+        append content [string repeat </ul> [incr current_level]]
+        append content "</div>"
+        page store content $content
+    }
 }
 
