@@ -146,7 +146,7 @@ proc distro::update_manifest_entries {id args} {
             set path [file join [dict get $distros($id) npath] $path]
         } else {
             set rel_path [fileutil::stripPath $dir [file normalize $path]]
-            if {![file pathtype $rel_path] ne "relative"} {
+            if {[file pathtype $rel_path] ne "relative"} {
                 error "File $path lies outside the distribution directory $dir."
             }
         }
@@ -565,6 +565,8 @@ proc distro::refresh {distro_path paths args} {
     #  the distribution directory or absolute but must
     #  lie within the distribution directory
     
+    variable manifest_defaults
+
     #ruff
     #  -manifest NAME - the name to use for the file manifest
     #  -version VERSION
