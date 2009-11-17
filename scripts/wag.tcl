@@ -216,9 +216,12 @@ proc wag::write_stubs {change} {
             } else {
                 puts "Created file [::fileutil::stripPath $cwd $path]"
             }
-            puts $fd "# The destroy command allows for resourcing of files during development"
-            puts $fd "catch {[namespace tail ${controller_class}] destroy}"
-            puts $fd ""
+            if {0} {
+                # No longer needed since Woof! itself destroys the controller
+                puts $fd "# The destroy command allows for resourcing of files during development"
+                puts $fd "catch {[namespace tail ${controller_class}] destroy}"
+                puts $fd ""
+            }
             puts $fd "# Create the controller class. Note the class name is not"
             puts $fd "# namespace-qualified as the file is automatically sourced"
             puts $fd "# in the correct namespace."
