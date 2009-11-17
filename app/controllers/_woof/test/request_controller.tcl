@@ -1,4 +1,4 @@
-puts ns:[namespace current]
+
 uses TestController
 oo::class create RequestController {
     superclass TestController

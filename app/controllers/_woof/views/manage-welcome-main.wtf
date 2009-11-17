@@ -16,7 +16,8 @@
 % my variable woof_url
 <p>
   To get started, do have a look through the
-  <a href='$woof_url(quick_start)'>Quick Start</a> chapter of the
-  <a href='$woof_url(user_guide)'>Woof! User Guide</a>,
+  [my link_to "Quick Start" -module _woof::docs -controller ug -action quick_start]
+  chapter of the
+  [my link_to "User Guide" -module _woof::docs -controller ug -action preface]
   if you have not done so already.
 </p>
