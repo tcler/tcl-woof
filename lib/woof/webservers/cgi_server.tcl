@@ -2,11 +2,11 @@
 # All rights reserved.
 # See the file LICENSE in the Woof! root directory for license
 
-package require ncgi
 
 namespace eval ::woof::webservers::cgi {}
 proc ::woof::webservers::cgi::init {args} {
     catch {WebServer destroy}
+    package require ncgi
     oo::class create WebServer {
         superclass ::woof::webservers::BaseWebServer
         constructor {args} {
