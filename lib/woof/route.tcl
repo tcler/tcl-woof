@@ -23,9 +23,10 @@ proc route::clear {} {
     set routes {}
 }
 
-proc route::read_routes {rpath} {
+proc route::read_routes {rpath {clear false}} {
     # Reads a file containing route definitions.
     # rpath - path to the file
+    # clear - if true, all existing definitions are deleted.
     # Reads the content of the specified file and parses it using
     # parse_routes. The parsed routes are appended to existing routes
     # for mapping URL's.
@@ -35,16 +36,17 @@ proc route::read_routes {rpath} {
     set fd [open $rpath r]
     # TBD - fconfigure encoding ?
     try {
-        parse_routes [read $fd]
+        parse_routes [read $fd] $clear
     } finally {
         close $fd
     }
     return
 }
 
-proc route::parse_routes {route_definitions args} {
+proc route::parse_routes {route_definitions {clear false}} {
     # Parses the specified routes file
     # route_definitions - string containing route definitions
+    # clear - if true, all existing definitions are deleted.
     # The string is evaluated as a Tcl script in a safe interpreter.
     # It may include any Tcl code and in addition the following
     # commands that set up the dispatch routes.
@@ -97,7 +99,7 @@ proc route::parse_routes {route_definitions args} {
     # require state from previous invocation to be cleaned up which is
     # a pain.
 
-    if {[dict exists $args -clear] && [dict get $args -clear]} {
+    if {$clear} {
         clear
     }
 
