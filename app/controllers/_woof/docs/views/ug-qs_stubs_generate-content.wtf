@@ -60,11 +60,11 @@ under your BowWow directory, you will see the following contents:</p>
     oo::define FibonacciController {
         method generate {} {
             # Raise an exception that allows woofer to detect unimplemented actions
-            ::woof::errors::exception WOOF NotImplemented &quot;Action generate has no supporting implementation.&quot;
+            ::woof::errors::exception WOOF NotImplemented "Action generate has no supporting implementation."
         }
         method help {} {
             # Raise an exception that allows woofer to detect unimplemented actions
-            ::woof::errors::exception WOOF NotImplemented &quot;Action help has no supporting implementation.&quot;
+            ::woof::errors::exception WOOF NotImplemented "Action help has no supporting implementation."
         }
     }
 }]
