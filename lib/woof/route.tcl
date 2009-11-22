@@ -6,47 +6,29 @@
 # NOTE NAMESPACES ARE RELATIVE.
 # So the procs in this file will be defined relative
 # to whatever namespace they are being sourced into.
-namespace eval route {
-    variable routes
-    set routes {}
-}
+namespace eval route {}
 
-proc route::add_route_alias {route} {
-    variable routes
-    lappend routes $route
-    return
-}
-
-
-proc route::clear {} {
-    variable routes
-    set routes {}
-}
-
-proc route::read_routes {rpath {clear false}} {
+proc route::read_routes {rpath} {
     # Reads a file containing route definitions.
     # rpath - path to the file
-    # clear - if true, all existing definitions are deleted.
     # Reads the content of the specified file and parses it using
-    # parse_routes. The parsed routes are appended to existing routes
-    # for mapping URL's.
+    # parse_routes. 
     #
     # See parse_routes for format of the routing definitions.
 
     set fd [open $rpath r]
     # TBD - fconfigure encoding ?
     try {
-        parse_routes [read $fd] $clear
+        return [parse_routes [read $fd]]
     } finally {
         close $fd
     }
-    return
 }
 
-proc route::parse_routes {route_definitions {clear false}} {
+proc route::parse_routes {route_definitions} {
     # Parses the specified routes file
     # route_definitions - string containing route definitions
-    # clear - if true, all existing definitions are deleted.
+    #
     # The string is evaluated as a Tcl script in a safe interpreter.
     # It may include any Tcl code and in addition the following
     # commands that set up the dispatch routes.
@@ -99,15 +81,11 @@ proc route::parse_routes {route_definitions {clear false}} {
     # require state from previous invocation to be cleaned up which is
     # a pain.
 
-    if {$clear} {
-        clear
-    }
-
     set cinterp [interp create -safe]
 
     # Define the command to execute the curl routing DSL command
-    $cinterp alias add_route [namespace current]::add_route_alias
     $cinterp eval {
+        global _routes
         proc curl {curl actions purl} {
             # TBD - check whether it would be faster to build a lambda expression
             # to evaluate at matching time instead of just storing the data
@@ -136,29 +114,26 @@ proc route::parse_routes {route_definitions {clear false}} {
                 }
             }
             
-            add_route [list $curl $actions $params]            
+            lappend ::_routes [list $curl $actions $params]            
         }
     }
 
 
-    if {[catch {
+    try {
         $cinterp eval $route_definitions
-    } msg]} {
+        return [$cinterp eval {set ::_routes}]
+    } finally {
         interp delete $cinterp
-        error $msg
     }
-
-    interp delete $cinterp
 }
 
 
-proc route::select {rurl args} {
+proc route::select {routes rurl args} {
     # Matches the specified URL against the list of route definitions
     # rurl - relative URL, without query or fragment components
     # -defaultaction ACTION - action name if none specified in URL (default
     #   is 'index')
     # It is expected that $rurl is in normalized and decoded form.
-    variable routes
 
     set opts [dict merge {-defaultaction index} $args]
     
@@ -244,9 +219,9 @@ namespace eval route::test {
         curl ctrl_one act *param
         curl ctrl_two act {paramA:[[:digit:]]+:}
         curl ctrl_three {} {paramA/paramB::30}
-   }
+    }
     proc init {} {
         variable test_routes
-        route::parse_routes $test_routes -clear true
+        return [route::parse_routes $test_routes]
     }
 }
