@@ -33,6 +33,9 @@ namespace eval ::woof {
     namespace eval app {
         namespace path [list ::woof ::woof::util]
     }
+
+    # Route definitions
+    variable _routes
 }
 
 
@@ -69,20 +72,24 @@ proc ::woof::handle_request {{request_context ""}} {
     #  the web server module to identify this request. See
     #  request_init.
 
-    # Create the transient namespace. Deleting this will delete all
-    # created objects within it when the request handling is complete.
-
-    # TBD - do we really need to generate a different namespace name
-    # every time for every request? Might be required if as in the
-    # case of the wub server, multiple requests are active in an
-    # interpreter at a time.
-
     #ruff 
     # Returns 'true' if output has been sent to the client 
     # and 'false' otherwise.
     # Note that the output may be an error message but the command still
     # returns 'true' in that case.
     set output_done false
+
+    variable _routes
+    if {![info exists _routes] || [config get reload_scripts]} {
+        set _routes [read_routes]
+    }
+
+    # Create the transient namespace. Deleting this will delete all
+    # created objects within it when the request handling is complete.
+    # TBD - do we really need to generate a different namespace name
+    # every time for every request? Might be required if as in the
+    # case of the wub server, multiple requests are active in an
+    # interpreter at a time.
 
     set trans_ns  [util::generate_name ::woof::request_ns]
     namespace eval $trans_ns {}
@@ -97,9 +104,9 @@ proc ::woof::handle_request {{request_context ""}} {
             #ruff
             # The command obtains information about the request through
             # callbacks implemented by the webserver interface module.
-            # The webserver module's init_request method is called to
+            # The webserver module's request_init method is called to
             # perform any per-request initialization or setup.
-            set request_init [::woof::webserver request_init $request_context]
+            set request_context [::woof::webserver request_init $request_context]
 
             #ruff A new Request object is created and exported as
             # 'request'. This contains information about the client request.
@@ -112,7 +119,7 @@ proc ::woof::handle_request {{request_context ""}} {
             #ruff
             # The request is then mapped to a particular controller and action
             # by the url_crack command.
-            set dispatchinfo [::woof::url_crack [request resource_url]]
+            set dispatchinfo [::woof::url_crack [request resource_url] $::woof::_routes]
 
             set controller_class ::woof::app::[dict get $dispatchinfo controller_class]
             if {[::woof::config get reload_scripts] &&
@@ -224,7 +231,7 @@ proc ::woof::handle_request {{request_context ""}} {
 }
 
 
-proc ::woof::url_crack {url} {
+proc ::woof::url_crack {url routes} {
     # Construct application request context from a URL.
     # url - the URL of interest relative to the application URL root
     #

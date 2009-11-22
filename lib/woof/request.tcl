@@ -311,18 +311,22 @@ oo::class create Request {
         #
         # This is NOT necessarily
         # the same as the 'url_root' value in the Woof! config
-        # dictionary and is dependent on how the web server is configured
+        # dictionary and is dependent on how the web server is configured.
+        # For example, with IIS using SCGI, /myapp maybe mapped to
+        # /myapp/isapi_scgi.dll. This method will return the latter
+        # though the former is the value of 'url_root' in the configuration
+        # file.
         #
         # Note the returned path does not include the protocol, host
         # or port number.
 
-        if {[env exists SCRIPT_NAME url_root]} {
+        if {[env exists SCRIPT_NAME path]} {
             # For example, /myapp/isapi_scgi.dll -> /myapp
-            set url_root [file dirname $url_root]
-            if {$url_root eq ""} {
-                set url_root /
+            set path [file dirname $path]
+            if {$path eq ""} {
+                set path /
             }
-            return $url_root
+            return $path
         } else {
             # TBD - assume / ?
             return /

@@ -63,12 +63,13 @@ oo::class create Configuration {
             debug_level {0 {0 9}}
         }
 
-        array set directories \
+        array set file_paths \
             [list \
                  temp_dir     [file join $_woof_root temp] \
                  session_dir  [file join $_woof_root temp] \
                  app_dir      [file join $_woof_root app] \
                  log_dir      [file join $_woof_root temp] \
+                 route_file   [file join $_woof_root config routes.cfg] \
                 ]
 
         array set enums {
@@ -138,8 +139,8 @@ oo::class create Configuration {
             }
         }
 
-        # Validate directories
-        foreach {cvar defval} [array get directories] {
+        # Validate file_paths
+        foreach {cvar defval} [array get file_paths] {
             set final_values($cvar) $defval
             if {[info exists cvals($cvar)]} {
                 set final_values($cvar) $cvals($cvar)

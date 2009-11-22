@@ -694,7 +694,7 @@ oo::class create Controller {
             # -query QUERYLIST - specifies the query component of the URL. This
             #  should be specified as a key value list.
             # 
-            set url [my url_for {*}[array get opts]]
+            set url [my url_for {*}[array get opts] -fullyqualify true]
         }
 
         # TBD - what about cookies, other headers ?

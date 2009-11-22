@@ -42,11 +42,11 @@ namespace eval ::woof {
 
 # Source filecache and configuration under woof::master as they
 # will only accessed under master
-# The apply allows dir variable without polluting globals or namespaces
 namespace eval ::woof::master {
     source [file join $::woof::master::_script_dir filecache.tcl]
     source [file join $::woof::master::_script_dir configuration.tcl]
     source [file join $::woof::master::_script_dir file_session.tcl]
+    source [file join $::woof::master::_script_dir route.tcl]
 }
 
 # The ::woof::safe namespace is used for commands that are aliased
@@ -234,6 +234,14 @@ proc ::woof::safe::map_file_to_url_alias {path url_map} {
     return ""
 }
 
+proc ::woof::safe::read_routes_alias {} {
+    set route_file [::woof::master::configuration get route_file]
+    if {[file exists $route_file]} {
+        return [route::read_routes $route_file]
+    }
+    return [list ]
+}
+
 proc ::woof::master::create_web_interp {} {
     # Create the web interpreter and load packages into it
     
@@ -283,7 +291,6 @@ proc ::woof::master::create_web_interp {} {
 
     # Misc aliases
     $ip alias ::woof::map_file_to_url ::woof::safe::map_file_to_url_alias
-
 
     return $ip
 }
@@ -417,6 +424,9 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     # TBD - do we need to restrict access to ::woof::log methods
     # for security reasons ?
     $_winterp alias ::woof::log ::woof::master::log
+
+    # Alias for reading routes
+    $_winterp alias ::woof::read_routes ::woof::safe::read_routes_alias
 
     $_winterp eval {
         namespace eval ::woof {
