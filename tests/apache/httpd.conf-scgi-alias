@@ -1,0 +1,32 @@
+# Woof! apache test config
+# - Woof! URL root at /myapp
+# - Woof! file system root at /var/myappdir
+# - SCGI interface
+
+ServerRoot "C:/Program Files/Apache Software Foundation/Apache2.2"
+Listen 8080
+
+Include conf/common.conf
+
+LoadModule alias_module modules/mod_alias.so
+LoadModule scgi_module modules/mod_scgi.so
+
+ServerAdmin admin@localhost
+ServerName localhost:8080
+
+DocumentRoot "C:\Documents and Settings\ashok\My Documents\src\woof\public"
+<Directory />
+    Order deny,allow
+    Deny from all
+</Directory>
+
+AliasMatch /myapp/((stylesheets|images)/.*) "/var/myappdir/public/$1"
+SCGIMount /myapp 127.0.0.1:9999
+<LocationMatch "/myapp/stylesheets|images/">
+    SCGIHandler Off
+</LocationMatch>
+
+<Directory "/var/myappdir/public">
+    Order allow,deny
+    Allow from all
+</Directory>

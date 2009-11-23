@@ -1,0 +1,28 @@
+# Woof! apache test config
+# - Woof! URL root at /
+# - Woof! file system root at /var/myappdir
+# - Document root is Woof public directory
+# - CGI
+
+ServerRoot "C:/Program Files/Apache Software Foundation/Apache2.2"
+Listen 8080
+
+Include conf/common.conf
+
+LoadModule cgi_module modules/mod_cgi.so
+LoadModule rewrite_module modules/mod_rewrite.so
+
+ServerAdmin admin@localhost
+ServerName localhost:8080
+
+
+DocumentRoot "/var/myappdir/public"
+<Directory "/var/myappdir/public">
+    AddHandler cgi-script .pl
+    AddHandler cgi-script .tcl
+    Options +ExecCGI
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ cgi_server.tcl [QSA,L]
+</Directory>
+

@@ -1,7 +1,7 @@
 # Woof! apache test config
 # - Woof! URL root at /myapp
 # - Woof! file system root at /var/myappdir
-# - CGI with script accessed through Alias
+# - CGI with script accessed through Rewrite
 
 ServerRoot "C:/Program Files/Apache Software Foundation/Apache2.2"
 Listen 8080
@@ -9,6 +9,7 @@ Listen 8080
 Include common.conf
 
 LoadModule alias_module modules/mod_alias.so
+LoadModule rewrite_module modules/mod_rewrite.so
 LoadModule cgi_module modules/mod_cgi.so
 
 ServerAdmin admin@localhost
@@ -22,14 +23,15 @@ DocumentRoot "C:/Program Files/Apache Software Foundation/Apache2.2/htdocs"
     Deny from all
 </Directory>
 
-Alias /myapp/stylesheets "/var/myappdir/public/stylesheets"
-Alias /myapp/images "/var/myappdir/public/images"
-Alias /myapp "/var/myappdir/public/cgi_server.tcl"
-<Directory "/var/myappdir/public">
+Alias /myapp c:/var/myappdir/public
+<Directory "c:/var/myappdir/public">
     Order allow,deny
     Allow from all
     AddHandler cgi-script .pl
     AddHandler cgi-script .tcl
     Options +ExecCGI
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^/myapp/(.*)$ c:/var/myappdir/public/cgi_server.tcl/$1 [QSA,L]
 </Directory>
 
