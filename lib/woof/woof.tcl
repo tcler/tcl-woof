@@ -24,6 +24,7 @@ apply {dir {
     source [file join $dir page.tcl]
     source [file join $dir wtf.tcl]
     source [file join $dir hutil.tcl]
+    source [file join $dir route.tcl]
 } ::woof} [file dirname [info script]]
 
 namespace eval ::woof {
@@ -230,6 +231,15 @@ proc ::woof::handle_request {{request_context ""}} {
     return $output_done
 }
 
+
+proc ::woof::read_routes {} {
+    # Reads the routing configuration from disk.
+
+    # Note - always read from disk so cachecontrol is "ignore"
+    return [route::parse_routes [filecache_read [config get route_file] \
+                              -cachecontrol ignore \
+                              -defaultcontent ""]]
+}
 
 proc ::woof::url_crack {url routes} {
     # Construct application request context from a URL.

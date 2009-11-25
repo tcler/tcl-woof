@@ -86,6 +86,7 @@ proc route::parse_routes {route_definitions} {
     # Define the command to execute the curl routing DSL command
     $cinterp eval {
         global _routes
+        set _routes {}
         proc curl {curl actions purl} {
             # TBD - check whether it would be faster to build a lambda expression
             # to evaluate at matching time instead of just storing the data
