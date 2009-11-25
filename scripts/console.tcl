@@ -142,7 +142,7 @@ proc ::woof::console::execute {method url} {
     array unset _env
 
     # Based on the url, set up the request environment as Apache would
-    array set _env [setup_dummy_env method $url]
+    array set _env [setup_dummy_env $method $url]
 
     try {
         array set saved_env [array get ::env]
