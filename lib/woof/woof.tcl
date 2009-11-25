@@ -234,11 +234,8 @@ proc ::woof::handle_request {{request_context ""}} {
 
 proc ::woof::read_routes {} {
     # Reads the routing configuration from disk.
-
     # Note - always read from disk so cachecontrol is "ignore"
-    return [route::parse_routes [filecache_read [config get route_file] \
-                              -cachecontrol ignore \
-                              -defaultcontent ""]]
+    return [route::parse_routes [read_route_file]]
 }
 
 proc ::woof::url_crack {url routes} {
@@ -248,29 +245,39 @@ proc ::woof::url_crack {url routes} {
     # Returns a dictionary mapping the given relative URL path to
     # a controller, action and related context.
 
-    set rel_path [string trimleft $url /]
+    set rel_path [string trimleft $url /]; # TBD - needed ?
 
-    if {[string length $rel_path] == 0} {
-        set rel_path [config get app_default_uri ""]
-    }
-    set tokens [split $rel_path /]
-    set ntokens [llength $tokens]
-    if {$ntokens == 0} {
-        # No module, default controller and action (even app_default_uri)
-        set module {}
-        set controller [config get app_default_controller [config get app_name]]
-        set action     [config get app_default_action index]
-    } elseif {$ntokens == 1} {
-        # No module, specific controller, default action
-        set module {}
-        set controller [lindex $tokens 0]
-        set action [config get app_default_action index]
+    set parsed_url [route::select $routes $url -action [config get app_default_action index]]
+    if {[llength $parsed_url]} {
+        lassign $parsed_url controller action params
+        set tokens [split $controller /]
+        set module [lrange $tokens 0 end-1]
+        set controller [lindex $tokens end]
     } else {
-        # Last two tokens are controller and action
-        # Rest (if any) specify module and namespace
-        set module [lrange $tokens 0 end-2]
-        set controller [lindex $tokens end-1]
-        set action [lindex $tokens end]
+        # Did not match a route. Do default processing
+        if {[string length $rel_path] == 0} {
+            set rel_path [config get app_default_uri ""]
+        }
+        set tokens [split $rel_path /]
+        set ntokens [llength $tokens]
+        if {$ntokens == 0} {
+            # No module, default controller and action (even app_default_uri)
+            set module {}
+            set controller [config get app_default_controller [config get app_name]]
+            set action     [config get app_default_action index]
+        } elseif {$ntokens == 1} {
+            # No module, specific controller, default action
+            set module {}
+            set controller [lindex $tokens 0]
+            set action [config get app_default_action index]
+        } else {
+            # Last two tokens are controller and action
+            # Rest (if any) specify module and namespace
+            set module [lrange $tokens 0 end-2]
+            set controller [lindex $tokens end-1]
+            set action [lindex $tokens end]
+        }
+        set params {}
     }
 
     # Here is where the various paths and defaults get set. search_dirs
@@ -301,6 +308,8 @@ proc ::woof::url_crack {url routes} {
     #  Note the last element is always "." indicating the
     #  context-dependent root of the search tree.
     # url_root - the root URL where the application resides
+    # route_params - dictionary containing the parameters defined as part
+    #  of the route
 
     return [dict create \
                 url_root      [config get url_root] \
@@ -312,6 +321,7 @@ proc ::woof::url_crack {url routes} {
                 controller_dir  [file join [config get root_dir] [config get app_dir] controllers {*}$module] \
                 controller_file ${controller}_controller.tcl \
                 search_dirs     $search_dirs \
+                route_params  $params \
                ]
 }
 

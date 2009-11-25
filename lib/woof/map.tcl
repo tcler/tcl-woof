@@ -182,10 +182,16 @@ oo::class create util::Map {
 
     method init {args} {
         # Initialize uninitialized keys.
-        # args - a list of key value elements
+        # args - a possibly empty list of alternating key value elements.
+        #  If a single argument is 
+        #  specified, it must itself be such a list.
         # The value of each key specified is
         # set to the corresponding specified value if the key
         # did not already exist in the object.
+
+        if {[llength $args] == 1} {
+            set args [lindex $args 0]
+        }
 
         set newvals {}
         foreach {k val} $args {

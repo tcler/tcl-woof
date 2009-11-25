@@ -233,6 +233,18 @@ proc ::woof::safe::map_file_to_url_alias {path url_map} {
     return ""
 }
 
+proc ::woof::safe::read_route_file_alias {} {
+    set fn [::woof::master::configuration get route_file]
+    if {[file readable $fn]} {
+        set fd [open $fn]
+        try {
+            return [read $fd]
+        } finally {
+            close $fd
+        }
+    }
+    return ""
+}
 
 proc ::woof::master::create_web_interp {} {
     # Create the web interpreter and load packages into it
@@ -282,6 +294,7 @@ proc ::woof::master::create_web_interp {} {
     $ip alias ::woof::session_manager ::woof::master::file_session
 
     # Misc aliases
+    $ip alias ::woof::read_route_file ::woof::safe::read_route_file_alias
     $ip alias ::woof::map_file_to_url ::woof::safe::map_file_to_url_alias
 
     return $ip

@@ -106,6 +106,8 @@ oo::class create Controller {
         # from Controller. Any application-wide changes should be defined
         # in that class and not by modifying this class.
 
+        set _dispatchinfo $dispatchinfo
+
         namespace import ::woof::config \
             ::woof::show_page_not_found \
             ::woof::log \
@@ -125,7 +127,13 @@ oo::class create Controller {
         interp alias {} ${ns}::headers {} $response headers
         interp alias {} ${ns}::ocookies {} $response cookies
 
-        set _dispatchinfo $dispatchinfo
+        # Merge any parameters specified through routing. We do that here
+        # and not in the caller so that a controller instance can
+        # override this in its constructor before this constructor is
+        # invoked (e.g. setting the dispatchinfo params key to empty
+        if {[dict exists $_dispatchinfo route_params]} {
+            params init [dict get $_dispatchinfo route_params]
+        }
 
         set _output_done false
 

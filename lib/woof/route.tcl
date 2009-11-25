@@ -145,7 +145,7 @@ proc route::select {routes rurl args} {
         lassign $r curl actions pdefs
         if {[string length $rurl] != [string length $curl] &&
             [string index $rurl [string length $curl]] != "/"} {
-            # E.g. r = /a/b, rurl = /a/bc
+            # E.g. r = a/b, rurl = a/bc
             continue
         }
         set url_parts [split [string range $rurl [string length $curl]+1 end] /]
