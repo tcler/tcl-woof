@@ -234,30 +234,47 @@ proc ::woof::handle_request {{request_context ""}} {
 
 proc ::woof::read_routes {} {
     # Reads the routing configuration from disk.
+
     # Note - always read from disk so cachecontrol is "ignore"
     return [route::parse_routes [read_route_file]]
 }
 
-proc ::woof::url_crack {url routes} {
+proc ::woof::url_crack {rurl routes} {
     # Construct application request context from a URL.
-    # url - the URL of interest relative to the application URL root
+    # rurl - the URL of interest relative to the application URL root
     #
     # Returns a dictionary mapping the given relative URL path to
     # a controller, action and related context.
 
-    set rel_path [string trimleft $url /]; # TBD - needed ?
+    #set rel_path [string trimleft $rurl /]; # TBD - needed ?
 
-    set parsed_url [route::select $routes $url -action [config get app_default_action index]]
-    if {[llength $parsed_url]} {
-        lassign $parsed_url controller action params
+    set orig_rurl $rurl
+
+    if {[string length $rel_path] == 0} {
+        #ruff
+        # If the specified URL is empty, it defaults to the value
+        # of 'app_default_uri' in the configuration file.
+        set rel_path [config get app_default_uri_path ""]
+    }
+
+    set parsed_rurl [route::select $routes $rurl -action [config get app_default_action index]]
+    if {[llength $parsed_rurl]} {
+        #ruff
+        # If the URL matches a defined route, the corresponding controller
+        # and action are used.
+        lassign $parsed_rurl controller action params
         set tokens [split $controller /]
         set module [lrange $tokens 0 end-1]
         set controller [lindex $tokens end]
     } else {
-        # Did not match a route. Do default processing
-        if {[string length $rel_path] == 0} {
-            set rel_path [config get app_default_uri ""]
-        }
+        #ruff
+        # If no defined route was matched, the URL is parsed as follows:
+        # If the URL path has at least two components, the last is
+        # the action, the penultimate is the controller and any preceding
+        # path components comprise the module. If the URL has only one
+        # component, it is taken as the name of the controller, the action
+        # defaults to the value of 'app_default_action' in the configuration
+        # file, and the module is empty.
         set tokens [split $rel_path /]
         set ntokens [llength $tokens]
         if {$ntokens == 0} {
@@ -303,13 +320,15 @@ proc ::woof::url_crack {url routes} {
     # controller_file - the name of the source file for the controller
     # module - the name of the module referenced by the request as a
     #  list of module components (not in namespace format)
+    # original_rurl - the original relative url path supplied by client
+    #  without any defaults or Woof! rewriting
+    # route_params - dictionary containing the parameters defined as part
+    #  of the route
     # search_dirs - list of directories to search for module-specific
     #  components such as stylesheets.
     #  Note the last element is always "." indicating the
     #  context-dependent root of the search tree.
     # url_root - the root URL where the application resides
-    # route_params - dictionary containing the parameters defined as part
-    #  of the route
 
     return [dict create \
                 url_root      [config get url_root] \
@@ -322,6 +341,7 @@ proc ::woof::url_crack {url routes} {
                 controller_file ${controller}_controller.tcl \
                 search_dirs     $search_dirs \
                 route_params  $params \
+                original_rurl $orig_url
                ]
 }
 
@@ -335,9 +355,14 @@ proc ::woof::url_build {cracked_url args} {
     #     same format returned by url_crack.
     #  -action ACTION - name of the action. This defaults to 'index',
     #     and is not based on $cracked_url
+    #  -parameters PARAMLIST - dictionary containing parameter and their values
+    #  -relative BOOLEAN - if true (default), the constructed URL is
+    #     relative to the URL in $cracked_url, else the full path
+    #     is included in the returned URL.
     #
     # Returns a URL that will corresponds to the controller and
-    # action. Note this does not include server, port or query components.
+    # action. Note this does not include server and port components.
+    # 
 
     # TBD - this is quite simplistic, replace when more sophisticated
     # mapping is done.
