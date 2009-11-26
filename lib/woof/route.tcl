@@ -72,6 +72,8 @@ proc route::parse_routes {route_definitions} {
     # as the start of the default value as opposed to be embedded in
     # it.
     #
+    # The returned route structures can be passed to select and construct
+    # to map URL's to controller actions and vice-versa.
 
     # Create a safe interpreter to protect against arbitrary (malicious)
     # input in config files (although here we do not care since we
@@ -122,6 +124,8 @@ proc route::parse_routes {route_definitions} {
 
     try {
         $cinterp eval $route_definitions
+        #ruff
+        # Returns a set of routes the structure of should be treated as opaque.
         return [$cinterp eval {set ::_routes}]
     } finally {
         interp delete $cinterp
@@ -131,6 +135,7 @@ proc route::parse_routes {route_definitions} {
 
 proc route::select {routes rurl args} {
     # Matches the specified URL against the list of route definitions
+    # routes - list of routes as returned by parse_routes
     # rurl - relative URL, without query or fragment components
     # -defaultaction ACTION - action name if none specified in URL (default
     #   is 'index')
@@ -143,41 +148,48 @@ proc route::select {routes rurl args} {
             continue;           # Prefix does not match
         }
         lassign $r curl actions pdefs
-        if {[string length $rurl] != [string length $curl] &&
-            [string index $rurl [string length $curl]] != "/"} {
-            # E.g. r = a/b, rurl = a/bc
-            continue
+        if {[string length $curl]} {
+            if {[string length $rurl] != [string length $curl] &&
+                [string index $rurl [string length $curl]] != "/"} {
+                # E.g. r = a/b, rurl = a/bc
+                continue
+            }
+            set action_index 1
+        } else {
+            # The controller url is empty (meaning the application root)
+            set action_index 0
         }
-        set url_parts [split [string range $rurl [string length $curl]+1 end] /]
-        set action [lindex $url_parts 0]
+
+        set url_parts [split $rurl /]
+
+        set action [lindex $url_parts $action_index]
         if {$action eq ""} {
             set action [dict get $opts -defaultaction]
         }
         if {[llength $actions] &&
             $action ni $actions} {
             # Action does not match
-            
             continue
         }
 
         # We have the controller and action, now match up the parameters
         set params {}
-        set i 1;                # Index 0 - > action
+        set param_index [expr {$action_index+1}]
         set match true
         foreach pdef $pdefs {
             set pname [lindex $pdef 0]
             if {[string index $pname 0] eq "*"} {
                 # Collect all remaining parameters as a list
-                lappend params [string range $pname 1 end] [lrange $url_parts $i end]
+                lappend params [string range $pname 1 end] [lrange $url_parts $param_index end]
                 # Keep looping, remaining parameter defs if any
                 # would need to have default values
-                set i [llength $url_parts]; # We have consumed all
+                set param_index [llength $url_parts]; # We have consumed all
                 continue
             }
             # As an aside, note that URLs can never have empty
             # path components. So url_part == "" means we have finished
             # up all URL parts
-            set url_part [lindex $url_parts $i]
+            set url_part [lindex $url_parts $param_index]
             if {$url_part eq ""} {
                 # No URL, the pdef better have default else no match
                 if {[llength $pdef] < 3} {
@@ -197,18 +209,107 @@ proc route::select {routes rurl args} {
                 }
                 lappend params $pname $url_part
             }
-            incr i
+            incr param_index
         }
         
         # Note for a match, all URL components must also have been used up
-        # $i may be > num url_parts when defaults are used
-        if {$match && $i >= [llength $url_parts]} {
+        # $param_index may be > num url_parts when defaults are used
+        if {$match && $param_index >= [llength $url_parts]} {
             return [list $curl $action $params]
         }
     }
 
     # No match found
     return [list ]
+}
+
+
+proc route::construct {routes curl action args} {
+    # Returns a URL constructed from specified controller, action
+    # and parameters
+    # curl - relative URL for the controller
+    # action - name of the action
+    # -parameters PARAMLIST - dictionary containing parameter values
+
+    foreach route [lsearch -all -inline -index 0 $routes $curl] {
+        #ruff
+        # The command searches for route definitions whose
+        # controller URL matches the one passed in and whose action
+        # definitions include the action passed in.
+        lassign $route curl actions pdefs
+        if {[llength $actions] && ($action ni $actions)} {
+            continue;           # Action does not match
+        }
+
+        #ruff
+        # In addition, if the route being matched has parameter definitions,
+        # each parameter must be included in PARAMLIST or have a default
+        # specified. In the former case, the parameter value must satisfy
+        # the match expression of the route definition, if any.
+
+        if {[dict exists $args -parameters]} {
+            set params [dict get $args -parameters]
+        } else {
+            set params {}
+        }
+        set url_params {}
+        set match true
+        foreach pdef $pdefs {
+            set pname [lindex $pdef 0]
+            if {[string index $pname 0] eq "*"} {
+                set pname [string range $pname 1 end]
+            }
+            if {[dict exists $params $pname]} {
+                set pval [dict get $params $pname]
+                # If a regexp specified, param value must match it
+                if {[string length [lindex $pdef 1]] &&
+                    ![regexp -- [lindex $pdef 1] $pval]} {
+                    set match false
+                    break
+                }
+                dict unset params $pname
+            } else {
+                # The param is not passed in, a default better exist
+                if {[llength $pdef] < 3} {
+                    # No default
+                    set match false
+                    break
+                }
+                set pval [lindex $pdef 2]
+            }
+            if {[string index [lindex $pdef 0] 0] eq "*"} {
+                # The parameter is a "*name" which is a list
+                foreach val $pval {
+                    lappend url_params [::woof::url_encode $val]
+                }
+            } else {
+                lappend url_params [::woof::url_encode $pval]
+            }
+        }                
+
+        #ruff
+        # The first route matching the above conditions is used to construct
+        # a relative URL. If any parameters from PARAMLIST were left over,
+        # they are included as query parameters.
+
+        if {$match} {
+            # We have a winner!
+            set url [file join $curl $action {*}$url_params]
+            set query {}
+            foreach {k val} [dict get $params] {
+                # We encode k and val separately. Else "=" might
+                # will get encoded
+                lappend query "[::woof::url_encode $k]=[::woof::url_encode $val]"
+            }
+            if {[llength $query]} {
+                append url ?[join $query ";"]
+            }
+            return $url
+        }
+    }
+
+    # If no route matches, an empty string is returned
+    return ""
 }
 
 
@@ -220,6 +321,7 @@ namespace eval route::test {
         curl ctrl_one act *param
         curl ctrl_two act {paramA:[[:digit:]]+:}
         curl ctrl_three {} {paramA/paramB::30}
+        curl "" {} {*params}
     }
     proc init {} {
         variable test_routes
