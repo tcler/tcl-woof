@@ -173,10 +173,15 @@ oo::class create util::Map {
 
     method set args {
         # Sets the values of one or more keys in the object.
-        # args - a list of key value elements
+        # args - a list of key value elements.
+        #  If a single argument is 
+        #  specified, it must itself be such a list.
         # The value of each key specified is
         # set to the corresponding specified value.
 
+        if {[llength $args] == 1} {
+            set args [lindex $args 0]
+        }
         array set _map $args
     }
 
@@ -199,7 +204,7 @@ oo::class create util::Map {
                 lappend newvals $k $val
             }
         }
-        my set {*}$newvals
+        my set $newvals
 
         return
     }
