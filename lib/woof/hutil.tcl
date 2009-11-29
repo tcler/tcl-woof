@@ -6,9 +6,9 @@
 # NOTE NAMESPACES ARE RELATIVE.
 # So the procs in this file will be defined relative
 # to whatever namespace they are being sourced into.
-namespace eval hutil {}
+namespace eval util {}
 
-proc hutil::make_navigation_links {linkdefs selection args} {
+proc util::make_navigation_links {linkdefs selection args} {
     # Generates HTML for a list based navigation tree
     # linkdefs - a list of link definitions.
     # selection - the selected link, if any, from $linkdefs
@@ -126,4 +126,73 @@ proc hutil::make_navigation_links {linkdefs selection args} {
 
     append html [string repeat "</ul>" [incr current_level]]
     return $html
+}
+
+proc util::make_query_string {args} {
+    # Constructs a URL query string from the given arguments
+    # args - list of alternating keys and values. If a single argument
+    #  is given, it is itself treated as such a list
+    # If no arguments are specified, returns an empty string, otherwise
+    # returns a query string prefixed with ? and suitably escaped for
+    # inclusion into a URL.
+    if {[llength $args] == 1} {
+        set args [lindex $args 0]
+    }
+    if {[llength $args] == 0} {
+        return ""
+    }
+    set query {}
+    foreach {k val} $args {
+        # We encode k and val separately. Else "=" might
+        # will get encoded
+        lappend query "[::util::url_encode $k]=[::util::url_encode $val]"
+    }
+
+    return ?[join $query &]
+}
+
+proc util::make_relative_url {base target} {
+    # Construct a URL path relative to a base URL
+    # base - the base URL
+    # target - the URL for which a path relative to $base is to be constructed
+
+    set base [split $base /]
+
+    if {[llength $base] == 0} {
+        return $target
+    }
+
+    set base [lrange $base 0 end-1]; # Relative is always w.r.t parent of base
+    set target [split $target /]
+    set i 0
+    foreach bpart $base tpart $target {
+        if {$bpart ne $tpart} {
+            break
+        }
+        incr i
+    }
+
+    # First $i components are common. See what's left over
+    if {$i < [llength $base]} {
+        set rurl [lrepeat [expr {[llength $base]-$i} ] ..]
+    } else {
+        # Base is all used up.
+        set rurl {}
+    }
+
+    if {$i < [llength $target]} {
+        set target [lrange $target $i end]
+    } else {
+        # Target is also used up. Special case - pick off last
+        # element of target
+        #lappend rurl ..
+        #set target [lrange $target end end]
+        #set target [list ..]
+        set target {}
+        if {[llength $rurl] == 0} {
+            set rurl [list .]
+        }
+    }
+
+    return [file join {*}$rurl {*}$target]
 }
