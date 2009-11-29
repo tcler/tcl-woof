@@ -348,10 +348,21 @@ oo::class create Controller {
         #  to the application's root URL.
         # -fullyqualify BOOLEAN - if true, a fully qualified URL (includes
         #  scheme and host) is returned in all cases. Default is false.
+        #  If -host, -port or -protocol options are specified,
+        #  it is always set to true.
 
         if {[llength $args] == 1} {
             # Options passed as a single argument
             set args [lindex $args 0]
+        }
+
+        set fullyqualify false
+        if {[dict exists $args -protocol] ||
+            [dict exists $args -host] ||
+            [dict exists $args -port]} {
+            set fullyqualify true
+        } elseif {[dict exists $args -fullyqualify]} {
+            set fullyqualify [dict get $args -fullyqualify]
         }
 
         # The URL will be built using defaults from the current URL
@@ -381,15 +392,10 @@ oo::class create Controller {
                     lappend modifiers -module $module
                 }
             } elseif {[dict exists $args -action]} {
-                # Controller not defined, but action is. Assume common
-                # case of action-only relative URL
-                set url [dict get $args -action]
-                lappend modifiers -action $url; # In case we need to build full URL
+                # Controller not defined, but action is.
+                lappend modifiers -action [dict get $args -action]
             }
         }
-
-        # At this point url is defined IFF -action WAS specified AND
-        # -controller WAS NOT (which causes -module to not matter)
 
         if {[dict exists $args -anchor]} {
             set anchor #[dict get $args -anchor]
@@ -398,24 +404,21 @@ oo::class create Controller {
         }
 
         if {[dict exists $args -query]} {
-            set query {}
-            foreach {k val} [dict get $args -query] {
-                lappend query $k=$val
-            }
-            # TBD - should we not encode k and val separately. Else "=" might
-            # also get encoded
-            set query ?[::woof::url_encode [join $query " "]]
+            set query [::woof::util::make_query_string [dict get $args -query]]
         } else {
             set query ""
         }
 
-        # As a short cut to processing, if only action is specified,
-        # or -urlpath was specified,
+        # As a short cut to processing, if -urlpath was specified,
         # we have a relative url in $url, return it as we have no need
         # for computing a full URL if
         # protocol, host and port are unspecified unless we want a
         # fully qualified URL
-        if {!([dict exists $args -fullyqualify] && [dict get $args -fullyqualify])} {
+        # Note: previously, we used to do this for action within the same
+        # controller as well. However, due to routing, a controller may not be
+        # what was specified by client in its URL, so we cannot use
+        # simple relative url. We will need to call url_build below.
+        if {! $fullyqualify} {
             if {![dict exists $args -protocol] &&
                 ![dict exists $args -host] &&
                 ![dict exists $args -port]} {
@@ -430,6 +433,10 @@ oo::class create Controller {
             append url "$anchor$query"
         } else {
             set url "[::woof::url_build $_dispatchinfo {*}$modifiers]$anchor$query"
+        }
+
+        if {! $fullyqualify} {
+            return $url
         }
 
         if {[dict exists $args -protocol]} {

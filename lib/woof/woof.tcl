@@ -30,6 +30,8 @@ apply {dir {
 namespace eval ::woof {
     variable _script_dir [file normalize [file dirname [info script]]]
 
+    namespace path [list ::woof::util]
+
     # Initialize the application namespace
     namespace eval app {
         namespace path [list ::woof ::woof::util]
@@ -120,7 +122,7 @@ proc ::woof::handle_request {{request_context ""}} {
             #ruff
             # The request is then mapped to a particular controller and action
             # by the url_crack command.
-            set dispatchinfo [::woof::url_crack [request resource_url] $::woof::_routes]
+            set dispatchinfo [::woof::url_crack [request resource_url]]
 
             set controller_class ::woof::app::[dict get $dispatchinfo controller_class]
             if {[::woof::config get reload_scripts] &&
@@ -239,25 +241,27 @@ proc ::woof::read_routes {} {
     return [route::parse_routes [read_route_file]]
 }
 
-proc ::woof::url_crack {rurl routes} {
+proc ::woof::url_crack {rurl} {
     # Construct application request context from a URL.
     # rurl - the URL of interest relative to the application URL root
     #
     # Returns a dictionary mapping the given relative URL path to
     # a controller, action and related context.
 
+    variable _routes
+
     #set rel_path [string trimleft $rurl /]; # TBD - needed ?
 
     set orig_rurl $rurl
 
-    if {[string length $rel_path] == 0} {
+    if {[string length $rurl] == 0} {
         #ruff
         # If the specified URL is empty, it defaults to the value
         # of 'app_default_uri' in the configuration file.
-        set rel_path [config get app_default_uri_path ""]
+        set rurl [config get app_default_uri_path ""]
     }
 
-    set parsed_rurl [route::select $routes $rurl -action [config get app_default_action index]]
+    set parsed_rurl [route::select $_routes $rurl -action [config get app_default_action index]]
     if {[llength $parsed_rurl]} {
         #ruff
         # If the URL matches a defined route, the corresponding controller
@@ -275,7 +279,7 @@ proc ::woof::url_crack {rurl routes} {
         # component, it is taken as the name of the controller, the action
         # defaults to the value of 'app_default_action' in the configuration
         # file, and the module is empty.
-        set tokens [split $rel_path /]
+        set tokens [split $rurl /]
         set ntokens [llength $tokens]
         if {$ntokens == 0} {
             # No module, default controller and action (even app_default_uri)
@@ -341,7 +345,7 @@ proc ::woof::url_crack {rurl routes} {
                 controller_file ${controller}_controller.tcl \
                 search_dirs     $search_dirs \
                 route_params  $params \
-                original_rurl $orig_url
+                original_rurl $orig_rurl
                ]
 }
 
@@ -356,7 +360,7 @@ proc ::woof::url_build {cracked_url args} {
     #  -action ACTION - name of the action. This defaults to 'index',
     #     and is not based on $cracked_url
     #  -parameters PARAMLIST - dictionary containing parameter and their values
-    #  -relative BOOLEAN - if true (default), the constructed URL is
+    #  -fullyqualify BOOLEAN - if false (default), the constructed URL is
     #     relative to the URL in $cracked_url, else the full path
     #     is included in the returned URL.
     #
@@ -364,28 +368,41 @@ proc ::woof::url_build {cracked_url args} {
     # action. Note this does not include server and port components.
     # 
 
+    variable _routes
+
     # TBD - this is quite simplistic, replace when more sophisticated
     # mapping is done.
 
+    array set opts {
+        -parameters {}
+        -fullyqualify false
+        -action index
+    }
     array set opts $args
     if {[info exists opts(-module)]} {
-        set module [join $opts(-module) /]
+        set module $opts(-module)
     } else {
-        set module [join [dict get $cracked_url module] /]
+        set module [dict get $cracked_url module]
     }
     if {[info exists opts(-controller)]} {
         set controller $opts(-controller)
     } else {
         set controller [dict get $cracked_url controller]
     }
-    if {[info exists opts(-action)]} {
-        set action $opts(-action)
-    } else {
-        set action "index"
+
+    set curl [file join {*}$module $controller]
+    set rurl [route::construct $_routes $curl $opts(-action) \
+                 -parameters $opts(-parameters)]
+    if {$rurl eq ""} {
+        set rurl "$curl/$opts(-action)"
+        append rurl [make_query_string $opts(-parameters)]
     }
 
-    # We use file join and not join here to take care of trailing or dup /
-    return [file join [dict get $cracked_url url_root] $module $controller $action]
+    if {$opts(-fullyqualify)} {
+        return [file join [dict get $cracked_url url_root] $rurl]
+    } else {
+        return [make_relative_url [dict get $cracked_url original_rurl] $rurl]
+    }
 }
 
 proc ::woof::url_for_file {path {default_url ""}} {
