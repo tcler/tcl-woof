@@ -46,10 +46,15 @@ proc route::parse_routes {route_definitions} {
     # components specify the module
     #
     # ACTIONS specifies the action methods for which the definition is
-    # applicable. This may be a list of action names or an empty list which
-    # indicates the definition applies to all actions.
+    # applicable. This may be a list of action names,
+    # an empty list which
+    # indicates the definition applies to all actions, or a string beginning
+    # with 'implicit:'. In this last case, the URL is treated as not having
+    # an action component and any remaining components after the controller
+    # are matched against parameter definitions. The string after the
+    # 'implicit:' prefix is treated as the action method to invoke.
     # 
-    # PURL is a URL path that defines additional parameters that be
+    # PURL is a URL path that defines additional parameters that are
     # supplied in the rest of the URL. Note these are not the explicit
     # parameters sent as part of a query or form post but rather additional
     # parameters that may be merged with them. Each component in this
@@ -62,10 +67,11 @@ proc route::parse_routes {route_definitions} {
     # Tcl subst command with -nocommands options hence variable
     # definitions and backslash sequences can be used.
     #
-    # In addition, the last path component in PURL may be of the form
-    #     *PARAMNAME:REGEXP
+    # In addition, PARAMNAME field of the last path component in PURL
+    # may be of the form
+    #     *NAME
     # in which case the corresponding parameter is a list of all remaining URL
-    # component values
+    # component values.
     #
     # Note that the ':' character in the default value should be
     # encoded using \u Tcl escape sequences else it will be treated
@@ -93,6 +99,14 @@ proc route::parse_routes {route_definitions} {
             # TBD - check whether it would be faster to build a lambda expression
             # to evaluate at matching time instead of just storing the data
 
+            if {[string match "implicit:*" $actions]} {
+                set actions [list implicit [string range $actions 9 end]]
+            } elseif {[llength $actions]} {
+                set actions [list enumerated $actions]
+            } else {
+                set actions [list any]
+            }
+
             # Parse the parameter expression into list form. The regexp itself
             # may have the ":" character so look for the last ":" character
             # to split the fields.
@@ -116,8 +130,8 @@ proc route::parse_routes {route_definitions} {
                                         [subst -nocommands [string range $param ${last}+1 end]]]
                 }
             }
-            
-            lappend ::_routes [list $curl $actions $params]            
+
+            lappend ::_routes [list $curl $actions $params]
         }
     }
 
@@ -147,42 +161,72 @@ proc route::select {routes rurl args} {
         if {[string compare -length [string length [lindex $r 0]] [lindex $r 0] $rurl]} {
             continue;           # Prefix does not match
         }
+
         lassign $r curl actions pdefs
+
+        # The prefix matches but make sure it is not a partial fragment match
         if {[string length $curl]} {
             if {[string length $rurl] != [string length $curl] &&
                 [string index $rurl [string length $curl]] != "/"} {
-                # E.g. r = a/b, rurl = a/bc
+                # E.g. r = a/b, rurl = a/bc is not a match
                 continue
             }
-            set action_index 1
+            # Where the action component starts
+            set curl_end [expr {[string length $curl]+1}]
         } else {
-            # The controller url is empty (meaning the application root)
-            set action_index 0
+            # Controller URL is empty.
+            set curl_end 0
         }
 
-        set url_parts [split $rurl /]
+        # url_parts are remaining pieces after the controller components
+        set url_parts [split [string range $rurl $curl_end end] /]
 
-        set action [lindex $url_parts $action_index]
+        if {[lindex $actions 0] eq "implicit"} {
+            # Action is "implicit" and not part of the URL
+            set action [lindex $actions 1]
+        } else {
+            # "any" or "enumerated"
+            set url_parts [lassign $url_parts action]
+        }
+
         if {$action eq ""} {
             set action [dict get $opts -defaultaction]
         }
-        if {[llength $actions] &&
-            $action ni $actions} {
-            # Action does not match
+        if {[lindex $actions 0] eq "enumerated" &&
+            $action ni [lindex $actions 1]} {
+            # Action does not match the enumerated action list in route
             continue
         }
-
         # We have the controller and action, now match up the parameters
+        # $url_parts contains all the parameter components
         set params {}
-        set param_index [expr {$action_index+1}]
+        set param_index 0
         set match true
         foreach pdef $pdefs {
             set pname [lindex $pdef 0]
             if {[string index $pname 0] eq "*"} {
                 # Collect all remaining parameters as a list
-                lappend params [string range $pname 1 end] [lrange $url_parts $param_index end]
+                set pname [string range $pname 1 end]
+                if {[string length [lindex $pdef 1]]} {
+                    # Verify that regexp matches all parameters
+                    foreach url_part [lrange $url_parts $param_index end] {
+                        if {![regexp -- [lindex $pdef 1] $url_part]} {
+                            set match false
+                            break
+                        }
+                    }
+                    if {! $match} {
+                        # Parameter did not match regexp. Break out of
+                        # parameter matching to continue with next route
+                        break
+                    }
+                }
+                lappend params $pname [lrange $url_parts $param_index end]
+
                 # Keep looping, remaining parameter defs if any
-                # would need to have default values
+                # would need to have default values as the * consumes
+                # everything specified in the URL. This is not really
+                # a sensible configuration but...
                 set param_index [llength $url_parts]; # We have consumed all
                 continue
             }
@@ -237,8 +281,18 @@ proc route::construct {routes curl action args} {
         # controller URL matches the one passed in and whose action
         # definitions include the action passed in.
         lassign $route curl actions pdefs
-        if {[llength $actions] && ($action ni $actions)} {
-            continue;           # Action does not match
+
+        if {[lindex $actions 0] eq "implicit"} {
+            # Action is not to be put into URL
+            if {[lindex $actions 1] ne $action} {
+                continue;       # Action does not match
+            }
+            set action "";      # Action not to be put in URL
+        } else {
+            if {[lindex $actions 0] eq "enumerated" &&
+                $action ni [lindex $actions 1]} {
+                continue;           # Action not in enumerated list
+            }
         }
 
         #ruff
@@ -294,7 +348,12 @@ proc route::construct {routes curl action args} {
 
         if {$match} {
             # We have a winner!
-            set url [file join $curl $action {*}$url_params]
+            if {$action eq ""} {
+                # Implicit action - do not include in URL
+                set url [file join $curl {*}$url_params]
+            } else {
+                set url [file join $curl $action {*}$url_params]
+            }
             set query {}
             foreach {k val} [dict get $params] {
                 # We encode k and val separately. Else "=" might
@@ -321,6 +380,8 @@ namespace eval route::test {
         curl ctrl_one act *param
         curl ctrl_two act {paramA:[[:digit:]]+:}
         curl ctrl_three {} {paramA/paramB::30}
+        curl ctrl_four {implicit:foo} {p1/p2}
+        curl ctrl_four {implicit:bar} {}
         curl "" {} {*params}
     }
     proc init {} {
