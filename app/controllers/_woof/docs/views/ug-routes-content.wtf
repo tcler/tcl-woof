@@ -1,0 +1,152 @@
+<p>There may be situations where the desired URL format does not satisfy
+  the assumptions behind Woof!'s
+  [my _chapter_link default_dispatcher "default URL mapping"].
+  For example, you may want the URL</p>
+<pre>
+  <span class='wf_filename'>http://www.mycompany.com/support/ticket/display/123</span>
+</pre>
+<p>to display the page corresponding to support ticket #123. This URL
+  cannot be dispatched to the appropriate controller by the
+  default URL dispatcher since it dispatching algorithm
+  expects the action method to be the last
+  component in the URL. In the above case the last component is actually
+  the ticket number. Woof! allows such URL's to be handled through the
+  definition of <em>URL dispatch routes</em>. Woof! will first check
+  these route definitions for a match before falling back to the
+  default dispatching algorithm.
+</p>
+
+<h3>Route definition file</h3>
+<p>Woof! reads the URL dispatch route definitions from the file
+<span class='wf_filename'>routes.cfg</span> in the
+<span class='wf_filename'>config</span> subdirectory. This file is 
+is expected to contain Tcl code and is executed in a temporary
+safe Tcl interpreter. The file may contain any Tcl code compatible
+with safe interpreters. A route is defined through the
+<code>curl</code> command which has the following format:
+[my _code_sample {
+curl CURL ACTIONS PURL
+}]
+
+<p>The <code>CURL</code> argument
+  specifies the relative URL for the controller and
+  may include a module path but does not include Woof! application root.
+  The last component is the controller name and any prior
+  components specify the module. For example,
+  <code>x/y/z</code> in this component would be treated as
+  the controller class <code>x::y::Z</code> or equivalently the
+  controller <code>z</code> in module <code>x y</code>.
+</p>
+
+<p><code>ACTIONS</code> specifies the action methods for which the 
+  definition is applicable. This may be a list of action names,
+  an empty list which
+  indicates the definition applies to all actions, or a string beginning
+  with <code>implicit:</code> (for
+  example, <code>implicit:display</code>.
+  In this last case, the URL is treated as not having
+  an action component and any remaining components after the controller
+  are matched against parameter definitions. The string after the
+  <code>implicit:</code> prefix is treated as the action method to
+  invoke. An example is shown later.</p>
+
+<p><code>PURL</code> is a URL path that defines additional parameters that
+  are supplied in the rest of the URL. Note these are not the explicit
+  parameters sent as part of a query or form post but rather additional
+  parameters that may be merged with them. Each component in this
+  <code>PURL</code> should have the format
+  <code>PARAMNAME:REGEXP:DEFAULT</code>
+  where <code>PARAMNAME</code> specifies the name of the parameter,
+  <code>REGEXP</code>, if not empty, specifies a regular expression
+  that the URL component should match, and <code>DEFAULT</code> is
+  the default value to be used if the URL 
+  component is missing. <code>DEFAULT</code> is actually passed through the
+  Tcl <code>subst</code> command with <code>-nocommands</code> options
+  hence variable
+  definitions and backslash sequences can be used. However, characters
+  that are special to Tcl will need to be escaped.</p>
+
+<p>In addition, the <code>PARAMNAME</code> field of the last path
+  component in <code>PURL</code> may begin with a <code>*</code>
+  character in which case the corresponding
+  parameter is a list of all remaining URL
+  component values.</p>
+
+<p>Note that any <code>:</code> character in a default value should be
+  encoded using <code>\\u</code> Tcl escape sequences else it will be treated
+  as the start of the default value as opposed to be embedded in it.</p>
+
+<h3>Route matching</h3>
+<p>Routes defined through the <code>curl</code> command are stored in
+  the order the corresponding commands are executed, which is
+  generally the order in which they occur in the file. Incoming
+  requests are matched against the routes in this order and the first
+  matching route is selected.</p>
+
+<p>The matching algorithm first strips off the protocol scheme, host
+  and port (if any) from the URL. The URL root of the Woof!
+  application is also removed. The rest of the URL is then matched
+  against each route definition. In the example URL at the top of
+  this page,
+  <span class='wf_filename'>http://www.mycompany.com/support/</span> 
+  will be stripped off (<span class='wf_filename'>support</span> being
+  the application root) leaving behind
+  <span class='wf_filename'>ticket/display/123</span> to be matched
+  against the route definitions.
+</p>
+
+<p>For a match to succeed, all three portions of the definition -
+  the controller URL, the action method name, and URL path embedded
+  parameters (as opposed to query parameters) - must match. A route
+  definition matching the example URL above would be as follows:</p>
+[my _code_sample {
+curl ticket display {id:[[:digit:]]+:}
+}]
+
+<p>The relative URL <span class='wf_filename'>ticket/display/123</span>
+  would successfully match against this route but
+  <span class='wf_filename'>ticket/display/abc</span> would not. On the
+  successful match, the action <code>display</code> in class
+  <code>Ticket</code> would be invoked. The parameter with name
+  <code>id</code> with a value of <code>123</code> would be passed to
+  the method using the standard parameter passing mechanism described in the
+  [my _chapter_link implementing_actions] chapter.
+</p>
+
+<p>The relative URL <span class='wf_filename'>ticket/display</span>
+  would also not match the route definition since no parameter is
+  specified. If the route definition were changed to</p>
+
+[my _code_sample {
+curl ticket display {id:[[:digit:]]+:1}
+}]
+
+<p>then <span class='wf_filename'>ticket/display</span> would match
+  the route definition as <code>id</code> parameter would be set to
+  the default value of <code>1</code> as it was not present in the URL.</p>
+
+<p>You may also choose the <code>implicit</code> action method
+  selection mechanism so that the <code>display</code> component is
+  not required in the URL. So with a route definition of</p>
+[my _code_sample {
+curl ticket implicit:display {id:[[:digit:]]+:}
+}]
+
+<p>With this definition in place, the relative URL
+<span class='wf_filename'>ticket/123</span> would also result in
+same invocation of the <code>display</code> action method as above.</p>
+
+<p>Furthermore, you could also change the route definition to</p>
+[my _code_sample {
+curl ticket display {*id:[[:digit:]]+:}
+}]
+
+<p>With this definition, relative URL's such as 
+<span class='wf_filename'>ticket/display/12</span> and
+<span class='wf_filename'>ticket/display/12/34/56</span>
+would both be accepted, with the <code>id</code> parameter set to
+lists <code>{12}</code> and <code>{12 34 56}</code> respectively.
+
+<p>See the [my _chapter_link dispatch_examples] chapter for more
+  examples of URL dispatching using routes.</p>
+

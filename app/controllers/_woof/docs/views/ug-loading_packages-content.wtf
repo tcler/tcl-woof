@@ -25,7 +25,7 @@
     set lib_dirs [list /usr/lib/tcl /usr/local/lib/tcl]
 }]
 
-<p>will any packages under those directories loadable. Generally, it
+<p>will allow any packages under those directories to be read. Generally, it
   would be wise to list only the directories containing the specific
   packages you want to load, or to place all required packages under
   a specific directory and include that in the list.</p>

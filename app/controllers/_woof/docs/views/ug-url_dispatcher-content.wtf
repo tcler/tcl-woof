@@ -1,41 +1,74 @@
-<p>The term URL dispatching refers to the mapping of a URL to a
-  specific controller and action. The current implementation in Woof!
-  is very simple and is likely undergo significant change before the
-  1.0 release.</p>
-
-<p>In the current release, Woof! follows these simple steps to map a
-  URL to a controller and action:</p>
-<ul>
-  <li>Remove the URL root prefix (corresponding to the value of
-    <code>url_root</code> in the
-    [my _chapter_link configuration "configuration file"] from the
-    presented URL.</li>
-  <li>Remove the query and fragment components if any from the
-  URL.</li>
-  <li>Split the remaining URL on the <code>/</code> character to get a
-    list of tokens.</li>
-  <li>If the list has two or more tokens, the last token is the name
-    of the action, and the penultimate token is the name of the
-    controller. Any preceding tokens specify the module.</li>
-  <li>If the list has exactly one token, it is the name of the controller.
-    The action is the value of the configuration variable
-    <code>app_default_action</code> if defined, or <code>index</code>
-    if not. The module list is empty.</li>  
-  <li>If the list is empty, the controller is the value of the
-    configuration variable <code>app_default_controller</code> if
-    defined or the configuration variable <code>app_name</code> if it
-    is not. The action is the value of the configuration variable
-    <code>app_default_action</code> if defined, or <code>index</code>
-    if not. The module list is empty.</li>
-</ul>    
-    
-<p>For example, if the application is rooted at
-  <span class="wf_filename">/myapp</span>, the URL
-  <span class="wf_filename">/myapp/alpha/beta/gamma/delta</span>, will
-  be mapped to the action <code>delta</code> in the controller
-  <code>gamma</code> in the module <code>{alpha beta}</code>. The
-  controller class will be <code>GammaController</code> and be loaded
-  from the file
-  <span class="wf_filename">app/controllers/alpha/beta/gamma_controller.tcl</span>
-  in the Woof! directory.
+<p>
+  <em>
+    Note: The current URL dispatcher in Woof!
+    is still somewhat experimental and likely undergo significant change
+    before the 1.0 release.
+  </em>
 </p>
+
+<p>The term URL dispatching refers to the mapping of a URL to a
+  specific controller and action. For example, consider the following
+  URL:
+</p>
+<pre>
+  <span class='wf_filename'>http://www.mycompany.com/support/ticket/display</span>
+</pre>
+
+<p>The components in this particular URL may be broken down as follows:</p>
+<table>
+<tr>
+  <td><span class=wf_filename>http://www.mycompany.com</span></td>
+  <td>The protocol and host specification
+    have very little to do with Woof!. Basically, these components are
+    used by the client and network infrastructure to deliver the request
+    to the web server under which our Woof! site is installed. </td>
+</tr>
+<tr>
+  <td><span class='wf_filename'>/support</span></td>
+  <td><p>In our example, this is the root URL for our Woof! application. The
+    website may host many applications implemented using various
+    technologies. Woof! is used to implement the support section of the
+    web site. In this case, the value of the <code>url_root</code>
+    [my _chapter_link configuration configuration] variable
+    would be set to <span class='wf_filename'>/support</span> and in
+    addition the hosting web server would be configured to invoke
+    Woof! for all requests under it as described in the
+      [my _chapter_link installation] chapter.</p>
+    <p>In the case where Woof! drives the entire web site, this
+      component may not be necessary (and <code>url_root</code> will
+      be <code>/</code>).
+  </td>
+</tr>
+<tr>
+  <td><span class='wf_filename'>/ticket</span></td>
+  <td>The next component is the controller which implements a support
+    ticket tracking system.
+  </td>
+</tr>
+<tr>
+  <td><span class='wf_filename'>/display</span></td>
+  <td>The last component specifies the action method, which in this
+  case specifies a page containing the list of support tickets.
+  </td>
+</tr>
+</table>
+
+<p>In the above example, the mapping from the URL to controller and
+  action is fairly straighforward and done using Woof!'s
+  [my _chapter_link default_dispatcher "default dispatch"] mapping.</p>
+
+<p>However, in many instances it may
+  be desirable to have a more flexible URL structure. For example,
+  suppose we want the following URL to display the support ticket with
+  id 123:</p>
+<pre>
+  <span class='wf_filename'>http://www.mycompany.com/support/ticket/display/123</span>
+</pre>
+
+<p>In this case, the last component of the URL is the ticket number
+  and not the name of the action method. To accomplish this kind of custom
+  dispatching of URL's, [my _chapter_link routes "dispatch routes"]
+  can be defined.</p>
+
+<p>Both these mechanisms are described in the next sections.</p>
+  

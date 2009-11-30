@@ -18,7 +18,8 @@
 configuration by executing the files
 <span class="wf_filename">application.cfg</span>
 and <span class="wf_filename">_woof.cfg</span>, in that order, in a
-special namespace. A configuration variable is any variable that is
+special temporary Tcl interpreter.
+A configuration variable is any variable that is
 set in either file that does not begin with an underscore
 (<span class="wf_filename">_</span>).</p>
 

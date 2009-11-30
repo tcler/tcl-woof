@@ -55,6 +55,9 @@ oo::class create UgController {
             {development_aids "Development Aids" 1}
             {request_handling "Request Handling"}
             {url_dispatcher "URL Dispatching" 1}
+            {default_dispatcher "Default Dispatching" 2}
+            {routes "Using Routes" 2}
+            {dispatch_examples "Dispatching Examples" 2}
             {controller_object "The <span class='wf_code'>controller</span> Object" 1}
             {controller_example "A Simple Controller Example" 2}
             {implementing_controllers "Implementing Controllers" 2}
