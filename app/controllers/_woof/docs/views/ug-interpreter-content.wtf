@@ -9,16 +9,33 @@
   in the presence of programming bugs and security holes. See
   [my _chapter_link security] for more details.</p>
 
-<p>Woof! makes use of this very useful Tcl capability by running all
-  application code inside a safe interpreter. When Woof! is started, a
-  master interpreter is created. This in turn reads the configuration,
-  initializes the web server interfaces, creates the safe interpreter
-  for executing application code and loads various packages into it,
-  including the <span class="wf_code">woof</span> package.</p>
-
+<p>Woof! makes use of this very useful Tcl capability by splitting the
+  runtime environment between two interpreters:</p>
+<ul>
+  <li>The <em>master</em> interpreter is created when Woof! is started
+    and is privileges to execute all Tcl commands. The master
+    interpreter reads the configuration, initializes web server
+    interfaces and various subsystems.</li>
+  <li>The <em>application</em> interpreter is a safe interpreter. It
+    is created by the master interpreter which also loads most of the
+    Woof! runtime packages into it
+    including the <span class="wf_code">woof</span> package.
+    The master interpreter also creates various
+    aliased commands, such as those for the web server interfaces and
+    logging, in the application interpreter.
+  </li>
+</ul>
+  
 <p>When a client request arrives, the master interpreter receives it
   from the web server and passes it into the safe application
-  interpreter as a [my _chapter_link request_object request]
-  object. It then retrieves the [my _chapter_link response_object response]
-  object from the application interpreter and passes it on to the web
-  server to be sent back to the client.</p>
+  interpreter. The application interpreter processes the request and
+  then calls the web server interfaces to return the response to the
+  client.</p>
+
+<p>The advantage of this model of processing is that most of the
+  processing happens in an interpreter whose access to system
+  resources such as the file system is limited. Serious damage caused
+  by security-related vulnerabilities is therefore limited. This is by
+  no means a panacea but affords some additional level of protection.</p>
+
+<p><strong><em>To be documented - how to interface to master interpreter.</em></strong></p>

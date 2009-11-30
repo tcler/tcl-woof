@@ -70,5 +70,9 @@
   dispatching of URL's, [my _chapter_link routes "dispatch routes"]
   can be defined.</p>
 
-<p>Both these mechanisms are described in the next sections.</p>
+<p>Both these mechanisms to map a URL to a controller and action 
+  are described in the next sections. The correspondence between the
+  URL's and the corresponding controller class names and locations
+  are described in the [my _chapter_link implementing_controllers]
+  chapter.</p>
   

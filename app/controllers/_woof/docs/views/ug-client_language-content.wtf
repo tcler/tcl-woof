@@ -13,6 +13,6 @@
   [my _chapter_link request_object "request"] object. This will return
   the list of preferred languages in priority order. For example, for
   the above header this method will return the list 
-  <span class="wf_code">{fr end de}</span>.</p>
+  <span class="wf_code">{fr en de}</span>.</p>
 
 

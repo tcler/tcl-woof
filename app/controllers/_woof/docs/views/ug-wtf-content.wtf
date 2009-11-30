@@ -44,6 +44,25 @@ fragment</p>
 
 <p>will generate a HTML table of integers from 1 to 5.</p>
 
+<p>You can also use the <code>%(</code> and <code>%)</code> block
+delimiters to enclose a block of Tcl code. For example, the lines
+[my _code_sample {
+  % # Initialize variables
+  % set i 1
+  % set j 2
+  % set k 3
+}]
+
+<p>can also be written as</p>
+[my _code_sample {
+  %(
+  # Initialize variables
+  set i 1
+  set j 2
+  set k 3
+  %)
+}]
+
 <h3>Template context</h3>
 
 <p>The processing of WTF fragments is implemented by the
@@ -51,7 +70,10 @@ command <span class='wf_code'>html_frag</span><sup>1</sup> in the
 context of the caller. In the case of Woof!, this context is the
 controller object handling the request. Therefore all commands and
 variables defined in the context of that controller's methods are
-available in the template with appropriate declarations.</p>
+available in the template with appropriate declarations. In particular,
+  note that <code>my variable</code> statements are required in the
+template file to bring the controller object member variables into the 
+template scope.</p>
 
 <h3>Comments</h3>
 
