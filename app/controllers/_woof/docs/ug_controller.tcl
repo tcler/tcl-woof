@@ -56,7 +56,7 @@ oo::class create UgController {
             {request_handling "Request Handling"}
             {url_dispatcher "URL Mapping" 1}
             {default_dispatcher "Default URL Mapping" 2}
-            {routes "Using URL Routes" 2}
+            {routes "URL Routes" 2}
             {url_construction "URL Construction" 2}
             {controller_object "The <span class='wf_code'>controller</span> Object" 1}
             {controller_example "A Simple Controller Example" 2}
