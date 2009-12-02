@@ -199,7 +199,7 @@ proc ::woof::safe::map_file_to_url_alias {path url_map} {
     # If path is relative, it is relative to the Woof public directory.
     switch -exact -- [file pathtype $path] {
         relative {
-            set path [file join [::woof::master::configuration get public_dir] $path]
+            set path [file join [::woof::master::config get public_dir] $path]
         }
         volumerelative -
         absolute {
@@ -241,7 +241,7 @@ proc ::woof::safe::map_file_to_url_alias {path url_map} {
 }
 
 proc ::woof::safe::read_route_file_alias {} {
-    set fn [::woof::master::configuration get route_file]
+    set fn [::woof::master::config get route_file]
     if {[file readable $fn]} {
         set fd [open $fn]
         try {
@@ -285,7 +285,7 @@ proc ::woof::master::create_web_interp {} {
     $ip eval {package require woof}
 
     # Make a copy of the config in safe interp, and freeze it
-    $ip eval [list ::woof::util::Map create ::woof::config [configuration get]]
+    $ip eval [list ::woof::util::Map create ::woof::config [config get]]
     $ip eval {::woof::config freeze}
 
     # Now hide the exposed unsafe commands
@@ -376,8 +376,8 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     # static Woof configuration information. This is exported and
     # available to all components, including applications as the
     # config object.
-    Configuration create configuration $_woof_root
-    configuration set server_module $server_module
+    Configuration create config $_woof_root
+    config set server_module $server_module
     
     # Create the safe web interpreter that will be used to
     # to service client requests.
@@ -390,25 +390,25 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     # -jails DIRLIST - list of directory paths. If specified and not empty,
     #  files under one of these paths can also be accessed through the cache.
     #  This is in addition to the files in the public and app directories.
-    set jails [list [configuration get public_dir] \
-                   [configuration get app_dir] \
-                   {*}[configuration get lib_dirs]]
+    set jails [list [config get public_dir] \
+                   [config get app_dir] \
+                   {*}[config get lib_dirs]]
 
     if {[dict exists $args -jails]} {
         lappend jails {*}[dict get $args -jails]
     }
 
     FileCache create filecache \
-        -relativeroot [configuration get public_dir] \
+        -relativeroot [config get public_dir] \
         -jails $jails
     $_winterp alias ::woof::filecache_locate ::woof::safe::filecache_locate_alias
     $_winterp alias ::woof::filecache_read ::woof::safe::filecache_read_alias
 
     #ruff
-    # Any directories specified in the configuration are
+    # Any directories specified in the config are
     # created if necessary.
     foreach dir {temp_dir session_dir log_dir} {
-        file mkdir [configuration get $dir]
+        file mkdir [config get $dir]
     }
 
     #ruff
@@ -430,8 +430,8 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     # The command also initializes the logging subsystem by instantiating
     # the Log class. This object, named 'log', is also exported and
     # available from all other components.
-    Log create log [configuration get app_name] ::woof::webserver
-    log setlevel [configuration get loglevel info]
+    Log create log [config get app_name] ::woof::webserver
+    log setlevel [config get loglevel info]
 
     # TBD - do we need to restrict access to ::woof::log methods
     # for security reasons ?
@@ -452,7 +452,7 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     $_winterp eval ::woof::init
 
     # If any application-specific code needs to be loaded, load it
-    set app_master_file [file join [::woof::master::configuration get app_dir] app_master.tcl]
+    set app_master_file [file join [::woof::master::config get app_dir] app_master.tcl]
     if {[file exists $app_master_file]} {
         uplevel #0 [list source $app_master_file]
     }
