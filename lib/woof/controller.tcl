@@ -338,8 +338,8 @@ oo::class create Controller {
         #  controller is defined. Ignored unless controller is also
         #  specified.
         # -anchor ANCHOR - specifies the anchor to be included in the URL
-        # -query QUERYLIST - specifies the query component of the URL. This
-        #  should be specified as a key value list.
+        # -query QUERYLIST - dictionary containing the query parameters
+        #  of the URL and their values.
         # -urlpath URLPATH - specifies the URL portion after the protocol and 
         #  host components. Specifying this will cause all other URL related
         #  options to be ignored except -protocol, -host and -port.
@@ -350,6 +350,8 @@ oo::class create Controller {
         #  scheme and host) is returned in all cases. Default is false.
         #  If -host, -port or -protocol options are specified,
         #  it is always set to true.
+        # -parameters PARAMLIST - dictionary containing the parameters to
+        #   be included in the URL path (see ::woof::url_build).
 
         if {[llength $args] == 1} {
             # Options passed as a single argument
@@ -377,6 +379,9 @@ oo::class create Controller {
                 set url [file join [::woof::config get url_root] $url]
             }
         } else {
+            if {[dict exists $args -parameters]} {
+                lappend modifiers -parameters [dict get $args -parameters]
+            }
             if {[dict exists $args -controller]} {
                 lappend modifiers -controller [dict get $args -controller]
                 if {[dict exists $args -action]} {
@@ -419,12 +424,8 @@ oo::class create Controller {
         # what was specified by client in its URL, so we cannot use
         # simple relative url. We will need to call url_build below.
         if {! $fullyqualify} {
-            if {![dict exists $args -protocol] &&
-                ![dict exists $args -host] &&
-                ![dict exists $args -port]} {
-                if {[info exists url]} {
-                    return "$url$anchor$query"
-                }
+            if {[info exists url]} {
+                return "$url$anchor$query"
             }
         }
 
