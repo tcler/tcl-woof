@@ -30,7 +30,14 @@ namespace eval ::woof::master {
 
     # The interpreter used for executing web commands
     variable _winterp
-
+    proc app_interp {} {
+        # Returns the Tcl interpreter running the Woof! application. 
+        #
+        # Will raise an error if the application interp has not been created
+        # yet.
+        variable _winterp
+        return $_winterp
+    }
 }
 
 # Source map and errors under the woof namespace as that's where much
@@ -444,11 +451,16 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     # Now tell the slave interpreter to init itself
     $_winterp eval ::woof::init
 
+    # If any application-specific code needs to be loaded, load it
+    set app_master_file [file join [::woof::master::configuration get app_dir] app_master.tcl]
+    if {[file exists $app_master_file]} {
+        uplevel #0 [list source $app_master_file]
+    }
+
     #ruff
     # Returns the path to the safe interpreter.
     return $_winterp
 }
-
 
 proc ::woof::master::process_request {{request_context ""}} {
     # Called by a webserver to handle a client request.
