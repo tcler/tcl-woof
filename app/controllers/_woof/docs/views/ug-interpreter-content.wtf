@@ -34,8 +34,54 @@
 
 <p>The advantage of this model of processing is that most of the
   processing happens in an interpreter whose access to system
-  resources such as the file system is limited. Serious damage caused
-  by security-related vulnerabilities is therefore limited. This is by
-  no means a panacea but affords some additional level of protection.</p>
+  resources such as the file system is limited. This is by
+  no means a panacea against security vulnerabilities but affords
+  some additional level of protection.</p>
 
-<p><strong><em>To be documented - how to interface to master interpreter.</em></strong></p>
+<h3>Loading application-specific code in the master interpreter</h3>
+
+<p>Because the application interpreter is a safe interpreter, not all
+  Tcl code, for example database access functions, can be executed in
+  it directly. Instead, the application must load code in the master
+  interpreter and then appropriately use the 
+  [my _tcl_manpage_link interp "<code>interp alias</code>"]
+  command to make the required commands visible in the application
+  interpreter.</p>
+
+<p>Application-specific code is loaded in the master interpreter at
+  start up time. After creation of the application interpreter, the
+  master checks for the existence of the file
+  <span class='wf_filename'>app_master.tcl</span> in the
+  <span class='wf_filename'>app</span> subdirectory under the Woof!
+  root and loads it using the Tcl
+  [my _tcl_manpage_link source] command. This file may in turn load
+  other packages as well as modify the application interpreter. The
+  name of the application interpreter can be obtained through the
+  <code>::woof::master::app_interp</code> command.</p>
+
+<p>Below is a sample <span class='wf_filename'>app_master.tcl</span>
+  file which assumes the presence of a database
+  package <code>db</code> and make a single command visible in the
+  application interpreter.</p>
+
+[my _code_sample {
+# File app_master.tcl
+
+package require db ;# Load the package
+...Initialize the database connections etc...
+
+proc select_alias {args} {
+   ...check arguments etc...
+   db::select db_handle {*}$args
+}
+
+# Create a global command db_select in the application interpreter that
+# will be handled by the the master interpreter
+
+[::woof::master::app_interp] alias ::db_select ::select_alias
+
+}]
+
+
+
+  

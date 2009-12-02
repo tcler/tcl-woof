@@ -46,7 +46,7 @@ oo::class create UgController {
             {install_final_steps "Verifying the Installation" 1}
             {basics "Woof! Basics"}
             {mvc "The Model-View-Controller Architecture" 1}
-            {interpreter "The Woof! Interpreters" 1}
+            {interpreter "The Woof! Interpreter Model" 1}
             {loading_packages "Loading Packages" 2}
             {filesystem_layout "File System Layout" 1}
             {directory_structure "Directory Structure" 2}
@@ -54,10 +54,10 @@ oo::class create UgController {
             {configuration "Configuration Settings" 1}
             {development_aids "Development Aids" 1}
             {request_handling "Request Handling"}
-            {url_dispatcher "URL Dispatching" 1}
-            {default_dispatcher "Default Dispatching" 2}
-            {routes "Using Routes" 2}
-            {dispatch_examples "Dispatching Examples" 2}
+            {url_dispatcher "URL Mapping" 1}
+            {default_dispatcher "Default URL Mapping" 2}
+            {routes "Using URL Routes" 2}
+            {url_construction "URL Construction" 2}
             {controller_object "The <span class='wf_code'>controller</span> Object" 1}
             {controller_example "A Simple Controller Example" 2}
             {implementing_controllers "Implementing Controllers" 2}
@@ -181,6 +181,16 @@ oo::class create UgController {
         }
         return "<a href='http://woof.magicsplat.com/manuals/woof/index.html#$name'>$display</a>"
     }
+
+    method _tcl_manpage_link {name {display ""}} {
+        # Generates a link to Tcl manpage
+        if {$display eq ""} {
+            set display "<span class='wf_code'>[hesc [namespace tail $name]]</span>"
+        }
+        return "<a href='http://www.tcl.tk/man/tcl8.6/TclCmd/${name}.htm'>$display</a>"
+    }
+
+
 
     method index {} {
         # Returns the chapter links

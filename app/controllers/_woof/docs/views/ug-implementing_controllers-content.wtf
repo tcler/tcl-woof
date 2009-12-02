@@ -57,33 +57,34 @@ created by the base
   [my _chapter_link default_page_layout "default layout"] parameters,
   [my _chapter_link using_stylesheets "stylesheets"] and so on.</p>
 
-<h3>Controller classes and namespaces</h3>
+<h3>Controller class names and namespaces</h3>
 <p>Controller classes are read into the
 <span class="wf_code">::woof::app</span> namespace.
 One important point to note is that the class name does not have
-any namespace qualifiers. Even if the controller is defined to be in a
+any namespace qualifiers in its definition. 
+Even if the controller is defined to be in a
 module, the class definition itself should generally not include the
 namespace. Woof! will automatically instantiate the class into the
 appropriate namespace based on the module name.</p>
 
 <p>For example, assuming
 the application URL root is <span class="wf_filename">/</span>, the
-URL <span class="wf_filename">/mod1/mod2/sample/index</span>
+URL <span class="wf_filename">/mod1/mod2/my_sample/index</span>
 corresponds to the <span class="wf_code">index</span> action in
-controller <span class="wf_code">sample</span> in the module
+controller <span class="wf_code">my_sample</span> in the module
 <span class="wf_code">mod1::mod2</span>. The corresponding controller
 implementation will be located under the Woof! directory in the file
 <span class="wf_filename">app/controllers/mod1/mod2/sample_controller.tcl</span>.
 The controller class as defined in the sample above (without any
 namespace qualifiers), will be created as
-<span class="wf_code">::woof::app::mod1::mod2::Sample</span>.</p>
+<span class="wf_code">::woof::app::mod1::mod2::MySample</span>.</p>
 
 <p>If at all namespace qualifiers are used, the
 class name must be fully qualified and begin with 
 <span class="wf_code">::woof::app</span> and include the module
 namespaces if any. So the class definition above could have been
 defined with the fully qualified name
-<span class="wf_code">::woof::app::mod1::mod2::Sample</span>
+<span class="wf_code">::woof::app::mod1::mod2::MySample</span>
 but this is not recommended.</p>
 
 

@@ -34,9 +34,10 @@
     addition the hosting web server would be configured to invoke
     Woof! for all requests under it as described in the
       [my _chapter_link installation] chapter.</p>
-    <p>In the case where Woof! drives the entire web site, this
-      component may not be necessary (and <code>url_root</code> will
-      be <code>/</code>).
+    <p>In the case where Woof! drives the entire web site
+      (<code>url_root</code> will
+      be <code>/</code>), this
+      component need not be present.
   </td>
 </tr>
 <tr>
@@ -65,14 +66,20 @@
   <span class='wf_filename'>http://www.mycompany.com/support/ticket/display/123</span>
 </pre>
 
-<p>In this case, the last component of the URL is the ticket number
-  and not the name of the action method. To accomplish this kind of custom
+<p>or, even</p>
+<pre>
+  <span class='wf_filename'>http://www.mycompany.com/support/ticket/123</span>
+</pre>
+
+
+<p>In the first case, the last component of the URL is the ticket number
+  and not the name of the action method. In the second case, the action method
+  is not even part of the URL. To accomplish this kind of custom
   dispatching of URL's, [my _chapter_link routes "dispatch routes"]
   can be defined.</p>
 
 <p>Both these mechanisms to map a URL to a controller and action 
   are described in the next sections. The correspondence between the
-  URL's and the corresponding controller class names and locations
+  URL's and the corresponding actual controller class names and locations
   are described in the [my _chapter_link implementing_controllers]
   chapter.</p>
-  
