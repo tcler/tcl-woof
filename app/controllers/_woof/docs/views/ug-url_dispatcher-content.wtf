@@ -6,17 +6,33 @@
   </em>
 </p>
 
-<p>The term URL dispatching refers to the mapping of a URL to a
+<p>A URL received in a request has to be mapped to a
   specific controller and action. For example, consider the following
-  URL:
+  URL broken up as per the RFC3986 URI specification:
 </p>
-<pre>
-  <span class='wf_filename'>http://www.mycompany.com/support/ticket/display</span>
-</pre>
+[my _code_sample {
+http://www.mycompany.com/myproduct/support/ticket/display?id=123#section
+\___/  \_______________/\_______________________________/ \____/\______/
+  |           |                        |                     |      |
+scheme   authority                   path                  query fragment
+}]
+
+<p>From the Woof! perspective, the same URL is broken up as follows:</p>
+
+[my _code_sample {
+http://www.mycompany.com/myproduct/support/ticket/display?id=123#section
+\___/  \_______________/\________/ \_____/ \____/ \_____/ \____/\______/
+  |           |             |         |       |      |       |      | 
+scheme   authority      url_root      |   controller |   parameters |
+                                   module          action        fragment
+}]
+
+
 
 <p>The components in this particular URL may be broken down as follows:</p>
 <table>
 <tr>
+  <td><code>scheme</code> and <code>authority</code></td>
   <td><span class=wf_filename>http://www.mycompany.com</span></td>
   <td>The protocol and host specification
     have very little to do with Woof!. Basically, these components are
@@ -24,15 +40,18 @@
     to the web server under which our Woof! site is installed. </td>
 </tr>
 <tr>
-  <td><span class='wf_filename'>/support</span></td>
-  <td><p>In our example, this is the root URL for our Woof! application. The
-    website may host many applications implemented using various
-    technologies. Woof! is used to implement the support section of the
-    web site. In this case, the value of the <code>url_root</code>
-    [my _chapter_link configuration configuration] variable
-    would be set to <span class='wf_filename'>/support</span> and in
-    addition the hosting web server would be configured to invoke
-    Woof! for all requests under it as described in the
+  <td><code>url_root</code></td>
+  <td><span class='wf_filename'>/myproduct</span></td>
+  <td>
+    <p>In our example, this is the root URL for our Woof! application. The
+      website may host many applications implemented using various
+      technologies. Woof! is used to implement the web site section for
+      <code>myproduct</code>.
+      In this case, the value of the <code>url_root</code>
+      [my _chapter_link configuration configuration] variable
+      would be set to <span class='wf_filename'>/myproduct</span> and in
+      addition the hosting web server would be configured to invoke
+      Woof! for all requests under it as described in the
       [my _chapter_link installation] chapter.</p>
     <p>In the case where Woof! drives the entire web site
       (<code>url_root</code> will
@@ -41,15 +60,43 @@
   </td>
 </tr>
 <tr>
-  <td><span class='wf_filename'>/ticket</span></td>
+  <td><code>module</code></td>
+  <td><span class='wf_filename'>support</span></td>
+  <td>Controllers implementing related functionality can be grouped into
+    modules. This is an optional component and need not be always present.
+  </td>
+</tr>
+<tr>
+  <td><code>controller</code></td>
+  <td><span class='wf_filename'>ticket</span></td>
   <td>The next component is the controller which implements a support
     ticket tracking system.
   </td>
 </tr>
 <tr>
-  <td><span class='wf_filename'>/display</span></td>
-  <td>The last component specifies the action method, which in this
-  case specifies a page containing the list of support tickets.
+  <td><code>action</code></td>
+  <td><span class='wf_filename'>display</span></td>
+  <td>This specifies the action method to be invoked in the
+    controller, which in this
+    case specifies a page showing a support ticket.
+  </td>
+</tr>
+<tr>
+  <td><code>parameters</code></td>
+  <td><span class='wf_filename'>id=123</span></td>
+  <td>This optional component specifies parameters to be passed to
+    the action method. The parameters can be retrieved through
+    the [my _chapter_link params_object "params object"].
+  </td>
+</tr>
+<tr>
+  <td><code>fragment</code></td>
+  <td><span class='wf_filename'>section</span></td>
+  <td>This is actually never seen by Woof! in an incoming request. It is
+    used strictly by the client to locate a particular section or
+    fragment within received content. Woof! may however generate links
+    that include this component in order to point clients to an exact
+    location within a document.
   </td>
 </tr>
 </table>
@@ -60,17 +107,25 @@
 
 <p>However, in many instances it may
   be desirable to have a more flexible URL structure. For example,
-  suppose we want the following URL to display the support ticket with
-  id 123:</p>
-<pre>
-  <span class='wf_filename'>http://www.mycompany.com/support/ticket/display/123</span>
-</pre>
+  we may want ticket id to be passed as part of the URL which would
+  then look like:</p>
+
+[my _code_sample {
+http://www.mycompany.com/myproduct/support/ticket/display/123
+\___/  \_______________/\________/ \_____/ \____/ \_____/ \_/
+  |           |             |         |       |      |     |
+scheme   authority      url_root      |   controller | parameters
+                                   module          action
+}]
 
 <p>or, even</p>
-<pre>
-  <span class='wf_filename'>http://www.mycompany.com/support/ticket/123</span>
-</pre>
-
+[my _code_sample {
+http://www.mycompany.com/myproduct/support/ticket/123
+\___/  \_______________/\________/ \_____/ \____/ \_/
+  |           |             |         |       |    |
+scheme   authority      url_root   module     | parameters
+                                          controller
+}]
 
 <p>In the first case, the last component of the URL is the ticket number
   and not the name of the action method. In the second case, the action method
