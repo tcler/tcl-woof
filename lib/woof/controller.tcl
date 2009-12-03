@@ -338,8 +338,6 @@ oo::class create Controller {
         #  controller is defined. Ignored unless controller is also
         #  specified.
         # -anchor ANCHOR - specifies the anchor to be included in the URL
-        # -query QUERYLIST - dictionary containing the query parameters
-        #  of the URL and their values.
         # -urlpath URLPATH - specifies the URL portion after the protocol and 
         #  host components. Specifying this will cause all other URL related
         #  options to be ignored except -protocol, -host and -port.
@@ -408,12 +406,6 @@ oo::class create Controller {
             set anchor ""
         }
 
-        if {[dict exists $args -query]} {
-            set query [::woof::util::make_query_string [dict get $args -query]]
-        } else {
-            set query ""
-        }
-
         # As a short cut to processing, if -urlpath was specified,
         # we have a relative url in $url, return it as we have no need
         # for computing a full URL if
@@ -425,15 +417,17 @@ oo::class create Controller {
         # simple relative url. We will need to call url_build below.
         if {! $fullyqualify} {
             if {[info exists url]} {
-                return "$url$anchor$query"
+                return "$url[::woof::util::make_query_string [::woof::util::dict_get $args -parameters [list ]]]$anchor"
             }
         }
 
         if {[dict exists $args -urlpath]} {
             # If urlpath is specified, do not go build the whole url
-            append url "$anchor$query"
+            append url "[::woof::util::make_query_string [::woof::util::dict_get $args -parameters [list ]]]$anchor"
         } else {
-            set url "[::woof::url_build $_dispatchinfo {*}$modifiers]$anchor$query"
+            # Note url_build includes the query parameters passed through
+            # the modifiers
+            set url "[::woof::url_build $_dispatchinfo {*}$modifiers]$anchor"
         }
 
         if {! $fullyqualify} {
@@ -705,8 +699,7 @@ oo::class create Controller {
             # -module MODULE - specifies the module in which the
             #  controller is defined
             # -anchor ANCHOR - specifies the anchor to be included in the URL
-            # -query QUERYLIST - specifies the query component of the URL. This
-            #  should be specified as a key value list.
+            # -parameters PARAMLIST - dictionary specifying the query component
             # 
             set url [my url_for {*}[array get opts] -fullyqualify true]
         }

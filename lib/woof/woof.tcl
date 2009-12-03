@@ -359,7 +359,9 @@ proc ::woof::url_build {cracked_url args} {
     #     same format returned by url_crack.
     #  -action ACTION - name of the action. This defaults to 'index',
     #     and is not based on $cracked_url
-    #  -parameters PARAMLIST - dictionary containing parameter and their values
+    #  -parameters PARAMLIST - dictionary containing parameter and their
+    #   values. These are encoded in the URL path if there is a matching
+    #   route or as a query string otherwise.
     #  -fullyqualify BOOLEAN - if false (default), the constructed URL is
     #     relative to the URL in $cracked_url, else the full path
     #     is included in the returned URL.
@@ -369,9 +371,6 @@ proc ::woof::url_build {cracked_url args} {
     # 
 
     variable _routes
-
-    # TBD - this is quite simplistic, replace when more sophisticated
-    # mapping is done.
 
     array set opts {
         -parameters {}

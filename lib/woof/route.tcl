@@ -354,15 +354,7 @@ proc route::construct {routes curl action args} {
             } else {
                 set url [file join $curl $action {*}$url_params]
             }
-            set query {}
-            foreach {k val} [dict get $params] {
-                # We encode k and val separately. Else "=" might
-                # will get encoded
-                lappend query "[::woof::url_encode $k]=[::woof::url_encode $val]"
-            }
-            if {[llength $query]} {
-                append url ?[join $query ";"]
-            }
+            append url [::woof::util::make_query_string $params]
             return $url
         }
     }
