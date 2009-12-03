@@ -130,17 +130,17 @@ div.navbox {
     background-color: #006666;
 }
 .navbox h2 {
-    margin-left: 0.75em;
+    margin-left: 1em;
 }
 .navbox h3 {
-    margin-left: 1.5em;
+    margin-left: 2em;
 }
 .navbox h4 {
-    margin-left: 1.5em;
+    margin-left: 2em;
     font-weight: normal;
 }
 .navbox h5 {
-    margin-left: 2em;
+    margin-left: 3em;
     font-weight: normal;
 }
 
