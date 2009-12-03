@@ -5,9 +5,11 @@
 # Ruff! In A Nutshell
 # Generate Woof! documentation
 
-set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. lib]]]
+set woof_root [file normalize [file join [file dirname [info script]] ..]]
+set auto_path [linsert $auto_path 0 [file join $woof_root lib]]
 
 set woof_ver [package require woof]
+source [file join $woof_root lib woof master.tcl]
 package require ruff
 
 if {[llength $argv] == 0} {
