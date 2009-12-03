@@ -379,13 +379,6 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     Configuration create config $_woof_root
     config set server_module $server_module
     
-    # Create the safe web interpreter that will be used to
-    # to service client requests.
-    set _winterp [create_web_interp]
-
-    # Init the file cache.
-    # TBD - do we need to add the lib dir to the jail? How about auto_path ?
-
     #ruff
     # -jails DIRLIST - list of directory paths. If specified and not empty,
     #  files under one of these paths can also be accessed through the cache.
@@ -398,9 +391,18 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
         lappend jails {*}[dict get $args -jails]
     }
 
+    # Add the application library directory to auto_path
+    set ::auto_path [linsert $::auto_path 0 [file join [config get app_dir] lib]]
+
+    # Init the file cache.
     FileCache create filecache \
         -relativeroot [config get public_dir] \
         -jails $jails
+
+    # Create the safe web interpreter that will be used to
+    # to service client requests.
+    set _winterp [create_web_interp]
+
     $_winterp alias ::woof::filecache_locate ::woof::safe::filecache_locate_alias
     $_winterp alias ::woof::filecache_read ::woof::safe::filecache_read_alias
 
@@ -480,7 +482,8 @@ proc ::woof::master::process_request {{request_context ""}} {
 # Code execution starts here
 
 # Set up auto path to include Woof! library
-set ::auto_path [linsert $::auto_path 0 [file normalize [file join [file dirname [info script]] .. .. lib]]]
+set ::auto_path [linsert $::auto_path 0 [file join $::woof::master::_woof_root lib]]
+
 namespace eval ::woof {
     source [file join $::woof::master::_script_dir util.tcl]
 }
