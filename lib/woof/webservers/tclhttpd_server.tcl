@@ -107,12 +107,12 @@ source [file join [file dirname [info script]] .. lib woof master.tcl]
 ::woof::master::init tclhttpd
 
 # Tell tclhttpd what our URL root is
-Url_PrefixInstall [::woof::master::configuration get url_root] \
+Url_PrefixInstall [::woof::master::config get url_root] \
     [list ::woof::webservers::tclhttpd::request_callback \
-         [::woof::master::configuration get url_root]]
+         [::woof::master::config get url_root]]
 
 # Ditto for the document root
-#Doc_Root [::woof::master::configuration get public_dir]
+#Doc_Root [::woof::master::config get public_dir]
 
 namespace eval ::woof::webservers::tclhttpd {
     proc request_callback {prefix sock suffix} {
@@ -120,7 +120,7 @@ namespace eval ::woof::webservers::tclhttpd {
 	# if the file exists, we handle it as a real file, and not
 	# a Woof script. The file must lie in the public area.
         if {[string length $suffix]} {
-            set fn [file join [::woof::master::configuration get public_dir] $suffix]
+            set fn [file join [::woof::master::config get public_dir] $suffix]
             if {[file exists $fn]} {
                 Httpd_ReturnFile $sock [Mtype $fn] $fn
                 return

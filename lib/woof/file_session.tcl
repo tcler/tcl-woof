@@ -13,7 +13,7 @@ namespace eval file_session {
 proc file_session::fetch {id} {
     variable _session_dir
     if {![info exists _session_dir]} {
-        set _session_dir [::woof::master::configuration get session_dir [file join [::woof::master::configuration get root_dir] temp]]
+        set _session_dir [::woof::master::config get session_dir [file join [::woof::master::config get root_dir] temp]]
     }
 
     set fd [open [file join $_session_dir _woof_sess_$id] r]
@@ -28,7 +28,7 @@ proc file_session::store {id data} {
     variable _session_dir
 
     if {![info exists _session_dir]} {
-        set _session_dir [::woof::master::configuration get session_dir [file join [::woof::master::configuration get root_dir] temp]]
+        set _session_dir [::woof::master::config get session_dir [file join [::woof::master::config get root_dir] temp]]
     }
 
     set fd [open [file join $_session_dir _woof_sess_$id] w]

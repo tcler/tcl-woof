@@ -40,7 +40,7 @@ namespace eval ::woof::webservers {
             # 
 
             my variable _facility
-            set logfile [file join [::woof::master::configuration get log_dir] [::woof::master::configuration get log_file]]
+            set logfile [file join [::woof::master::config get log_dir] [::woof::master::config get log_file]]
             set fd [open $logfile {CREAT WRONLY APPEND}]
             try {
                 puts $fd "[clock format [clock seconds] -format {%a %Y/%m/%d %T} -gmt false] $_facility.$level $msg"
