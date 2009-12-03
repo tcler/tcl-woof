@@ -17,7 +17,11 @@
   <span class='wf_code'>lib_dirs</span> in the
   [my _chapter_link configuration "configuration file"] to a list of
   directories that should be accessible. Note that the entire subdirectory
-  tree below these directories will also be accessible.</p>
+  tree below these directories will also be accessible. Note that the
+  directories <span class='wf_filename'>app</span>
+  <span class='wf_filename'>lib</span> do not need to be listed as
+  they are included by default.
+</p>
 
 <p>For example,</p>
 

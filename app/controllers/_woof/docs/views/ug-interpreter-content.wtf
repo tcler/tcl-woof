@@ -59,6 +59,11 @@
   name of the application interpreter can be obtained through the
   <code>::woof::master::app_interp</code> command.</p>
 
+<p>The path <span class='wf_filename'>app/lib</span> under the Woof! root
+  directory is automatically added to the <code>auto_path</code> Tcl
+  variable. If you are loading packages from other directories, they
+  should be added to <code>auto_path</code> as well.</p>
+
 <p>Below is a sample <span class='wf_filename'>app_master.tcl</span>
   file which assumes the presence of a database
   package <code>db</code> and make a single command visible in the

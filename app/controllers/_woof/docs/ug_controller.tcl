@@ -190,7 +190,18 @@ oo::class create UgController {
         return "<a href='http://www.tcl.tk/man/tcl8.6/TclCmd/${name}.htm'>$display</a>"
     }
 
-
+    method tbd {} {
+        # Generates a page showing which pages are still to be written
+        set content "<p>The following pages still need to be written:</p><ul>"
+        foreach sec $_toc {
+            lassign $sec key title level
+            if {![page fetch content "" -alias "ug-${key}-content"]} {
+                lappend content "<li>$key</li>"
+            }
+        }
+        append content "</ul>"
+        page store content $content
+    }
 
     method index {} {
         # Returns the chapter links
