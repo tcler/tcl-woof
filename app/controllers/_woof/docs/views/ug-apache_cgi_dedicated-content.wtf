@@ -21,7 +21,7 @@ the configuration process.</p>
 <p>The first step is to install Woof! for Apache and CGI using
 [my _chapter_link installer].</p>
 [my _code_sample {
-~/woof-dist> tclsh86 scripts/installer.tcl install apache cgi -installdir /var/myapp
+~/woof-dist> tclsh scripts/installer.tcl install apache cgi -installdir /var/myapp
 }]
 <p>This will create the Woof! 
 [my _chapter_link directory_structure "directory structure"] under 

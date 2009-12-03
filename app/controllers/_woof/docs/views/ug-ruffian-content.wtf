@@ -3,6 +3,6 @@ in the <span class="wf_filename">scripts</span> subdirectory,
 generates reference pages for Woof! using the Ruff! documentation
 generator. For example,</p>
 [my _code_sample {
-tclsh86 scripts/ruffian.tcl woof.html
+tclsh scripts/ruffian.tcl woof.html
 }]
 <p>will generate Woof! reference documentation in the woof.html file.</p>

@@ -35,14 +35,14 @@ example, the following command, executed from the woof distribution
 directory, will install and configure Woof! components for Apache
 using the SCGI interface.</p>
 [my _code_sample {
-woof-dist> tclsh86 scripts/installer.tcl install apache scgi
+woof-dist> tclsh scripts/installer.tcl install apache scgi
 }]
 <p>In the above example, the script assumes that Woof! is to be
 installed in-place - i.e. woof-dist is the final location for Woof!
 components. The following command, on the other hand, will install
 Woof! in a different location.</p>
 [my _code_sample {
-woof-dist> tclsh86 scripts/installer.tcl install apache scgi -installdir ~/web-dev/woof
+woof-dist> tclsh scripts/installer.tcl install apache scgi -installdir ~/web-dev/woof
 }]
 <p>Note that the <code>installer.tcl</code> script only configures Woof! itself. The web
 server configuration has to be modified separately. Examples are given

@@ -31,7 +31,7 @@ below.</p>
 <p>Install Woof! for IIS and SCGI using 
 using the [my _chapter_link installer "installer script"].</p>
 [my _code_sample {
-~/woof-dist> tclsh86 scripts/installer.tcl install iis scgi -installdir /myappdir
+~/woof-dist> tclsh scripts/installer.tcl install iis scgi -installdir /myappdir
 }]
 
 <p>

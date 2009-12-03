@@ -25,7 +25,7 @@ may need to enable it as shown below.</p>
 <p>The next step is to install Woof! for Lighttpd and SCGI
 using the [my _chapter_link installer "installer script"].
 [my _code_sample {
-~/woof-dist> tclsh86 scripts/installer.tcl install lighttpd scgi -installdir /var/myapp
+~/woof-dist> tclsh scripts/installer.tcl install lighttpd scgi -installdir /var/myapp
 }]
 <p>The above command will create the
 Woof! <a href="directory_structure">directory structure</a>

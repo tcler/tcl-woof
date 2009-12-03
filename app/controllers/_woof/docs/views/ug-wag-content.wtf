@@ -4,6 +4,6 @@ the Woof! root, generates and verifies controller and view stubs.
 The general form of the command
 when invoked from the Woof! root directory is:</p>
 [my _code_sample {
-tclsh86 scripts/wag.tcl COMMAND ?arguments?
+tclsh scripts/wag.tcl COMMAND ?arguments?
 }]
 <p>The next sections describe these commands in detail.</p>

@@ -7,7 +7,7 @@
 <p>The general form of the command to build a distribution is</p>
 
 [my _code_sample {
-tclsh86 scripts/installer.tcl distribute TARGETDIR ?options?
+tclsh scripts/installer.tcl distribute TARGETDIR ?options?
 }]
 
 <p>This will create multiple format distributions in the specified
@@ -44,7 +44,7 @@ can then be used to install on the target system. The general syntax
 of the command is</p>
 
 [my _code_sample {
-tclsh86 scripts/installer.tcl install SERVER INTERFACE ?options?
+tclsh scripts/installer.tcl install SERVER INTERFACE ?options?
 }]
 
 <p>By default, the script will install in its current

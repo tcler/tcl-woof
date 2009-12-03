@@ -6,7 +6,7 @@ provides a way of checking which stubs remain to be written.</p>
 
 <p>The example below is a continuation of the one in the previous section.</p>
 [my _code_sample {
-> tclsh86 scripts/wag.tcl verify
+> tclsh scripts/wag.tcl verify
 ApplicationController: no stubs found.
 MathController:
         Action method stubs:

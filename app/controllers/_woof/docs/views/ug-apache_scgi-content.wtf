@@ -52,7 +52,7 @@ LoadModule scgi_module modules/mod_scgi.so
 <p>The next step is to install Woof! for Apache and SCGI
 using the [my _chapter_link installer "installer script"].
 [my _code_sample {
-~/woof-dist> tclsh86 scripts/installer.tcl install apache scgi -installdir /var/myapp
+~/woof-dist> tclsh scripts/installer.tcl install apache scgi -installdir /var/myapp
 }]
 <p>This will create the Woof! 
 [my _chapter_link directory_structure "directory structure"]

@@ -27,7 +27,7 @@ methods we describe in later sections.</p>
 using [my _chapter_link installer] as described in the
 [my _chapter_link apache_cgi_dedicated "previous section"].</p>
 [my _code_sample {
-~/woof-dist> tclsh86 scripts/installer.tcl install apache cgi -installdir ~/myappdir
+~/woof-dist> tclsh scripts/installer.tcl install apache cgi -installdir ~/myappdir
 }]
 <p>See the [my _chapter_link apache_cgi_dedicated "previous section"]
 for details on what this command does. The only difference here is

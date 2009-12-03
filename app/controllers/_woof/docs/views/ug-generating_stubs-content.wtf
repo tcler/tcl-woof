@@ -7,7 +7,7 @@ controllers as was illustrated in the
 The general form of the command is</p>
 
 [my _code_sample {
-  tclsh86 scripts/wag.tcl url ?-excludeviews <em>BOOLEAN</em>? ?list of urls?
+  tclsh scripts/wag.tcl url ?-excludeviews <em>BOOLEAN</em>? ?list of urls?
 } false]
 
 <p>For each URL specified as an argument, the command will check if
@@ -27,7 +27,7 @@ controllers.</p>
 [my _chapter_link implementing_controllers "chapter"].</p>
 
 [my _code_sample {
-> tclsh86 scripts/wag.tcl url /math/add /math/multiply
+> tclsh scripts/wag.tcl url /math/add /math/multiply
 Controller MathController:
          File app/controllers/math_controller.tcl will be modified.
          Class MathController will be modified.
