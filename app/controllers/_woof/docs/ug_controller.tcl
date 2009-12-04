@@ -88,15 +88,15 @@ oo::class create UgController {
             {pagevar "The <span class='wf_code'>pagevar</span> Object" 1}
             {static_resources "Using Static Resources" 1}
             {locating_resources "Locating Static Resources" 2}
-            {using_stylesheets "Using Stylesheets" 2}
             {using_images "Using Images" 2}
+            {using_stylesheets "Using Stylesheets" 2}
             {wtf "Woof! Template Format" 1}
             {wtf_mistakes "Common WTF errors" 2}
             {localization "Localization"}
             {client_language "Client Language Preference" 1}
             {message_catalogs "Using Message Catalogs" 1}
             {language_specific_pages "Language-Specific Page Templates" 1}
-            {error_and_logging "Error Handling and Logging"}
+            {errors_and_logging "Error Handling and Logging"}
             {woof_library "The Woof! Library"}
             {yui "The Yahoo User Interface library" 1}
             {tools "Tools and Utilities"}

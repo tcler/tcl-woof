@@ -1,4 +1,13 @@
-<p>Woof! may generate links based on a URL or the name of a local file
+<p>Woof! may generate links to static resources based on a URL or the
+  name of a local file.</p>
+
+<p>If a fully qualified URL is specified, Woof! generates a link using
+  the URL as is. If the URL is a relative URL, Woof! expects that it
+  is relative to the application root URL and generates the link
+  appropriately.</p>
+
+<p>When linking to a local file, Woof! expects the file to not
+  include any directory components and to be located
   somewhere under the <span class='wf_filename'>public</span>
   directory.
   Woof! follows a similar procedure for locating static file resources
@@ -11,7 +20,8 @@
   there, it will progressively check higher up in the directory
   path.</p>
 
-<p>For example, assume the page generation for the controller URL
+<h4>Example: locating an image file</h4>
+<p>Assume the page generation for the controller URL
   <span class='wf_filename'>investor_relations/documents/annual_report</span>
   invokes the command</p>
 [my _code_sample {
