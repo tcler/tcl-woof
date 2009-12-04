@@ -18,6 +18,6 @@
   To get started, do have a look through the
   [my link_to "Quick Start" -module _woof::docs -controller ug -action quick_start]
   chapter of the
-  [my link_to "User Guide" -module _woof::docs -controller ug -action preface]
+  [my link_to "User Guide" -module _woof::docs -controller ug -action index]
   if you have not done so already.
 </p>

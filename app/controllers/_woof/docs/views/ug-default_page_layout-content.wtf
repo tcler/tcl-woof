@@ -12,15 +12,14 @@ its own version. However, the default layout described here
 provides sufficient flexibility for many applications.</p>
 
 <p>The default Woof! page layout 
-  file <span class="wf_filename">app/controllers/views/layout.wtf</span>. This
   divides a Web page into five page sections:</p>
 <ul>
   <li>The <span class='wf_code'>header</span> section which contains
   content, such as a banner, that pat the top of a page.</li>
-  <li>Similarly, the <span class='wf_code'>footer</span> section
+  <li>The <span class='wf_code'>footer</span> section
   contains content that is to appear at the bottom of a page.</li>
-  <li>The <span class='wf_code'>sidebar</span> contains elements such
-  as navigation links that appear alongside the main content.</li>
+  <li>The <span class='wf_code'>sidebar</span>, which may contain elements
+    such as navigation links that appear alongside the main content.</li>
   <li>The <span class='wf_code'>main</span> section
   contains the primary content of the main page.</li>
   <li>The <span class='wf_code'>supplement</span> section contains
@@ -28,11 +27,12 @@ provides sufficient flexibility for many applications.</p>
   links, advertising.</li>
 </ul>
 
-<p>When using the default layout, all sections are optional. Sections
-that are empty are omitted from the generated Web page with the
-exception of the main section which is always generated. Section
-content may be generated either through template files or directly
-created by application code.</p>
+<p><strong>All sections in the default layout are optional</strong>. Sections
+  that are empty are omitted from the generated Web page with the
+  exception of the main section which is always generated (as an empty section
+  if no content is defined for it). Section
+  content may be generated either through template files or directly
+  created by application code.</p>
 
 <h3>Customizing the default layout</h3>
 
@@ -91,24 +91,59 @@ created by application code.</p>
 </table>
 
 <p>Woof! uses the [my _chapter_link YUI "YUI"] stylesheets to provide
-  the underlying styles infrastructure for the default layout. The
+  the underlying styles infrastructure for the default layout. The appropriate
+  style classes are chosen based on the values of the above settings. The
   defaults and allowed values are part of YUI.</p>
 
-<h3>Sample default layout customization</h3>
+<h4>Example</h4>
 
 <p>The sample code below shows how an application might customize the
   default layout. In this example, we set up the options in the
   <code>ApplicationController</code> class constructor so it will
   apply to all pages in the application unless overridden by a
-  controller or action.</p>
+  controller or action. If you want to customize for a specific controller,
+  you could do this customization in the constructor for that controller
+  instead.
+</p>
 
 [my _code_sample {
   oo::class create ApplicationController {
       superclass ::woof::Controller
       constructor args {
           next {*}$args  ;# Call base constructor first
-          pagevar set \
-            yui_page_width 750px yui_sidebar_width 160px
+          pagevar set   yui_page_width 750px   yui_sidebar_width 160px
       }
   }
 }]
+
+<h3>Default layout boilerplate</h3>
+
+<p>In addition to laying out the page, the default layout template
+  also includes some common HTML boilerplate. By convention, the layout
+  template fetches this boilerplate from the
+  [my _chapter_link pagevar_object "pagevar object"]. Applications
+  can set the appropriate values in <code>pagevar</code> any time
+  before the page is rendered.
+</p>
+
+<p>Currently, the following elements of the <code>pagevar</code>
+  object are used.</p>
+<table>
+<tr>
+  <td><code>title</code></td>
+  <td>The title to use for the page. If not
+    set, the [my _chapter_link configuration "configuration variable"]
+    <code>app_name</code> is used.</td>
+</tr>
+<tr>
+  <td><code>styles</code></td>
+  <td>The list of stylesheets to include in the page. Each element of
+    this list is linked into the page using the
+    [my _chapter_link using_stylesheets "include_stylesheet"]
+    method. If not set, includes a default stylesheet based on
+    [my _chapter_link yui YUI].
+    If you do not want any stylesheets at all, set the value to an
+    empty list.
+  </td>
+</tr>
+</table>

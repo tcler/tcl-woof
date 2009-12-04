@@ -1,0 +1,38 @@
+<p>Woof! may generate links based on a URL or the name of a local file
+  somewhere under the <span class='wf_filename'>public</span>
+  directory.
+  Woof! follows a similar procedure for locating static file resources
+  associated with a controller that it does for 
+  [my _chapter_link locating_templates "locating page templates"].
+  It will first check for the existence of the file in a directory
+  corresponding to the controller module under a subdirectory of
+  <span class='wf_filename'>public</span> that is specific to that
+  resource type. If not found
+  there, it will progressively check higher up in the directory
+  path.</p>
+
+<p>For example, assume the page generation for the controller URL
+  <span class='wf_filename'>investor_relations/documents/annual_report</span>
+  invokes the command</p>
+[my _code_sample {
+  [my include_image logo.png alt "header logo"]
+}]
+
+<p>The URL is [my _chapter_link url_dispatcher "mapped"]  to the
+  controller <code>annual_report</code> in module
+  <code>{investor_relations documents}</code>. Woof! would search for
+  the file in the following order:</p>
+
+% set arrow "&#x2192;"
+<ul class='wf_nobullets'>
+  <li><span class="wf_filename">public/images/investor_relations/documents/logo.png</span></li>
+  <li>$arrow <span class="wf_filename">public/images/investor_relations/logo.png</span></li>
+  <li>$arrow <span class="wf_filename">public/images/logo.png</span></li>
+</ul>
+
+<p>Note that because Woof! is looking for an image, the root of the
+  search tree is the <span class='wf_filename'>images</span>
+  subdirectory under <span class='wf_filename'>public</span>. If
+  looking for a stylesheet, the root of the search would have been the
+  <span class='wf_filename'>stylesheets</span> subdirectory</span>.
+</p>

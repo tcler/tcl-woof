@@ -23,6 +23,20 @@ it in an editor and replace its content with the following text:</p>
 </p>
 }]
 
+<p>We would also like the title for our site to be set to reflect its purpose.
+  So we add a line to our controller class to set the page title.</p>
+
+[my _code_sample {
+    oo::class create FibonacciController {
+        superclass ApplicationController
+        constructor args {
+            # Very important to pass arguments to parent
+            next {*}$args
+            pagevar set title "Fibonacci Generator"
+        }
+    }
+}]
+
 <p>Now browsing to the URL
 <span class="wf_filename">http://localhost:8015/fibonacci/help</span>
 brings up the following page in the browser.</p>

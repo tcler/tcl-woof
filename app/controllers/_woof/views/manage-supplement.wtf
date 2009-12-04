@@ -5,7 +5,7 @@
     [my link_to "Quick Start" -module _woof::docs -controller ug -action quick_start]
   </li>
   <li>
-    [my link_to "User Guide" -module _woof::docs -controller ug -action preface]
+    [my link_to "User Guide" -module _woof::docs -controller ug]
   </li>
   <li>
 % my variable woof_url

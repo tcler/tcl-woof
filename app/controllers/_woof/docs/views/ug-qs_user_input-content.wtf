@@ -19,8 +19,7 @@ sequence desired. To implement this, we first modify the page template in
     % set index 0
     % foreach number $seq {
         <tr style='background-color: [expr {$index & 1 ? "#cccccc" : "white"}];'>
-        <td>[incr index]</td>
-        <td>$number</td>
+          <td>[incr index]</td><td>$number</td>
         </tr>
         % }
     </table>

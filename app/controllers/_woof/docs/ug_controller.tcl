@@ -86,8 +86,10 @@ oo::class create UgController {
             {page_section_example "Page Section Layout Example" 2}
             {locating_templates "Locating Templates" 1}
             {pagevar "The <span class='wf_code'>pagevar</span> Object" 1}
-            {using_stylesheets "Using Stylesheets" 1}
-            {using_images "Using Images" 1}
+            {static_resources "Using Static Resources" 1}
+            {locating_resources "Locating Static Resources" 2}
+            {using_stylesheets "Using Stylesheets" 2}
+            {using_images "Using Images" 2}
             {wtf "Woof! Template Format" 1}
             {wtf_mistakes "Common WTF errors" 2}
             {localization "Localization"}

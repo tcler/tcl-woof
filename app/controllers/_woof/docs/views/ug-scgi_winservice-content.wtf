@@ -1,0 +1,68 @@
+<p>The <span class="wf_filename">scgi_winservice.tcl</span> script, located
+  in the <span class="wf_filename">scripts</span> subdirectory under
+  the Woof! root, is used for installing and running Woof! as an
+  [my _chapter_link start_scgi "SCGI"] server
+  under Windows.</p>
+
+<p>The general form of the command
+when invoked from the Woof! root directory is:</p>
+[my _code_sample {
+tclsh scripts/scgi_winservice.tcl ?OPTIONS? COMMAND
+}]
+
+<p>Details of each command are given below.</p>
+
+<h3>Installing Woof! as an Windows service</h3>
+
+[my _code_sample {
+tclsh scripts/scgi_winservice.tcl ?-service SERVICENAME? ?-port PORT? ?-startup STARTMODE? install
+}]
+
+<p>Installs the Woof! SCGI server as a Windows service. Once installed, the
+  service can be managed like any other Windows service through the
+  <code>net start</code> and <code>net stop</code> commands or through
+  the Windows service control manager user interface.</p>
+
+<table>
+<tr>
+  <td><code>-service SERVICENAME</code></td>
+  <td>Installs as the service <code>SERVICENAME</code>. If this
+    option is not specified, the service installed with the name
+    <code>woofscgi</code>.</td>
+</tr>
+<tr>
+  <td><code>-port PORT</code></td>
+  <td>Specifies the port number on which the service should listen for
+    requests sent by the web server. Defaults to 9999.</td>
+</tr>
+<tr>
+  <td><code>-startup STARTMODE</code></td>
+  <td>Specifies how the service is to be
+    started. <code>STARTMODE</code> must be one of <code>manual</code>
+    or <code>auto</code>. If <code>auto</code>, the service is
+    automatically started by the service control manager at system
+    boot time. Otherwise, it must be manually started. The default is
+    <code>manual</code>.</td>
+</tr>
+</table>
+
+<h3>Uninstalling the Woof! Windows service</h3>
+
+[my _code_sample {
+tclsh scripts/scgi_winservice.tcl ?-service SERVICENAME? uninstall
+}]
+
+<p>Uninstalls any Windows service. The
+  option <code>-service</code> should be specified with the name of
+  the service to be uninstalled if it is different from the default
+  value of <code>woofscgi</code>. Note this command can actually
+  uninstall any Windows service (not just Woof!) so use with care.</p>
+
+<h3>Running as a Windows service</h3>
+<p>When called without any <code>COMMAND</code> argument,
+  the script will run as the Woof!
+  SCGI server service. This is intended to be called from the service
+  control manager and should not be called from the command line.</p>
+
+<p>See the chapter [my _chapter_link start_scgi_windows] for some
+  additional information.</p>
