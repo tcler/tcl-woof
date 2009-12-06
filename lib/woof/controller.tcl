@@ -613,8 +613,11 @@ oo::class create Controller {
     }
 
 
-    method render {} {
+    method render {args} {
         # Generates content for the web page.
+        #
+        # -status HTTPSTATUS - sets the HTTP status for the response
+        #   (default is 200)
         #
         # Generates html fragments for all page sections in a web page.
         # The Page class object 'page' holds the content for each page section.
@@ -642,14 +645,44 @@ oo::class create Controller {
         # templates. Inadvertent name clashes may occur. Also performance?
         # NO MORE - my variable {*}[info object vars [self]]
 
+        set response_data [my _render_template]
+        response status [::woof::util::dict_get $args -status 200]
+        response content_type [lindex $response_data 0]
+        response content [lindex $response_data 1]
+
+        set _output_done true
+    }
+
+    method _render_template {} {
+        # Generates content for the web page from a template.
+
+        #
+        # Generates html fragments for all page sections in a web page.
+        # The Page class object 'page' holds the content for each page section.
+        # Refer to its documentation for more details.
+        #
+
+        # NOTE:
+        # This method exists as a separate method because
+        # we do not want to pollute the template namespace with variable
+        # names. For that same reason, so all local variables in
+        # this method should begin with an "_".
+        # The page template code should not use variables with "_"
+        # by convention.
+
+        # The page get layout will result in execution of the template
+        # processing code in this context. 
+
+        # We no longer make all instance variables visible to
+        # rendering code without additional declarations in the
+        # templates. Inadvertent name clashes may occur. Also performance?
+        # NO MORE - my variable {*}[info object vars [self]]
+
         if {[page fetch layout content -alias [pagevar get section_layout_alias ""]]} {
-            response content $content
-            response content_type [page content_type]
+            return [list [page content_type] $content]
         } else {
             exception WOOF MissingTemplate "No layout template found for controller [dict get $_dispatchinfo controller], action [dict get $_dispatchinfo action]."
         }
-
-        set _output_done true
     }
 
     method redirect {args} {
