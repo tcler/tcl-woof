@@ -433,7 +433,7 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     # the Log class. This object, named 'log', is also exported and
     # available from all other components.
     Log create log [config get app_name] ::woof::webserver
-    log setlevel [config get loglevel info]
+    log setlevel [config get log_level info]
 
     # TBD - do we need to restrict access to ::woof::log methods
     # for security reasons ?
