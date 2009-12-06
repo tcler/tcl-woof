@@ -79,11 +79,11 @@ oo::class create UgController {
             {page_generation "Page Generation"}
             {page_layout "Page Layout" 1}
             {default_page_layout "Default Page Layout" 2}
+            {extending_default_layout "Extending the Default Layout" 2}
             {custom_page_layout "Custom Page Layout" 2}
             {page_sections "Page Sections" 1}
             {page_section_templates "Template Based Page Sections" 2}
             {page_section_direct "Directly Generated Page Sections" 2}
-            {page_section_example "Page Section Layout Example" 2}
             {locating_templates "Locating Templates" 1}
             {pagevar "The <span class='wf_code'>pagevar</span> Object" 1}
             {static_resources "Using Static Resources" 1}
@@ -96,7 +96,7 @@ oo::class create UgController {
             {client_language "Client Language Preference" 1}
             {message_catalogs "Using Message Catalogs" 1}
             {language_specific_pages "Language-Specific Page Templates" 1}
-            {woof_library "The Woof! Library"}
+            {library "The Woof! Library"}
             {error_handling "Error Handling" 1}
             {error_display "Error Pages" 2}
             {error_generation "Generating Exceptions" 2}

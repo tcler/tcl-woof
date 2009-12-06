@@ -1,0 +1,42 @@
+<p>In addition to customizing the size and positions of various
+  sections in the default layout, you may also extend it by defining new
+  sections within any of the predefined sections.</p>
+
+<p>For example, suppose the top part of the main section for every
+  page is a link showing Google's search box. We could hard code the
+  link in the template file for the main section for every controller
+  and action. However, this makes it harder if we want to switch to
+  the Bing search box at some future point when Microsoft throws a five-dollar
+  bill at us. A better way would be to define a single main template
+  for the controller and then within it define a new page section to
+  contain the actual content.</p>
+
+<p>Assuming the controller is <code>mycontroller</code>, create a
+  common main page section containing the following:</p>
+[my _code_sample {
+   <div class='search_box'>
+     ...some javascript for the search box...
+   </div>
+   % if {[page fetch content data]} {
+     $data
+   % }
+}]
+
+<p>In effect we have now defined a new page section called 
+  <code>content</code> that will be retrieved using the same
+  [my _chapter_link locating_templates "search algorithm"]
+  used for retrieving predefined sections. To render the main section for
+  the <code>myaction</code> in the controller, Woof! will look for
+  <span class='wf_filename'>mycontroller-myaction-main.wtf</span>. Upon not
+  finding this file, it will look for
+  <span class='wf_filename'>mycontroller-main.wtf</span> and find it 
+  containing the above content. When encountering the
+  <code>page fetch</code> command, it will look for
+  <span class='wf_filename'>mycontroller-myaction-content.wtf</span>
+  and insert it in the appropriate place.</p>
+
+<p>The advantage of this approach is that should we desire to make any
+  changes to the search box, or even move it below the real
+  content, we only need to modify the one single file above.</p>
+
+  
