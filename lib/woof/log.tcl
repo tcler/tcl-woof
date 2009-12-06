@@ -93,7 +93,6 @@ oo::class create Log {
             set _pending {}
         }
 
-
         return $prev
     }
 
@@ -103,6 +102,7 @@ oo::class create Log {
         # All messages at a priority higher than or equal to the
         # specified level are logged. Messages logged at a lower
         # level are discarded.
+        #
         my variable _levels
         foreach l [array names _levels] {
             if {$_levels($l) < $_levels($level)} {
@@ -121,6 +121,9 @@ oo::class create Log {
         # msg - the message to log
         # If no log writer has been attached, the message is kept in a pending
         # queue and written when the log writer is attached.
+        #
+        # Note this method writes to the log irrespective of the log level
+        # set through the setlevel method.
         my variable _writer
 
         if {(![info exists _writer]) || ($_writer eq "")} {
@@ -131,6 +134,78 @@ oo::class create Log {
 
         $_writer log $level $msg
         return
+    }
+
+    method debug msg {
+        # Writes a message to the log file at level debug
+        # msg - message to write
+        # If the log level is set to debug, the message is logged to the log
+        # file. Otherwise it is silently discarded.
+
+        # Empty placeholder - method is actually created in object at run time
+    }
+
+    method info msg {
+        # Writes a message to the log file at level info
+        # msg - message to write
+        # If the log level is set to info or below, the message is logged
+        # to the log file. Otherwise it is silently discarded.
+
+        # Empty placeholder - method is actually created in object at run time
+    }
+
+    method notice msg {
+        # Writes a message to the log file at level notice
+        # msg - message to write
+        # If the log level is set to notice or below, the message is logged
+        # to the log file. Otherwise it is silently discarded.
+
+        # Empty placeholder - method is actually created in object at run time
+    }
+
+    method warn msg {
+        # Writes a message to the log file at level warn
+        # msg - message to write
+        # If the log level is set to warn or below, the message is logged
+        # to the log file. Otherwise it is silently discarded.
+
+        # Empty placeholder - method is actually created in object at run time
+    }
+
+    method err msg {
+        # Writes a message to the log file at level err
+        # msg - message to write
+        # If the log level is set to err or below, the message is logged
+        # to the log file. Otherwise it is silently discarded.
+
+        # Empty placeholder - method is actually created in object at run time
+    }
+
+    method crit msg {
+        # Writes a message to the log file at level crit
+        # msg - message to write
+        # If the log level is set to crit or below, the message is logged
+        # to the log file. Otherwise it is silently discarded.
+
+        # Empty placeholder - method is actually created in object at run time
+    }
+
+    method alert msg {
+        # Writes a message to the log file at level alert
+        # msg - message to write
+        # If the log level is set to alert or below, the message is logged
+        # to the log file. Otherwise it is silently discarded.
+
+        # Empty placeholder - method is actually created in object at run time
+    }
+
+    method emerg msg {
+        # Writes a message to the log file at level emerg
+        # msg - message to write
+        # If the log level is set to emerg or below, the message is logged
+        # to the log file. Otherwise it is silently discarded.
+
+        # Empty placeholder - method is actually created in object at run time
     }
 
 }
