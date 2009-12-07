@@ -2,6 +2,14 @@
 # All rights reserved.
 # See the file LICENSE in the Woof! root directory for license
 
+# For testing purposes, enable this fragment and just print out environment
+if {0} {
+    puts -nonewline "Content-type: text/html\r\n\r\n"
+    foreach e [lsort [array names ::env]] {
+        puts $e=$::env($e)<br>
+    }
+    exit 0
+}
 
 namespace eval ::woof::webservers::cgi {}
 proc ::woof::webservers::cgi::init {args} {
