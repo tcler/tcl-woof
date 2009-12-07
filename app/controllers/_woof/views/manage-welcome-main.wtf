@@ -5,7 +5,7 @@
 <p>
   What luck!
 </p>
-% if {"woof/_manage/index" eq [config get app_default_uri_path ""]} {
+% if {"_woof/manage/welcome" eq [config get app_default_uri_path ""]} {
 <p>
   This page is currently the default page for the installation. At some
   point, you should change the setting of <code>app_default_uri_path</code>
