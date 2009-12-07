@@ -75,6 +75,31 @@ proc ::woof::handle_request {{request_context ""}} {
     #  the web server module to identify this request. See
     #  request_init.
 
+    if {[config get dump_env 0]} {
+        # Debugging - dump environment back irrespective of URL
+        Response create response
+        set request_context [::woof::webserver request_init $request_context]
+        Environment create env $request_context
+        
+        env lazy_load
+        set content "Environment:\r\n"
+        foreach e [lsort [env keys]] {
+            append content "$e=[env get $e]\r\n"
+        }
+        response content $content
+        response content_type text/plain
+        ::woof::webserver output $request_context \
+            [dict create \
+                 status [response status] \
+                 status_line [response status_line] \
+                 headers [response headers] \
+                 content_type [response content_type] \
+                 content [response content]]
+        env destroy
+        response destroy
+        return true
+    }
+
     #ruff 
     # Returns 'true' if output has been sent to the client 
     # and 'false' otherwise.
@@ -250,10 +275,9 @@ proc ::woof::url_crack {rurl} {
 
     variable _routes
 
-    #set rel_path [string trimleft $rurl /]; # TBD - needed ?
-
     set orig_rurl $rurl
 
+    set rurl [string trimleft $rurl /]; # Needed when rooted at /
     if {[string length $rurl] == 0} {
         #ruff
         # If the specified URL is empty, it defaults to the value
