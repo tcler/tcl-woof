@@ -108,18 +108,22 @@ proc ::woof::console::setup_dummy_env {method url} {
         set host_and_port $url_parts(host):$port
     }
 
-    # Below assumes Woof is rooted at URL /
+    set url_root [string trimleft [::woof::master::config get url_root] /]
+    set url_root_len [string length $url_root]
+    if {![string equal -length $url_root_len $url_root $url_parts(path)]} {
+        error "URL $url does not lie within Woof! URL root"
+    }
     set dummy_env [list \
-             SERVER_NAME [info hostname] \
-             SERVER_PORT $port \
-             SERVER_SOFTWARE "woof_console" \
-             SERVER_PROTOCOL $url_parts(scheme)/1.0 \
-             REQUEST_METHOD  $method \
-             REMOTE_HOST localhost \
-             REMOTE_ADDR 127.0.0.1 \
-             REQUEST_URI $uri \
-             SCRIPT_INFO / \
-             PATH_INFO $url_parts(path) \
+                       SERVER_NAME [info hostname] \
+                       SERVER_PORT $port \
+                       SERVER_SOFTWARE "woof_console" \
+                       SERVER_PROTOCOL $url_parts(scheme)/1.0 \
+                       REQUEST_METHOD  $method \
+                       REMOTE_HOST localhost \
+                       REMOTE_ADDR 127.0.0.1 \
+                       REQUEST_URI $uri \
+                       SCRIPT_INFO / \
+                       PATH_INFO [string range $url_parts(path) $url_root_len end] \
             ]
 
     if {$url_parts(query) ne ""} {
@@ -174,7 +178,7 @@ proc ::woof::console::restart {} {
 
 proc ::woof::console::testpage {args} {
     if {[llength $args] == 0} {
-        get http://localhost/_woof/manage/welcome
+        get http://localhost[::woof::master::config get url_root]/_woof/manage/welcome
     } else {
         get http://localhost/[string trimleft [join {*}$args /] /]
     }
