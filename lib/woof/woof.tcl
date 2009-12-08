@@ -266,31 +266,32 @@ proc ::woof::read_routes {} {
     return [route::parse_routes [read_route_file]]
 }
 
-proc ::woof::url_crack {rurl} {
+proc ::woof::url_crack {aurl} {
     # Construct application request context from a URL.
-    # rurl - the URL of interest relative to the application URL root
+    # aurl - the URL of interest relative to the application URL root
     #
     # Returns a dictionary mapping the given relative URL path to
     # a controller, action and related context.
 
     variable _routes
 
-    set orig_rurl $rurl
+    set orig_aurl $aurl
 
-    set rurl [string trimleft $rurl /]; # Needed when rooted at /
-    if {[string length $rurl] == 0} {
+    #set aurl [string trimleft $aurl /] -- Routes expect to be rooted at /
+
+    if {[string length $aurl] == 0} {
         #ruff
         # If the specified URL is empty, it defaults to the value
         # of 'app_default_uri' in the configuration file.
-        set rurl [config get app_default_uri_path ""]
+        set aurl [config get app_default_uri_path "/"]
     }
 
-    set parsed_rurl [route::select $_routes $rurl -action [config get app_default_action index]]
-    if {[llength $parsed_rurl]} {
+    set parsed_aurl [route::select $_routes $aurl -action [config get app_default_action index]]
+    if {[llength $parsed_aurl]} {
         #ruff
         # If the URL matches a defined route, the corresponding controller
         # and action are used.
-        lassign $parsed_rurl controller action params
+        lassign $parsed_aurl controller action params
         set tokens [split $controller /]
         set module [lrange $tokens 0 end-1]
         set controller [lindex $tokens end]
@@ -303,7 +304,7 @@ proc ::woof::url_crack {rurl} {
         # component, it is taken as the name of the controller, the action
         # defaults to the value of 'app_default_action' in the configuration
         # file, and the module is empty.
-        set tokens [split $rurl /]
+        set tokens [split $aurl /]
         set ntokens [llength $tokens]
         if {$ntokens == 0} {
             # No module, default controller and action (even app_default_uri)
@@ -348,8 +349,8 @@ proc ::woof::url_crack {rurl} {
     # controller_file - the name of the source file for the controller
     # module - the name of the module referenced by the request as a
     #  list of module components (not in namespace format)
-    # original_rurl - the original relative url path supplied by client
-    #  without any defaults or Woof! rewriting
+    # original_app_url - the original url path below the application root
+    #  supplied by client without any defaults or Woof! rewriting
     # route_params - dictionary containing the parameters defined as part
     #  of the route
     # search_dirs - list of directories to search for module-specific
@@ -357,6 +358,7 @@ proc ::woof::url_crack {rurl} {
     #  Note the last element is always "." indicating the
     #  context-dependent root of the search tree.
     # url_root - the root URL where the application resides
+
 
     return [dict create \
                 url_root      [config get url_root] \
@@ -369,7 +371,7 @@ proc ::woof::url_crack {rurl} {
                 controller_file ${controller}_controller.tcl \
                 search_dirs     $search_dirs \
                 route_params  $params \
-                original_rurl $orig_rurl
+                original_app_url $orig_aurl
                ]
 }
 
@@ -413,18 +415,18 @@ proc ::woof::url_build {cracked_url args} {
         set controller [dict get $cracked_url controller]
     }
 
-    set curl [file join {*}$module $controller]
-    set rurl [route::construct $_routes $curl $opts(-action) \
+    set curl /[file join {*}$module $controller]
+    set aurl [route::construct $_routes $curl $opts(-action) \
                  -parameters $opts(-parameters)]
-    if {$rurl eq ""} {
-        set rurl "$curl/$opts(-action)"
-        append rurl [make_query_string $opts(-parameters)]
+    if {$aurl eq ""} {
+        set aurl "$curl/$opts(-action)"
+        append aurl [make_query_string $opts(-parameters)]
     }
 
     if {$opts(-fullyqualify)} {
-        return [file join [dict get $cracked_url url_root] $rurl]
+        return [file join [dict get $cracked_url url_root] $aurl]
     } else {
-        return [make_relative_url [dict get $cracked_url original_rurl] $rurl]
+        return [make_relative_url [dict get $cracked_url original_app_url] $aurl]
     }
 }
 
