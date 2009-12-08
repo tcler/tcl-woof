@@ -108,11 +108,18 @@ proc ::woof::console::setup_dummy_env {method url} {
         set host_and_port $url_parts(host):$port
     }
 
-    set url_root [string trimleft [::woof::master::config get url_root] /]
+    # Strip off the application root from the URL to get the PATH_INFO
+    set url_root [::woof::master::config get url_root /]
     set url_root_len [string length $url_root]
-    if {![string equal -length $url_root_len $url_root $url_parts(path)]} {
+    if {![string equal -length $url_root_len $url_root "/$url_parts(path)"]} {
         error "URL $url does not lie within Woof! URL root"
     }
+    if {$url_root_len == 1} {
+        set path_info /$url_parts(path)
+    } else {
+        set path_info [string range /$url_parts(path) $url_root_len end]
+    }
+
     set dummy_env [list \
                        SERVER_NAME [info hostname] \
                        SERVER_PORT $port \
@@ -122,8 +129,8 @@ proc ::woof::console::setup_dummy_env {method url} {
                        REMOTE_HOST localhost \
                        REMOTE_ADDR 127.0.0.1 \
                        REQUEST_URI $uri \
-                       SCRIPT_INFO / \
-                       PATH_INFO [string range $url_parts(path) $url_root_len end] \
+                       SCRIPT_INFO $url_root \
+                       PATH_INFO $path_info \
             ]
 
     if {$url_parts(query) ne ""} {
