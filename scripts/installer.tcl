@@ -77,6 +77,7 @@ proc installer::install_log {msg} {
     # opened the log file channel.
 
     variable log_fd
+    variable 
     if {[info exists log_fd]} {
         puts $log_fd "[clock format [clock seconds] -format %T] $msg"
     }
@@ -474,6 +475,7 @@ proc installer::install {server module args} {
         install_log "Installation arguments: [join [list $server $module {*}$args] {. }]."
     }
 
+    puts -nonewline "Installing. Please be patient..."
     try {
         # Create default files if they do not exist
         write_defaults $opts(-installdir)
@@ -502,6 +504,7 @@ proc installer::install {server module args} {
             }
         }
 
+        puts "completed."
         install_log "Installation completed."
     } on error {msg eopts } {
         install_log "Error: $msg"
