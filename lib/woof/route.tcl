@@ -161,18 +161,20 @@ proc route::select {routes rurl args} {
         if {[string compare -length [string length [lindex $r 0]] [lindex $r 0] $rurl]} {
             continue;           # Prefix does not match
         }
-
         lassign $r curl actions pdefs
 
         # The prefix matches but make sure it is not a partial fragment match
-        if {[string length $curl]} {
+        # Special case when $curl is "/"
+        if {[string length $curl] > 1} {
             if {[string length $rurl] != [string length $curl] &&
                 [string index $rurl [string length $curl]] != "/"} {
-                # E.g. r = a/b, rurl = a/bc is not a match
+                # E.g. r = /a/b, rurl = /a/bc is not a match
                 continue
             }
             # Where the action component starts
             set curl_end [expr {[string length $curl]+1}]
+        } elseif {[string length $curl] == 1} {
+            set curl_end 1
         } else {
             # Controller URL is empty.
             set curl_end 0
@@ -271,7 +273,7 @@ proc route::select {routes rurl args} {
 proc route::construct {routes curl action args} {
     # Returns a URL constructed from specified controller, action
     # and parameters
-    # curl - relative URL for the controller
+    # curl -  URL fragment for the controller
     # action - name of the action
     # -parameters PARAMLIST - dictionary containing parameter values
 
@@ -280,6 +282,7 @@ proc route::construct {routes curl action args} {
         # The command searches for route definitions whose
         # controller URL matches the one passed in and whose action
         # definitions include the action passed in.
+
         lassign $route curl actions pdefs
 
         if {[lindex $actions 0] eq "implicit"} {
@@ -367,14 +370,14 @@ proc route::construct {routes curl action args} {
 namespace eval route::test {
     variable test_routes
     set test_routes {
-        curl ctrl_one act param
-        curl ctrl_one act {}
-        curl ctrl_one act *param
-        curl ctrl_two act {paramA:[[:digit:]]+:}
-        curl ctrl_three {} {paramA/paramB::30}
-        curl ctrl_four {implicit:foo} {p1/p2}
-        curl ctrl_four {implicit:bar} {}
-        curl "" {} {*params}
+        curl /ctrl_one act param
+        curl /ctrl_one act {}
+        curl /ctrl_one act *param
+        curl /ctrl_two act {paramA:[[:digit:]]+:}
+        curl /ctrl_three {} {paramA/paramB::30}
+        curl /ctrl_four {implicit:foo} {p1/p2}
+        curl /ctrl_four {implicit:bar} {}
+        curl / {} {*params}
     }
     proc init {} {
         variable test_routes
