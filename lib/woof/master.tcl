@@ -132,7 +132,7 @@ proc ::woof::safe::file_alias {subcommand args} {
     # subcommand - subcommand of the file command
     # args - any additional arguments to be passed to the file command
     # Only the syntactic file name manipulation commands are allowed
-    if {$subcommand in {dirname join rootname extension tail pathtype}} {
+    if {$subcommand in {dirname extension join pathtype rootname split tail}} {
         return [file $subcommand {*}$args]
     }
     error "Subcommand $subcommand unknown or not allowed."
