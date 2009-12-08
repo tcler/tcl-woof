@@ -148,7 +148,6 @@ proc ::woof::handle_request {{request_context ""}} {
             # The request is then mapped to a particular controller and action
             # by the url_crack command.
             set dispatchinfo [::woof::url_crack [request resource_url]]
-
             set controller_class ::woof::app::[dict get $dispatchinfo controller_class]
             if {[::woof::config get reload_scripts] &&
                 [llength [info commands $controller_class]] != 0} {
@@ -277,15 +276,6 @@ proc ::woof::url_crack {aurl} {
 
     set orig_aurl $aurl
 
-    #set aurl [string trimleft $aurl /] -- Routes expect to be rooted at /
-
-    if {[string length $aurl] == 0} {
-        #ruff
-        # If the specified URL is empty, it defaults to the value
-        # of 'app_default_uri' in the configuration file.
-        set aurl [config get app_default_uri_path "/"]
-    }
-
     set parsed_aurl [route::select $_routes $aurl -action [config get app_default_action index]]
     if {[llength $parsed_aurl]} {
         #ruff
@@ -296,6 +286,14 @@ proc ::woof::url_crack {aurl} {
         set module [lrange $tokens 0 end-1]
         set controller [lindex $tokens end]
     } else {
+        if {[string length $aurl] == 0 || $aurl eq "/"} {
+            #ruff
+            # If the specified URL does not match a route and is either empty
+            # or /, it defaults to the value
+            # of 'app_default_uri' in the configuration file.
+            set aurl [config get app_default_uri_path "/"]
+        }
+
         #ruff
         # If no defined route was matched, the URL is parsed as follows:
         # If the URL path has at least two components, the last is
@@ -304,7 +302,11 @@ proc ::woof::url_crack {aurl} {
         # component, it is taken as the name of the controller, the action
         # defaults to the value of 'app_default_action' in the configuration
         # file, and the module is empty.
-        set tokens [split $aurl /]
+
+        # URL is supposed to begin with a / unless it is empty so
+        # skip first empty token.
+
+        set tokens [lrange [split $aurl /] 1 end]
         set ntokens [llength $tokens]
         if {$ntokens == 0} {
             # No module, default controller and action (even app_default_uri)
@@ -423,11 +425,12 @@ proc ::woof::url_build {cracked_url args} {
         append aurl [make_query_string $opts(-parameters)]
     }
 
+    set fqurl "[string trimright [dict get $cracked_url url_root] /]$aurl"
     if {$opts(-fullyqualify)} {
-        return [file join [dict get $cracked_url url_root] $aurl]
-    } else {
-        return [make_relative_url [dict get $cracked_url original_app_url] $aurl]
+        return $fqurl
     }
+    
+    return [make_relative_url "[string trimright [dict get $cracked_url url_root] /][dict get $cracked_url original_app_url]" $fqurl]
 }
 
 proc ::woof::url_for_file {path {default_url ""}} {

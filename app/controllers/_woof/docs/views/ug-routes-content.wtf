@@ -30,12 +30,12 @@ curl CURL ACTIONS PURL
 
 <p>An example of a route is</p>
 [my _code_sample {
-curl finance/companies {profile quote} symbol
+curl /finance/companies {profile quote} symbol
 }]
 
-<p>This route will match URL's of the form
-<span class='wf_filename'>finance/companies/quote/csco</span> or
-<span class='wf_filename'>finance/companies/profile/BRK.A</span> and
+<p>This route will match application URL paths of the form
+<span class='wf_filename'>/finance/companies/quote/csco</span> or
+<span class='wf_filename'>/finance/companies/profile/BRK.A</span> and
 invoke the <code>quote</code> or <code>profile</code> action in the controller
 <code>finance::Companies</code> passing it a parameter <code>symbol</code>
 containing <code>csco</code> and <code>BRK.A</code> respectively. More
@@ -43,10 +43,11 @@ examples are given below.</p>
 
 <p>The <code>CURL</code> argument
   specifies the relative URL for the controller and
-  may include a module path but does not include Woof! application root.
+  may include a module path
+  <strong>but does not include Woof! application root</strong>.
   The last component is the controller name and any prior
   components specify the module. For example,
-  <code>x/y/z</code> in this component would be treated as
+  <code>/x/y/z</code> in this component would be treated as
   the controller class <code>x::y::Z</code> or equivalently the
   controller <code>z</code> in module <code>x y</code>.
 </p>
@@ -116,14 +117,14 @@ examples are given below.</p>
 
 <h4>Route: simple route</h4>
 [my _code_sample {
-curl ticket index
+curl /ticket index
 }]
-<p>The relative URL <span class='wf_filename'>ticket/index</span>
+<p>The relative URL <span class='wf_filename'>/ticket/index</span>
   would successfully match against this route and presumably show a list
   of support tickets.
   The action <code>index</code> in class
   <code>Ticket</code> would be invoked. Note the URL
-  <span class='wf_filename'>ticket/index/123</span> does not match
+  <span class='wf_filename'>/ticket/index/123</span> does not match
   this route as it has an additional URL component. In fact, this
   route definition is redundant since the
   [my _chapter_link default_dispatcher "default URL mapping"] behaviour
@@ -132,9 +133,9 @@ curl ticket index
 
 <h4>Route: using parameters</h4>
 [my _code_sample {
-curl ticket display id
+curl /ticket display id
 }]
-<p>The relative URL <span class='wf_filename'>ticket/display/123</span>
+<p>The relative URL <span class='wf_filename'>/ticket/display/123</span>
   would successfully match against this route.
   The action <code>display</code> in class
   <code>Ticket</code> would be invoked. The parameter with name
@@ -145,46 +146,46 @@ curl ticket display id
 
 <h4>Route: multiple actions</h4>
 [my _code_sample {
-curl ticket {display edit} id
+curl /ticket {display edit} id
 }]
 <p>This is similar to the previous route except that two actions are listed
   so both
-  <span class='wf_filename'>ticket/display/123</span> and
-  <span class='wf_filename'>ticket/edit/123</span> will match.
+  <span class='wf_filename'>/ticket/display/123</span> and
+  <span class='wf_filename'>/ticket/edit/123</span> will match.
 </p>
 
 <h4>Route: matching on parameter syntax</h4>
 [my _code_sample {
-curl ticket display {id:[[:digit:]]+:}
+curl /ticket display {id:[[:digit:]]+:}
 }]
 <p>The problem with the route in the previous examples was that
-  although <span class='wf_filename'>ticket/display/123</span>
+  although <span class='wf_filename'>/ticket/display/123</span>
   would successfully match, so would the URL
-  <span class='wf_filename'>ticket/display/abc</span>, something that
+  <span class='wf_filename'>/ticket/display/abc</span>, something that
   is probably undesired. Adding a regular expression to the parameter
   definition ensures that only numeric strings will match the parameter
   component for <code>id</code>. The URL 
-  <span class='wf_filename'>ticket/display/abc</span> would therefore
+  <span class='wf_filename'>/ticket/display/abc</span> would therefore
   not match the route.</p>
 
-<p>The relative URL <span class='wf_filename'>ticket/display</span>
+<p>The relative URL <span class='wf_filename'>/ticket/display</span>
   would also not match the route definition since no parameter is
   specified.</p>
 
 <h4>Route: using default parameter values</h4>
 [my _code_sample {
-curl ticket display {id:[[:digit:]]+:1}
+curl /ticket display {id:[[:digit:]]+:1}
 }]
 
 <h4>Route: using implicit actions</h4>
 [my _code_sample {
-curl ticket implicit:display {id:[[:digit:]]+:}
+curl /ticket implicit:display {id:[[:digit:]]+:}
 }]
 <p>You may also choose the <code>implicit</code> action method
   selection mechanism so that the <code>display</code> component is
   not required in the URL. So with the route definition in this example,
   the relative URL
-  <span class='wf_filename'>ticket/123</span> would result in
+  <span class='wf_filename'>/ticket/123</span> would result in
   same invocation of the <code>display</code> action method as above.
   Note that if you want URL's of the form shown in the previous examples 
   as well, both route definitions would need to be in place as this route
@@ -193,14 +194,14 @@ curl ticket implicit:display {id:[[:digit:]]+:}
 
 <h4>Route: parameter with list values</h4>
 [my _code_sample {
-curl ticket display {*id:[[:digit:]]+:}
+curl /ticket display {*id:[[:digit:]]+:}
 }]
 
 <p>Prefixing a parameter with the <code>*</code> character causes
   the parameter to collect the entire remaining portion of the URL as a
   list value. So in this example, relative URL's such as 
-  <span class='wf_filename'>ticket/display/12</span> and
-  <span class='wf_filename'>ticket/display/12/34/56</span>
+  <span class='wf_filename'>/ticket/display/12</span> and
+  <span class='wf_filename'>/ticket/display/12/34/56</span>
   would both be accepted, with the <code>id</code> parameter set to
   lists <code>{12}</code> and <code>{12 34 56}</code> respectively.</p>
 
@@ -211,13 +212,13 @@ curl ticket display {*id:[[:digit:]]+:}
   set day_regex {[[:digit:]]{1,2}}
   set date_params year:${year_regex}:/month:${month_regex}:/day:${day_regex}:
   foreach controller {blog article} {
-      curl $controller implicit:display $date_params
+      curl "/$controller" implicit:display $date_params
   }
 }]
 
 <p>This Tcl fragment in a route definition file would set up two routes
   which would match URL's of the form
-  <span class='wf_filename'>blog/2009/1/21</span> or
-  <span class='wf_filename'>article/2009/1/21</span> and invoke the
+  <span class='wf_filename'>/blog/2009/1/21</span> or
+  <span class='wf_filename'>/article/2009/1/21</span> and invoke the
   <code>display</code> action on the <code>Blog</code> or <code>Article</code>
   controllers respectively.</p>

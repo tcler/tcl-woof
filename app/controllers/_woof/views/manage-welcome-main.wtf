@@ -5,12 +5,13 @@
 <p>
   What luck!
 </p>
-% if {"_woof/manage/welcome" eq [config get app_default_uri_path ""]} {
+% if {"/_woof/manage/welcome" eq [config get app_default_uri_path ""]} {
 <p>
   This page is currently the default page for the installation. At some
   point, you should change the setting of <code>app_default_uri_path</code>
-  in the configuration file <code>application.cfg</code> to point to
-  your application's default page.
+  in the configuration file 
+  [my link_to "<code>application.cfg</code>" -module _woof::docs -controller ug -action configuration]
+  to point to your application's default page.
 </p>
 % }
 % my variable woof_url
