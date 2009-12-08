@@ -27,4 +27,9 @@ proc main {config apache_root woof_root} {
     file copy -force [file join $::test_conf_dir common.conf] [file join $apache_root conf common.conf]
 }
 
+if {[llength $argv] < 3} {
+    puts stderr "Usage:"
+    puts "[file tail [info nameofexecutable]] $::argv0 [string toupper [info args main]]"
+    exit 1
+}
 main {*}$argv
