@@ -184,7 +184,7 @@ if {[file normalize $::argv0] eq [file normalize [info script]]} {
     package require uri
     package require wibble
     source [file join [file dirname [info script]] .. .. .. lib woof master.tcl]
-    ::woof::webservers::wibble::main [file normalize [file join [file dirname [info script]] .. .. ..]]
+    ::woof::webservers::wibble::main [file normalize [file join [file dirname [info script]] .. .. ..]] {*}$::argv
 } else {
     package require uri
     package require wibble
