@@ -325,7 +325,8 @@ oo::class create Request {
         # On IIS, depending on some obscure metabase setting, PATH_INFO
         # may or may not include the path to the invoked script.
         # Check and get rid of it
-        if {[env exists SCRIPT_NAME script_name]} {
+        if {[string match Microsoft-IIS* [env get SERVER_SOFTWARE ""]] &&
+            [env exists SCRIPT_NAME script_name]} {
             if {[string index $script_name end] ne "/"} {
                 # Script name does not end with a /, get rid of it from
                 # the path_info if it is a prefix
