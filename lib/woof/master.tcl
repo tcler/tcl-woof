@@ -385,6 +385,7 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     #  This is in addition to the files in the public and app directories.
     set jails [list [config get public_dir] \
                    [config get app_dir] \
+                   lib
                    {*}[config get lib_dirs]]
 
     if {[dict exists $args -jails]} {

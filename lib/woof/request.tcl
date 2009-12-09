@@ -236,26 +236,8 @@ oo::class create Request {
         }
 
         # None of the above env vars exists.
-        # As per Rails,
-        # construct IIS missing REQUEST_URI from SCRIPT_NAME and PATH_INFO.
-        # PATH_INFO is the trailing url path after the application root
-        # SCRIPT_NAME is the path to the extension/executable running the script
-        # URL is the portion before PATH_INFO
-        # The below is based on empirical evidence on how IIS sets things
-        # up. There is a good chance it is broken in many scenarios. TBD
-
-        set uri [env get PATH_INFO ""]
-        if {[env exists SCRIPT_NAME script_name]} {
-            if {[regexp {[^/]+$} $script_name]} {
-                # Script name does not end with a /, get rid of it from
-                # path info uri (including trailing / in the uri)
-                set pos [string first ${script_name}/ $uri]
-                if {$pos >= 0} {
-                    set uri [string replace $uri $pos [string length $script_name] ""]
-                }
-            }
-        }
-
+        # Construct it
+        set uri [my resource_url]
         if {[env exists URL url]} {
             set uri "$url$uri"
         }
@@ -338,7 +320,23 @@ oo::class create Request {
         #
         # This is the portion of the request url beyond the application
         # root url and excludes the query string.
-        return [env get PATH_INFO ""]
+        set rurl [env get PATH_INFO ""]
+
+        # On IIS, depending on some obscure metabase setting, PATH_INFO
+        # may or may not include the path to the invoked script.
+        # Check and get rid of it
+        if {[env exists SCRIPT_NAME script_name]} {
+            if {[string index $script_name end] ne "/"} {
+                # Script name does not end with a /, get rid of it from
+                # the path_info if it is a prefix
+                set len [string length $script_name]
+                if {[string equal -length $len $script_name $rurl] &&
+                    [string index $rurl $len] eq "/"} {
+                    set rurl [string range $rurl $len end]
+                }
+            }
+        }
+        return $rurl
     }
 
     method query_string {} {

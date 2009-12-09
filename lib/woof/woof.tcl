@@ -275,7 +275,6 @@ proc ::woof::url_crack {aurl} {
     variable _routes
 
     set orig_aurl $aurl
-
     set parsed_aurl [route::select $_routes $aurl -action [config get app_default_action index]]
     if {[llength $parsed_aurl]} {
         #ruff
