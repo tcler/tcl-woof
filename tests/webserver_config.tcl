@@ -31,38 +31,23 @@ namespace eval ::woof::test::apache {
         set apache_root [file normalize $opts(-serverdir)]
         set woof_root [file normalize $opts(-woofdir)]
 
+        set template_map [list \
+                              server_root $apache_root \
+                              server_port $opts(-port) \
+                              woof_root $woof_root \
+                              url_root $opts(-urlroot)]
+
         set test_conf_dir [file join $::woof::test::script_dir apache]
 
-        # Read in test configuration
-        set test_conf [file join $test_conf_dir httpd-${opts(-config)}.conf]
-        set fd [open $test_conf r]
-        set conf_data [read $fd]
-        close $fd
-
-        # Substitute the config
-        regsub -all -- {%SERVER_ROOT%} $conf_data $apache_root conf_data
-        regsub -all -- {%SERVER_PORT%} $conf_data $opts(-port) conf_data
-        regsub -all -- {%WOOF_ROOT%} $conf_data $woof_root conf_data
-        if {$opts(-urlroot) eq "/"} {
-            # Special case URL_ROOT=/ else we will land up with paths
-            # like //stylesheets
-            regsub -all -- {%URL_ROOT%/} $conf_data / conf_data
-            regsub -all -- {%URL_ROOT%} $conf_data $opts(-urlroot) conf_data
-        } else {
-            regsub -all -- {%URL_ROOT%} $conf_data $opts(-urlroot) conf_data
-        }
-
-        # Assume if .sav exists, original httpd.conf already backed up
-        set httpd_conf [file join $apache_root conf httpd.conf]
-        if {![file exists ${httpd_conf}.sav]} {
-            file copy $httpd_conf ${httpd_conf}.sav
-        }
-
-        set fd [open $httpd_conf w]
-        puts $fd $conf_data
-        close $fd
-
-        file copy -force [file join $test_conf_dir common.conf] [file join $apache_root conf common.conf]
+        # Copy Apache test configuration
+        copy_template \
+            [file join $test_conf_dir httpd-${opts(-config)}.conf] \
+            [file join $apache_root conf httpd.conf] \
+            $template_map
+        copy_template \
+            [file join $test_conf_dir common.conf] \
+            [file join $apache_root conf common.conf] \
+            $template_map
 
         # Set application.cfg to reflect URL root
         set fd [open [file join $woof_root config application.cfg] w]
@@ -95,6 +80,35 @@ namespace eval ::woof::test::apache {
     }
 }
 
+
+proc ::woof::test::copy_template {from to map} {
+    # Copy a template after replacing placeholders
+
+    set fd [open $from r]
+    set data [read $fd]
+    close $fd
+
+    # Substitute the content
+    regsub -all -- {%SERVER_ROOT%} $data [dict get $map server_root] data
+    regsub -all -- {%SERVER_PORT%} $data [dict get $map server_port] data
+    regsub -all -- {%WOOF_ROOT%} $data [dict get $map woof_root] data
+    if {[dict get $map url_root] eq "/"} {
+        # Special case URL_ROOT=/ else we will land up with paths
+        # like //stylesheets so replace such cases first and then
+        # remaining %URL_ROOT%
+        regsub -all -- {%URL_ROOT%/} $data / data
+    }
+    regsub -all -- {%URL_ROOT%} $data [dict get $map url_root] data
+
+    # Assume if .sav exists, original already backed up
+    if {![file exists ${to}.sav]} {
+        file copy $to ${to}.sav
+    }
+
+    set fd [open $to w]
+    puts $fd $data
+    close $fd
+}
 
 proc ::woof::test::webserver_setup {args} {
     variable script_dir
