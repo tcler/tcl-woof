@@ -302,17 +302,14 @@ oo::class create Request {
         # Note the returned path does not include the protocol, host
         # or port number.
 
-        if {[env exists SCRIPT_NAME path]} {
-            # For example, /myapp/isapi_scgi.dll -> /myapp
-            set path [file dirname $path]
-            if {$path eq ""} {
-                set path /
-            }
-            return $path
-        } else {
-            # TBD - assume / ?
-            return /
+        set path [env get SCRIPT_NAME /]
+
+        # Apache will set SCRIPT_NAME to "" when url root is at /
+        # and AliasMatch is being used.
+        if {$path eq ""} {
+            set path /
         }
+        return $path
     }
 
     method resource_url {} {
