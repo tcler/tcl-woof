@@ -43,7 +43,14 @@ namespace eval ::woof::test::apache {
         regsub -all -- {%SERVER_ROOT%} $conf_data $apache_root conf_data
         regsub -all -- {%SERVER_PORT%} $conf_data $opts(-port) conf_data
         regsub -all -- {%WOOF_ROOT%} $conf_data $woof_root conf_data
-        regsub -all -- {%URL_ROOT%} $conf_data $opts(-urlroot) conf_data
+        if {$opts(-urlroot) eq "/"} {
+            # Special case URL_ROOT=/ else we will land up with paths
+            # like //stylesheets
+            regsub -all -- {%URL_ROOT%/} $conf_data / conf_data
+            regsub -all -- {%URL_ROOT%} $conf_data $opts(-urlroot) conf_data
+        } else {
+            regsub -all -- {%URL_ROOT%} $conf_data $opts(-urlroot) conf_data
+        }
 
         # Assume if .sav exists, original httpd.conf already backed up
         set httpd_conf [file join $apache_root conf httpd.conf]

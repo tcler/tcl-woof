@@ -29,6 +29,11 @@ proc ::woof::test::run {args} {
 
     array set opts $args
 
+    # Restart the web server
+    progress "Restarting server $opts(-server)"
+    ::woof::test::${opts(-server)}::stop
+    ::woof::test::${opts(-server)}::start
+
     set ::env(WOOF_TEST_URLROOT) $opts(-urlroot)
     set ::env(WOOF_TEST_PORT)    $opts(-port)
 
@@ -43,6 +48,9 @@ proc ::woof::test::run {args} {
     tcltest::configure {*}$test_opts
 
     tcltest::runAllTests
+
+    progress "Stopping server $opts(-server)"
+    ::woof::test::${opts(-server)}::stop
 }
 
 
