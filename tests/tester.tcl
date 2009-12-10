@@ -7,6 +7,8 @@ namespace eval ::woof::test {
     variable script_dir
     # We use the shortname to avoid quoting problems when exec'ing
     set script_dir [file attributes [file normalize [file dirname [info script]]] -shortname]
+
+    variable outchan stdout
 }
 
 if {$::tcl_platform(platform) eq "windows"} {
@@ -43,6 +45,11 @@ proc ::woof::test::run {args} {
     tcltest::runAllTests
 }
 
+
+proc ::woof::test::progress {msg} {
+    variable outchan
+    puts $outchan $msg
+}
 
 proc ::woof::test::main {command args} {
     switch -exact -- $command {

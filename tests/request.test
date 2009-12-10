@@ -23,14 +23,16 @@ namespace eval ::woof::test::request {
     namespace upvar ::woof::test test_url test_url
     variable dom;      # What we get back in DOM form
 
-    proc request_setup {{query ""}} {
+    proc request_setup {{query ""} {headers {}}} {
         variable dom
         variable test_url
-        if {![info exists dom]} {
-            set tok [http::geturl [make_test_url "$test_url(url_module)/request/dump" $query]]
-            set dom [dom parse -keepEmpties -html [http::data $tok]]
-            http::cleanup $tok
+        if {[info exists dom]} {
+            $dom delete
+            unset dom
         }
+        set tok [http::geturl [make_test_url "$test_url(url_module)/request/dump" $query] -headers $headers]
+        set dom [dom parse -keepEmpties -html [http::data $tok]]
+        http::cleanup $tok
     }
 
     proc host_and_port {host port} {
@@ -41,65 +43,57 @@ namespace eval ::woof::test::request {
         return [[lindex [$dom selectNodes "//dd\[@id='$id']"]  0] text]
     }
 
-    foreach {method_name mode expected_value} \
+    foreach {method_name mode expected_value query_expected_value} \
         [list \
-             application_url exact $test_url(urlroot) \
-             delete?         boolean false \
-             formatted_host_with_port exact [host_and_port $test_url(host) $test_url(port)] \
-             get?            boolean true \
-             get_or_head?    boolean true \
-             host            exact   $test_url(host) \
-             port            exact   $test_url(port) \
-             post?           boolean false \
-             protocol        exact   $test_url(scheme) \
-             referer         exact   "" \
-             remote_addr     exact   127.0.0.1 \
-             request_method  exact   get \
-             request_uri     exact   [file join $test_url(urlroot) $test_url(url_module) request/dump] \
-             resource_url    exact   [file join $test_url(url_module) request/dump] \
-             ssl?            boolean [expr {$test_url(scheme) == "https"}] \
-             standard_port   exact   [expr {$test_url(scheme) == "https" ? 443 : 80}] \
-             url             exact   [make_test_url [file join $test_url(urlroot) $test_url(url_module) request dump]]
+             application_url exact $test_url(urlroot) "" \
+             delete?         boolean false "" \
+             formatted_host_with_port exact [host_and_port $test_url(host) $test_url(port)] "" \
+             get?            boolean true            "" \
+             get_or_head?    boolean true            "" \
+             host            exact   $test_url(host) "" \
+             port            exact   $test_url(port) "" \
+             post?           boolean false           "" \
+             protocol        exact   $test_url(scheme) ""\
+             query_string    exact   ""              $test_url(query) \
+             referer         exact   ""              "" \
+             remote_addr     exact   127.0.0.1       "" \
+             request_method  exact   get             "" \
+             request_uri     exact   [file join $test_url(urlroot) $test_url(url_module) request/dump] "?$test_url(query)" \
+             resource_url    exact   "/[file join $test_url(url_module) request/dump]" "" \
+             ssl?            boolean [expr {$test_url(scheme) == "https"}] "" \
+             standard_port   exact   [expr {$test_url(scheme) == "https" ? 443 : 80}] "" \
+             url             exact   [make_test_url [file join $test_url(urlroot) $test_url(url_module) request dump]] "?$test_url(query)"
             ] { 
                 eval [format {
-                    test request_%1$s-1.0 {
+                    test request-%1$s-1.0 {
                         Testing %1$s method in Request object
                     } -setup {
                         request_setup
                     } -body {
                         dom_field "%1$s"
                     } -result "%2$s" -match $mode
-                } $method_name $expected_value]
+                } $method_name $expected_value ]
 
                 eval [format {
-                    test request_%1$s-1.1 {
+                    test request-%1$s-1.1 {
                         Testing %1$s method in Request object when query present in URL
                     } -setup {
                         request_setup $test_url(query)
                     } -body {
                         dom_field "%1$s"
                     } -result "%2$s" -match $mode
-                } $method_name $expected_value]
+                } $method_name $expected_value$query_expected_value ]
             }
     
-    test request_query_string-1.0 {
-        Testing query_string method in Request object when no query is present
+    test request-referer-2.0 {
+        Testing referer when Referer header is present
     } -setup {
-        request_setup
+        request_setup "" [list Referer http://www.google.com]
     } -body {
-        dom_field "query_string"
-    } -result "" -match exact
+        dom_field "referer"
+    } -result http://www.google.com -match exact
 
-    test request_query_string-1.1 {
-        Testing query_string method in Request object when query present in URL
-    } -setup {
-        request_setup $test_url(query)
-    } -body {
-        dom_field "query_string"
-    } -result $test_url(query) -match exact
-
-
-    ################################################################
+     ################################################################
 
     if {[info exists dom]} {
         $dom delete

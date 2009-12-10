@@ -26,6 +26,8 @@ namespace eval ::woof::test::apache {
 
         array set opts $args
 
+        progress "Setting up Apache config: [array get opts]"
+
         set apache_root [file normalize $opts(-serverdir)]
         set woof_root [file normalize $opts(-woofdir)]
 
