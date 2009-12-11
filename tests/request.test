@@ -36,7 +36,12 @@ namespace eval ::woof::test::request {
     }
 
     proc host_and_port {host port} {
-        return [join [concat $host $port] :]
+        # If port is "" or default, it is not included in the returned string
+        if {$port eq "" || $port == 80} {
+            return $host
+        } else {
+            return "${host}:${port}"
+        }
     }
     proc dom_field {id} {
         variable dom

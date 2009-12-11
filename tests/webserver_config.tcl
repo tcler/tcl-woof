@@ -9,27 +9,14 @@ namespace eval ::woof::test::apache {
 
     namespace path ::woof::test
 
-    proc setup_config {args} {
+    proc setup_config {} {
         # Set up the Apache configuration
+        namespace upvar ::woof::test popts opts
 
-        array set opts {
-            -config cgi-dedicated
-            -port 8080
-            -urlroot /
-        }
-        if {[windows]} {
-            set opts(-serverdir) [file join $::env(ProgramFiles) "Apache Software Foundation" Apache2.2]
-        } else {
-            set opts(-serverdir) TBD
-        }
-        set opts(-woofdir) [file join $::woof::test::script_dir ..]
+        progress "Setting up Apache config: [array get popts]"
 
-        array set opts $args
-
-        progress "Setting up Apache config: [array get opts]"
-
-        set apache_root [file normalize $opts(-serverdir)]
-        set woof_root [file normalize $opts(-woofdir)]
+        set apache_root [clean_path $opts(-serverdir)]
+        set woof_root [clean_path $opts(-woofdir)]
 
         set template_map [list \
                               server_root $apache_root \
@@ -41,7 +28,7 @@ namespace eval ::woof::test::apache {
 
         # Copy Apache test configuration
         copy_template \
-            [file join $test_conf_dir httpd-${opts(-config)}.conf] \
+            [file join $test_conf_dir httpd-${opts(-interface)}-${opts(-config)}.conf] \
             [file join $apache_root conf httpd.conf] \
             $template_map
         copy_template \
@@ -110,22 +97,31 @@ proc ::woof::test::copy_template {from to map} {
     close $fd
 }
 
-proc ::woof::test::webserver_setup {args} {
+proc ::woof::test::webserver_setup {} {
     variable script_dir
-
-    set opts(-server) apache
-    set opts(-woofdir) [clean_path [file join $script_dir ..]]
-    set opts(-interface) cgi
-
-    array set opts $args
+    variable popts
 
     # Sets up the specified server configuration
-    if {$opts(-server) ni {apache iis}} {
-        error "Server $opts(-server) not supported."
+    if {$popts(-server) ni {apache iis}} {
+        error "Server $options(-server) not supported."
     }
 
     # Installs Woof! "in-place" within $woof_dir
-    exec [info nameofexecutable] [file join $opts(-woofdir) scripts installer.tcl] install $opts(-server) $opts(-interface)
+    exec [info nameofexecutable] [file join $popts(-woofdir) scripts installer.tcl] install $popts(-server) $popts(-interface)
 
-    return [::woof::test::${opts(-server)}::setup_config {*}[array get opts]]
+    return [::woof::test::${popts(-server)}::setup_config]
+}
+
+proc ::woof::test::webserver_start {} {
+    variable script_dir
+    variable popts
+
+    ::woof::test::${popts(-server)}::start
+}
+
+proc ::woof::test::webserver_stop {args} {
+    variable script_dir
+    variable popts
+
+    ::woof::test::${popts(-server)}::stop
 }
