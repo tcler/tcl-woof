@@ -5,6 +5,7 @@ syntax: glob
 # Emacs backups
 *~
 
+*.log
 *.orig
 application.cfg
 dist
