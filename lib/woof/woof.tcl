@@ -46,6 +46,9 @@ proc ::woof::init {} {
     # Called by the master interpreter to initialize the safe web interpreter
     # in which requests are processed.
     variable _script_dir
+    variable _session_key_name
+
+    set _session_key_name [config get session_key_name $_session_key_name]
 
     set server_module [config get server_module]
 

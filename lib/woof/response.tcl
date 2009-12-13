@@ -90,12 +90,15 @@ oo::class create Response {
         #
         # On the other hand, web server interface code can call this method
         # to retrieve the set of headers to send back to the client.
+        #
+        # Caller should treat the return value as a dictionary as 
+        # headers can be repeated (for example the Set-Cookie header).
         if {[llength $args]} {
             return [_headers {*}$args]
         } else {
             # When called to get all headers, cookie values
             # are merged in. TBD - is this a good idea?
-            # Note cookies are multivalued
+            # Note cookies are multivalued.
             set cookie_headers {}
             foreach cookie [_cookies cookies] {
                 lappend cookie_headers Set-Cookie $cookie

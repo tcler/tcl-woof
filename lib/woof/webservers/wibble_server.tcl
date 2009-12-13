@@ -8,6 +8,8 @@ namespace eval ::woof::webservers::wibble {
     # Variable to signal that we should terminate
     variable terminate
     variable docroot
+
+    variable wibble_version;    # Version of wibble server
 }
 
 proc ::woof::webservers::wibble::init {args} {
@@ -32,7 +34,7 @@ proc ::woof::webservers::wibble::init {args} {
             
             # TBD - optimize this to not return unnecessary values
 
-	    dict set env SERVER_SOFTWARE "[my server_interface]/[package require wibble]"
+	    dict set env SERVER_SOFTWARE "[my server_interface]/$::woof::webservers::wibble::wibble_version"
 	    # name and version of the server. Format: name/version
 
 	    dict set env GATEWAY_INTERFACE CGI/1.1
@@ -111,11 +113,22 @@ proc ::woof::webservers::wibble::init {args} {
 
         method output {request_context response} {
             set id [dict get $request_context woof_req_id]
+
+            set need_server_header true
+            foreach {k v} [set headers [dict get $response headers]] {
+                if {$k eq "Server"} {
+                    set need_server_header false
+                    break
+                }
+            }
+            if {$need_server_header} {
+                lappend headers Server [string totitle [my server_interface]]/$::woof::webservers::wibble::wibble_version
+            }
             set ::woof::webservers::wibble::responses($id) \
                 [dict create \
                      status [dict get $response status] \
                      content [dict get $response content] \
-                     header [dict get $response headers]]
+                     header $headers]
         }
     }
 }
@@ -185,11 +198,11 @@ if {[file normalize $::argv0] eq [file normalize [info script]]} {
     set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. .. .. lib]]]
     lappend auto_path [file normalize [file join [file dirname [info script]] .. .. .. thirdparty]]
     package require uri
-    package require wibble
+    set ::woof::webservers::wibble::wibble_version [package require wibble]
     source [file join [file dirname [info script]] .. .. .. lib woof master.tcl]
     ::woof::webservers::wibble::main [file normalize [file join [file dirname [info script]] .. .. ..]] {*}$::argv
 } else {
     package require uri
-    package require wibble
+    set ::woof::webservers::wibble::wibble_version [package require wibble]
 }
 

@@ -4,7 +4,7 @@
 
 namespace eval ::woof {
     # Name of key storing session id. TBD - make this changeable?
-    variable session_key_name "woofsid"
+    variable _session_key_name "woofsid"
 }
 
 # Flash
@@ -143,10 +143,10 @@ oo::class create Controller {
         # code can use this object to store persistent data.
 
         # TBD - should this be here or in the dispatch code?
-        if {[icookies exists $::woof::session_key_name sid]} {
+        if {[icookies exists $::woof::_session_key_name sid]} {
             try {
                 ::woof::Session create session $sid \
-                    -id_name $::woof::session_key_name \
+                    -id_name $::woof::_session_key_name \
                     -dir [config get session_dir]
             } on error msg {
                 # Could not get session information
@@ -156,14 +156,14 @@ oo::class create Controller {
                 # Should we unfreeze and delete frozen cookies?
                 # TBD - document that input cookies should not be
                 # relied on for session info
-                #icookies -unset $::woof::session_key_name
+                #icookies -unset $::woof::_session_key_name
             }
         }
 
         if {![info exists sid]} {
             # Need a new session
             ::woof::Session create session "" \
-                -id_name $::woof::session_key_name \
+                -id_name $::woof::_session_key_name \
                 -dir [config get session_dir]
         }
 
@@ -314,7 +314,7 @@ oo::class create Controller {
                 # created. For existing sessions the cookie is already
                 # present on the client anyway.
                 ocookies setwithattr \
-                    $::woof::session_key_name [session get $::woof::session_key_name] \
+                    $::woof::_session_key_name [session get $::woof::_session_key_name] \
                     path [config get url_root]
             }
         }

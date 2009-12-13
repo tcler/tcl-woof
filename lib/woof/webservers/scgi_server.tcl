@@ -195,10 +195,18 @@ proc ::woof::webservers::scgi::init {args} {
                 # Other servers expect a Status: dummy header
                 puts $sock "Status: [dict get $response status_line]"
             }
+            set need_server_header true
             foreach {k val} [dict get $response headers] {
+                if {$k eq "Server"} {set need_server_header false}
                 puts $sock "$k: $val"
             }
+            if {$need_server_header &&
+                [dict exists $request_context headers SERVER_SOFTWARE]} {
+                puts $sock "Server: [dict get $request_context headers SERVER_SOFTWARE]"
+            }
+
             puts $sock ""
+            # TBD - fconfigure channel to binary ? Convert encoding ?
             puts $sock [dict get $response content]
             close $sock
         }
