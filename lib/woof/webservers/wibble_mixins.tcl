@@ -28,7 +28,8 @@ namespace eval ::woof::webservers::wibble {
         }
 
         method query_string {} {
-            return [dict get $_context rawquery]
+            # rawquery includes "?" prefix - remove it
+            return [string range [dict get $_context rawquery] 1 end]
         }
 
         method remote_addr {} {

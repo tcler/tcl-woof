@@ -60,15 +60,15 @@ if {$::tcl_platform(platform) eq "windows"} {
 }
 
 proc ::woof::test::start_scgi_process {} {
-    variable script_dir
     variable scgi_pid
+    variable popts
 
     if {[info exists scgi_pid] && [process_exists $scgi_pid]} {
         return
     }
 
     unset -nocomplain scgi_pid;             # In case exec fails
-    set scgi_pid [exec [info nameofexecutable] [file join $script_dir .. lib woof webservers scgi_server.tcl] &]
+    set scgi_pid [exec [info nameofexecutable] [clean_path [file join $popts(-woofdir) lib woof webservers scgi_server.tcl]] &]
     # Wait for it to start before returning
     after 10
 }

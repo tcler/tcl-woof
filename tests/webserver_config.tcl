@@ -150,6 +150,56 @@ namespace eval ::woof::test::iis {
 }
 
 
+################################################################
+# Wibble stuff
+namespace eval ::woof::test::wibble {
+
+    namespace path ::woof::test
+
+    proc setup_config {} {
+        # Set up the wibble configuration
+        namespace upvar ::woof::test popts opts
+
+        progress "Setting up wibble config: [array get opts]"
+
+        # Nothing to really do for wibble itself. 
+        # All config is done at start time through the command line
+
+        # Set application.cfg to reflect URL root
+        set woof_root [clean_path $opts(-woofdir)]
+        set fd [open [file join $woof_root config application.cfg] w]
+        puts $fd "set url_root $opts(-urlroot)"
+        close $fd
+
+        return [array get opts]
+    }
+
+    proc start {} {
+        variable wibble_pid
+        namespace upvar ::woof::test popts opts
+        
+        if {[info exists wibble_pid] && [process_exists $wibble_pid]} {
+            return
+        }
+
+        unset -nocomplain wibble_pid;             # In case exec fails
+        set wibble_pid [exec [info nameofexecutable] [clean_path [file join $opts(-woofdir) lib woof webservers wibble_server.tcl]] -urlroot $opts(-urlroot) -port $opts(-port) &]
+        # Wait for it to start before returning
+        after 10
+    }
+
+    proc stop {} {
+        variable wibble_pid
+
+        if {[info exists wibble_pid]} {
+            ::twapi::end_process $wibble_pid -force true
+            unset wibble_pid
+        }
+    }
+}
+
+################################################################
+# General routines
 
 proc ::woof::test::copy_template {from to map} {
     # Copy a template after replacing placeholders
@@ -185,12 +235,14 @@ proc ::woof::test::webserver_setup {} {
     variable popts
 
     # Sets up the specified server configuration
-    if {$popts(-server) ni {apache iis}} {
+    if {$popts(-server) ni {apache iis wibble}} {
         error "Server $options(-server) not supported."
     }
 
     # Installs Woof! "in-place" within $woof_dir
-    exec [info nameofexecutable] [file join $popts(-woofdir) scripts installer.tcl] install $popts(-server) $popts(-interface)
+    if {$popts(-server) ni {bowwow wibble}} {
+        exec [info nameofexecutable] [file join $popts(-woofdir) scripts installer.tcl] install $popts(-server) $popts(-interface)
+    }
 
     return [::woof::test::${popts(-server)}::setup_config]
 }

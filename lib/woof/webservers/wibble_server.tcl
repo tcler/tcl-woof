@@ -48,9 +48,12 @@ proc ::woof::webservers::wibble::init {args} {
 	    dict set env SERVER_PROTOCOL [dict get $req protocol]
             dict set env REQUEST_URI [dict get $req uri]
 	    dict set env REQUEST_METHOD [dict get $req method]
+
             # TBD - should we decode query ? CGI spec seems to say no but Woof Request
             # class assumes it is already decoded
-            dict set env QUERY_STRING [dict get $req rawquery]
+
+            # rawquery includes "?" prefix - remove it
+            dict set env QUERY_STRING [string range [dict get $req rawquery] 1 end]
 	    dict set env SCRIPT_NAME [dict get $req prefix]
             set suffix [dict get $req suffix]
 	    dict set env PATH_INFO $suffix
