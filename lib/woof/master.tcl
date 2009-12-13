@@ -80,6 +80,18 @@ proc ::woof::safe::package_loader {ip name args} {
     }
 }
 
+proc ::woof::safe::encoding_alias {command args} {
+    if {$command eq "system" && [llength $args]} {
+        error "Setting of system encoding not allowed in safe interpreter"
+    }
+
+    if {$command eq "dirs"} {
+        error "encoding subcommand dirs not allowed in safe interpreter"
+    }
+
+    return [encoding $command {*}$args]
+}
+
 proc ::woof::safe::source_alias {ip args} {
     # Safe alias for the Tcl source command
     # ip - safe interpreter invoking the source command
@@ -296,6 +308,7 @@ proc ::woof::master::create_web_interp {} {
     # Now enable the safe version of file command and source commands
     $ip alias ::file ::woof::safe::file_alias
     $ip alias ::source ::woof::safe::source_alias $ip
+    $ip alias ::encoding ::woof::safe::encoding_alias 
 
     # Map our chosen session manager (currently we only have file :-)
     $ip alias ::woof::session_manager ::woof::master::file_session

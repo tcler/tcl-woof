@@ -31,6 +31,9 @@ namespace eval ::woof::test::request {
             unset dom
         }
         set tok [http::geturl [make_test_url "$test_url(url_module)/request/dump" $query] -headers $headers]
+        if {[http::ncode $tok] ne 200} {
+            error "Server returned HTTP code [http::code $tok][http::cleanup $tok]"
+        }
         set dom [dom parse -keepEmpties -html [http::data $tok]]
         http::cleanup $tok
     }

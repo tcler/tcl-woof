@@ -19,7 +19,7 @@ proc ::woof::test::init_values {} {
     array set test_url {
         scheme    http
         host      127.0.0.1
-        port      80
+        port      8015
         urlroot   /
         url_module _woof/test
         query    a=b&=d

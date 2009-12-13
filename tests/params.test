@@ -10,8 +10,10 @@ package require tcltest
 package require http
 package require tdom
 
-source [file join [file dirname [info script]] config.tcl]
 source [file join [file dirname [info script]] testutil.tcl]
+
+# Initialize URL component values from environment
+::woof::test::init_values
 
 namespace eval ::woof::test::params {
     namespace import ::tcltest::test
@@ -20,12 +22,14 @@ namespace eval ::woof::test::params {
 
     namespace upvar ::woof::test test_url test_url
 
-    proc do_query {query} {
+    proc do_query {query {headers {}}} {
+        variable test_url
         set url [make_test_url params/dump]
-        if {[llength $query]} {
-            append url ?[http::formatQuery {*}$query]
-        }
-        set tok [http::geturl $url]
+        set tok [http::geturl [make_test_url \
+                                   "$test_url(url_module)/params/dump" \
+                                   [http::formatQuery {*}$query]] \
+                     -headers $headers]
+
         if {[http::ncode $tok] ne 200} {
             error "Server rerurned HTTP code [http::code $tok][http::cleanup $tok]"
         }
@@ -115,7 +119,10 @@ namespace eval ::woof::test::params {
     test params_get-2.1 {
         Testing GET request parameters with non-ASCII characters
     } -body {
-        set params [list pname \u00a9\u221e]
+        # Note the following unicode sequence is chosen such that
+        # the first two chars have a HTML & mapping, the last two do
+        # not.
+        set params [list pname \u00a9\u221e\u0102\u0108]
         set state [do_query $params]
         check_values [dict get $state dom] $params
     } -cleanup {

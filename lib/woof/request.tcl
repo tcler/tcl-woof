@@ -48,7 +48,8 @@ oo::class create Params {
         # a request.
         #
         # Application code may access values associated with keys
-        # using the standard Map interfaces.
+        # using the standard Map interfaces. The retrieved keys and values
+        # will have been fully decoded.
         my variable _request_context
         set _request_context $request_context
         next
@@ -61,7 +62,16 @@ oo::class create Params {
         # parameter values in the Map and not just the keys specified in $args.
         # See Map.lazy_load for details.
         my variable _request_context
-        my set {*}[::woof::webserver request_parameters $_request_context]
+
+        # TBD - we assume query values are UTF-8 encoded but not
+        # query parameters. Also should this be done by the webserver
+        # itself? But then we have to modify code in more places.
+        set qvals {} 
+        foreach {name val} [::woof::webserver request_parameters $_request_context] {
+            # What should the encoding be converted from ?
+            lappend qvals $name [encoding convertfrom utf-8 $val]
+        }
+        my set $qvals
     }
 }
 
@@ -338,14 +348,21 @@ oo::class create Request {
     }
 
     method query_string {} {
-        # Returns the query string portion of request
+        # Returns the query string portion of request.
+        #
+        # Note that the returned query string is not in decoded form.
+        # Use the Params object instead to retrieve decoded values.
 
         # TBD - is the query string already decoded or not ?
+        if {[env exists QUERY_STRING query]} {
+            return $query
+        }
+
         if {[env exists REQUEST_URI uri]} {
             return [lindex [split $uri ?] 1]
-        } else {
-            return [env get QUERY_STRING ""]
         }
+
+        return ""
     }
 
     method referer {} {
