@@ -1,7 +1,8 @@
 # Main script for driving tests
 
 package require tcltest
-
+package require http
+package require uri
 
 namespace eval ::woof::test {
     variable script_dir
@@ -45,23 +46,51 @@ proc ::woof::test::run {} {
     ::woof::test::webserver_stop
     ::woof::test::webserver_start
 
-    set ::env(WOOF_TEST_URLROOT) $popts(-urlroot)
-    set ::env(WOOF_TEST_PORT)    $popts(-port)
-
-    # Collect those options understood by the test package.
-    set test_opts {}
-    foreach opt [::tcltest::configure] {
-        if {[info exists popts($opt)]} {
-            lappend test_opts $opt $popts($opt)
+    # Verify server is set up
+    set url [uri::join scheme http host localhost port $popts(-port) path $popts(-urlroot)]
+    puts "Testing server availability at $url"
+    if {[catch {
+        set tok [http::geturl $url]
+        if {[http::ncode $tok] != 200} {
+            set msg "Error: Server returned status [http::ncode $tok]. Please check configuration and command line options."
+        } else {
+            array set meta [http::meta $tok]
+            if {![info exists meta(Server)]} {
+                set msg "No identification returned by server. Please check configuration and command line options."
+            } else {
+                if {![string match -nocase "*${popts(-server)}*" $meta(Server)]} {
+                    set msg "Reached server $meta(Server), expected $popts(-server). Please check configuration and command line options."
+                }
+                # Ideally, want to check the server interface but not sure how
+            }
         }
+        http::cleanup $tok
+        if {[info exists msg]} {
+            error $msg
+        }
+    } msg]} {
+        progress "Stopping server $popts(-server)"
+        ::woof::test::webserver_stop
+        error $msg
+    } else {
+        set ::env(WOOF_TEST_URLROOT) $popts(-urlroot)
+        set ::env(WOOF_TEST_PORT)    $popts(-port)
+
+        # Collect those options understood by the tcltest package.
+        set test_opts {}
+        foreach opt [::tcltest::configure] {
+            if {[info exists popts($opt)]} {
+                lappend test_opts $opt $popts($opt)
+            }
+        }
+
+        tcltest::configure {*}$test_opts
+
+        tcltest::runAllTests
+        progress "Stopping server $popts(-server)"
+        ::woof::test::webserver_stop
     }
 
-    tcltest::configure {*}$test_opts
-
-    tcltest::runAllTests
-
-    progress "Stopping server $popts(-server)"
-    ::woof::test::webserver_stop
 }
 
 
