@@ -28,10 +28,22 @@ HTTP cookies on the client to store the session identifier.</p>
 the <code>session</code> object are automatically stored by Woof! and
 restored when the next request is received from the same client.</p>
 
-<p>In Woof! 0.3 and later, because storage/retrieval has a non-trivial
+<p>Because storage/retrieval has a non-trivial
 cost, sessions are created in lazy fashion. If the application does
 not store data in the session, no overhead is imposed.</p>
 
 <p>Refer to the sample application in the chapter
 [my _chapter_link quick_start]
 for an example of using the session to store state.</p>
+
+<h3>The session cookie</h3>
+<p>The session identifier is sent by the client as an HTTP cookie. By
+default, the name of the cookie is <code>woofsid</code>. If there are
+multiple Woof! installations on a single site, each installation needs
+to use a different cookie name to prevent confusion between sessions
+  belonging to applications for each installation.</p>
+
+<p>To prevent this, you can change the name of the cookie by assigning
+  the variable <code>session_key_name</code> in the
+  [my _chapter_link configuration "configuration file"]. Each
+  installation for the site should use a different name.</p>
