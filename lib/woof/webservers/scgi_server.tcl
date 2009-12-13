@@ -1,3 +1,4 @@
+#!C:/Tcl/bin/tclsh86t.exe
 # Copyright (c) 2009, Ashok P. Nadkarni
 # All rights reserved.
 # See the file LICENSE in the Woof! root directory for license

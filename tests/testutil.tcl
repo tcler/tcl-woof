@@ -52,6 +52,36 @@ proc ::woof::test::clean_path {path} {
     }
 }
 
+if {$::tcl_platform(platform) eq "windows"} {
+    interp alias {} ::woof::test::process_exists {} ::twapi::process_exists
+    interp alias {} ::woof::test::end_process {} ::twapi::end_process
+} else {
+    error "TBD - process_exists not implemented on this platform"
+}
+
+proc ::woof::test::start_scgi_process {} {
+    variable script_dir
+    variable scgi_pid
+
+    if {[info exists scgi_pid] && [process_exists $scgi_pid]} {
+        return
+    }
+
+    unset -nocomplain scgi_pid;             # In case exec fails
+    set scgi_pid [exec [info nameofexecutable] [file join $script_dir .. lib woof webservers scgi_server.tcl] &]
+    # Wait for it to start before returning
+    after 10
+}
+
+proc ::woof::test::stop_scgi_process {} {
+    variable scgi_pid
+
+    if {[info exists scgi_pid]} {
+        ::twapi::end_process $scgi_pid -force true
+        unset scgi_pid
+    }
+}
+
 
 ::tcltest::customMatch boolean ::woof::test::boolean_compare
 proc ::woof::test::boolean_compare {aval bval} {

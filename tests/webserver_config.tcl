@@ -3,6 +3,8 @@
 namespace eval ::woof::test {}
 namespace eval ::woof::test::iis {}
 
+################################################################
+# Apache stuff
 namespace eval ::woof::test::apache {
     variable apache_service_name
     set apache_service_name apache
@@ -13,7 +15,7 @@ namespace eval ::woof::test::apache {
         # Set up the Apache configuration
         namespace upvar ::woof::test popts opts
 
-        progress "Setting up Apache config: [array get popts]"
+        progress "Setting up Apache config: [array get opts]"
 
         set apache_root [clean_path $opts(-serverdir)]
         set woof_root [clean_path $opts(-woofdir)]
@@ -67,6 +69,87 @@ namespace eval ::woof::test::apache {
     }
 }
 
+################################################################
+# IIS stuff
+
+namespace eval ::woof::test::iis {
+    variable iis_service_name
+    set iis_service_name W3SVC
+
+    namespace path ::woof::test
+
+    proc setup_config {} {
+        error "The test framework is not currently capable of setting up IIS. You must do it manually and then run the test scripts with the testonly command."
+
+        # Set up the IIS configuration
+        namespace upvar ::woof::test popts opts
+
+        progress "Setting up IIS config: [array get opts]"
+
+        set iis_root [clean_path $opts(-serverdir)]
+        set woof_root [clean_path $opts(-woofdir)]
+
+        if {$opts(-urlroot) eq "/"} {
+            error "IIS testing does not currently support a configuration rooted at /"
+        }
+
+        reset_iis_config
+
+        switch -exact -- $opts(-config) {
+            rewrite {
+                
+            }
+            transparent {
+                set opts(-urlroot) $opts(-urlroot)/cgi_server.tcl
+                TBD
+            }
+        }
+
+
+        # Write the IIRF ini file
+
+        set template_map [list \
+                              server_root $iis_root \
+                              server_port $opts(-port) \
+                              woof_root $woof_root \
+                              url_root $opts(-urlroot)]
+
+        set test_conf_dir [file join $::woof::test::script_dir iis]
+
+        # Copy Iis test configuration
+        copy_template \
+            [file join $test_conf_dir httpd-${opts(-interface)}-${opts(-config)}.conf] \
+            [file join $iis_root conf httpd.conf] \
+            $template_map
+        copy_template \
+            [file join $test_conf_dir common.conf] \
+            [file join $iis_root conf common.conf] \
+            $template_map
+
+        # Set application.cfg to reflect URL root
+        set fd [open [file join $woof_root config application.cfg] w]
+        puts $fd "set url_root $opts(-urlroot)"
+        close $fd
+
+        return [array get opts]
+    }
+
+    proc start {} {
+        variable iis_service_name
+        if {![twapi::start_service $iis_service_name -wait 10000]} {
+            error "Could not start service $iis_service_name"
+        }
+    }
+
+    proc stop {} {
+        variable iis_service_name
+        if {![twapi::stop_service $iis_service_name -wait 10000]} {
+            error "Could not stop service $iis_service_name"
+        }
+    }
+}
+
+
 
 proc ::woof::test::copy_template {from to map} {
     # Copy a template after replacing placeholders
@@ -116,6 +199,9 @@ proc ::woof::test::webserver_start {} {
     variable script_dir
     variable popts
 
+    if {$popts(-interface) eq "scgi"} {
+        start_scgi_process
+    }
     ::woof::test::${popts(-server)}::start
 }
 
@@ -124,4 +210,7 @@ proc ::woof::test::webserver_stop {args} {
     variable popts
 
     ::woof::test::${popts(-server)}::stop
+    if {$popts(-interface) eq "scgi"} {
+        stop_scgi_process
+    }
 }

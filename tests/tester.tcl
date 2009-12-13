@@ -16,7 +16,7 @@ namespace eval ::woof::test {
         -interface cgi
         -server apache
         -port   80
-        -config dedicated
+        -config rewrite
         -urlroot /
     }
     set popts(-woofdir) [file join $script_dir ..]
