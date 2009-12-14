@@ -19,9 +19,7 @@ namespace eval ::scgi {
     }
 
     proc connect {sock ip port} {
-        # TBD - should we make output also binary? Maybe required for
-        # binary content ? May even give better performance ?
-        fconfigure $sock -blocking 0 -translation {binary crlf}
+        fconfigure $sock -blocking 0 -translation binary
         fileevent $sock readable [namespace code [list read_length $sock {}]]
     }
 
@@ -186,28 +184,28 @@ proc ::woof::webservers::scgi::init {args} {
             # TBD - add error handling
 
             set sock [dict get $request_context socket]
+            set head ""
             if {[dict exists $request_context headers SERVER_SOFTWARE] &&
                 [string equal -length 13 Microsoft-IIS [dict get $request_context headers SERVER_SOFTWARE]]} {
                 # On IIS, isapi_scgi expects a real HTTP status line
                 # TBD - should this be 1.x, 1.0 or 1.1 ?
-                puts $sock "HTTP/1.0 [dict get $response status_line]"
+                append head "HTTP/1.0 [dict get $response status_line]\r\n"
             } else { 
                 # Other servers expect a Status: dummy header
-                puts $sock "Status: [dict get $response status_line]"
+                append head "Status: [dict get $response status_line]\r\n"
             }
             set need_server_header true
             foreach {k val} [dict get $response headers] {
                 if {$k eq "Server"} {set need_server_header false}
-                puts $sock "$k: $val"
+                append head "$k: $val\r\n"
             }
             if {$need_server_header &&
                 [dict exists $request_context headers SERVER_SOFTWARE]} {
-                puts $sock "Server: [dict get $request_context headers SERVER_SOFTWARE]"
+                append head "Server: [dict get $request_context headers SERVER_SOFTWARE]\r\n"
             }
 
-            puts $sock ""
-            # TBD - fconfigure channel to binary ? Convert encoding ?
-            puts $sock [dict get $response content]
+            puts -nonewline $sock "${head}\r\n"
+            puts -nonewline $sock [encoding convertto [dict get $response encoding] [dict get $response content]]
             close $sock
         }
     }

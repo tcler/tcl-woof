@@ -372,8 +372,13 @@ proc wibble::process {socket peerhost peerport} {
                     chan configure $file -translation binary
                 }
             } elseif {[dict exists $response content]} {
-                dict set response content [encoding convertto iso8859-1\
-                        [dict get $response content]]
+                if {[dict exists $response encoding]} {
+                    set enc [dict get $response encoding]
+                } else {
+                    set enc utf-8
+                }
+                dict set response content [encoding convertto $enc\
+                                               [dict get $response content]]
                 set size [string length [dict get $response content]]
             } else {
                 set size 0

@@ -46,7 +46,7 @@ proc ::woof::webservers::console::init {args} {
                 append out "$k: $val\n"
             }
             append out \n
-            append out [dict get $response content]\n
+            append out [encoding convertto [dict get $response encoding] [dict get $response content]]
         }
     }
 }

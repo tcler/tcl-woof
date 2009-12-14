@@ -164,6 +164,7 @@ proc ::woof::webservers::wub_server::init {args} {
 
 	    # add in the meta-headers
 	    dict set r -code [dict get $response status]
+            # TBD - do we need encoding converto here ?
 	    dict set r -content [dict get $response content]
 	    dict set r content-length [string length [dict get $r -content]]
 	    dict set r content-type [dict get $response content_type]

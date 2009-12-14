@@ -18,7 +18,7 @@ namespace eval ::woof::test {
         -server apache
         -port   80
         -config rewrite
-        -urlroot /
+        -urlroot /myapp
     }
     set popts(-woofdir) [file join $script_dir ..]
     if {$::tcl_platform(platform) eq "windows"} {
@@ -47,22 +47,18 @@ proc ::woof::test::run {} {
     ::woof::test::webserver_start
 
     # Verify server is set up
-    set url [uri::join scheme http host localhost port $popts(-port) path $popts(-urlroot)]
+    set url [uri::join scheme http host localhost port $popts(-port) path /]
     puts "Testing server availability at $url"
     if {[catch {
         set tok [http::geturl $url]
-        if {[http::ncode $tok] != 200} {
-            set msg "Error: Server returned status [http::ncode $tok]. Please check configuration and command line options."
+        array set meta [http::meta $tok]
+        if {![info exists meta(Server)]} {
+            set msg "No identification returned by server. Please check configuration and command line options."
         } else {
-            array set meta [http::meta $tok]
-            if {![info exists meta(Server)]} {
-                set msg "No identification returned by server. Please check configuration and command line options."
-            } else {
-                if {![string match -nocase "*${popts(-server)}*" $meta(Server)]} {
-                    set msg "Reached server $meta(Server), expected $popts(-server). Please check configuration and command line options."
-                }
-                # Ideally, want to check the server interface but not sure how
+            if {![string match -nocase "*${popts(-server)}*" $meta(Server)]} {
+                set msg "Reached server $meta(Server), expected $popts(-server). Please check configuration and command line options."
             }
+            # Ideally, want to check the server interface but not sure how
         }
         http::cleanup $tok
         if {[info exists msg]} {

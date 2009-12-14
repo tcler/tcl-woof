@@ -242,13 +242,21 @@ proc ::woof::handle_request {{request_context ""}} {
             try {
                 # Display either the response or the error message. Even this
                 # might error so we trap to clean up the namespaces
+                set enc [response charset]
+                if {$enc eq ""} {
+                    set enc utf-8
+                } else {
+                    set enc [::woof::util::charset_iana2tcl $enc]
+                }
                 ::woof::webserver output $request_context \
                     [dict create \
                          status [response status] \
                          status_line [response status_line] \
                          headers [response headers] \
+                         encoding $enc \
                          content_type [response content_type] \
                          content [response content]]
+                
 		set output_done true
             } finally {
                 # Namespace will be deleted as soon as execution exits its context

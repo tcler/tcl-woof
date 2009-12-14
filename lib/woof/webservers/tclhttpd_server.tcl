@@ -95,6 +95,7 @@ proc ::woof::webservers::tclhttpd::init {args} {
                 Httpd_AddHeaders $sock $k $val
             }
 
+            # TBD - do we need a encoding convertto for the content ?
             Httpd_ReturnData $sock \
                 $ctype \
                 [dict get $response content] \

@@ -93,7 +93,7 @@ web::initializer {
                     dict for {k val} $hdrs {
                         web::response -set $k {*}$val
                     }
-                    web::put [dict get $response content]
+                    web::put [encoding convertto [dict get $response encoding] [dict get $response content]]
                 }
             }
         }

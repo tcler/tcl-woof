@@ -51,7 +51,7 @@ proc ::woof::webservers::cgi::init {args} {
                 puts -nonewline "$k: $val\r\n"
             }
             puts -nonewline "\r\n"
-            puts [dict get $response content]
+            puts -nonewline [encoding convertto [dict get $response encoding] [dict get $response content]]
         }
     }
 

@@ -128,6 +128,7 @@ proc ::woof::webservers::wibble::init {args} {
                 [dict create \
                      status [dict get $response status] \
                      content [dict get $response content] \
+                     encoding [dict get $response encoding] \
                      header $headers]
         }
     }

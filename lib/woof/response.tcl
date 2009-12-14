@@ -41,7 +41,7 @@ oo::class create Response {
         my status 200
         _headers set Cache-Control "no-cache"
         # TBD - what should default Content-Type be? Should there be a charset attr ?
-        my content_type "text/html"
+        my content_type "text/html; charset=utf-8"
     }
 
     # Define methods for accessing contained maps
