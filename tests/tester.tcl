@@ -7,7 +7,11 @@ package require uri
 namespace eval ::woof::test {
     variable script_dir
     # We use the shortname to avoid quoting problems when exec'ing
-    set script_dir [file attributes [file normalize [file dirname [info script]]] -shortname]
+    if {$::tcl_platform(platform) eq "windows"} {
+	set script_dir [file attributes [file normalize [file dirname [info script]]] -shortname]
+    } else {
+	set script_dir [file normalize [file dirname [info script]]]
+    }
 
     variable outchan stdout
 
@@ -24,7 +28,7 @@ namespace eval ::woof::test {
     if {$::tcl_platform(platform) eq "windows"} {
         set popts(-serverdir) [file join $::env(ProgramFiles) "Apache Software Foundation" Apache2.2]
     } else {
-        set opts(-serverdir) TBD
+        set popts(-serverdir) TBD
     }
 }
 

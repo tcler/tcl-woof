@@ -53,7 +53,7 @@ namespace eval ::woof::test::apache {
                 error "Could not start service $apache_service_name"
             }
         } else {
-            error "apache_start not implemented on this platform"
+            exec -ignorestderr -- sudo /etc/init.d/apache2 start
         }
     }
 
@@ -64,7 +64,7 @@ namespace eval ::woof::test::apache {
                 error "Could not stop service $apache_service_name"
             }
         } else {
-            error "apache_stop not implemented on this platform"
+            exec -ignorestderr -- sudo /etc/init.d/apache2 stop
         }
     }
 }

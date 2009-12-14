@@ -56,7 +56,12 @@ if {$::tcl_platform(platform) eq "windows"} {
     interp alias {} ::woof::test::process_exists {} ::twapi::process_exists
     interp alias {} ::woof::test::end_process {} ::twapi::end_process
 } else {
-    error "TBD - process_exists not implemented on this platform"
+    proc ::woof::test::process_exists pid {
+	return [file exists /proc/$pid]
+    }
+    proc ::woof::test::end_process {pid args} {
+	exec kill $pid
+    }
 }
 
 proc ::woof::test::start_scgi_process {} {
@@ -77,7 +82,7 @@ proc ::woof::test::stop_scgi_process {} {
     variable scgi_pid
 
     if {[info exists scgi_pid]} {
-        ::twapi::end_process $scgi_pid -force true
+        end_process $scgi_pid -force true
         unset scgi_pid
     }
 }
