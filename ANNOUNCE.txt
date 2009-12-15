@@ -1,0 +1,97 @@
+Version 0.4 of Woof! has been released.
+
+What is Woof!
+-------------
+
+Woof! - Web Oriented Object Framework - is an
+open-source, platform and server-independent, web
+application framework written in the Tcl
+programming language. It is intended to be easy to
+install and deploy, simple to understand and
+customize, and embeddable into other applications.
+
+
+Files
+-----
+
+The download area is at http://sourceforge.net/projects/woof/files/
+
+bowwow-VERSION.exe is a single file Windows executable
+with Woof, Tcl and a web server built in and no
+external dependencies. Just download and run.
+
+woof-VERSION.zip and woof-VERSION.tar.gz are source
+distributions for use with other web servers.
+
+
+Requirements
+------------
+
+See http://woof.magicsplat.com/woof-ug/_woof/docs/ug/system_requirements
+Woof! has been tested with Apache and IIS on Windows and
+Apache and Lighttpd on Linux (Ubuntu 8.10)
+
+
+Release Notes
+-------------
+
+This is the third public release of Woof! and is
+intended to allow people to try out Woof! and
+provide early feedback. The API is stabilizing but
+still subject to change.
+
+
+Installation
+------------
+
+See http://woof.magicsplat.com/woof-ug/_woof/docs/ug/installation
+for install instructions.  Upgrades are not yet
+supported. Full upgrades are not planned until the 0.5 release.
+
+
+Getting started
+---------------
+
+See the Woof! Quick Start Guide at 
+http://woof.magicsplat.com/woof-ug/_woof/docs/ug/quick_start.
+
+
+Useful URLs
+-----------
+Home page - http://woof.magicsplat.com/woof_home
+Programming guide - http://woof.magicsplat.com/woof-ug/_woof/docs/ug/index
+Reference pages - http://woof.magicsplat.com/manuals/woof/index.html
+SourceForge project - http://sourceforge.net/projects/woof
+
+
+Changes since V0.3
+------------------
+
+There are many changes and enhancements to API's and
+functionality. Only the major ones are listed
+here.
+
+- Woof! application code is now run in a safe Tcl
+  interpreter for security reasons. 
+  *INCOMPATIBILITY* If you are loading your
+  own libraries, you may need to make some changes.
+  See http://woof.magicsplat.com/woof-ug/_woof/docs/ug/interpreter
+  and http://woof.magicsplat.com/woof-ug/_woof/docs/ug/loading_packages
+
+- More flexible control of mapping URL's to controllers
+  (similar to routes in Rails or Pylons)
+  See http://woof.magicsplat.com/woof-ug/_woof/docs/ug/url_dispatcher
+
+- Enhancements and changes to Woof! Template File
+  format. In particular, controller variables now
+  have to be explicitly brought into scope ( *INCOMPATIBILITY* )
+  Also, support for new %( %) code blocks.
+
+- Improved support for language-specific pages.
+  See http://woof.magicsplat.com/woof-ug/_woof/docs/ug/localization
+
+- Greatly expanded documentation.
+  See http://woof.magicsplat.com/woof-ug/_woof/docs/ug/index
+  This is also available under URL _woof/docs/ug/index in your local
+  Woof! installation.
+
