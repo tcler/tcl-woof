@@ -9,7 +9,10 @@ set woof_root [file normalize [file join [file dirname [info script]] ..]]
 set auto_path [linsert $auto_path 0 [file join $woof_root lib]]
 
 set woof_ver [package require woof]
-source [file join $woof_root lib woof master.tcl]
+if {0} {
+    # Commented out because not sure we want to document the master interp yet
+    source [file join $woof_root lib woof master.tcl]
+}
 package require ruff
 
 if {[llength $argv] == 0} {
