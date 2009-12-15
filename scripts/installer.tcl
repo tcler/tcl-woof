@@ -148,7 +148,7 @@ proc installer::distribute {target_dir args} {
             file copy -- [file join $src_dir $dir] $zip_dir
         }
         file copy -- {*}[glob [file join $src_dir thirdparty lib *]] [file join $zip_dir lib]
-        set textfile_patterns {*.txt *.tcl *.htm *.html *.wtf *.bat *.cmd}
+        set textfile_patterns {*.txt *.tcl *.htm *.html *.wtf *.bat *.cmd *.cfg}
 
         if {$opts(-kit) in {zip all}} {
             puts "Building zip distribution"
@@ -409,6 +409,25 @@ proc installer::install {server module args} {
     variable woof_version
     variable manifest_name
 
+    switch -exact -- $server {
+        iis {
+            if {$::tcl_platform(platform) ne "windows"} {
+                error "Server $server is not supported on this platform"
+            }
+        }
+        lighttpd {
+            if {$::tcl_platform(platform) eq "windows"} {
+                error "Server $server is not supported on this platform"
+            }
+        }
+        apache {
+            # All platforms supported
+        }
+        default {
+            error "$server is not a supported web server"
+        }
+    }
+
     set timestamp [clock format [clock seconds] -format %y%m%d%H%M%S]
     array set opts $args
     if {[info exists opts(-installdir)]} {
@@ -475,7 +494,7 @@ proc installer::install {server module args} {
         install_log "Installation arguments: [join [list $server $module {*}$args] {. }]."
     }
 
-    puts -nonewline "Installing. Please be patient..."
+    puts "Installing. Please be patient..."
     try {
         # Create default files if they do not exist
         write_defaults $opts(-installdir)
@@ -484,27 +503,20 @@ proc installer::install {server module args} {
         # on Windows as the line is ignored
         if {$::tcl_platform(platform) eq "unix"} {
             set updates {}
-            foreach script_file {installer.tcl console.tcl ruffian.tcl} {
-                set script_file [file join $opts(-installdir) scripts $script_file]
+            foreach script_file [glob [file join $opts(-installdir) scripts $script_file *.tcl]] {
                 lappend updates $script_file
-                install_log "Adding shebang line to script $script_file and updating manifest."
+                install_log "Adding shebang line to script $script_file."
                 replace_shebang $script_file
+                install_log "Marking script $script_file as executable."
+                file attributes $script_file -permissions ugo+x
             }
+            install_log "Updating manifest."
             distro::refresh $opts(-installdir) $updates -manifest $manifest_name
         }
 
-        switch -exact -- $server {
-            iis -
-            lighttpd -
-            apache {
-                install_webserver_interface $server $module $opts(-installdir)
-            }
-            default {
-                error "$server is not a supported web server"
-            }
-        }
+        install_webserver_interface $server $module $opts(-installdir)
 
-        puts "completed."
+        puts "Installation completed."
         install_log "Installation completed."
     } on error {msg eopts } {
         install_log "Error: $msg"
