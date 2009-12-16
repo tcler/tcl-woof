@@ -96,6 +96,7 @@ proc ::woof::handle_request {{request_context ""}} {
                  status [response status] \
                  status_line [response status_line] \
                  headers [response headers] \
+                 encoding iso8859-1 \
                  content_type [response content_type] \
                  content [response content]]
         env destroy

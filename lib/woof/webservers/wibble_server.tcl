@@ -58,7 +58,7 @@ proc ::woof::webservers::wibble::init {args} {
             dict set env QUERY_STRING [string range [dict get $req rawquery] 1 end]
 	    dict set env SCRIPT_NAME [dict get $req prefix]
             set suffix [dict get $req suffix]
-	    dict set env PATH_INFO $suffix
+	    dict set env PATH_INFO /[string trimleft $suffix /]
 	    dict set env PATH_TRANSLATED [file join [dict get $req fspath] $suffix]
 	    dict set env REMOTE_ADDR [dict get $req peerhost]
             dict set env REMOTE_PORT [dict get $req peerport]
