@@ -2,9 +2,9 @@
 Fibonacci number sequence and a help page.</p>
 
 <p>Although we could create all the required files manually, we'll
-save a bit of work by using the Woof! application generator, 
+save a bit of work by using the Woof! application generator
 [my _chapter_link wag wag]. If you are
-  using <code>bowwow.exe</code>,</p>
+  using <code>bowwow.exe</code>, this is built into the program:</p>
 
 [my _code_sample {
 C:\fibo> bowwow url fibonacci/generate fibonacci/help
@@ -18,8 +18,8 @@ Controller FibonacciController:
 Do you want to continue? [YN] y
 }]
 
-<p>If you are not using <code>bowwow.exe</code>, the equivalent command would
-be</p>
+<p>If you are not using <code>bowwow.exe</code>, <code>wag</code> has
+to be invoked as a script:</p>
 
 [my _code_sample {
 ~/fibo> tclsh scripts/wag.tcl url fibonacci/generate fibonacci/help

@@ -10,7 +10,7 @@
   <li>On all platforms, you can 
     [my _chapter_link installation "download and extract"] a Woof!
     distribution and run the
-    [my _chapter_link bowwow "<code>bowwow</code> script"]. A Tcl 8.6 shell
+    [my _chapter_link bowwow_script "<code>bowwow</code> script"]. A Tcl 8.6 shell
     must have been previously installed on your system. This script
     runs a simple web server, [my _chapter_link bowwow_script "BowWow"],
     that can be used for trying out Woof!.
