@@ -54,13 +54,24 @@ little larger and we had generated more than two
 stubs. The <span class='wf_code'>verify</span> command helps us locate stubs
 that are still to be implemented.</p>
 [my _code_sample { 
-C:\bowwow> bowwow verify fibonacci 
+C:\fibo> bowwow verify fibonacci 
 FibonacciController: 
     Action method stubs: 
         generate
     View stubs
         app/controllers/views/fibonacci-generate-main.wtf
 }]
+<p>or</p>
+[my _code_sample { 
+~/fibo> tclsh scripts/wag.tcl verify fibonacci 
+FibonacciController: 
+    Action method stubs: 
+        generate
+    View stubs
+        app/controllers/views/fibonacci-generate-main.wtf
+}]
+
+
 <p>As we can see, the method <span class='wf_code'>generate</span> and the
 corresponding view have still to be implemented. We will now go ahead
 and do just that.</p>

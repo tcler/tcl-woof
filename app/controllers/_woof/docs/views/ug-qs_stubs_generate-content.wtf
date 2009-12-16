@@ -4,10 +4,10 @@ Fibonacci number sequence and a help page.</p>
 <p>Although we could create all the required files manually, we'll
 save a bit of work by using the Woof! application generator, 
 [my _chapter_link wag wag]. If you are
-using BowWow,</p>
+  using <code>bowwow.exe</code>,</p>
 
 [my _code_sample {
-C:\bowwow> bowwow url fibonacci/generate fibonacci/help
+C:\fibo> bowwow url fibonacci/generate fibonacci/help
 Controller FibonacciController:
          File app/controllers/fibonacci_controller.tcl will be created.
          Class FibonacciController will be created.
@@ -18,11 +18,11 @@ Controller FibonacciController:
 Do you want to continue? [YN] y
 }]
 
-<p>Using Woof! with other web servers, the equivalent command would
+<p>If you are not using <code>bowwow.exe</code>, the equivalent command would
 be</p>
 
 [my _code_sample {
-C:\bowwow> tclsh scripts/wag.tcl url fibonacci/generate fibonacci/help
+~/fibo> tclsh scripts/wag.tcl url fibonacci/generate fibonacci/help
 }]
 
 <p>

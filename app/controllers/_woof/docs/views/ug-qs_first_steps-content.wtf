@@ -9,13 +9,20 @@
       different web server with no changes.</strong></li>
   <li>On all platforms, you can 
     [my _chapter_link installation "download and extract"] a Woof!
-    distribution. You can run the
-    [my _chapter_link bowwow "<code>bowwow</code> script"] using a Tcl 8.6 shell which
-    must have been previously installed on your system.</li>
+    distribution and run the
+    [my _chapter_link bowwow "<code>bowwow</code> script"]. A Tcl 8.6 shell
+    must have been previously installed on your system. This script
+    runs a simple web server, [my _chapter_link bowwow_script "BowWow"],
+    that can be used for trying out Woof!.
+    Note that there
+    is no need to run the [my _chapter_link installation installer] script
+    to use the <code>bowwow.tcl</code> script.
+  </li>
   <li>A third alternative is to install a suitable web server, Tcl 8.6
     and Woof! as described in 
     the [my _chapter_link "installation"] chapter. This provides a production
-    environment but entails a few more steps for installation.
+    environment but entails a few more steps for installation including
+    running the [my _chapter_link installation installer] script.
   </li>
 </ul>
 
@@ -33,21 +40,22 @@ entirely self-contained, it is used to invoke various commands. For
 example,</p>
 
 [my _code_sample {
-c:\woof> bowwow url fibonacci/generate fibonacci/help
+c:\fibo> bowwow url fibonacci/generate fibonacci/help
 }]
 
 <p>On the other hand, for the other configurations,
-  <em>including use of the</em>
-  <code>bowwow</code> <em>script</em>, the Tcl shell program
+  <strong>including use of the</strong>
+  <code>bowwow</code> <strong>script</strong>, the Tcl shell program
   has to be run for the same purpose, with an appropriate script.
   For example,</p>
 
 [my _code_sample {
-~/woof> tclsh scripts/wag.tcl url fibonacci/generate fibonacci/help
+~/fibo> tclsh scripts/wag.tcl url fibonacci/generate fibonacci/help
 }]
 
 <p>Here it is assumed the command is run from the Woof! root
-  directory. Both forms of the commands are shown in this guide.</p>
+  directory <span class='wf_filename'>~/fibo</span>.
+  Both forms of the commands are shown in this guide.</p>
 
 <p>The URL's used in the examples assume you are running the web server on
 port 8015 (which is the default BowWow port) and the Woof! application
