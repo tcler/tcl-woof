@@ -1,76 +1,20 @@
-<p>BowWow is a single file executable for Windows that contains everything
-you need to try Woof! or to use as a development web server. It includes
-a very basic web server, based on
-<a href="http://wiki.tcl.tk/23626">Wibble</a>, Tcl interpreter
-and libraries, and Woof! itself.
-</p>
+<p>Woof! includes a simple web server BowWow, 
+  based on <a href="http://wiki.tcl.tk/23626">Wibble</a>,
+  that can be used as a
+  lightweight development web server or to quickly try out Woof! without
+  installing a separate web server.</p>
 
-<h3>Running BowWow</h3>
+<p>BowWow comes in two forms:</p>
+<ul>
+  <li>As a standalone Windows executable,
+    <span class='wf_filename'>bowwow-<em>VERSION</em>.exe</span>
+    which is entirely
+    self-contained and has no other software dependencies. It includes
+    the web server, Woof!, associated libraries and a Tcl
+    interpreter. Just download and run.</li>
+  <li>A script, <span class='wf_filename'>bowwow.tcl</span> located in the
+    <span class='wf_filename'>scripts</span> directory in the standard
+    distribution. This can be run by invoking it with a Tcl shell.
+    </ul>
 
-<p>To run BowWow, simply type its name on the command line. Or as seen
-in the screenshot below, type <code>start bowwow</code> to start it in
-a separate console window.</p>
-[my _code_sample {
-C:\bowwow>ls
-bowwow.exe
-
-C:\bowwow>start bowwow.exe
-
-C:\bowwow>ls
-app  bowwow.exe  config  public  temp
-
-C:\bowwow>
-}]
-
-<p>As seen in the directory listing above, several new directories
-appear after BowWow is
-started. The <span class="wf_filename">app</span> directory will
-contain your application code and
-templates. The <span class="wf_filename">config</span> directory
-will contain configuration settings for the installation. The public
-directory contains files such as stylesheets and
-images. The <span class="wf_filename">temp </span>directory is the
-default location for log files, session state, and other miscelleneous
-files. Note that other directories described in 
-[my _chapter_link directory_structure] are missing as their content is
-contained within the executable itself.</p>
-
-<p>The above commands will start up BowWow in a separate console
-window as shown below.</p>
-
-[my _code_sample {
-BowWow 0.1
-Server started on port 8015
-Enter Ctrl-C to exit...
-}]
-
-<p>The window shows the BowWow V0.1 server running on port 8015, which
-is the BowWow default. You can run the server on a different port by
-specifying the <code>-port <em>PORTNUMBER</em></code> command line
-option when starting the server. After starting BowWow, browsing to
-URL <span class='wf_filename'>http://localhost:8015</span>
-should bring up the web page below.</p>
-
-<p class="wf_center">
-[my include_image bowwow_welcome.png alt "BowWow Welcome Page"]
-</p>
-
-
-<h3>Built-in utilities</h3>
-<p>The <span class="wf_code">bowwow.exe</span> executable includes
-commands for invoking the
-[my _chapter_link wag "application generation"] tools. Instead of
-invoking the <span class="wf_code">wag</span> script however, the
-commands should be directly invoked through
-  <span class="wf_code">bowwow</span>.</p>
-
-[my _code_sample {
-C:\bowwow&gt;   bowwow url ?-excludeviews <em>BOOLEAN</em>? ?list of urls?
-C:\bowwow&gt;   bowwow verify
-} false]
-
-<p>Refer to the [my _chapter_link wag] chapter for details of these commands.</p>
-
-<p>More examples of using BowWow can be found in the 
-  [my _chapter_link quick_start] chapter.</p>
-
+<p>The next two sections describe the use of each of these.</p>

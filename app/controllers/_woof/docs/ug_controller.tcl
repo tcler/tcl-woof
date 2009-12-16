@@ -108,6 +108,8 @@ oo::class create UgController {
             {generating_stubs "Generating controller stubs" 2}
             {verifying_stubs "Verifying controller stubs" 2}
             {bowwow "bowwow - a Lightweight Web Server" 1}
+            {bowwow_exe "bowwow.exe standalone executable" 2}
+            {bowwow_script "bowwow.tcl script" 2}
             {console "console - Interactive Console" 1}
             {ruffian "ruffian - Documentation Generator" 1}
             {scgi_winservice "scgi_winservice - Woof! Windows Service" 1}

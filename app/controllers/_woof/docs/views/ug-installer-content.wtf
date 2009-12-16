@@ -31,9 +31,14 @@ tclsh scripts/installer.tcl distribute TARGETDIR ?options?
   exists. Specify the option <span class="wf_code">-force true</span>
   to overwrite existing directories.
 
+<p>By default, the distribution is built from the working directory. To 
+create a distribution from the contents of the source repository, specify
+  the option <code>-fromscm true</code>.
+
 <p>Note that this command makes use of several external programs to
   build the archives. These must be present in the path.</p>
 
+<em>Building a distribution can currently be done only on Windows.</em>
 
 <h3>Installing a distribution</h3>
 

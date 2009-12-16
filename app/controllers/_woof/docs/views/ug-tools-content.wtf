@@ -1,2 +1,21 @@
 <p>Woof! provides several tools and utilities that aid in the
   development process. This chapter describes these tools.</p>
+
+<p>These tools are generally implemented as Tcl scripts in the 
+  <span class='wf_filename'>scripts</span> subdirectory and are invoked as</p>
+
+[my _code_sample {
+~/woof> tclsh scripts/<em>SCRIPTFILE arguments</em>
+} false]
+
+<p>If on Unix/Linux, you may also directly invoke the script
+itself</p>
+
+[my _code_sample {
+~/woof> scripts/<em>SCRIPTFILE arguments</em>
+} false]
+
+<p>For this latter to work, the 
+  [my _chapter_link installer "installer"] <code>install</code> command in the 
+  Woof! distribution must have first been run as that adds appropriate
+  shebang lines to the script files to invoke the correct Tcl interpreter.</p>
