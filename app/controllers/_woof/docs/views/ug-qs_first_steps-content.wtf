@@ -1,8 +1,8 @@
 <p>To follow along, you need to first do one of the following</p>
 <ul>
-  <li>If you are on Windows, you can simply
-    [my _chapter_link install_under_bowwow "download and run"]
-    the self-contained BowWow executable. No other software (web server,
+  <li>If you are on Windows, you can simply download and run the
+    self-contained [my _chapter_link bowwow_exe "BowWow executable"].
+    No other software (web server,
     a Tcl installation etc.) is needed.
     <strong>This is the quickest way to try
       out Woof! and the application can be easily moved later to a

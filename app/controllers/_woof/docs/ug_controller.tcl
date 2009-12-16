@@ -30,7 +30,6 @@ oo::class create UgController {
             {qs_default_page "Configuring the Default Page" 1}
             {qs_finish "Finishing Up" 1}
             {installation "Installation"}
-            {install_under_bowwow "Woof! under BowWow" 1}
             {install_under_apache "Woof! under Apache 2" 1}
             {apache_cgi_dedicated "Dedicated CGI on Apache" 2}
             {apache_cgi_shared "Shared CGI on Apache" 2}
