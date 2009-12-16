@@ -473,7 +473,7 @@ proc wag::verify {{urls {}} args} {
         }
     } else {
         foreach url $urls {
-            set curl [::woof::url_crack /[string trimleft $url /]
+            set curl [::woof::url_crack /[string trimleft $url /]]
             set file [file join [dict get $curl controller_dir] [dict get $curl controller_file]]
             lappend targets [list $file [dict get $curl controller_class] [dict get $curl controller]]
         }
