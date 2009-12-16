@@ -44,6 +44,7 @@ oo::class create FileCache {
         # -jails DIRLIST - list of directory paths. If specified and not empty,
         #  only files under one of these paths can be accessed through the 
         #  cache.
+        set _jails {}
         if {[dict exists $args -jails]} {
             foreach dir [dict get $args -jails] {
                 # TBD - should we use fileutil::fullnormalize instead
@@ -250,6 +251,7 @@ oo::class create FileCache {
             if {[info exists opts(-contentvar)]} {
                 return false
             } else {
+                my log "File $path not found in any location under jails [join $_jails ,]"
                 ::woof::errors::exception WOOF MissingFile "File $path could not be read."
             }
         }
@@ -265,7 +267,8 @@ oo::class create FileCache {
 
     method _jailed {path} {
 
-        if {![info exists _jails]} {
+        if {[llength $_jails] == 0} {
+            # No jails defined
             return true
         }
 
@@ -276,5 +279,15 @@ oo::class create FileCache {
         }
 
         return false
+    }
+
+    method log {msg} {
+        # Called to log messages.
+        # msg - Message to be logged
+        # This method is called from other methods to log error conditions
+        # and access failures. The method itself does not do any logging
+        # and discards the message. If desired, an application should
+        # override the method through derivation, a mix-in, or object-level
+        # method redefinition.
     }
 }

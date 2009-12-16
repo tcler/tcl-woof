@@ -398,7 +398,7 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     #  This is in addition to the files in the public and app directories.
     set jails [list [config get public_dir] \
                    [config get app_dir] \
-                   lib
+                   [file join $_woof_root lib] \
                    {*}[config get lib_dirs]]
 
     if {[dict exists $args -jails]} {
@@ -412,6 +412,8 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     FileCache create filecache \
         -relativeroot [config get public_dir] \
         -jails $jails
+    # Note the filecache log method will be redefined below once the webserver
+    # is initialized to log to the webserver log
 
     # Create the safe web interpreter that will be used to
     # to service client requests.
@@ -448,6 +450,13 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     # available from all other components.
     Log create log [config get app_name] ::woof::webserver
     log setlevel [config get log_level info]
+
+    # Have the file cache log errors to the master log. We have it log
+    # at info level because at err level there might be too many errors
+    # logged when it searches for files.
+    oo::objdefine filecache {
+        method log {msg} { ::woof::master::log err $msg }
+    }
 
     # TBD - do we need to restrict access to ::woof::log methods
     # for security reasons ?

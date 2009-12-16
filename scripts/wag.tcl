@@ -279,7 +279,7 @@ proc wag::generate {urls args} {
 
     set cracked_urls {}
     foreach url $urls {
-        lappend cracked_urls [::woof::url_crack $url]
+        lappend cracked_urls [::woof::url_crack /[string trimleft $url /]]
     }
 
     # Arrange URLs by controller
@@ -473,7 +473,7 @@ proc wag::verify {{urls {}} args} {
         }
     } else {
         foreach url $urls {
-            set curl [::woof::url_crack $url]
+            set curl [::woof::url_crack /[string trimleft $url /]
             set file [file join [dict get $curl controller_dir] [dict get $curl controller_file]]
             lappend targets [list $file [dict get $curl controller_class] [dict get $curl controller]]
         }
@@ -510,6 +510,15 @@ proc wag::verify {{urls {}} args} {
     return
 }
 
+proc wag::init_routes {} {
+    namespace eval ::woof {
+        variable _routes
+        if {![info exists _routes] || [config get reload_scripts]} {
+            set _routes [read_routes]
+        }
+    }
+}
+
 proc wag::main {command args} {
     # Generates and manages stubs for Woof components.
     # command - one of 'controller', 'url', 'verify'
@@ -540,6 +549,7 @@ proc wag::main {command args} {
     }
     array set opts [::cmdline::getKnownOptions args $optdefs "Usage: [info nameofexecutable] stubs \[controller|url|verify] ?OPTIONS? ?ARG1 ARG2 ...?"]
 
+    init_routes;                # TBD - is this where we should init routes?
     switch -exact -- $command {
         controller {
             set actions [lassign $args controller]
