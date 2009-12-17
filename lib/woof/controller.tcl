@@ -427,7 +427,7 @@ oo::class create Controller {
         } else {
             # Note url_build includes the query parameters passed through
             # the modifiers
-            set url "[::woof::url_build $_dispatchinfo {*}$modifiers]$anchor"
+            set url "[::woof::url_build $_dispatchinfo -fullyqualify $fullyqualify {*}$modifiers]$anchor"
         }
 
         if {! $fullyqualify} {

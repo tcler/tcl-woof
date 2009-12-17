@@ -11,6 +11,7 @@ we want is the following Web page:</p>
 sequence desired. To implement this, we first modify the page template in
 <span class="wf_filename">app/controllers/views/fibonacci-generate-main.wtf </span>as below:</p>
 [my _code_sample {
+    % my variable seq
     <p>
     The first [llength $seq] numbers in the 
     Fibonacci sequence are shown below:</p>
@@ -21,7 +22,7 @@ sequence desired. To implement this, we first modify the page template in
         <tr style='background-color: [expr {$index & 1 ? "#cccccc" : "white"}];'>
           <td>[incr index]</td><td>$number</td>
         </tr>
-        % }
+    % }
     </table>
     <p><a href='[request url]'>More</a>
     <hr>

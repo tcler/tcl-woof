@@ -34,7 +34,10 @@ that are replaced with the corresponding values by the Tcl
 <ul>
   <li>The reference to the <span class='wf_code'>seq</span> member
     variable which is brought into the scope of the template through
-    the <code>my variable</code> declaration.</li>
+    the <code>my variable</code> declaration. <strong>This is required
+      for accessing any variables in the controller object from the template
+      file.</strong>
+  </li>
   <li>The call to the <span class='wf_code'>url</span> method of the
     <span class='wf_code'>request</span> object. which returns the current
     URL. The <span class='wf_code'>request</span> object encapsulates the 
