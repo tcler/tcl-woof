@@ -81,7 +81,7 @@ oo::class create Session {
             my set {*}[::woof::session_manager fetch $id]
             my clean;       # Mark as unmodified
         } on error msg {
-            ::woof::log error "Session data for session $id is unreadable or corrupt. $msg"
+            ::woof::log err "Session data for session $id is unreadable or corrupt. $msg"
             ::woof::errors::exception WOOF CorruptOrMissingData "Session $id has corrupt or missing data. $msg"
         }
     }
