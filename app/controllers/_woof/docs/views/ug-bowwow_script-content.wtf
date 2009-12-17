@@ -1,0 +1,41 @@
+<p>After extracting the Woof! distribution, the BowWow server,
+  can be invoked through the Tcl interpreter program.
+  Note that to run the BowWow server it is not necessary to
+  [my _chapter_link installation install] the distribution first.</p>
+
+[my _code_sample {
+~/woof> tclsh scripts/bowwow.tcl
+}]
+
+<p>The above commands will start up BowWow in a separate console
+window as shown below.</p>
+
+[my _code_sample {
+BowWow 0.4
+Server started on port 8015
+Enter Ctrl-C to exit...
+}]
+
+<p>The output shows the BowWow server running on port 8015, which
+is the BowWow default. You can run the server on a different port by
+specifying the <code>-port <em>PORTNUMBER</em></code> command line
+option when starting the server. After starting BowWow, browsing to
+URL <span class='wf_filename'>http://localhost:8015</span>
+should bring up the web page below.</p>
+
+<p class="wf_center">
+[my include_image bowwow_welcome.png alt "BowWow Welcome Page"]
+</p>
+
+<p>you can change the URL at which the application is rooted by
+  specifying the option <code>-urlroot <em>URLROOT</em></code>. By default
+  the application URL is at <span class='wf_filename'>/</span>.</p>
+
+<p>Note that unlike the
+[my _chapter_link bowwow_exe "standalone BowWow server"],
+the script based version does not have any built-in utility commands.
+Instead the standard Woof! utilities like
+[my _chapter_link wag "application generation"] tools have to be
+  invoked using the Tcl interpreter.</p>
+
+

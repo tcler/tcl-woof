@@ -1,0 +1,37 @@
+<p>Linking to stylesheets is done through the 
+[my _manpage_link ::woof::Controller::include_stylesheet] controller
+  method. This method generates <code>[hesc <link>]</code>
+  tags based on either URL's or
+  file names. For example, within a template, the following will
+  generate a <code>[hesc <link>]</code> tag:</p>
+[my _code_sample {
+[my include_stylesheet http://yui.yahooapis.com/2.8.0r4/build/reset/reset-min.css]
+}]
+
+<p>As will this:</p>
+[my _code_sample {
+[my include_stylesheet relative/local/url.css]
+}]
+
+<p>Or this:</p>
+[my _code_sample {
+[my include_image mystyle.css]
+}]
+
+<p>These examples show the various targets for the links.</p>
+<ul>
+  <li>An absolute URL, as in the first example,</li>
+  <li>A relative URL, which is treated as the file path under the
+    <span class='wf_filename'>public/stylesheets</span> subdirectory.</li>
+  <li>A file name, which will be located as described in the
+    [my _chapter_link locating_resources] chapter with
+    <span class='wf_filename'>public/stylesheets</span> as the
+    search root.</li>
+</ul>
+
+<h3>Stylesheets in the default layout</h3>
+<p>The default layout will
+  automatically include links to stylesheets if the
+  [my _chapter_link pagevar_object pagevar] object contains the element
+  <code>stylesheets</code>. See the
+  [my _chapter_link default_page_layout] chapter for more details.

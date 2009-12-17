@@ -1,0 +1,63 @@
+<p>Like most other frameworks, Woof! separates program logic from the
+presentation by using <em>templates</em> to implement the latter. A
+template in Woof! is a combination of HTML text markup with Tcl code
+as the simple example below shows.</p>
+
+[my _code_sample {
+<p>The current time is [clock format [clock seconds] -format %T].</p>
+}]
+
+<p>In the above example, the template processor will replace the Tcl
+code in brackets with its result, thereby generating a HTML fragment
+displaying the current time in a paragraph.</p>
+
+<h3>Locating page templates</h3>
+
+<p>When the fetch method of the page object is called to retrieve a
+page section that has not already been stored in the object, it
+searches the file system for a suitable template from which the
+requested page section can be generated.</p>
+
+<p>The algorithm of locating a layout for a page is the same as
+that used for page sections and is detailed in
+[my _chapter_link locating_templates].
+The method described there allows flexible
+sharing of page sections within, and between, controllers and
+controller trees while simultaneously allowing specialization for
+specific controllers or even actions within a controller.</p>
+
+<h3>Nesting page sections</h3>
+
+<p>Page section templates may themselves contain page section
+  templates, just like layouts. For example, this user guide actually
+  uses the default Woof! layout which references <code>main</code>
+  page section. Instead of having a separate <code>main</code>
+  section for each chapter (action), the user guide has only one
+  template <span class="wf_filename">ug-main.wtf</span>. This sets up
+  the previous and next chapter links and then includes the
+  statement</p>
+
+[my _code_sample {
+ % if {![page fetch content content]} {
+     set content "<p>This section is still to be written.</p>"
+ % }
+ $content
+}]
+
+<p>Woof! will then 
+  [my _chapter_link locating_templates "locate"]
+  a page section named <code>content</code>
+  and insert it.</p>
+
+
+<h3>Page template processing</h3>
+<p>The syntax used in the template depends on the template
+processor. Currently, Woof! only supports the syntax defined
+in [my _chapter_link wtf].</p>
+
+<p>The processing of the template is done in the context of the
+[my _chapter_link controller_object "<span class='wf_code'>controller</span>"]
+object. The Tcl code in the template can therefore invoke any method of the
+controller or access any object instance variable using the standard
+Tcl syntax.</p>
+

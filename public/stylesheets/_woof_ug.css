@@ -1,0 +1,42 @@
+/* Woof User Guide CSS - assumes _woof.css loaded */
+
+#bd .yui-g h2 {
+  border-bottom: thin solid #cccccc;
+}
+
+
+.wf_console_session {
+   margin: 10px 30px;
+   font-size: 85%;
+   font-family: "Courier New", Courier, monospace;
+   background-color: #cccccc;
+   padding: 2px;
+   line-height: 1.2em;
+}
+
+.wf_filename {
+   font-size: 93%;
+   font-family: "Courier New", Courier, monospace;
+}
+
+.wf_demotext {
+   font-size: 93%;
+   font-family: "Courier New", Courier, monospace;
+}
+
+.wf_center {
+   text-align: center;
+}
+
+code, .wf_code {
+   font-family: "Courier New", Courier, monospace;
+   font-size: 93%;
+}
+
+h4 .wf_code {
+   font-size: 100%;
+}
+
+ul.wf_nobullets li {
+  list-style-type: none;
+}

@@ -1,0 +1,43 @@
+<p>Any Web application uses static resources such as stylesheets or
+  images that are linked from the application's Web pages. For
+  performance reasons, it is best that these are directly served by
+  the hosting web server without going through Woof!. By convention
+  (actually default configuration), such resources are expected to
+  reside in the <span class='wf_filename'>public</span> subdirectory
+  under the Woof! root. As described in the 
+  [my _chapter_link installation] chapter, the web server is configured
+  so that files under this directory can be directly served to the
+  client.</p>
+
+<p>Although Woof! plays no part in serving static resources, it still
+  needs to be able to correctly generate links to these resources. A
+  page could hard code the link to the resource but if the resource is
+  a local file, a better way is to
+  use the Woof! controller methods such as 
+  [my _chapter_link using_stylesheets "<code>include_stylesheet</code>"]
+  which can locate a static resource based on the controller.
+  The advantage is not just that the resource can be moved without
+  having to change all the hardcoded links but also that sharing and
+  specialization of resources becomes easier.</p>
+  
+<p>As an example, suppose you have a website displaying company
+  information and you have structured the different areas of the
+  website into different modules such as product information, customer
+  support, investor relations and so on. The layout is identical in
+  all cases (header, footer, main content etc.) except that the image
+  in the header depends on the section of the web site.</p>
+
+<p>In this scenario, if you hard code the links to the images, you
+  would need to create separate headers for each area (module) of the
+  web site, increasing maintenance work whenever changes are
+  needed. Instead, you could have a single header with the line</p>
+
+[my _code_sample {
+  [my include_image section_logo.png alt "section logo"]
+}]
+
+<p>Woof! will then generate a link pointing to the appropriate image for
+  that area of the web site. How this is accomplished is described in
+  the next section.</p>
+
+

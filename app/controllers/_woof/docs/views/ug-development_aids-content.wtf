@@ -1,0 +1,58 @@
+<p>Woof! provides several facilities that streamline the development
+of Web applications.</p>
+
+<h3>The console server</h3>
+<p>One of the biggest advantages of scripting languages like Tcl is
+that they provide interactive programming capabilities that greatly
+reduce the development cycles. Woof! includes a Tcl command line
+environment that emulates a web server and allows issuing commands
+corresponding to HTTP requests such as <code>GET</code>
+and <code>POST</code>. Requests can be issued and responses examined
+interactively. Any procedure or method can be invoked and debugged on
+the fly. These facilities are implemented in
+the [my _chapter_link console "console server"].</p>
+
+<h3>Application generator</h3>
+<p>Woof! application code is generally very stylized with boilerplate
+code. In order to reduce repetitive typing, Woof! provides a means for
+scaffolding - automatic generation of the controller and view
+template boilerplate text corresponding to URL's through
+the [my _chapter_link wag "wag"] <code>stubs</code>
+command.</p>
+
+<h3>Run modes</h3>
+<p>Some Woof! behaviours depend on whether the system is running in a
+production environment or development. For example, the amount of
+error detail shown in a HTTP response in a production environment
+should be controlled for security reasons. Similarly, when doing
+development, caching of scripts for performance reasons should be
+disabled so that any script modifications are immediately picked
+up. Although these behaviours can be individually controlled, a single
+setting - <code>run_mode</code> - sets up sensible defaults depending
+on its value,
+either <code>development </code>or <code>production</code>. Woof! is
+distributed with the value set to <code>development</code>. To switch
+to production mode add the following line:</p>
+[my _code_sample {
+set run_mode production
+}]
+
+<p>to your <a href="configuration">application.cfg</a> configuration
+file.</p>
+
+<h3>Documentation generation</h3>
+<p>Woof! includes 
+<a href="http://woof.magicsplat.com/ruff_home">Ruff!</a>, a documentation
+generation system, and [my _chapter_link ruffian "ruffian"], a script
+specific to Woof! for generating program reference documentation from
+comments. The Woof! documentation is itself generated using this
+system and can optionally include application program documentation as
+well.
+
+<h3>The BowWow development server</h3>
+<p>To facilitate development without having having to install a
+heavy-weight Web server, Woof! includes a basic Web server -
+[my _chapter_link bowwow "BowWow"] -
+that can be used to develop applications
+which can be re-deployed <em>with no changes</em>, to run under
+production Web servers like Apache.</p>

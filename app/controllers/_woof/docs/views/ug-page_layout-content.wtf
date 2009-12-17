@@ -1,0 +1,117 @@
+<p>A layout defines the HTML&nbsp;page head and body sections and then
+positions the various page sections within the body.</p>
+
+<p>The following is a simple example of a layout:</p>
+
+[my _code_sample {
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+  <html>
+    <head>
+      <title>Example Layout</title>
+    </head>
+    <body>
+  % if {[page fetch header content]} {
+       $content
+       <hr/>
+  % }
+  % if {[page fetch main content]} {
+       $content
+  % }
+  % if {[page exists footer content]} {
+       <hr/>
+       $content
+  % }
+    </body>
+  </html>
+}]
+
+<p>The above layout is defined in [my _chapter_link wtf] (WTF) format
+containing a mixture of Tcl code and HTML 
+markup. It starts with defining the standard HTML page headers. Within the body
+element, the layout defines three sections - the header, the main
+content and the footer. The contents of each section, if defined, are
+expected to be in the <span class='wf_code'>page</span> object. Note
+that the layout makes use of conditional Tcl statements to insert each
+section only if it exists. The <span class='wf_code'>fetch</span>
+method returns true if the page section exists and stores it in the
+variable <span class='wf_code'>content</span>.
+The [my _chapter_link page_object "<span class='wf_code'>page</span>"]
+object, from which the HTML content is retrieved, is constructed when
+building page sections.
+
+<h3>Defining page sections in layouts</h3>
+
+<p>In the above layout, only three sections are referenced. However,
+Woof! itself does not impose any restrictions on the number and names
+of the sections, or how they are positioned. The page object will
+attempt to retrieve the content of each section based on the
+controller and action specified in the client request and the name of
+the section. The corresponding section content is either 
+[my _chapter_link page_section_direct "directly stored"]
+by the action method or 
+[my _chapter_link page_section_templates "generated from a template"].
+It is up
+to the application writer to ensure the appropriate named sections can
+be generated.</p>
+
+<h3>Processing layout templates</h3>
+
+<p>A layout template is processed like any
+other [my _chapter_link wtf "WTF"] file. What
+makes it different is really only the intended usage. By convention,
+the layout template is primarily be concerned with positioning of
+major HTML areas and providing standard headers. It then makes use of
+the <span class='wf_code'>page</span> object
+to retrieve the various page sections that contain the actual data,
+both static and dynamically retrieved from a controller.</p>
+
+<p>However, <em>there is nothing that prevents a layout from containing
+pure static HTML content, or directly accessing a controller's dynamic
+content</em>. It does not have to use the <span class="wf_code">page</span>
+object. Nor does it does not have to be implemented in terms of page
+sections at all. However, as we will see, using page sections offers
+great flexibility and reuse and Woof! rendering system provides specific
+features to support that model.
+Moving away from this might be occasionally
+useful when a particular page does not follow a site's standard layout
+and is simple enough that adding separate layout and page section
+templates is not worthwhile.</p>
+
+<h3>Locating layout templates</h3>
+
+<p>An application's web pages may not all be layed out the same way.
+Woof! allows for this by using a search path to locate the layout to
+use for a particular controller and action. This search path allows
+for both sharing as well as specialization of layouts.</p>
+
+<p>The algorithm of locating a layout for a page is the same as
+that used for page sections and is detailed in
+[my _chapter_link locating_templates].
+The method described there allows flexible
+sharing of common layouts within, and between, controllers and
+controller trees while simultaneously allowing special layouts for
+specific controllers or even actions within a controller.</p>
+
+<h3>Using layout overrides</h3>
+
+<p>There may be instances where you want to use a specific named
+layout and override the constructed layout file names described
+above. You can do this by setting the 
+[my _chapter_link pagevar pagevar] value 
+<span class='wf_code'>section_layout_alias</span> as follows:</p>
+
+[my _code_sample {
+  pagevar set section_layout_alias special_layout
+}]
+
+<p>Woof! will then use <span class='wf_filename'>special_layout.wtf</span>
+as the name of the layout file and look for it in the search path as described
+above.</p>
+
+<p>This kind of layout override may be done at any time before the page
+is rendered. If the above statement was executed within the constructor
+for the controller, <span class='wf_filename'>special_layout.wtf</span>
+would be used for all action methods in the controller (unless they in turn
+overrode it). If it was executed within an action method, only the layout
+for that action method would be overridden.
+

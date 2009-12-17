@@ -1,0 +1,174 @@
+<p>Implementing a controller involves writing the controller class and
+action methods corresponding to the URL's through which the client
+will access the application. Although these can be implemented
+manually, the stubs generator of
+[my _chapter_link wag "wag"] saves us a bit of typing.</p>
+
+[my _code_sample {
+> tclsh scripts/wag.tcl stubs url /math/index /math/add
+Controller MathController:
+         File app/controllers/math_controller.tcl will be created.
+         Class MathController will be created.
+         Methods to be added: index, add.
+         View stubs to be added:
+                app/controllers/views/math-index-main.wtf
+                app/controllers/views/math-add-main.wtf
+Do you want to continue? [YN] y
+Created file app/controllers/math_controller.tcl
+Created class MathController.
+Created action MathController.index.
+Created action MathController.add.
+Created view app/controllers/views/math-index-main.wtf.
+Created view app/controllers/views/math-add-main.wtf.
+}]
+
+<p>This will create the
+controller <span class='wf_code'>MathController</span> and its action
+methods <span class='wf_code'>add</span>
+and <span class='wf_code'>subtract</span> as well as corresponding
+views in the shown locations. Views are described in the
+[my _chapter_link page_generation] chapter; here we
+will only go into details about the controller.</p>
+
+<p>The controller file
+<span class="wf_filename">app/controllers/math_controller.tcl</span>
+contains the following content:</p>
+[my _code_sample {
+oo::class create MathController {
+    superclass ApplicationController
+    constructor args {
+        # Very important to pass arguments to parent
+        next {*}$args
+    }
+}
+
+oo::define MathController {
+    method index {} {
+        # Raise an exception that allows woofer to detect unimplemented actions
+        ::woof::errors::exception WOOF NotImplemented "Action index has no supporting implementation."
+    }
+    method add {} {
+        # Raise an exception that allows woofer to detect unimplemented actions
+        ::woof::errors::exception WOOF NotImplemented "Action add has no supporting implementation."
+    }
+}
+}]
+
+<p>As shown, the file contains stubs for the controller and its action
+method definitions. Naturally, all these stubs could be created
+manually as well. Using the script only saves a bit of typing.</p>
+
+<h3>Writing an action method</h3>
+
+<p>The index method is the default method callled when a request is
+made that does not contain an explicit action method name for the
+controller. In our case, the index method does not actually need to
+anything since all we want to return for that URL is a Web page
+where the user can enter the addends. That can be done within the view
+template itself, so the index method can be simply be empty.</p>
+
+[my _code_sample {
+method index {} {
+    # Nothing needs to be done here
+}
+}]
+
+<p>The corresponding view template
+<span class="wf_filename">app/controllers/views/math-index-main.wtf</span>
+displays a form into which the addends can be entered.</p>
+[my _code_sample {
+<form method='POST' action='[my url_for -action add]'>
+Enter the two numbers to be added:<br/>
+<input type='text' name='a'/> +
+<input type='text' name='b'/>
+<input type='submit' value='Calculate'/>
+</form>
+}]
+
+<p>This template is basically an HTML fragment that displays a
+form. Details of how this template is converted into a Web page are in
+the [my _chapter_link page_generation] chapter. Here the
+only thing to note is the value set for
+the <span class='wf_code'>action</span> attribute in
+the <span class='wf_code'>form</span> tag. The Tcl
+statement <span class='wf_code'>my url_for -action add</span>
+generates a URL that corresponds to
+the <span class='wf_code'>add</span> action of this controller. So
+when the form's submit button is clicked, the browser will submit a
+HTTP POST request to the URL corresponding to
+the <span class='wf_code'>add</span> action of
+the <span class='wf_code'>math</span> controller. It is generally
+advisable to use the url_for method wherever possible instead of
+hardcoding the link since it will generate the correct URL even when
+the top level domain or application root or even the controller name
+is modified.</p>
+
+<p>Browsing to the /math/index url will bring up the following page.</p>
+
+<p class="wf_center">
+[my include_image math_index.png alt "Math Index page"]
+</p>
+
+<p>Entering two numbers and clicking <strong>Calculate</strong> will
+send an HTTP POST request with the
+URL <span class="wf_filename">/math/add</span> which will be handled
+by the add method, the implementation of which is shown below.</p>
+
+[my _code_sample {
+method add {} {
+    pagevar set result [expr {[params get a] + [params :b]}]
+}
+}]
+
+<p>Parameters sent in a POST request or a query string in a GET
+request are accessible through the [my _chapter_link params_object "params"]
+object using the standard [my _manpage_link ::woof::util::Map]
+interface. The code above illustrates two methods of retrieving
+parameter values from the object - using an
+explicit <span class='wf_code'>get</span> method call, and retrieval
+using the parameter name prefixed with
+a <span class='wf_code'>:</span> character. By convention, values used
+by the display template are stored in a
+[my _manpage_link ::woof::util::Map]
+object, <span class='wf_code'>pagevar</span>, in the controller
+context. As we see below, this is not mandated.</p>
+
+<p>The corresponding template for displaying the result is</p>
+
+[my _code_sample {
+<p>[pagevar hget result]</p>
+<p><a href='[request referer]'>Back</a></p>
+}]
+
+<p>which displays the result page:</p>
+
+<p class="wf_center">
+[my include_image math_result.png alt "Math Result page"]
+</p>
+
+<p>There are some variations in how action methods can be written. The add method above could also have been written as follows:</p>
+
+[my _code_sample {
+method add {a b} {
+    my variable result
+    set result "The result of $a+$b is [expr {$a + $b}]."
+}
+}]
+
+<p>Here the parameters are directly defined as method parameters. In
+this case, Woof! will extract request parameters of the same name and
+pass them to the method. Picking one of the two styles is a matter of
+personal taste.</p>
+
+<p>The new method definition also uses an instance variable instead of
+the <span class='wf_code'>pagevar</span> object to pass data to the
+view template below.</p>
+
+[my _code_sample {
+  % my variable result
+  <p>$result</p>
+  <p><a href='[request referer]'>Back</a></p>
+}]
+
+<p>Again, this is a matter of personal choice but use of the pagevar
+object avoids cluttering the controller object namespace.</p>

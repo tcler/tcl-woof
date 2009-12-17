@@ -1,0 +1,77 @@
+<p>Let us start by implementing the
+simpler <span class="wf_filename">fibonacci/help</span> URL. This is
+intended to simply display some informational text so the method
+itself does not need to do any processing. We therefore edit the
+method definition to be a no-op.</p>
+
+[my _code_sample {
+    method help {} {
+        # Nothing to be done other than rendering the template.
+    }
+}]
+
+<p>The help text itself will go into the view template for the URL. As
+seen in the console output earlier, this file is <span
+class="wf_filename">app/controllers/views/fibonacci-help-main.wtf</span>. Open
+it in an editor and replace its content with the following text:</p>
+
+[my _code_sample {
+<p>
+  A Fibonacci sequence is a sequence of integers that
+  begins with the numbers 0 and 1 with subsequent numbers
+  being the sum of the two prior numbers.
+</p>
+}]
+
+<p>We would also like the title for our site to be set to reflect its purpose.
+  So we add a line to our controller class to set the page title.</p>
+
+[my _code_sample {
+    oo::class create FibonacciController {
+        superclass ApplicationController
+        constructor args {
+            # Very important to pass arguments to parent
+            next {*}$args
+            pagevar set title "Fibonacci Generator"
+        }
+    }
+}]
+
+<p>Now browsing to the URL
+<span class="wf_filename">http://localhost:8015/fibonacci/help</span>
+brings up the following page in the browser.</p>
+
+<p class="wf_center">[my include_image qs_help_plain.png alt "Quick Start Example Help page"]</p>
+
+<p>No big deal, that's not much different from a static HTML page
+except that it is a HTML fragment as opposed to a full HTML page. We
+will implement something a little more dynamic -
+the <span class="wf_filename">generate</span> page - in just a
+bit.</p>
+
+<p>Before we do that however, let us imagine our application was a
+little larger and we had generated more than two
+stubs. The <span class='wf_code'>verify</span> command helps us locate stubs
+that are still to be implemented.</p>
+[my _code_sample { 
+C:\fibo> bowwow verify fibonacci 
+FibonacciController: 
+    Action method stubs: 
+        generate
+    View stubs
+        app/controllers/views/fibonacci-generate-main.wtf
+}]
+<p>or</p>
+[my _code_sample { 
+~/fibo> tclsh scripts/wag.tcl verify fibonacci 
+FibonacciController: 
+    Action method stubs: 
+        generate
+    View stubs
+        app/controllers/views/fibonacci-generate-main.wtf
+}]
+
+
+<p>As we can see, the method <span class='wf_code'>generate</span> and the
+corresponding view have still to be implemented. We will now go ahead
+and do just that.</p>

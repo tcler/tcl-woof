@@ -1,0 +1,126 @@
+<p>Like the <a href="apache_scgi">SCGI</a> interface option,
+running Woof! as an Apache module has the benefit of greatly
+improved performance compared to CGI. Unlike SCGI, running as an
+Apache module entails running the Woof! Tcl interpreter within the
+Apache processes themselves as opposed to within a separate server
+process. Compared to CGI, responses are an order of magnitude or more
+faster as it avoids all the startup costs associated with the latter,
+such as process creation, interpreter initialization, loading of
+application code and re-establishing database connections.</p>
+
+<p>Running Woof! in this mode requires installation of
+the <a href="http://tcl.apache.org/websh">mod_websh</a> Apache module
+written by Ronnie Brunner. This is a part of the Websh application
+which like Woof! is also a server side web application development
+environment. However, for portability to other web servers, Woof! does
+not make use of any Websh features other than the Apache
+interface.</p>
+
+<p>Because it requires the installation of a non-standard Apache
+module, this method of running Woof! may not be possible with some
+service providers. It requires to have full control over your Apache
+configuration.</p>
+
+<h3>Assumptions</h3>
+<p>This scenario makes the following assumptions:</p>
+<ul>
+    <li>This is a dedicated server and you have full control over the Apache configuration files.</li>
+    <li>The server only hosts the Woof! application and nothing else.</li>
+    <li>The application is rooted at the top level, i.e. <span class="wf_filename">http://www.mysite.com</span> is the entry point into the application.</li>
+</ul>
+<h3>Step 1 - install mod_websh</h3>
+<p><strong><em>TBD - where to download mod_websh from.</em></strong>
+For Windows systems, you can download prebuilt binaries from
+the <a href="http://sourceforge.net/project/showfiles.php?group_id=250256">Woof!
+download page</a>.</p>
+<p>After building, the <span class="wf_filename">mod_websh.so</span>
+module and the associated
+DLL <span class="wf_filename">mod_websh<em>VERSION</em>.dll</span>
+should be copied to the
+Apache <span class="wf_filename">modules</span> directory. Then add
+the following line to the <span class="wf_filename">httpd.conf</span>
+to load the module.</p>
+[my _code_sample {
+LoadModule websh_module modules/mod_websh.so
+}]
+<h3>Step 2 - install Woof!</h3>
+<p>The next step is to install Woof! for Apache and SCGI using <a href="wag"><code>wag</code></a>.</p>
+[my _code_sample {
+~/woof-dist> tclsh scripts/wag.tcl install apache websh -installdir /var/myapp
+}]
+<p>This will create the Woof!
+<a href="directory_structure">directory structure</a> under 
+<span class="wf_filename">/var/myapp</span>. In
+particular, the <span class="wf_filename">/var/myapp/public</span>
+will contain the publically accessible directory tree that will be the
+document root for the dedicated web server. The
+file <span class="wf_filename">websh_server.tcl</span> will be loaded
+by the <code>mod_websh</code> module in Apache to create the Tcl
+interpreter for handling client requests. The other files in the
+directory, including subdirectories, are intended to be directly
+served by Apache without going through Woof! as detailed below.</p>
+<p>In addition, the
+directory <span class="wf_filename">config/websh</span> will also be
+created to contain <code>mod_websh</code> configuration. The files
+here need not be modified but are simply referenced from the Apache
+configuration files as shown in subsequent steps.</p>
+<h3>Step 3 - set the document root</h3>
+<p>Since this is the only application on the server, the document root
+for Apache must be changed to point to the Woof! public directory by
+editing the definition of <code>DocumentRoot</code>
+in <span class="wf_filename">httpd.conf</span>.</p>
+[my _code_sample {
+DocumentRoot /var/myapp/public</pre>
+}]
+<p>Note that the document root points to
+the <span class="wf_filename">public</span> subdirectory, <em>not</em>
+the Woof! root directory. By default, Apache will now look under
+the <span class="wf_filename">/var/myapp/public</span> directory to
+locate URL resources.</p>
+<h3>Step 4 - configure mod_websh</h3>
+<p>The main Apache configuration
+file <span class="wf_filename">httpd.conf</span> has to be edited to
+pass requests to the <code>mod_websh</code> module.</p>
+[my _code_sample {
+<Directory "/var/myapp/public">
+   AllowOverride All
+   Order allow,deny
+   Allow from all
+   AddHandler websh .tcl
+   RewriteEngine On
+   RewriteCond %{REQUEST_FILENAME} !-f
+   RewriteRule ^(.*)$ websh_server.tcl [QSA,L]
+</Directory>
+
+WebshConfig "/var/myapp/config/websh/websh.conf"
+}]
+<p>The <code>AddHandler</code> registers <code>mod_websh</code> as the
+handler for Tcl files; in particular, requests for
+the <span class="wf_filename">public/websh_server.tcl</span> file will
+be handled by it.</p>
+<p>The <code>Rewrite</code> directives are needed for the same reason
+they were required for CGI - we want all requests to be handled by the
+Woof! without having to specify the handler in the request
+URL. Without these directives, URL's of the
+form <span class="wf_filename">http://www.mysite.com/websh_server.tcl
+...</span> would have to be used to access the Woof!
+application. The <code>RewriteEngine</code> directive enables URL
+rewriting. The <code>RewriteRule</code> directive is what channels all
+URL's to our Woof! mod_websh module. However, we need to make one
+exception - images, stylesheets and other static files should be
+served without going through the additional Woof!
+overhead. The <code>RewriteCond</code> directive takes care of this
+situation. It stipulates that the following <code>RewriteRule</code>
+will only have effect if the requested file name does not exist. Thus
+requests for files within the <span class="wf_filename">public</span>
+directory tree will be served without Woof! being invoked. For other
+requests, the URL is rewritten as a request
+for <span class="wf_filename">websh_server.tcl</span> resulting
+in <code>mod_websh</code> handling the request. For more details on
+how rewriting works, refer to
+the <a href="http://httpd.apache.org/docs/2.2/rewrite/">Apache
+documentation</a>.</p>
+<h3>Completing the installation</h3>
+<p>That completes Apache configuration. You can now move on
+to [my _chapter_link install_final_steps "completing the installation"].</p>
+

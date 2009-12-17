@@ -1,0 +1,43 @@
+<p>There are some final steps to be done after installing Woof! and
+configuring the Web server as described in previous sections.</p>
+<h3>Verifying the installation</h3>
+<p>Once the installation steps specific to your configuration have
+been done, you can verify that the installation has been successful by
+browsing to the appropriate URL. For the BowWow server, the
+URL will
+be <span class="wf_filename">http://localhost:8015</span>; for other
+servers the URL will depend on how the server has been
+configured.</p>
+<p>A successful installation will bring up a page similar to the one
+below.</p>
+<p class="wf_center">
+[my include_image bowwow_welcome.png alt "Woof! welcome page"]</p>
+
+<h3>Additional steps before going live</h3>
+<p>There are some additional steps you need to take once you are ready to go live with your application.</p>
+
+<h4>Changing the default page</h4>
+<p>At some point you will want to change the default page from the one
+above to that of your own application. After you have created your
+application's default page, edit the Woof! application configuration
+file <span class="wf_filename">config/application.cfg</span> to set
+the default page and other application-specific data. For example,</p>
+[my _code_sample {
+set app_name          "My Application"
+set app_internal_name "myapp"
+set app_default_uri   "/main/welcome"
+}]
+<p>where the default page corresponds to
+the <code>welcome</code>
+[my _chapter_link controller_object "action method"] of the controller
+<code>main</code>. Refer to the comments in the
+configuration file for more details.</p>
+<h4>Switching to production mode</h4>
+<p>Before taking a site online, it should be
+[my _chapter_link development_aids "switched"] to <code>production</code>
+mode. Woof! is by default installed in <code>development</code> mode
+which streamlines development but is less secure and significantly
+slower. Again, this is done through the configuration file:</p>
+[my _code_sample {
+set run_mode production
+}]

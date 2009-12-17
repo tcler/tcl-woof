@@ -1,0 +1,102 @@
+<h3>Assumptions</h3>
+<p>This scenario makes the following assumptions:</p>
+<ul>
+    <li>The application is being served in a shared hosting
+    environment so we have no control over the main Apache
+    configuration files.</li>
+    <li>The hosting service provider has created a virtual server for
+    our domain <span class="wf_filename">www.mysite.com</span> and
+    has set the our site document root to point
+    to <span class="wf_filename">public_html</span> in our home
+    directory.</li>
+    <li>The service provider has enabled the Apache mod_rewrite and
+    mod_cgi modules (this is usually the case) and has also
+    enabled <span class="wf_filename">.htaccess</span> file support
+    for per-directory configuration.</li>
+    <li>The Woof! application is only one part of our own site with its root
+    URL <span class="wf_filename">http://www.mysite.com/myapp</span>.</li>
+</ul>
+<p>Again, we use the
+<a href="http://hoohoo.ncsa.illinois.edu/cgi/overview.html">Common
+Gateway Interface</a> (CGI) adapter. CGI has the advantage that most
+hosting service providers have already configured their servers for
+CGI access but not necessarily for any of the more efficient
+methods we describe in later sections.</p>
+<h3>Step 1 - install Woof!</h3>
+<p>The first step is to install Woof! for Apache and CGI
+using [my _chapter_link installer] as described in the
+[my _chapter_link apache_cgi_dedicated "previous section"].</p>
+[my _code_sample {
+~/woof-dist> tclsh scripts/installer.tcl install apache cgi -installdir ~/myappdir
+}]
+<p>See the [my _chapter_link apache_cgi_dedicated "previous section"]
+for details on what this command does. The only difference here is
+that the install target directory
+is <span class="wf_filename">myappdir</span> under your home
+directory.</p>
+<h3>Step 2 - Route requests for /myapp URL tree</h3>
+<p>The document root for our virtual server is set to point
+to <span class="wf_filename">~/public_html</span> so any requests
+to <span class="wf_filename">http://www.mysite.com </span>will be
+targeted to that directory. Since the root for the Woof! application
+will be <span class="wf_filename">http://www.mysite.com/myapp</span>
+we create a link as follows:</p>
+[my _code_sample {
+~/woof-dist> ln -s ~/myappdir/public ~/public_html/myapp
+}]
+<p>All requests to
+<span class="wf_filename">http://www.mysite.com/myapp</span> will now be
+routed to <span class="wf_filename">~/myappdir/public</span>. Note that the
+link was created to the public subdirectory of our Woof! installation,
+not to the Woof! root directory myappdir. This is because only the
+content under public should be exposed to the web server for security
+reasons. This is also the reason why we did not directly put the Woof!
+installation under the virtual server's document root.</p>
+<p>When the Woof! application is not rooted
+at <span class="wf_filename">/</span> we also need to tell Woof! the
+application root URI, <span class="wf_filename">/myapp</span> in our
+case. For this purpose, we add the line below to the Woof!
+application [my _chapter_link configuration "configuration file"], which in
+our example will reside
+at <span class="wf_filename">~/myappdir/config/application.cfg</span>.</p>
+[my _code_sample {
+set url_root /myapp
+}]
+<p>This will allow Woof! to correctly decode and generate URL's for
+the Woof! application.</p>
+<h3>Step 3 - configure CGI</h3>
+<p>The next step is to configure Apache to run our 
+<span class='wf_filename'>cgi_server.tcl</span>
+script whenever the client requests a URL under the application root
+URL. Because this is a shared host, the main Apache configuration file
+cannot be modified. Instead we have to modify
+the <span class="wf_filename">.htaccess</span> file
+in <span class="wf_filename">~/myappdir/public</span> directory (which
+is the document root for our virtual host). See
+the <a href="http://httpd.apache.org/docs/trunk/howto/htaccess.html">Apache
+documentation</a> for details about this file but in a nutshell, this
+file allows a subset of Apache directives to be applied to the
+directory where the file resides.</p>
+<p>The content of the .htaccess file are shown below.</p>
+[my _code_sample {
+AddHandler cgi-script .tcl
+Options +ExecCGI
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ cgi_server.tcl [QSA,L]
+
+# In case Woof! experiences terminal errors
+# Instead of displaying this message you can supply a file here which will be rendered instead
+# 
+# Example:
+#   ErrorDocument 500 /500.html
+ErrorDocument 500 "<h2>Application error</h2>Woof application failed to start properly"
+}]
+<p>The content above is very similar to the changes made to the
+<span class='wf_filename>httpd.conf</span> file in the 
+previous section. See the description there for an explanation of the
+directives.</p>
+<h3>Completing the installation</h3>
+<p>That completes Apache configuration. You can now move on
+to [my _chapter_link install_final_steps "completing the installation"].</p>
+

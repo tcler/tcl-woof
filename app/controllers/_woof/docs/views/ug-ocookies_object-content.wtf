@@ -1,0 +1,54 @@
+<p>Complementary to the icookies object that provides access to HTTP
+cookies sent by the client, Woof also provides
+the <span class='wf_code'>ocookies</span> object which allows the application a
+convenient means of manipulating HTTP cookies on the client. This
+object, belonging to class [my _manpage_link ::woof::CookiesOut],
+provides an interface for setting values, as well as attributes, for
+cookies. When the response is sent to a client, Woof! will
+automatically include <span class='wf_code'>Set-Cookie</span> headers to set the
+values for all keys defined in the <span class='wf_code'>ocookies</span> object. Below
+are some examples where the cookie name is <em>cname</em> and value
+is <em>cvalue</em>.</p>
+
+<h3>Setting a cookie value</h3>
+[my _code_sample {
+ocookies set cname cvalue
+}]
+
+<p>This is the simplest case of setting a cookie value. All cookie
+attributes take their default values.</p>
+
+<h3>Setting a cookie with an expiry time</h3>
+
+[my _code_sample {
+ocookies setwithattr cname cvalue -expires [clock add [clock seconds] 1 hour 30 minutes]
+}]
+
+<p>In this example, we set the cookie to expire after an hour and a half making use of Tcl's <span class='wf_code'>clock</span> command.</p>
+
+<h3>Setting a cookie to never expire</h3>
+
+[my _code_sample {
+ocookies setwithattr cname cvalue -expires never
+}]
+
+<p>Here the cookie will stick around until the user explicitly deletes it.</p>
+
+<h3>Deleting a cookie</h3>
+
+[my _code_sample {
+ocookies setwithattr cname cvalue -expires now
+}]
+
+<p>Setting the cookie to expire right way will effectively cause the
+browser to delete it.</p>
+
+<h3>Restricting a cookie to be specific to a domain</h3>
+
+[my _code_sample {
+ocookies setwithattr cname cvalue -domain yourdomain.com
+}]
+
+<p>Restricting the cookie to a specific domain will cause the browser
+to send the cookie in requests to servers belonging to that
+domain.</p>

@@ -1,0 +1,24 @@
+% lassign [my _neighbours] prev next
+<div class='wf_hnavbox wf_navbox'>
+% if {[llength $prev]} {
+   [my link_to [lindex $prev 1] -action [lindex $prev 0] -attrs {class leftmost}]
+% }
+% if {[llength $next]} {
+   [my link_to [lindex $next 1] -action [lindex $next 0] -attrs {class rightmost}]
+% }
+</div>
+<h2>[my _heading]</h2>
+%(
+  if {![page fetch content content]} {
+    set content "<p>This section is still to be written.</p>"
+  }
+%)
+$content
+<div class='wf_hnavbox wf_navbox'>
+% if {[llength $prev]} {
+   [my link_to [lindex $prev 1] -action [lindex $prev 0] -attrs {class leftmost}]
+% }
+% if {[llength $next]} {
+   [my link_to [lindex $next 1] -action [lindex $next 0] -attrs {class rightmost}]
+% }
+</div>

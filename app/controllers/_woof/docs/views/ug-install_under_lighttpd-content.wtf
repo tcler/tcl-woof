@@ -1,0 +1,10 @@
+<p><a href="http://redmine.lighttpd.net/projects/lighttpd">Lighttpd</a>
+is an increasingly popular web server that is focuses on performance
+and flexibility. This chapter describes some sample configurations to
+run Woof! under this server. These examples have only been tried under
+Linux as Lighttpd is not supported under Windows although there are
+some third-party distributions floating around.</p>
+<p>The following sections assume that the Lighttpd version is 1.4.x
+and that the configuration file
+is <span class="wf_filename">lighttpd.conf</span>. You will need to
+adapt the instructions for other versions.</p>

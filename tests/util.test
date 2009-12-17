@@ -1,0 +1,216 @@
+#
+# Copyright (c) 2009, Ashok P. Nadkarni
+# All rights reserved.
+#
+# See the file LICENSE for license
+
+# This file contains tests for the utils procs
+
+package require tcltest
+
+source [file join [file dirname [info script]] config.tcl]
+source [file join [file dirname [info script]] testutil.tcl]
+source [file join [file dirname [info script]] .. lib woof util.tcl]
+source [file join [file dirname [info script]] .. lib woof hutil.tcl]
+
+namespace eval ::woof::test::util {
+    namespace import ::tcltest::test
+
+    namespace path ::woof::test
+
+    ################################################################
+
+    test quoted_split-1.0 {
+        Split with simple single element
+    } -body {
+        util::quoted_split "abc def" ,
+    } -result [list "abc def"] -match list
+
+    test quoted_split-1.1 {
+        Split with simple n-element list
+    } -body {
+        util::quoted_split "abc def,xyz, 123 " ,
+    } -result [list "abc def" xyz " 123 "] -match list
+
+    test quoted_split-1.2 {
+        Split with simple n-element list with leading separator
+    } -body {
+        util::quoted_split ",abc,def,xyz" ,
+    } -result [list "" "abc" "def" "xyz"] -match list
+
+    test quoted_split-1.3 {
+        Split with simple n-element list with trailing separator
+    } -body {
+        util::quoted_split "abc def,xyz, 123 ," ,
+    } -result [list "abc def" xyz " 123 " ""] -match list
+
+    test quoted_split-2.0 {
+        Split with single quoted element
+    } -body {
+        util::quoted_split {"abc,def"} ,
+    } -result [list "abc,def"] -match list
+
+    test quoted_split-2.1 {
+        Split with single element with non-default quote char
+    } -body {
+        util::quoted_split {'abc,def'} , '
+    } -result [list "abc,def"] -match list
+
+    test quoted_split-2.2 {
+        Split with quoted element
+    } -body {
+        util::quoted_split {one,"two and three",four} ,
+    } -result [list one "two and three" four] -match list
+
+    test quoted_split-2.3 {
+        Split with multiple quoted elements and embedded separators
+    } -body {
+        util::quoted_split {one,"two and three",four,"six,seven",eight} ,
+    } -result [list one "two and three" four "six,seven" eight] -match list
+
+    test quoted_split-2.4 {
+        Split with trailing quoted element
+    } -body {
+        util::quoted_split {one,"two,three"} ,
+    } -result [list one "two,three"] -match list
+
+    test quoted_split-2.5 {
+        Split with trailing unterminated quoted element
+    } -body {
+        util::quoted_split {one+'two+three} + '
+    } -result [list one "two+three"] -match list
+
+    test quoted_split-2.6 {
+        Split with paired quotes
+    } -body {
+        util::quoted_split {one, <two, and <three>,four} , [list < >]
+    } -result [list one { two, and <three} four] -match list
+
+    test quoted_split-2.7 {
+        Split with paired quotes and escaping
+    } -body {
+        util::quoted_split {one, <two \>and <three>,four} , [list < >]
+    } -result [list one { two >and <three} four] -match list
+
+    test quoted_split-3.0 {
+        Split with escapes
+    } -body {
+        util::quoted_split {one,"two\"three\",",} ,
+    } -result [list one two\"three\", ""] -match list
+
+    test quoted_split-3.1 {
+        Split with escapes outside quotes
+    } -body {
+        util::quoted_split {one\,"two\"three"} ,
+    } -result [list one\\ two\"three] -match list
+
+    test quoted_split-4.0 {
+        Split without quotes and with transform
+    } -body {
+        util::quoted_split { one , two , three } , [list \"] \\ "string trim"
+    } -result [list one two three] -match list
+
+    test quoted_split-4.1 {
+        Split with quotes and with transform
+    } -body {
+        util::quoted_split { one , "two , three " , four} , [list \"] \\ "string trim"
+    } -result [list one "two , three" four] -match list
+
+    ###
+
+    test http_select_header_value-1.0 {
+        Select a HTTP header value when single value is specified
+    } -body {
+        util::http_select_header_value "text/html" [list text/html application/json] "defaultvalue"
+    } -result text/html
+    
+    test http_select_header_value-1.1 {
+        Select a HTTP header value when single value matches second available
+    } -body {
+        util::http_select_header_value "application/json" [list text/html application/json] "defaultvalue"
+    } -result application/json
+    
+    test http_select_header_value-1.1 {
+        Select a HTTP header value when there are no matches
+    } -body {
+        util::http_select_header_value "text/xml" [list text/html application/json] "defaultvalue"
+    } -result defaultvalue
+
+    test http_select_header_value-2.0 {
+        Select a HTTP header value with multiple values specified
+    } -body {
+        util::http_select_header_value "text/xml, text/html, application/pdf" [list text/html application/json] "defaultvalue"
+    } -result text/html
+
+    test http_select_header_value-2.1 {
+        Select a HTTP header value with multiple values specified and second available matches
+    } -body {
+        util::http_select_header_value "text/xml, text/html" [list text/html text/xml application/json] "defaultvalue"
+    } -result text/xml
+    
+    test http_select_header_value-3.0 {
+        Select a HTTP header value when matching unspecified quality
+    } -body {
+        util::http_select_header_value "text/xml ;q=0.5, text/html" [list text/xml text/html application/json] "defaultvalue"
+    } -result text/html
+    
+    test http_select_header_value-3.1 {
+        Select a HTTP header value when highest specified quality
+    } -body {
+        util::http_select_header_value "text/xml ;q=0.5, text/html; q=0.7" [list text/xml text/html application/json] "defaultvalue"
+    } -result text/html
+    
+    ###
+
+    test make_relative_url-1.0 {
+        Relative URL where target is below the base
+    } -body {
+        util::make_relative_url a/b/c a/b/c/d/e
+    } -result c/d/e
+
+    test make_relative_url-1.1 {
+        Relative URL where target is same as base
+    } -body {
+        util::make_relative_url a/b/c a/b/c
+    } -result c
+
+    test make_relative_url-1.2 {
+        Relative URL where target is sibling of base
+    } -body {
+        util::make_relative_url a/b/c a/b/x
+    } -result x
+
+    test make_relative_url-1.3 {
+        Relative URL where target is parent of base
+    } -body {
+        util::make_relative_url a/b/c a/b
+    } -result .
+
+    test make_relative_url-1.4 {
+        Relative URL where target is ancestor of base
+    } -body {
+        util::make_relative_url a/b/c/d a/b
+    } -result ..
+
+    test make_relative_url-1.5 {
+        Relative URL where target is root of base
+    } -body {
+        util::make_relative_url a/b/c/d/e a
+    } -result ../../..
+
+    test make_relative_url-1.6 {
+        Relative URL where target is unrelated to base
+    } -body {
+        util::make_relative_url a/b/c x/y
+    } -result ../../x/y
+
+    test make_relative_url-1.7 {
+        Relative URL where base is empty string
+    } -body {
+        util::make_relative_url "" a/b/c
+    } -result a/b/c
+
+    ################################################################
+
+    tcltest::cleanupTests
+}

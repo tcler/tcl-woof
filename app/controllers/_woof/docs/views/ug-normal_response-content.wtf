@@ -1,0 +1,11 @@
+<p>In the course of normal processing, the 
+[my _chapter_link controller_object "<span class='wf_code'>controller</span>"]
+object's [my _manpage_link ::woof::Controller::render] method is called to
+generate a Web page to be returned to the client. This method may be
+explicitly called by an action method, but is usually implicitly
+invoked by the controller after the action method completes if it has
+not already been called and output has not been initiated by some
+other means such as [my _chapter_link redirects "redirection"].</p> 
+
+<p>The process by which the <span class='wf_code'>render</span> method 
+produces a page is described in [my _chapter_link page_generation].</p>

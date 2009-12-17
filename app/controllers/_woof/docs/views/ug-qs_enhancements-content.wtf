@@ -1,0 +1,17 @@
+<p> So we now have a somewhat functional Web site that can generate
+Fibonacci numbers. However, we are not done as competition in the
+Fibonacci generator space is fierce and we want to draw eyeballs from
+our competitors' sites. We need to enhance the usability and
+attractiveness of our site. Besides, we need to illustrate a few more
+Woof! features. We will enhance the site in the following ways:</p>
+<ul>
+  <li>We will add navigation links so people can easily access the
+  help and generator.</li>
+  <li>We will attempt to make the site more attractive through the use
+  of banners and stylesheets.</li>
+  <li>We will make it easier to generate multiple numbers by
+    allowing the user to specify how many elements of the sequence are
+    to be generated.</li>
+  <li>Finally, we will change the default page of the site to point to
+    our Fibonacci site instead of the BowWow welcome page.</li>
+</ul>
