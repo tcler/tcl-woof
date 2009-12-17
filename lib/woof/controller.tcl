@@ -315,7 +315,7 @@ oo::class create Controller {
                 # present on the client anyway.
                 ocookies setwithattr \
                     $::woof::_session_key_name [session get $::woof::_session_key_name] \
-                    path [config get url_root]
+                    -path [config get url_root]
             }
         }
     }
