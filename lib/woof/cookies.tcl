@@ -114,8 +114,19 @@ oo::class create CookiesOut {
         # 
         my variable _jar
 
-        array set opts {-httponly false -secure false}
+        array set opts {-httponly false -secure false -deleteexisting false}
         array set opts $args
+
+        #ruff
+        # -deleteexisting BOOLEAN - normally values are appended to any
+        #  previously set values for that cookie. If this option is
+        #  specified as true, any previous values are removed. Note
+        #  this refers to values being set in outgoing cookies on the
+        #  the server, not the client side.
+
+        if {$opts(-deleteexisting)} {
+            unset -nocomplain _jar($name)
+        }
 
         # TBD - can value be "" ?
         set cookie [dict create -value $value]
@@ -131,7 +142,7 @@ oo::class create CookiesOut {
             #  Otherwise, EXPIRYTIME must be a positive integer
             #  and interpreted as the number of seconds since
             #  00:00:00 Jan 1, 1970.
-            switch -exact -- {
+            switch -exact -- $opts(-expires) {
                 now {
                     # Expire the cookie - set any time in the past
                     # We pick Jan 1 2000

@@ -11,6 +11,8 @@ catch {Session destroy};        # To allow resourcing
 oo::class create Session {
     superclass ::woof::util::DirtyMap
 
+    variable _id_name;          # Name/key used for session ids
+
     constructor {{id ""} args} {
         # Container for persistent session data.
         #
@@ -35,7 +37,6 @@ oo::class create Session {
 
         next;                   # Initialize superclass
 
-        my variable _id_name;     # name used for session ids
         my variable _new;         # New or existing session?
 
         #ruff
@@ -45,7 +46,7 @@ oo::class create Session {
         if {[dict exists $args -id_name]} {
             set _id_name [dict get $args -id_name]
         } else {
-            set _id_name session_id
+            set _id_name "session_id"
         }
 
         # Check if a persistent session exists and load it.
@@ -59,9 +60,13 @@ oo::class create Session {
         }
     }
 
+    method id_name {} {
+        # Returns the name of the key used for the session id
+        return $_id_name
+    }
+
     method id {} {
         # Returns the session id for this session.
-        my variable _id_name
 
         if {![my exists $_id_name id]} {
             # New session so generate a new id and the path

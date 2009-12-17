@@ -157,6 +157,15 @@ oo::class create Controller {
                 # TBD - document that input cookies should not be
                 # relied on for session info
                 #icookies -unset $::woof::_session_key_name
+
+                # Get rid of the cookie from the client side. Note if a
+                # new session is created and committed, it will overwrite
+                # this.
+                ocookies setwithattr \
+                    $::woof::_session_key_name "" \
+                    -path [config get url_root] \
+                    -expires now \
+                    -deleteexisting true
             }
         }
 
@@ -313,9 +322,17 @@ oo::class create Controller {
                 # client. Note this is only done when a new session is
                 # created. For existing sessions the cookie is already
                 # present on the client anyway.
+
+                # The -deleteexisting true option is there because
+                # old invalid sessions will result in the initial 
+                # session checking code to put in a cookie to delete
+                # the existing client side session id cookie. This
+                # will simply overwrite that. Without the option,
+                # cookie values are appended.
                 ocookies setwithattr \
-                    $::woof::_session_key_name [session get $::woof::_session_key_name] \
-                    -path [config get url_root]
+                    [session id_name] [session id] \
+                    -path [config get url_root] \
+                    -deleteexisting true
             }
         }
     }
