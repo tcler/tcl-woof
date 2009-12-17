@@ -208,4 +208,11 @@ oo::class create Log {
         # Empty placeholder - method is actually created in object at run time
     }
 
+    # Create a forward because it is common to write log error when
+    # you really mean log err etc.
+    forward error my err
+    forward critical my crit
+    forward information my info
+    forward emergency my emerg
+    forward warning my warn
 }
