@@ -316,8 +316,15 @@ oo::class create util::DirtyMap {
         return $_dirty
     }
 
+    method dirty {} {
+        # Marks the object as being modified.
+        set _dirty true
+        return
+    }
+
     method clean {} {
         # Marks the object as being unmodified.
         set _dirty false
+        return
     }
 }
