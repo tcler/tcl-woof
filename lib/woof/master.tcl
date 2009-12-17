@@ -396,9 +396,15 @@ proc ::woof::master::init {server_module {woof_root ""} args} {
     # -jails DIRLIST - list of directory paths. If specified and not empty,
     #  files under one of these paths can also be accessed through the cache.
     #  This is in addition to the files in the public and app directories.
+    if {[info exists ::starkit::topdir]} {
+        # We are running inside a starkit.
+        set libdir [file join $::starkit::topdir lib]
+    } else {
+        set libdir [file join $_woof_root lib]
+    }
     set jails [list [config get public_dir] \
                    [config get app_dir] \
-                   [file join $_woof_root lib] \
+                   $libdir \
                    {*}[config get lib_dirs]]
 
     if {[dict exists $args -jails]} {

@@ -50,8 +50,8 @@ proc bowwow {args} {
     puts "Restart with -urlroot and -port options to change these."
     puts "Running. Hit Ctrl-C to exit ..."
 
-    uplevel #0  [list source [file join $starkit::topdir lib woof webservers wibble_server.tcl]]
-    uplevel #0  [list source [file join $starkit::topdir lib woof master.tcl]]
+    uplevel #0  [list source [file join $::starkit::topdir lib woof webservers wibble_server.tcl]]
+    uplevel #0  [list source [file join $::starkit::topdir lib woof master.tcl]]
     ::woof::webservers::wibble::main $::env(WOOF_ROOT) -port $opts(-port) -urlroot $opts(-urlroot)
 }
 

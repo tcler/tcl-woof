@@ -58,7 +58,7 @@ proc ::woof::init {} {
     uplevel #0 [list ::woof::source_file \
                     [file join $_script_dir webservers ${server_module}_mixins.tcl] \
                     -sourceonce true \
-                    -ignoremissing true]
+                    -ignoremissing false]
 
     if {[llength [info class instances ::oo::class ::woof::webservers::${server_module}::RequestMixin]]} {
         oo::define ::woof::Request "mixin ::woof::webservers::${server_module}::RequestMixin"
