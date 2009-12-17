@@ -4,7 +4,7 @@ config/application.cfg to include the following lines:</p>
 [my _code_sample {
   set app_name fibonacci 
   set app_display_name "Fibonacci Generator"
-  set app_default_uri fibonacci/generate
+  set app_default_uri_path /fibonacci/generate
 }]
 <p><strong>You need to restart the bowwow
 server to have this configuration change take effect.</strong> 
