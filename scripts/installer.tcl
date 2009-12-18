@@ -148,6 +148,7 @@ proc installer::distribute {target_dir args} {
             file copy -- [file join $src_dir $dir] $zip_dir
         }
         file copy -- {*}[glob [file join $src_dir thirdparty lib *]] [file join $zip_dir lib]
+        file copy -- [file join $src_dir thirdparty wibble] [file join $zip_dir lib]
         set textfile_patterns {*.txt *.tcl *.htm *.html *.wtf *.bat *.cmd *.cfg}
 
         if {$opts(-kit) in {zip all}} {
