@@ -23,10 +23,10 @@ brand our fibonacci generator. Create the file
 with the following contents:</p>
 [my _code_sample {
 <div style='padding: 10px;'>
- [my include_image /images/_woof/logo.png' style "float: left;"]
+ [my include_image images/_woof/logo.png' style "float: left;"]
  <h2 style='line-height: 3em; margin-left: 160px;'>Fibonacci Generator</h2>
 </div>
-[my include_image /images/_woof/banner_separator.png']
+[my include_image images/_woof/banner_separator.png']
 }]
 
 <p>Again, the HTML leaves something to be desired, and we are being
