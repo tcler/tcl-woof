@@ -144,6 +144,7 @@ proc installer::distribute {target_dir args} {
         set zip_dir [file join $target_dir "woof-$woof_version"]
         file delete -force $zip_dir; # Empty it if it exists
         file mkdir $zip_dir
+        file copy -- [file join $src_dir ANNOUNCE.txt] [file join $zip_dir README.txt]
         foreach dir {app config lib public scripts} {
             file copy -- [file join $src_dir $dir] $zip_dir
         }
