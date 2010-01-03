@@ -344,7 +344,7 @@ proc util::charset_iana2tcl {iana_cs {default_cs ""}} {
 proc util::http_sorted_header_values {header_value} {
     # Parses a multi-valued HTTP header string and returns the values
     # sorted by their quality attribute
-    # header_val - the HTTP header value such as those for the Accept-* headers.
+    # header_value - the HTTP header value such as those for the Accept-* headers.
     #  Should not include the header itself.
     # The command sorts the values specified in the header and returns
     # them sorted by their associated quality attributes.
