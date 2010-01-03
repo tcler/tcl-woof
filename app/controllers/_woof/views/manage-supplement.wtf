@@ -8,8 +8,7 @@
     [my link_to "User Guide" -module _woof::docs -controller ug]
   </li>
   <li>
-% my variable woof_url
-    <a href='$woof_url(reference)'>Reference</a>
+    <a href='[my url_for_static woof_manual.html]'>Reference</a>
   </li>
 </ul>
 </div>
