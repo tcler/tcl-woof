@@ -150,8 +150,11 @@ proc installer::distribute {target_dir args} {
         }
         file copy -- {*}[glob [file join $src_dir thirdparty lib *]] [file join $zip_dir lib]
         file copy -- [file join $src_dir thirdparty wibble] [file join $zip_dir lib]
-        set textfile_patterns {*.txt *.tcl *.htm *.html *.wtf *.bat *.cmd *.cfg}
+        # Generate man pages
+        exec -ignorestderr -- [info nameofexecutable] [file join $src_dir scripts ruffian.tcl] [file join $zip_dir public woof_manual.html]
 
+        set textfile_patterns {*.txt *.tcl *.htm *.html *.wtf *.bat *.cmd *.cfg}
+        
         if {$opts(-kit) in {zip all}} {
             puts "Building zip distribution"
             puts "Converting line endings to Windows format"
@@ -237,8 +240,10 @@ proc installer::distribute {target_dir args} {
         file copy [file join $src_dir app] $bowwow_dir
         file copy [file join $src_dir public] $bowwow_dir
         file copy [file join $src_dir scripts] $bowwow_dir
-        distro::build $bowwow_dir $woof_version -manifest $manifest_name -crlf lf
+        # Generate man pages
+        exec -ignorestderr -- [info nameofexecutable] [file join $src_dir scripts ruffian.tcl] [file join $bowwow_dir public woof_manual.html]
 
+        distro::build $bowwow_dir $woof_version -manifest $manifest_name -crlf lf
         # TBD - make tclkit path configurable
         set tclkit [file join $src_dir thirdparty tclkits tclkit-cli.exe]
         set bowwow [file join $target_dir bowwow-${woof_version}]
