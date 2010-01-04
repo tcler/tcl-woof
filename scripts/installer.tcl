@@ -510,7 +510,7 @@ proc installer::install {server module args} {
         # on Windows as the line is ignored
         if {$::tcl_platform(platform) eq "unix"} {
             set updates {}
-            foreach script_file [glob [file join $opts(-installdir) scripts $script_file *.tcl]] {
+            foreach script_file [glob [file join $opts(-installdir) scripts *.tcl]] {
                 lappend updates $script_file
                 install_log "Adding shebang line to script $script_file."
                 replace_shebang $script_file
