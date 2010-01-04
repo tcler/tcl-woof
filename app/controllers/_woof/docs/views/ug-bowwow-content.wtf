@@ -1,0 +1,20 @@
+<p>Woof! includes a simple web server BowWow, 
+  based on <a href="http://wiki.tcl.tk/23626">Wibble</a>,
+  that can be used as a
+  lightweight development web server or to quickly try out Woof! without
+  installing a separate web server.</p>
+
+<p>BowWow comes in two forms:</p>
+<ul>
+  <li>As a standalone Windows executable,
+    <span class='wf_filename'>bowwow-<em>VERSION</em>.exe</span>
+    which is entirely
+    self-contained and has no other software dependencies. It includes
+    the web server, Woof!, associated libraries and a Tcl
+    interpreter. Just download and run.</li>
+  <li>A script, <span class='wf_filename'>bowwow.tcl</span> located in the
+    <span class='wf_filename'>scripts</span> directory in the standard
+    distribution. This can be run by invoking it with a Tcl shell.
+    </ul>
+
+<p>The next two sections describe the use of each of these.</p>

@@ -1,0 +1,12 @@
+<p>There is one more thing we need to do and that is to change the
+default page for the site. For this we edit the file
+config/application.cfg to include the following lines:</p>
+[my _code_sample {
+  set app_name fibonacci 
+  set app_display_name "Fibonacci Generator"
+  set app_default_uri_path /fibonacci/generate
+}]
+<p><strong>You need to restart the bowwow
+server to have this configuration change take effect.</strong> 
+Now when you browse to http://localhost:8015, you will be redirected to
+our Fibonacci generator page.</p>

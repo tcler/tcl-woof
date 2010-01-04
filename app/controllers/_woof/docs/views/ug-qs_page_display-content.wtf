@@ -1,0 +1,46 @@
+<p>Having generated the new sequence, we now need a page to actually
+display it to the user.&nbsp;The page for this method is automatically
+generated from its view template
+<span class="wf_filename">app/controllers/views/fibonacci-generate-main.wtf</span>. 
+Currently, that still contains a stub so we will edit it to contain the 
+following template.</p>
+[my _code_sample {
+  % my variable seq
+  <p>
+  The first [llength $seq] numbers in the Fibonacci 
+  sequence are:
+  </p>
+  <p>
+    [join $seq ", "]
+    <a href='[request url]'>More</a>
+  </p>
+}]
+<p>Browsing to the URL will now display the following page:</p>
+<p class="wf_center">
+[my include_image qs_generate_plain.png alt "Quick Start Example Generate page"]
+</p>
+
+<p>Refreshing the page or clicking on the 
+<span style="color: blue;"><u>More</u></span> link will 
+generate additional numbers in the sequence.</p>
+
+<p>The corresponding [my _chapter_link wtf]
+(WTF) template shown earlier is quite simple. It is essentially a mixture
+of display text (including HTML tags) and Tcl command and variable references
+that are replaced with the corresponding values by the Tcl 
+<span class='wf_code'>subst</span> command.</p>
+
+<p>The two things to note in this simple case are:</p>
+<ul>
+  <li>The reference to the <span class='wf_code'>seq</span> member
+    variable which is brought into the scope of the template through
+    the <code>my variable</code> declaration. <strong>This is required
+      for accessing any variables in the controller object from the template
+      file.</strong>
+  </li>
+  <li>The call to the <span class='wf_code'>url</span> method of the
+    <span class='wf_code'>request</span> object. which returns the current
+    URL. The <span class='wf_code'>request</span> object encapsulates the 
+    current client request, various attributes of which can be retrieved
+    through method calls.</li>
+</ul>

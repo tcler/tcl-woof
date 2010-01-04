@@ -1,0 +1,63 @@
+<p>To follow along, you need to first do one of the following</p>
+<ul>
+  <li>If you are on Windows, you can simply download and run the
+    self-contained [my _chapter_link bowwow_exe "BowWow executable"].
+    No other software (web server,
+    a Tcl installation etc.) is needed.
+    <strong>This is the quickest way to try
+      out Woof! and the application can be easily moved later to a
+      different web server with no changes.</strong></li>
+  <li>On all platforms, you can 
+    [my _chapter_link installation "download and extract"] a Woof!
+    distribution and run the
+    [my _chapter_link bowwow_script "<code>bowwow</code> script"]. A Tcl 8.6 shell
+    must have been previously installed on your system. This script
+    runs a simple web server, [my _chapter_link bowwow_script "BowWow"],
+    that can be used for trying out Woof!.
+    Note that there
+    is no need to run the [my _chapter_link installation installer] script
+    to use the <code>bowwow.tcl</code> script.
+  </li>
+  <li>A third alternative is to install a suitable web server, Tcl 8.6
+    and Woof! as described in 
+    the [my _chapter_link "installation"] chapter. This provides a production
+    environment but entails a few more steps for installation including
+    running the [my _chapter_link installation installer] script.
+  </li>
+</ul>
+
+<p>In all cases, remember to follow
+the [my _chapter_link installation_final_steps "installation verification"]
+steps to ensure Woof! and the web server are installed and configured
+correctly.</p>
+
+<p>Although the application code runs unchanged between various web
+servers, the commands for invoking various Woof! utilities, such as
+stub generation, differs between the single-executable BowWow 
+and the other configurations. 
+In the former case, because the BowWow executable is
+entirely self-contained, it is used to invoke various commands. For
+example,</p>
+
+[my _code_sample {
+c:\fibo> bowwow url fibonacci/generate fibonacci/help
+}]
+
+<p>On the other hand, for the other configurations,
+  <strong>including use of the</strong>
+  <code>bowwow</code> <strong>script</strong>, the Tcl shell program
+  has to be run for the same purpose, with an appropriate script.
+  For example,</p>
+
+[my _code_sample {
+~/fibo> tclsh scripts/wag.tcl url fibonacci/generate fibonacci/help
+}]
+
+<p>Here it is assumed the command is run from the Woof! root
+  directory <span class='wf_filename'>~/fibo</span>.
+  Both forms of the commands are shown in this guide.</p>
+
+<p>The URL's used in the examples assume you are running the web server on
+port 8015 (which is the default BowWow port) and the Woof! application
+URL root is /. If not, you will need to modify the example URL's
+appropriately.</p>

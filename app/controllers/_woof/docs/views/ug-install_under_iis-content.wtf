@@ -1,0 +1,11 @@
+<p>Microsoft Internet Information Server (IIS) is the most widely used
+web server on Windows platforms. Like Apache, it also is flexible and
+feature-rich with an attendant increase in complexity. The following
+sections describe only a small subset of possible configurations but
+they should suffice to let you adapt Woof! to your own situation. Note
+that what differs in these situations is not Woof! or the application,
+but rather IIS configuration. The same Woof! application installation
+can run unchanged under different web servers.</p>
+
+<p>The following sections assume that the IIS version is 5.1. For other
+versions, you will need to adapt the instructions accordingly.</p>

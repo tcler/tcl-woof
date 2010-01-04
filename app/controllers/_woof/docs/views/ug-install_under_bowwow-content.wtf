@@ -1,0 +1,15 @@
+<p>The [my _chapter_link bowwow] is a single
+self-contained 2MB Windows executable that you can just download and run; no
+other software is needed as it has a web server, Tcl and the Woof!
+components built-in. However, you do need a Windows system currently
+for this single executable solution although Woof! itself is platform
+independent.</p>
+<p>Download the BowWow server from the Woof!
+<a href="https://sourceforge.net/project/showfiles.php?group_id=250256&amp;package_id=305826">download
+area</a> to an empty directory on your system. When starting up,
+BowWow will create several configuration files and directories in the
+directory where it is located so it is best if you run it from an
+empty directory. By default, the server runs on port 8015.</p>
+<p>No other installation step is necessary and you can move on
+to
+[my _chapter_link install_final_steps "completing the installation"].</p>

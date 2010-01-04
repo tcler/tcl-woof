@@ -1,0 +1,29 @@
+<p>The <a href="http://python.ca/scgi/protocol.txt">Simple Common
+Gateway Interface</a> (SCGI) is a standard for communicating with
+web servers on the back end. Unlike CGI, where the web server will
+start a new process for every request, SCGI involves a
+long-running process (the SCGI server) which is handed off
+requests from the web server and responds as per the protocol. It has
+the following benefits compared to CGI:</p>
+<ul>
+  <li>It is an order of magnitude or more faster as it avoids all the
+    startup costs associated with the latter, such as process
+    creation, interpreter initialization, loading of application code
+    and re-establishing database connections.</li>
+  <li>Because communication with the web server is on top of TCP, the
+    application code can actually run on a different server if desired
+    for performance or security reasons.</li>
+</ul>
+
+<p>As described in earlier sections, most web servers support the SCGI
+protocol and Woof! can be run as a SCGI application server
+communicating with the web server via SCGI. This requires Woof! to be
+started as a separate process either at system boot time or whenever
+the web server is running. This chapter describes some possible
+mechanisms for doing this on Linux and Windows. There are of course
+other ways you might accomplish the same thing.</p>
+
+<p>The one thing to keep in mind in all cases is that you must ensure
+the Woof! process runs under an appropriate user account that has
+the appropriate privileges - sufficient to access relevant files,
+databases, etc. but no more than that (for security reasons).</p>

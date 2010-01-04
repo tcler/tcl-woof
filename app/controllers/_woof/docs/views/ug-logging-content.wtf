@@ -1,0 +1,41 @@
+<p>The Woof! environment provides a facility for logging messages
+  through the [my _manpage_link ::woof::Log "<code>log</code>"]
+  object.</p>
+
+<p>The location of the log file is dependent on the web server
+  interface in use. In most cases, Woof! own logging facility is used
+  in which case the [my _chapter_link configuration "configuration variable"]
+  <code>log_dir</code> specifies the directory in which the logs will
+  be stored. By default, this is the
+  <span class='wf_filename'>temp</span> directory under the Woof!
+  root. Note that Woof! itself does not currently rotate logs.
+  The name of the log file is specified by the
+  variable <code>log_file</code> which is set to
+  <span class='wf_filename'>woof.log</span> by default.
+</p>
+
+<p>Log messages have one of the following <em>levels</em> associated
+  with them: <code>debug</code>, <code>info</code>, <code>notice</code>,
+  <code>warn</code>, <code>err</code>, <code>crit</code>, <code>alert</code>
+  and <code>emerg</code>. These levels are the same as those used by
+  the syslog facility on Unix.</p>
+
+<p>Messages to the log file can be logged
+  at one of these levels using the corresponding method of the same
+  name. The message will be written to the log file only if the
+  <em>current logging level</em> is lower or equal to the log level of the
+  message. The current logging level is initialized to the value of
+  the configuration variable <code>log_level</code> (<code>info</code>
+  by default) and can be changed through the
+  [my _manpage_link ::woof::Log::setlevel] method.</p>
+
+<p>The [my _manpage_link ::woof::Log::write] method can be used to
+  write a message to the log file at any level irrespective of the
+  current logging level. For example,</p>
+[my _code_sample {
+  log setlevel info
+  log err "This message will not be written since err < info"
+  log write err "This message will be written always."
+}]
+
+

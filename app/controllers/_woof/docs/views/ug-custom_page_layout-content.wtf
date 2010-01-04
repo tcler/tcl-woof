@@ -1,0 +1,59 @@
+<p>As stated earlier, for the most part
+  a layout file is really no different from any other
+  template file making up the content. It is only by convention that
+  layout files are focused on aspects related to the different logical
+  sections in a page and expect to retrieve the actual content for
+  the sections from other templates. It is recommended that you follow
+  the same convention with your own custom layouts.</p>
+
+<p>A layout template should generate a complete HTML document
+  including the document header. It is useful to also include in it
+  common elements that are shared across all web pages, such as style
+  sheets, javascript link and so on.</p>
+
+<p>Below is a minimal layout.</p>
+[my _code_sample {
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+  <html>
+  <head>
+    <title>A static layout</title>
+  </head>
+  <body>
+    <p>This layout is a static page.</p>
+  </body>
+}]
+
+<p>This layout is purely static and self-contained. The only time this
+  might be useful is for a specific controller action that has no
+  dynamic content, like a generic error.</p>
+
+<p>The following layout uses the page section mechanism
+  like the default layout but instead
+  of using the standard page section names <code>header</code>,
+  <code>main</code> etc., it uses page section names that are
+  dynamically defined by the controller and arranges these one below
+  the other.</p>
+
+[my _code_sample {
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+  <html>
+  <head>
+    <title>A layout with dynamically named pages sections</title>
+  </head>
+  <body>
+  % my variable page_section_names
+  % foreach ps_name $page_section_names {
+  %    page fetch $ps_name content
+       $content
+  % }
+  </body>
+}]
+
+<p>The above layout allows the controller to define the names of the
+  page sections and their order.</p>
+
+<p>Finally, you can even define a layout that completely ignores the
+  page section definition mechanisms in Woof! and locates content by
+  some other means.</p>
+
+

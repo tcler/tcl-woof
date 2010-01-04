@@ -1,0 +1,191 @@
+/* Woof default CSS */
+/* Assumes YUI reset-font-grids and base-min loaded */
+
+/* FYI - The Woof logo main color is #DB7D2A */
+
+h1,h2 {
+  color: #888888;
+  margin-bottom: 0.5em;
+}
+
+h3,h4 {
+  color: #777777;
+  margin-bottom: 0.5em;
+}
+
+h4 {
+  font-size: 93%;
+}
+
+table {
+  margin: 1em;
+  border: thin solid;
+  border-collapse: collapse;
+  border-color: #808080;
+  padding: 4;
+}
+
+td {
+  border: thin solid;
+  border-color: #808080;
+  vertical-align: top;
+  font-size: 93%;
+}
+
+th {
+  border: thin solid;
+  border-color: #808080;
+  padding: 4px;
+  background-color: #CCCCCC;
+}
+
+dt, dd {
+   font-size: 93%;
+}
+
+#ft {
+    font-size: 77%;
+    text-align: center;
+    border-top: 1px solid #aaaaaa;
+    /* margin-right: 180px; */
+    margin-top: 10px;
+}
+
+.wf_banner h2 {
+    color: #006666;
+    margin: 0px;
+}
+
+.wf_banner h3 {
+    color: #006666;
+    margin: 0px;
+}
+
+#hd .wf_banner {
+    font-family: Trebuchet MS, Helvetica, sans-serif;
+    font-weight: bold;
+    height: 48px;
+    background-image: url(../images/_woof/logo.png);
+    background-position: left top;
+    background-repeat: no-repeat;
+    text-indent: 100px;
+    margin-top: 20px;
+}
+
+
+#bd {
+  font-family: Verdana;
+  font-size: 108%;
+  margin-top: 10px;
+}
+
+#bd h2.wf_first {
+  margin-top: 0px;
+  padding-top: 0px;
+}
+
+.wf_linkbox h2 {
+  color: #177f75; /* #21b6a8; */
+  margin-bottom: 0.2em;
+  /* margin-top: 1.5em; */
+  margin-top: 0em;
+  font-size: 93%;
+}
+
+.wf_linkbox {
+  font-size: 93%;
+}
+
+.wf_linkbox ul {
+  margin-top: 0em;
+  margin-left: 0.5em;
+}
+
+.wf_linkbox ul li {
+  list-style: none;
+}
+
+.wf_linkbox a {
+  color: #177f75;
+  text-decoration: none;
+}
+
+.wf_linkbox li a:hover {
+  font-weight: bold;
+}
+
+div.wf_navbox {
+  /* margin-top: 1em; */
+  margin-bottom: 20px;
+}
+
+.wf_navbox {
+  font-size: 93%;
+}
+
+.wf_navbox h2 {
+  font-size: 93%;
+  margin-bottom: 0.2em;
+  margin-top: 0em;
+  color: #808080;
+}
+
+.wf_navbox ul {
+  margin-left: 1.5em;
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+
+.wf_navbox li {
+  list-style-image: url(../images/_woof/navarrowright.png);
+  font-weight: bold;
+  color: #808080;
+}
+
+.wf_navbox a:link, .wf_navbox a:visited {
+  text-decoration: none;
+  font-weight: normal;
+  color: #808080;
+}
+
+.wf_navbox a:hover {
+  /* font-weight: bold; */
+  /* text-decoration: underline; */
+  color: #db7d2a;
+}
+
+.wf_hnavbox {
+  padding-bottom:0.5em;
+  text-align:center;
+  display: block;
+}
+
+.wf_top_border {
+  border-top:1px solid #aaaaaa;
+  padding-top:
+}
+
+.wf_bottom_border {
+  border-bottom:1px solid #aaaaaa;
+}
+
+.wf_hnavbox .leftmost {
+  display: block;
+  float: left;
+  text-align: left;
+  background-image: url(../images/_woof/navarrowleft.png);
+  background-position: left center;
+  background-repeat: no-repeat;
+  padding-left: 15px; /* So image does not overlap */
+}
+
+.wf_hnavbox .rightmost {
+  display: block;
+  float: right;
+  text-align: right;
+  background-image: url(../images/_woof/navarrowright.png);
+  background-position: right center;
+  background-repeat: no-repeat;
+  padding-right: 15px; /* So image does not overlap */
+}
+

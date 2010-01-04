@@ -1,0 +1,99 @@
+<p>While developing with Woof!, you can simply directly start Woof! as
+an SCGI server by directly invoking the Woof! SCGI server
+script. For example, the following console command in the Woof! root
+directory <span class="wf_filename">c:\\myapp</span></p>
+
+[my _code_sample {
+c:\myapp> tclsh lib\woof\webservers\scgi_server.tcl
+}]
+
+<p>starts Woof! listening on the default port 9999, or</p>
+[my _code_sample {
+c:\myapp> tclsh lib\woof\webservers\scgi_server.tcl -port 10000
+}]
+
+<p>will start it on a non-default port 10000.</p>
+
+<p>To stop the server, simply hit Ctrl-C.</p>
+
+<h3>Running Woof! as a Windows service</h3>
+
+<p>To run Woof! in production mode, where the Woof! process must be
+running independently of anybody being logged in, it must be installed
+as a Windows service using
+the <span class="wf_filename">scripts\\scgi_winservice.tcl</span>
+script. For example,</p>
+
+[my _code_sample {
+c:\myapp> tclsh scripts\scgi_winservice.tcl -service woofscgi install
+}]
+
+<p>will install Woof! as a Windows service <code>woofscgi</code>. You
+can use the standard Windows service control commands, such
+as <code>net stop</code> and <code>net start</code> to control the service.
+In addition to the service name, you can also set the port and other 
+parameters. see the [my _chapter_link scgi_winservice] chapter for
+  details.</p>
+
+<p>Note you have to make sure the service is started by
+some means before the web server is ready to pass on requests. There are
+  three possible ways to do this.</p>
+
+<ul>
+  <li>Start it manually using the Windows <code>net start</code> command.</li>
+  <li>Have it automatically started at system boot time. For this to happen,
+    you need to install the service with the <code>-startup auto</code>
+    option.
+[my _code_sample {
+c:\myapp> tclsh scripts\scgi_winservice.tcl -service woofscgi -startup auto install
+}]
+  </li>
+  <li>Have it started on-demand by the web server. This is only possible with
+    IIS and is described in the next section.</li>
+</ul>
+
+<h3>Starting Woof! SCGI from IIS</h3>
+<p>If your web server is Microsoft IIS and you are using
+the <a href="http://woof.magicsplat.com/isapi_scgi/home"><code>isapi_scgi</code></a>
+IIS extension, you can have IIS start the Woof! service
+"on-demand". Configure the service to start in manual mode
+as above. Then add the following two lines to
+the <a href="http://woof.magicsplat.com/isapi_scgi/configuration">isapi_scgi configuration</a>
+file.</p>
+[my _code_sample {
+SCGIServerStartCommand= net start woofscgi
+SCGIServerStopCommand= net stop woofscgi
+}]
+<p>This assumes you have named the Woof! SCGI service
+  as <code>woofscgi</code>.</p>
+
+<p>The first time that IIS receives a request to be sent to Woof!, it
+will load the <code>isapi_scgi</code> extension. As part of its
+initialization, the extension will then execute the command specified
+by the <code>SCGIServerStartCommand</code> variable to start the Woof!
+SCGI server. Similarly, when IIS is stopped, the isapi_scgi extension
+will invoke the command specified by
+the <code>SCGIServerStopCommand</code> variable to stop the Woof!
+service. For more details, see
+  the <a href="http://woof.magicsplat.com/isapi_scgi/autostart"><code>isapi_scgi</code> documentation</a>.</p>
+
+<h3>Uninstalling the Woof! service</h3>
+<p>If you no longer wish to run Woof! as a service, you can use the
+<span class='wf_filename'>scgi_winservice.tcl</span> script to uninstall it:</p>
+[my _code_sample {
+c:\myapp> tclsh scripts\scgi_winservice.tcl -service woofscgi uninstall
+}]
+
+<h3>Setting the Woof! service user account</h3>
+<p>By default, the Woof! service will run under the Windows
+LocalSystem account. For security reasons, you may want to change to
+run under a less privileges account. You can do this through
+the <span class="wf_filename">Log on</span> pane in the property sheet
+for the service in Windows Service Control Manager. If you do this,
+make sure the account has access to the resources (file system,
+databases etc.) used by your Woof! application.</p>
+
+<h3>Error logging</h3>
+<p>Because the Woof! libraries may not be loaded during startup, the
+Woof! service will log errors to the Windows event log in some
+cases, particularly during startup.</p>

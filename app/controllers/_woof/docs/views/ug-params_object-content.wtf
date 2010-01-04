@@ -1,0 +1,11 @@
+<p>A [my _manpage_link ::woof::Params "<code>params</code>"] object is instantiated for each
+  request and contains the client request parameters. These include
+  both query parameters in a HTTP GET request as well as form data in
+  a HTTP POST. The parameters can be accessed using the standard
+  [my _manpage_link ::woof::util::Map] interface.</p>
+
+<p>A major difference between using the <code>params</code> object and
+  directly accessing the <code>QUERY_STRING</code> environment
+  variable is that in addition to splitting the string into keys and
+  values, the values are fully decoded with the assumption that they
+  have been encoded as utf-8 followed by x-www-urlencoded encoding.</p>

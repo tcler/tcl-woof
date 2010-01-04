@@ -1,0 +1,14 @@
+<div class='wf_linkbox'>
+<h2>Documentation</h2>
+<ul>
+  <li>
+    [my link_to "Quick Start" -module _woof::docs -controller ug -action quick_start]
+  </li>
+  <li>
+    [my link_to "User Guide" -module _woof::docs -controller ug]
+  </li>
+  <li>
+    <a href='[my url_for_static woof_manual.html]'>Reference</a>
+  </li>
+</ul>
+</div>

@@ -1,0 +1,15 @@
+<div class='wf_navbox'>
+<h2>Site management</h2>
+<ul>
+% foreach {label action} {
+%     Welcome welcome
+%     Environment print_env
+%     "Configuration settings" print_config
+% } {
+  <li>
+    <a href='[my url_for -action $action]'>[hesc $label]</a>
+  </li>
+% }
+</ul>
+</div>
+

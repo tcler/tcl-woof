@@ -1,0 +1,142 @@
+#
+# Copyright (c) 2009, Ashok P. Nadkarni
+# All rights reserved.
+#
+# See the file LICENSE for license
+
+# This file contains tests for the Request object
+
+package require tcltest
+package require http
+package require tdom
+
+source [file join [file dirname [info script]] testutil.tcl]
+
+# Initialize URL component values from environment
+::woof::test::init_values
+
+namespace eval ::woof::test::params {
+    namespace import ::tcltest::test
+
+    namespace path ::woof::test
+
+    namespace upvar ::woof::test test_url test_url
+
+    proc do_query {query {headers {}}} {
+        variable test_url
+        set url [make_test_url params/dump]
+        set tok [http::geturl [make_test_url \
+                                   "$test_url(url_module)/params/dump" \
+                                   [http::formatQuery {*}$query]] \
+                     -headers $headers]
+
+        if {[http::ncode $tok] ne 200} {
+            error "Server rerurned HTTP code [http::code $tok][http::cleanup $tok]"
+        }
+        set dom [dom parse -keepEmpties -html [http::data $tok]]
+        return [dict create tok $tok dom $dom]
+    }
+
+    proc cleanup {state} {
+        if {[dict exists $state dom]} {
+            [dict get $state dom] delete
+        }
+        if {[dict exists $state tok]} {
+            http::cleanup [dict get $state tok]
+        }
+    }
+
+    proc check_values {dom expected} {
+        set expected_count [expr {[llength $expected]/2}]
+        set count [[$dom selectNodes "//span\[@id='count']"] text]
+        if {$count != $expected_count} {
+            return "Returned count '$count' did not match expected count '$expected_count'."
+        }
+        foreach {name val} $expected {
+            # Get and check the param definition node
+            set node [$dom selectNodes "//dt\[@id='$name']\[1]"]
+            if {$node eq ""} {
+                return "No parameter node found with id '$name'."
+            }
+            set param_name [$node text]
+            if {$param_name ne $name} {
+                return "Parameter '$name' is displayed as '$param_name'."
+            }
+            # Now check the value node
+            set val_node [$node selectNodes "following-sibling::dd\[1]"]
+            if {$val_node eq ""} {
+                return "No value node found for parameter '$name'."
+            }
+            set param_val [$val_node text]
+            if {$param_val ne $val} {
+                return "Returned value for parameter '$name' is '$param_val' instead of expected value '$val'."
+            }
+        }
+        return ""
+    }
+
+    ################################################################
+
+    test params_get-1.0 {
+        Testing GET request parameters with no parameters
+    } -body {
+        set state [do_query ""]
+        check_values [dict get $state dom] {}
+    } -cleanup {
+        cleanup $state
+    } -result ""
+
+    test params_get-1.1 {
+        Testing GET request parameters with one parameter
+    } -body {
+        set params {pname pvalue}
+        set state [do_query $params]
+        check_values [dict get $state dom] $params
+    } -cleanup {
+        cleanup $state
+    } -result ""
+
+    test params_get-1.2 {
+        Testing GET request parameters with multiple parameters
+    } -body {
+        set params {p1 val1 p2 val2 p3 val3}
+        set state [do_query $params]
+        check_values [dict get $state dom] $params
+    } -cleanup {
+        cleanup $state
+    } -result ""
+
+    test params_get-2.0 {
+        Testing GET request parameters with escaped characters
+    } -body {
+        set params {pname { &?+}}
+        set state [do_query $params]
+        check_values [dict get $state dom] $params
+    } -cleanup {
+        cleanup $state
+    } -result ""
+
+    test params_get-2.1 {
+        Testing GET request parameters with non-ASCII characters
+    } -body {
+        # Note the following unicode sequence is chosen such that
+        # the first two chars have a HTML & mapping, the last two do
+        # not.
+        set params [list pname \u00a9\u221e\u0102\u0108]
+        set state [do_query $params]
+        check_values [dict get $state dom] $params
+    } -cleanup {
+        cleanup $state
+    } -result ""
+
+
+        
+
+    ################################################################
+
+    if {[info exists dom]} {
+        $dom delete
+        unset dom
+    }
+    tcltest::cleanupTests
+}

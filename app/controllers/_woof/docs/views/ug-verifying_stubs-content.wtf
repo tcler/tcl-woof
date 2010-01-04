@@ -1,0 +1,21 @@
+<p>When generating stubs using <span class='wf_code'>wag</span>, it
+is sometimes easy to lose track of which stubs have actually been
+implemented and which are still to be
+written. The <span class='wf_code'>verify</span> command
+provides a way of checking which stubs remain to be written.</p>
+
+<p>The example below is a continuation of the one in the previous section.</p>
+[my _code_sample {
+> tclsh scripts/wag.tcl verify
+ApplicationController: no stubs found.
+MathController:
+        Action method stubs:
+                multiply
+
+        View stubs:
+                app/controllers/views/math-multiply-main.wtf
+}]
+
+<p>The output shows that we have not actually implemented the stubs
+for the <span class='wf_code'>multiply</span> action method and
+corresponding view.</p>

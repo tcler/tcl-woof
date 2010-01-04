@@ -1,0 +1,25 @@
+<p>For those who are new to either Tcl or Web development, here are
+some links to useful online resources.</p>
+
+<h3>Tcl</h3>
+<ul>
+  <li>An <a href="http://www.tcl.tk/man/tcl8.5/tutorial/tcltutorial.html">online
+      Tcl tutorial</a> provides a step-by-step introduction to the Tcl
+    language. This tutorial currently covers features upto version
+    8.5.</li>
+  <li>The <a href="http://en.wikibooks.org/wiki/Tcl_Programming">Tcl
+  Wikibook</a> provides another introduction to the Tcl language and
+  libraries.</li>
+</ul>
+
+<h3>Web development</h3>
+<ul>
+  <li>eXtropia has a
+  general <a href="http://www.extropia.com/tutorials/devenv/toc.html">introduction</a>
+  as well as
+  a <a href="http://www.extropia.com/tutorials/perl_cgi/pre_requisite_intro.html">tutorial</a>
+    for web programming.</li>
+  <li>An <a href="http://www.technicalinfo.net/papers/WebBasedSessionManagement.html">introduction
+      to Web sessions</a> describes various mechanisms for maintaining
+    session contexts and the tradeoffs involved in each.</li>
+</ul>

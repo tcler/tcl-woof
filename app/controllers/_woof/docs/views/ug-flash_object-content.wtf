@@ -1,0 +1,21 @@
+<p>On occasion, there may be a need to pass data between action
+methods invoked by consecutive requests from a client. For example,
+input validation failures in an action method may invoke a HTTP
+redirect to a error display page. The error display method or template
+would need to have access to details about the error cause, parameters
+and so on.</p>
+
+<p>It would not be difficult for the application to accomplish this through
+the [my _chapter_link session_object "<span class='wf_code'>session</span>"]
+object. However, this is a common enough requirement that Woof!
+supports it directly through the [my _manpage_link ::woof::Flash flash]
+object (which in fact is built on top
+of <span class='wf_code'>session</span>). Applications can use the
+standard [my _manpage_link ::woof::util::Map]
+interfaces to store key value pairs into the flash object. These
+values will live for the duration of the very next client request and
+be automatically deleted when that request is completely
+processed.</p>
+
+<p>The error handling example in the [my _chapter_link qs_flash] section
+of [my _chapter_link quick_start] illustrates use of this facility.</p>

@@ -1,0 +1,47 @@
+<p>The <span class='wf_code'>wag</span>
+script's <span class='wf_code'>url</span> command can be used to
+generate the common boilerplate code that is contained in Woof!
+controllers as was illustrated in the 
+[my _chapter_link implementing_controllers] section of the
+[my _chapter_link quick_start] chapter.
+The general form of the command is</p>
+
+[my _code_sample {
+  tclsh scripts/wag.tcl url ?-excludeviews <em>BOOLEAN</em>? ?list of urls?
+} false]
+
+<p>For each URL specified as an argument, the command will check if
+the controller and action exist, and if not, generate stubs
+corresponding to each URL, creating files, classes and method stubs as
+necessary. Moreover, if
+the <span class='wf_code'>-excludeviews </span>option is not specified
+or specified as <span class='wf_code'>false</span>, the command will
+also generate a stub for the main
+[my _chapter_link page_sections "page section"].
+Specifying true for this option will prevent generation
+of the view stubs. Note that stubs for other page sections are not
+generated as they are expected to be shared between actions, and even
+controllers.</p>
+
+<p>The example below continues the one in the aforementioned
+[my _chapter_link implementing_controllers "chapter"].</p>
+
+[my _code_sample {
+> tclsh scripts/wag.tcl url /math/add /math/multiply
+Controller MathController:
+         File app/controllers/math_controller.tcl will be modified.
+         Class MathController will be modified.
+         Methods to be added: multiply.
+         View stubs to be added:
+                app/controllers/views/math-multiply-main.wtf
+Do you want to continue? [YN] y
+Created action MathController.multiply.
+}]
+
+<p>The above example specifies the generation of stubs for
+the <span class='wf_code'>add</span>
+and <span class='wf_code'>multiply</span> methods. As indicated in the
+output, the script discovers only
+the <span class='wf_code'>multiply</span> stubs are missing and
+generates the same. The <span class='wf_code'>add</span> method and
+view are not touched in any way.</p>

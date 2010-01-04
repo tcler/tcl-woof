@@ -1,0 +1,69 @@
+% set arrow "&#x2192;"
+<p>An application may optionally use different page section
+  templates for different
+  languages. This is supported by Woof! through an minor enhancement
+  of the [my _chapter_link locating_templates "template location"]
+  algorithm.</p>
+
+<p>When a client sends an HTTP <span wf_code="">Accept-Language</span>
+  header indicating its language preferences, Woof! will modify its
+  algorithm for locating templates by first checking for the existence
+  of the appropriate template in a subdirectory whose name is the same
+  as the language identifier and use that in preference if it
+  exists.</p>
+
+<p>In addition, the 
+  [my _chapter_link configuration "configuration variable"]
+  <span class="wf_code">app_default_language</span> should be set to
+  the language identifier corresponding to the template files in the
+  standard location. By default, this is set to
+  <span class="wf_code">en</span>.</p>
+
+<p>Note that it is not required that every section or action have a
+  language-specific template. You may choose to have specific
+  templates in some cases and fall back to the default in others.</p>
+
+<p>As an example, consider the following header from a client received
+  in a request to action <em>ACTION</em> in controller
+  <em>CONTROLLER</em>:</p>
+
+[my _code_sample {
+  Accept-Language: fr,de;q=0.7,en;q=0.3
+}]
+
+<p>When looking for the <span class="wf_code">header</span> page
+  section, Woof! will look for the file
+  <span class="wf_filename"><em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span>
+  in order</p>
+<ul class='wf_nobullets'>
+  <li><span class="wf_filename">views/fr/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/de/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/en/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+</ul>
+<p>under the controller directory.</p>
+
+<p>On the other hand, if the client preference was as per the
+  following header:</p>
+
+[my _code_sample {
+  Accept-Language: fr,de;q=0.3,en;q=0.7
+}]
+
+<p>where <span class="wf_code">en</span> has a higher priority over
+  <span class="wf_code">de</span>, the search order would be</p>
+<ul class='wf_nobullets'>
+  <li><span class="wf_filename">views/fr/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/en/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+  <li>$arrow <span class="wf_filename">views/de/<em>CONTROLLER</em>-<em>ACTION</em>-header.wtf</span></li>
+</ul>
+  
+<p>Note here that not only has the <span class="wf_filename">en</span>
+  subdirectory moved above the <span class="wf_filename">de</span>
+  directory, but that the default directory is also moved up. This is
+  because the <span class='wf_code'>app_default_language</span>
+  configuration setting has a value of <span class="wf_code">en</span>
+  by default, and hence the default directory is treated as though it
+  has the priority associated with <span class='wf_code'>en</span>.
+

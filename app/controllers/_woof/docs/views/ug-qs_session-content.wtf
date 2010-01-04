@@ -1,0 +1,54 @@
+<p>We implement the <code>generate</code> method as shown below.</p>
+[my _code_sample {
+method generate {} {
+    # Generate the next number in the sequence. The sequence generated
+    # so far is stored in the session.
+
+    # Declare a member variable seq to hold the Fibonacci sequence.
+    # All member variables are automatically available for use in
+    # the view templates.
+    my variable seq
+
+    # If we have already generated a sequence in this session
+    # it will be stored in the session.
+    if {[session exists fibonacci seq]} {
+        # Yep, already in the process of building a sequence
+        lappend seq [expr {[lindex $seq end-1]+[lindex $seq end]}]
+    } else {
+        # First call to generate a sequence
+        set seq {0 1}
+    }
+
+    # Store it back in the session for the next request
+    session set fibonacci $seq
+}
+}]
+<p>The first time a user browses to
+the <span class="wf_filename">fibonacci/generate</span> link, we
+want to display the starting two numbers in the sequence. Then for
+subsequent visits to the page within the same browser session, we want
+to include the next number in the sequence. To do that we need to be
+able store state on the server side. That is what a session does.</p>
+
+<p>A session maintains state between
+multiple requests from a single client. When the initial client
+request is received, a new session is created for it. Subsequent
+requests from the client are associated with that session and the
+state information associated with it is made available through
+the <code>session </code>object. Application code can store any Tcl
+values in the <code>session </code>object and retrieve them for
+subsequent requests. In general, the session object is not intended
+for storing large amounts of data, but for our purposes for storing
+the current sequence, it is adequate.</p>
+
+<p>In the <code>generate </code>method above, we check if
+the <code>session </code>object contains the
+key <span class="wf_filename">fibonacci </span>which holds the
+sequence generated so far. If so, we add the next number in the
+sequence and if not, we initialize the sequence with the first two
+numbers. We then store the new sequence back in
+the <code>session</code> so as to remember it for the next
+request. The object member variable <code>seq</code> also holds the
+sequence which makes it available in the view template.</p>
+
+<p>We now need a way of displaying what we computed. We do that next.</p>

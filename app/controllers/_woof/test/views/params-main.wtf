@@ -1,0 +1,9 @@
+<h2>Params object methods</h2>
+<p>The following parameters were received by the [::woof::webserver server_interface] server interface.</p>
+<p>Number of parameters: <span id='count'>[params count]</span></p>
+<dl>
+% foreach var [lsort [params keys]] {
+<dt id='[hesc $var]'>[hesc $var]</dt><dd>[hesc [params get $var]]</dd>
+% }
+</dl>
+

@@ -1,0 +1,15 @@
+<p>Woof! provides some facilities for delivering
+  Web pages in multiple languages. Applications can make decisions on
+  content language based on the preferences expressed by the client in
+  its request. Content language can be changed either within a page
+  section or entire page sections can selected based on the
+  language.</p>
+
+<p>For simpler pages, such as display of a standard form, it is
+  sufficient to define a page section and then generate content using
+  a message catalog or a database.</p>
+
+<p>In cases where the static content is complex, entire page section
+  templates can be created in language-dependent fashion.</p>
+
+<p>Naturally, these mechanisms can be used in combination.</p>
