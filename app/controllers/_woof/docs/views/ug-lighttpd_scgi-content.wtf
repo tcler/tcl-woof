@@ -66,6 +66,7 @@ $HTTP["url"] !~ "\.[^.]+$" {
                       (
                         "host" => "127.0.0.1",
                         "port" => 9999,
+			"fix-root-scriptname" => "enable",
                         "check-local" => "disable"
                       )
                     )
@@ -77,6 +78,13 @@ an extension. The purpose of this is to serve stylesheets and images
 directly without going through SCGI and Woof!. There are better ways
 of doing this in Lighttpd 1.5 but that has not released as yet.</p>
 <p>The remaining lines configure the host and port that the Woof! SCGI server is running on.</p>
+
+<p>
+<em>The setting of the variable <code>fix-root-scriptname</code>
+is required for some versions of Lighttpd to fix a 
+<a href='http://redmine.lighttpd.net/issues/show/729'>bug</a>
+in Lighttpd when it is running a SCGI server rooted at <code>/</code>.
+</p>
 <h3>Step 4 - starting the SCGI server</h3>
 <p>The Woof! SCGI server script that handles connections passed by
 Apache needs to be started whenever Apache runs. This step is actually
