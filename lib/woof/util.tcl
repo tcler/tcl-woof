@@ -344,7 +344,7 @@ proc util::charset_iana2tcl {iana_cs {default_cs ""}} {
 proc util::http_sorted_header_values {header_value} {
     # Parses a multi-valued HTTP header string and returns the values
     # sorted by their quality attribute
-    # header_val - the HTTP header value such as those for the Accept-* headers.
+    # header_value - the HTTP header value such as those for the Accept-* headers.
     #  Should not include the header itself.
     # The command sorts the values specified in the header and returns
     # them sorted by their associated quality attributes.
@@ -378,7 +378,7 @@ proc util::http_sorted_header_values {header_value} {
 
 proc util::http_select_header_value {header_value available default_value} {
     # Select a content attribute for a HTTP response
-    # header_val - the HTTP Accept-* value (excluding the Accept-* header)
+    # header_value - the HTTP Accept-* value (excluding the Accept-* header)
     # available - list of available attribute values
     # default_value - value to return if there is no match
     # The command matches the requested HTTP header value against what
@@ -502,17 +502,22 @@ proc util::quoted_split {s sep {quote_chars {\"}} {esc \\} {transform {}}} {
 }
 
 proc util::memoize {args} {
-    # TBD - set limit on size of cache
-    # Redefine without the initialization
-    proc memoize {args} {
-        variable _memoize_cache
-        if {[info exists _memoize_cache($args)]} {
-            return $_memoize_cache($args)
-        }
-        return [set _memoize_cache($args) [uplevel 1 $args]]
+    # Evaluates and caches a command result
+    # args - command and arguments to evaluate
+    # If $args was previously evaluated, its result
+    # is returned from the cache. Otherwise, it is
+    # evaluated in the caller's context and the
+    # result is stored in the cache before being 
+    # returned.
+    #
+    # Note that calls from different contexts will
+    # be treated as identical if $args are syntatically
+    # identical.
+    variable _memoize_cache
+    if {[info exists _memoize_cache($args)]} {
+        return $_memoize_cache($args)
     }
-    
-    return [memoize {*}$args]
+    return [set _memoize_cache($args) [uplevel 1 $args]]
 }
 
 
