@@ -8,7 +8,6 @@
 
 package require tcltest
 
-source [file join [file dirname [info script]] config.tcl]
 source [file join [file dirname [info script]] testutil.tcl]
 source [file join [file dirname [info script]] .. lib woof util.tcl]
 source [file join [file dirname [info script]] .. lib woof hutil.tcl]
