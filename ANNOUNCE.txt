@@ -60,7 +60,7 @@ Useful URLs
 -----------
 Home page - http://woof.magicsplat.com/woof_home
 Programming guide - http://woof.magicsplat.com/woof-ug/_woof/docs/ug/index
-Reference pages - http://woof.magicsplat.com/manuals/woof/index.html
+Reference pages - http://woof.magicsplat.com/woof-ug/woof_manual.html
 SourceForge project - http://sourceforge.net/projects/woof
 
 
