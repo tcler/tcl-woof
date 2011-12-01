@@ -265,6 +265,18 @@ proc ::woof::safe::read_route_file_alias {} {
     return ""
 }
 
+proc ::woof::unsafe_file_command_proxy {ip args} {
+    # Proxy the 'file' command into a safe interp WITHOUT safeguards
+    #   ip - interp into which the command is being proxied
+    #   args - arguments to pass to the file command
+    # The command simply aliases the standard Tcl file command
+    # into a safe interp. It should be only accessed during initialization
+    # and removed before accepting external requests. It is needed
+    # because some 8.6 betas are broken in their handling of file
+    # inside interps.
+    return [file {*}$args]
+}
+
 proc ::woof::master::create_web_interp {} {
     # Create the web interpreter and load packages into it
     
@@ -272,10 +284,11 @@ proc ::woof::master::create_web_interp {} {
     
     # During initialization, we let the safe interpreter source
     # anything it wants
-    set unsafe_cmds {file source load}
-    foreach cmd $unsafe_cmds {
-        interp expose $ip $cmd
-    }
+    interp expose $ip source
+    interp expose $ip load
+    # Some 8.6 betas have broken file commands inside safe interps
+    # so we have to use an alias - TBD
+    interp alias $ip ::file {} ::woof::unsafe_file_command_proxy $ip
 
     # Since it is safe interpreter, we need to set up a package loading
     # mechanism for it.
@@ -301,9 +314,9 @@ proc ::woof::master::create_web_interp {} {
     $ip eval {::woof::config freeze}
 
     # Now hide the exposed unsafe commands
-    foreach cmd $unsafe_cmds {
-        interp hide $ip $cmd
-    }
+    interp hide $ip source
+    interp hide $ip load
+    interp alias $ip ::file {}
 
     # Now enable the safe version of file command and source commands
     $ip alias ::file ::woof::safe::file_alias
