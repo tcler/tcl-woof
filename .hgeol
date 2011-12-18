@@ -2,6 +2,7 @@
 **.hg = native
 **.hgignore = native
 **.hgeol = native
+**.hgtags = BIN
 
 **.cmd = native
 **.bat = native
@@ -16,6 +17,7 @@
 **.htf = native
 **.cfg = native
 **.inc = native
+**.rc = native
 makefile = native
 
 **.lzma = BIN
@@ -34,3 +36,8 @@ makefile = native
 **.wtf = native
 **.conf = native
 **.test = native
+
+**.init = native
+**.types = native
+**.terms = native
+**/MakeIndex = native
