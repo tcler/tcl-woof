@@ -16,6 +16,7 @@
 **.css = native
 **.htf = native
 **.cfg = native
+**.cfg-* = native
 **.inc = native
 **.rc = native
 makefile = native
@@ -33,6 +34,7 @@ makefile = native
 
 **.vcproj = CRLF
 
+**.wtf-* = native
 **.wtf = native
 **.conf = native
 **.test = native
