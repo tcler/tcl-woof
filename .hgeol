@@ -2,7 +2,7 @@
 **.hg = native
 **.hgignore = native
 **.hgeol = native
-**.hgtags = BIN
+**.hgtags = native
 
 **.cmd = native
 **.bat = native
