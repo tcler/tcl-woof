@@ -435,6 +435,8 @@ proc installer::install {server module args} {
         }
     }
 
+    puts "Installing. Please be patient..."
+
     set timestamp [clock format [clock seconds] -format %y%m%d%H%M%S]
     array set opts $args
     if {[info exists opts(-installdir)]} {
@@ -501,7 +503,6 @@ proc installer::install {server module args} {
         install_log "Installation arguments: [join [list $server $module {*}$args] {. }]."
     }
 
-    puts "Installing. Please be patient..."
     try {
         # Create default files if they do not exist
         write_defaults $opts(-installdir)
