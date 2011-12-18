@@ -387,7 +387,7 @@ proc installer::write_defaults {woof_dir} {
     variable root_dir
 
     foreach {src_path dst_path} {
-        config/_application.cfg           config/application.cfg
+        config/_application.cfg-template       config/application.cfg
         app/controllers/views/_layout.wtf  app/controllers/views/layout.wtf
     } {
         set dst_path [file join $woof_dir $dst_path]
