@@ -306,7 +306,7 @@ proc ruff::parse {lines} {
                 }
                 lappend result(fragment) $fragment
             }
-            {^\s*(\w+)\s+-(\s+.*)$} {
+            {^\s*(\S+)\s+-(\s+.*)$} {
                 #ruff
                 # A definition list or parameter list begins with a word
                 # followed by whitespace, a '-' character, whitespace
@@ -327,7 +327,7 @@ proc ruff::parse {lines} {
                 } else {
                     _change_state deflist result
                 }
-                if {![regexp {^\s*(\w+)\s+-(\s+.*)$} $line dontcare result(name) fragment]} {
+                if {![regexp {^\s*(\S+)\s+-(\s+.*)$} $line dontcare result(name) fragment]} {
                     error "Internal error: regexp did not match after switch statement matched."
                 }
                 lappend result(fragment) $fragment
