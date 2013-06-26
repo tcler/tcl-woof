@@ -339,10 +339,11 @@ proc ::ruff::formatter::html::_locate_link {link_label scope} {
     }
 
     # Note in this case we return $link_label, not $scoped_label
-    return [escape $link_label]
+    return [_cmd $link_label]
 }
 
 proc ::ruff::formatter::html::_linkify {text {link_regexp {}} {scope {}}} {
+
     # Convert matching substrings to links
     # text - string to be substituted
     # link_regexp - regexp to use for matching potential links
@@ -362,6 +363,8 @@ proc ::ruff::formatter::html::_linkify {text {link_regexp {}} {scope {}}} {
 
     set start_delim {^|[^[:alnum:]_\:]}
     set end_delim {$|[^[:alnum:]_\:]}
+    set arg_re {\$[_[:alnum:]]+}
+    set const_re {'[<>_[:alnum:]]+'}
 
     # As an aside, initially tried doing this without using indices
     # and instead directly storing the subexpressions for the pre,
@@ -372,14 +375,28 @@ proc ::ruff::formatter::html::_linkify {text {link_regexp {}} {scope {}}} {
 
     set processed ""
     set remain $text
-    while {[regexp -indices "($start_delim)($link_regexp)($end_delim)" $remain dontcare starter link ender]} {
-        foreach {dontcare start_last} $starter break
-        foreach {link_first link_last} $link break
-        foreach {end_first end_last} $ender break
-        append processed [escape [string range $remain 0 $start_last]]
-        append processed [_locate_link [string range $remain $link_first $link_last] $scope]
-        append processed [escape [string range $remain $end_first $end_last]]
-        set remain [string range $remain [incr end_last] end]
+    while {[regexp -indices "($start_delim)($link_regexp)($end_delim)|($arg_re)|($const_re)" $remain dontcare starter link ender argrange constrange cmdrange]} {
+        if {[lindex $link 0] != -1} {
+            lassign $starter dontcare start_last
+            lassign $link link_first link_last
+            lassign $ender end_first end_last
+            # Some links will be enclosed in []. Discard the []
+            append processed [escape [string trimright [string range $remain 0 $start_last] \[]]
+            set linkval [string range $remain $link_first $link_last]
+            append processed [_locate_link $linkval $scope]
+            append processed [escape [string trimleft [string range $remain $end_first $end_last] \]]]
+            set remain [string range $remain [incr end_last] end]
+        } elseif {[lindex $argrange 0] != -1} {
+            lassign $argrange arg_first arg_last
+            append processed [escape [string range $remain 0 $arg_first-1]]
+            append processed [_arg [string range $remain $arg_first+1 $arg_last]]
+            set remain [string range $remain [incr arg_last] end]
+        } else {
+            lassign $constrange const_first const_last
+            append processed [escape [string range $remain 0 $const_first-1]]
+            append processed [_const [string range $remain $const_first+1 $const_last-1]]
+            set remain [string range $remain [incr const_last] end]
+        }
     }
     append processed [escape $remain]
 
@@ -1027,7 +1044,7 @@ proc ::ruff::formatter::html::generate_document {classprocinfodict args} {
             # Print the preamble for this namespace
             foreach {sec paras} [dict get $opts(-preamble) $ns] {
                 append doc [_fmthead $sec 2]
-                append doc [_fmtparas $paras $ref_regexp]
+                append doc [_fmtparas $paras $ref_regexp $ns]
             }
         }
 
