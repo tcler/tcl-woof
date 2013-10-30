@@ -1,3 +1,8 @@
+////
+To generate html docs, 
+asciidoc.py -a data-uri -a icons -a toc -a max-width=55em ruff_guide.txt
+////
+
 = Ruff! Documentation Generator User Guide (V0.4)
 
 == Introduction
