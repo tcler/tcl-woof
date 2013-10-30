@@ -22,7 +22,7 @@ if {[info commands dict] == ""} {
 }
 
 namespace eval ruff {
-    variable version 0.4
+    variable version 0.4.1
 
     variable names
     set names(display) "Ruff!"

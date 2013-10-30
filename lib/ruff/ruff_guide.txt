@@ -1,0 +1,352 @@
+= Ruff! Documentation Generator User Guide (V0.4)
+
+== Introduction
+
+Ruff! (Runtime function formatter) is a documentation generation
+system for programs written in the Tcl programming language. Ruff! is
+included with Woof! but can be used independently of it. Ruff! uses
+runtime introspection in conjunction with comment analysis to generate
+reference manuals for Tcl programs.
+
+In comparison with source code based documentation generators, Ruff!
+produces documentation that not only requires less effort from the
+programmer, but is also more complete, more accurate and more
+maintainable.
+
+Ruff! is covered by a liberal BSD open-source license that permits use
+for any purpose.
+
+== Requirements
+
+Ruff! will run on any system that supports Tcl 8.4 or later. For Tcl
+8.4, the dict extension, which is already included with later versions
+of Tcl, is also required.
+
+== Quick Start
+
+To quickly generate HTML documentation for a namespace hierarchy, say
+::app, run the following commands from inside your application after
+all code has been loaded.
+
+----
+package require ruff
+::ruff::document_namespaces html ::app -output app.html -recurse true
+----
+
+This will create the documentation for all classes and procs under the
+::app namespace tree, in the app.html file.
+
+== Documentation through introspection
+
+One of the more painful exercises a programmer has to go through is
+that of documenting code. Unlike the more intellectually satisfying
+activities of design, coding, and even debugging, documentation is
+seen, with good reason, as a grind. Moreover, burdensome enough the
+initial documentation effort may be, there is the additional ongoing
+chore of maintaining the documentation as the software grows and
+programming interfaces evolve. Documentation through run time
+introspection may help.
+
+Several tools such as ROBODoc and Natural Docs reduce this burden by
+generating documentation from comments in the source code. In addition
+to documentation for individual program elements such as classes and
+functions, they can also generate cross-references, table of contents
+and indices.
+
+Nevertheless, useful though they may be, these source code based
+documenters have several shortcomings:
+
+* The markup necessary for the documentation generators to locate
+relevant comments adds considerable visual clutter to the source code.
+
+* There is duplication of information as program element names, default
+values and such have to be repeated in the code and in the comment
+markup. As changes are made, these can easily get out of sync. In
+fairness, some generators allow code fragments, such as prototypes, to
+be included in the generated documentation but the result is not as
+visually satisfactory.
+
+* Even correctly naming a program element becomes an issue when the
+language supports scopes through namespaces and classes. It is
+difficult to establish the namespace scope for a function without
+considerable sophistication in the parsing code. The generators that
+try to deal with this have to rely on more markup help from the
+programmer. In the case of dynamic languages, the namespaces may be
+established on the fly which makes the problem unsolvable using just
+source analysis. 
+
+* Comments embedded in the source code itself, for
+example to describe the behavior of an option, need to be needlessly
+duplicated in the documentation markup.
+
+The most intractable problem
+though, is dealing with languages that support constructs such as
+inheritance, delegation and mix-ins. There are several choices, all
+unpalatable to various degrees, that can be made in documenting the
+methods exposed by a class.
+
+* The simplest is to simply ignore the inherited class elements. The
+resulting documentation for the class is practically useless, for
+example, when a class only specializes a single method.
++
+At a small incremental cost, the programmer can choose to list the
+direct ancestors in the inheritance tree. In some cases, the generator
+may even do this automatically. Now the reader can at least manually
+follow the links and negotiate the class hierarchy to discover the
+method interface. Like the implementation effort though, the benefits
+are marginal. The issues of duplication and maintenance are still
+present, and manual method lookups are tedious, particularly with deep
+hierarchies and multiple inheritance.
+
+* As an extreme case, the programmer may list and link to all inherited
+methods. This is such a burden that it is likely never done when
+document generators are in use. Not only is the initial cost high,
+maintaining accuracy as ancestors change is next to impossible. The
+only time this approach might be taken is in projects with large
+documentation teams whose sole job is to figuratively run behind the
+programmers, mirroring their every move.
+
+So what’s the solution to all these problems? In the case of
+traditional languages, there might not be one, other than essentially
+retargeting the compiler to take on the task as some implementations
+have done. However, in a language like Tcl, which supports
+comprehensive introspection, the information required for solving the
+above issues is made available by the runtime system and can be made
+use of by a documentation genrator. That is what Ruff! does.
+
+== Basic Document Generation
+
+Ruff! is a package that generates documentation using runtime
+introspection in conjunction with smart parsing of comments in proc
+and method bodies.
+
+Runtime introspection is primarily through the Tcl info
+command. Comments within proc and method bodies are also processed at
+run time and not by analysing source files. Therefore, only comments
+inside proc and method bodies are visible to Ruff!.
+
+Ruff! requires almost no markup and uses wiki-like free formatting
+conventions for structured text like lists.  A simple proc definition
+with Ruff! markup would look like this:
+
+----
+proc character_at {str {index 0}} {
+       # Fetches the character at the specified position in the string
+       # str - string from which character is to be retrieved
+       # index - position at which character is to be retrieved
+       if {$index < 0} {
+           #ruff
+           # If the index has a negative value, it is taken as the position
+           # from the end of the string.
+           ...some code...
+           # The above comment about index gets documented by Ruff! because
+           # of the #ruff marker even though it appears in the middle of the
+           # program body. This comment does not get picked up by Ruff! because it
+           # it appears in the middle of the code and has no #ruff marker attached.
+       } else {
+           ...some code...
+       }
+   }
+----
+
+Below is the output generated by the Ruff! using the doctools plain text formatter
+
+----
+character_at str ?index?
+    str
+        string from which character is to be retrieved
+
+    index
+        position at which character is to be retrieved (default 0)
+
+Fetches the character at the specified position in the string
+
+If the index has a negative value, it is taken as the position from the 
+end of the string.
+----
+
+Note the markup is not obtrusive. Refer to the documentation of the
+distill_body and parse commands for the exact syntax. The source code
+for Ruff! itself is the best example of comment formatting conventions
+for Ruff!.
+
+Because Ruff! gets its input purely from runtime information, to use
+it to generate documentation for a set of commands or classes, it must
+first be loaded into the same interpreter as those commands and
+classes. Use the package command to do so as below:
+
+----
+package require ruff
+----
+
+=== Documenting a single namespace hierarchy
+
+The simplest use of Ruff! is to generate documentation for a single
+namespace or namespace hierarchy in HTML format. The command
+document_namespaces accomplishes this. The following example generates
+documentation for all classes and procs in the namespace
+`::some_namespace` and its descendents. The output is written to the
+file `some_namespace.html`.
+
+----
+package require ruff; # Loads Ruff! into the interpreter
+::ruff::document_namespaces html ::some_namespace -output some_namespace.html -recurse true 
+----
+
+The above uses the built-in HTML output formatter. External formatters
+like doctools require another step to be invoked and may themselves
+have additional options you can use to control the final output. Refer
+to the documentation for those tools for details.
+
+=== Documenting multiple namespaces
+
+Documentation of multiple namespaces may take one of two forms:
+
+* All namespaces may be included in a single documentation file
+* Each namespace may be documented in a separate file
+
+An additional factor is whether the built-in HTML formatter or an
+external formatter is being used.
+
+If the internal HTML formatter is being used, multiple namespaces can
+be documented in a single documentation file simply by passing
+multiple namespaces as a list to the document_namespaces command. If
+multiple output files are desired, then the command is invoked
+separately for each namespace. In this case, however, there will be no
+automatic cross-referencing or navigation menus across namespaces.
+
+In the case where an external formatter is being used, single file
+output may be generated through the use of the `-append` option to the
+`document_namespaces` command:
+
+----
+::ruff::document_namespaces doctools ::some_namespace -output some_namespace.man
+::ruff::document_namespaces doctools ::another_namespace -output some_namespace.man -append true
+----
+
+Both namespace are then documented in the same file. Note that some
+formatters, like doctools, may not be able to process such a combined
+file.
+
+If separate output files are desired, separate files can be generated
+for each namespace. Here the formatter in use has to combine these
+into a single documentation set. Refer to the documentation for the
+appropriate formatting tool for information on how to accomplish this.
+
+== Advanced Document Generation
+
+In some cases, you might want more control over the content and
+structure of the documentation. For example, you may want to
+
+* document a set of commands or classes partitioned based on something
+  other than namespaces
+* document classes and commands in separate reference pages
+* document each class in its own reference page
+
+Such documents may be generated through the use of the `document`
+command in combination with one or more of the commands `extract`,
+`extract_ooclass`, `extract_proc` and `extract_namespace`. These latter
+commands extract metainformation about classes and procs in the form
+of dictionaries. The combined dictionaries can then be passed to the
+document command to generate the documentation.
+
+== Controlling Output Content and Display
+
+In addition to selecting which classes and procedures are included in
+the generated documentation, it may be desirable to include or exclude
+certain parts within the class or procedure. For example,
+documentation for the public API of a module will should not include
+private or internal functions. The following sections describe some of
+the options commonly supported by Ruff! commands that affect this.
+
+=== Using `-docstrings` to include additional documentation
+
+A reference page may need to include additional material, such as an
+overview, in addition to details about individual procs and
+classes. This material may be included in the generated document
+through the use of the `-docstrings` option as described in the `document`
+command.
+
+=== Using `-hidenamespace` to hide namespace qualifiers
+
+By default, documentation generated by Ruff! includes namespace
+qualifiers in all class and proc names. It is possible to have the
+generated output leave out the namespace qualifers by adding the
+`-hidenamespace NAMESPACE` qualifier to the document generation
+commands. This provides a more visually pleasing output with less
+noise, but may result in ambiguities in case of names being present in
+more than one namespace. In particular, some formatters may not
+cross-link correctly in such cases.
+
+=== Using `-includeprivate` to document private procs and methods
+
+By default, private methods and procs are not included in generated
+documentation. Specifying `-includeprivate true` to a command causes
+these to be included. Private methods are methods that are not
+exported from a class. Private procs are procs whose names begin with
+an underscore. This is not currently configurable but is likely to be
+so in the future.
+
+=== Using `-includesource` to include source code
+
+The source code for a proc or a class method is not included in the
+documentation. For internal documentation, it may be convenient to
+have the source code be visible as part of documentation. Specifying
+the option `-includesource true` to a command causes the source code to
+be included in the documentation. It is intended that in a future
+release, HTML output formats will show source code in collapsible
+sections though this is not currently done.
+
+== Ruff! Output Formatters
+
+Ruff! can either directly generate HTML documentation using the
+built-in HTML formatter, or generate formats that can be understood by
+several existing tools such as ROBODoc, Natural Docs or doctools.
+
+Each option has its advantages and disadvantages.
+
+The internal HTML formatter offers (in the author's humble opinion) the best cross-linking and navigation support in addition to cosmetic enhancements such as tooltips and optional hiding/display of source code. It is also the simplest to use as no other external tools are required.
+
+The external formatters have the advantage of supporting many more output formats such as PDF, plain text, Latex etc. In additional the generated documentation can be integrated into other larger documentation sets that contain documentation from other sources.
+
+Choice of an output formatter depends on several factors:
+
+* the end use document format desired - ROBODoc and doctools support
+several output formats but the Ruff! internal formatter and Natural
+Docs support only HTML;
+
+* existing familiarity with a tool - obviously, if you are already familiar with a tool, or want to integrate Ruff! output with other documentation, it makes sense to stick with a tool you know;
+
+* capabilities of the tool itself - some tools are better than others in some areas such as quality of output generated, automatic cross-linking and indexing, configurability etc.
+
+In my biased opinion, Ruff! built-in HTML formatter and Natural Docs
+to be the best (in that order) if you want HTML output. From a purely
+formatting perspective, doctools is the most capable, and works at the
+semantic level unlike other external formatters. Its HTML output is
+decent and it supports many other formats as well. The biggest
+drawback in my mind is that its cross-linking is very
+limited. ROBODoc's strength would appear to be its support for
+additional formats like XML DocBook which can be used to generate even
+more output formats like Microsoft Help.
+
+In general, it is best to try all formatters and pick one that best
+meets your needs.
+
+== Reference Manual
+
+The Ruff! reference manual, generated using Ruff! itself, is available
+at http://woof.magicsplat.com/manuals/ruff/index.html.
+
+== Source Code and Downloads
+
+Ruff! is an open-source project hosted at sourceforge.net. Source code
+and downloadable packages can be found at the Woof! sourceforge
+project site.
+
+== Ruff! Sample Output
+
+The Ruff! reference manual itself is an example of documentation
+produced using Ruff!. However, since Ruff! supports Tcl 8.4, it does
+not make use of any classes. For an example that documents classes,
+see the Woof! reference manual.
+
