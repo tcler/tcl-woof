@@ -1,0 +1,36 @@
+////
+To generate html docs, 
+asciidoc.py -a data-uri -a icons -a max-width=55em index.adoc
+////
+
+image:public/images/_woof/logo.png[align="left"]
+
+*Web Oriented Object Framework*
+
+A Web framework for lazy dogs! Woof! is an open-source, platform and
+server-independent web application framework. It is intended to be
+simple to understand and customize, easy to install and deploy, and
+embeddable into other applications.
+
+* http://woof.sourceforge.net/woof-ug/_woof/docs/ug/index[Woof! User Guide]
+* http://woof.sourceforge.net/woof-ug/woof_manual.html[Woof! Reference Manual]
+
+*Ruff! - Runtime Function Formatter*
+
+Ruff! is a documentation generation system for Tcl that uses source
+code introspection in conjunction with comment analysis to generate
+programming reference manuals. 
+Although part of Woof!, it can be used independently.
+
+In comparison with source code based
+documentation generators, Ruff! produces documentation that not only
+requires less effort from the programmer, but is also more complete,
+more accurate and more maintainable.
+
+* link:ruff_guide.html[Ruff! User Guide]
+* link:ruff.html[Ruff! Reference Manual]
+
+*Source Code and Downloads*
+
+Source code and downloads for both packages are available from
+http://www.sourceforge.net/projects/woof.
