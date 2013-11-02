@@ -297,5 +297,6 @@ Some sample output from Ruff! can be seen at
 * link:woof-ug/woof_manual.html[Woof! reference manual] - reference manual for
 the link:index.html[Woof! framework] illustrating output for TclOO classes
 
-* http://www.posoft.de/download/extensions/Cawt/CawtReference-1.0.3.html[CAWT reference manual] - reference manual for the *COM Automation with Tcl package*
+* http://www.posoft.de/download/extensions/Cawt/CawtReference-1.0.3.html[CAWT reference manual] - reference manual for the 
+http://www.posoft.de/html/extCawt.html[COM Automation with Tcl] package
 from Paul Obermeier
