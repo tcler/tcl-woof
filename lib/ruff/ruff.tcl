@@ -5,8 +5,8 @@
 # Ruff! - RUntime Formatting Function
 # ...a document generator using introspection
 #
-# See http://woof.magicsplat.com/ruff_guide for the user guide
-# and http://woof.magicsplat.com/manuals/ruff/index.html
+# See http://woof.sourceforge.net/ruff_guide for the user guide
+# and http://woof.sourceforge.net/ruff.html
 # for the man pages. The package generates its own documentation
 # (see document_self).
 
@@ -47,7 +47,7 @@ namespace eval ruff {
 
         This document contains reference material for Ruff!. For
         more introductory and tutorial documentation, a user
-        guide is available at http://woof.magicsplat.com/ruff_guide.
+        guide is available at http://woof.sourceforge.net/ruff_guide.html.
         The SourceForge site http://sourceforge.net/projects/woof hosts the
         Ruff! source tree as part of the Woof! project.
     }
