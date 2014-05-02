@@ -364,7 +364,7 @@ proc ::ruff::formatter::html::_linkify {text {link_regexp {}} {scope {}}} {
     set start_delim {^|[^[:alnum:]_\:]}
     set end_delim {$|[^[:alnum:]_\:]}
     set arg_re {\$[_[:alnum:]]+}
-    set const_re {'[<>_[:alnum:]]+'}
+    set const_re {'[<>\._[:alnum:]]+'}
 
     # As an aside, initially tried doing this without using indices
     # and instead directly storing the subexpressions for the pre,
