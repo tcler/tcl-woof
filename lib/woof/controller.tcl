@@ -626,7 +626,7 @@ oo::class create Controller {
 
         set attrs [::woof::util::tag_attr_fragment \
                        [dict merge {type text/javascript} $args]]
-        return "<script href='[my url_for_static $js -subdir javascript]' $attrs>"
+        return "<script src='[my url_for_static $js -subdir javascript]' $attrs></script>"
     }
 
 
