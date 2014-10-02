@@ -22,6 +22,12 @@ referenced by the application code.
 <b>TBD - describe the controller based search paths.</b>
 </p>
 
+<h3>Directory <span class="wf_filename">public/javascript</span></h3>
+<p>This directory is the root of directory tree containing Javascript
+referenced by the application code.
+<b>TBD - describe the controller based search paths.</b>
+</p>
+
 <h3>Directory <span class="wf_filename">lib</span></h3>
 <p>This directory contains the code for Woof! itself and any
 supporting libraries that may be required by Woof!.
