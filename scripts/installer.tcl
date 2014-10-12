@@ -25,15 +25,9 @@ namespace eval installer {
     set source_root_dir $root_dir
 
     # Exes for resource editing and compression
-    variable gorc_exe
-    set gorc_exe [file join $source_root_dir tools win32 gorc.exe]
-    variable upx_exe
-    set upx_exe [file join $source_root_dir tools win32 upx.exe]
-    # ResHacker is free but not redistributable so we cannot
-    # put it in the source tree. Assume it is in the path somewhere
-    variable reshacker_exe
-    set reshacker_exe reshacker.exe
-
+    variable upx_exe  [file join $source_root_dir tools win32 upx.exe]
+    variable ctcl_exe [file join $source_root_dir tools win32 ctcl.exe]
+    
     # Woof! version
     variable woof_version
 
@@ -103,12 +97,11 @@ proc installer::distribute {target_dir args} {
     variable source_root_dir
     variable woof_version
     variable upx_exe
-    variable reshacker_exe
-    variable gorc_exe
+    variable ctcl_exe
     variable manifest_name
 
     if {$::tcl_platform(platform) ne "windows"} {
-        # The gorc etc. not available on Unix. TBD - need to clean up this mess
+        # ctcs gorc etc. not available on Unix. TBD - need to clean up this mess
         error "Sorry, currently the distribution can only be created on Windows."
     }
 
@@ -255,45 +248,9 @@ proc installer::distribute {target_dir args} {
         file copy -force $tclkit $runtime
         # Decompress the exe
         exec $upx_exe -d $runtime
-        # Remove the existing version and icon resources
-        exec $reshacker_exe -delete $runtime , $runtime , versioninfo , ,
-        exec $reshacker_exe -delete $runtime , $runtime , icongroup , ,
-        # Now write out the bowwow resource file
-        set rc_file [file join $target_dir bowwow.rc]
-        # TBD - change path to icon
-        set fd [open $rc_file w]
-        puts $fd [format {
-TCLSH ICON "public/images/_woof/woof_icon.ico"
-1 VERSIONINFO
-FILEVERSION %1$d, %2$d, 0, 0
-PRODUCTVERSION %1$d, %2$d, 0, 0
 
-FILEOS 4
-FILETYPE 1
-{
-    BLOCK "StringFileInfo" {
-        BLOCK "040904b0" {
-            VALUE "FileDescription", "BowWow Web server"
-            VALUE "OriginalFilename", "bowwow.exe"
-            VALUE "CompanyName", "Ashok P. Nadkarni"
-            VALUE "FileVersion", "%1$d.%2$d.0.0"
-            VALUE "LegalCopyright", "Copyright © 2009, Ashok P. Nadkarni"
-            VALUE "ProductName", "BowWow Web Server"
-            VALUE "ProductVersion", "%1$d.%2$d.0.0"
-        }
-    }
-    BLOCK "VarFileInfo" {
-        VALUE "Translation", 0x0409, 0x04B0
-    }
-}
-} {*}[split $woof_version .]]
-        close $fd
-        # Compile the resource file into binary format
-        set res_file [file join $target_dir bowwow.res]
-        exec $gorc_exe /fo $res_file /r $rc_file
-
-        # Add binary resources back into the runtime
-        exec $reshacker_exe -add $runtime , $runtime , $res_file , , ,
+	exec $ctcl_exe write_version_resource $runtime -copyright "2014 Ashok P. Nadkarni" -timestamp now -version $woof_version -productversion $woof_version ProductName "BowWow Web Server" FileDescription "BowWow Web Server" CompanyName "Ashok P. Nadkarni" FileVersion "$woof_version.0.0" ProductVersion "$woof_version.0.0"
+	exec $ctcl_exe write_icon_resource $runtime "public/images/_woof/woof_icon.ico" -name 1
         exec $tclkit [file join $src_dir tools sdx.kit] wrap ${bowwow}.exe -runtime $runtime -vfs $bowwow_dir
     }
     return
