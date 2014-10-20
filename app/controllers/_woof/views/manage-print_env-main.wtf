@@ -1,9 +1,10 @@
 %# Page to display contents of the environment
 
 <h2>Environment</h2>
-<p>The following environment was passed by the [::woof::webserver server_interface] server interface.</p>
+<p>The following environment was passed by the [::woof::webserver server_interface] server interface.
 <dl>
 % foreach var [lsort [env keys]] {
 <dt>[hesc $var]</dt><dd>[hesc [env get $var]]</dd>
 % }
 </dl>
+</p>

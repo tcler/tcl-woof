@@ -1,7 +1,21 @@
 /* Woof default CSS */
+
 /* Assumes YUI reset-font-grids and base-min loaded */
 
-/* FYI - The Woof logo main color is #DB7D2A */
+.pure-menu.pure-menu-open {
+    border-width: 0;
+    background-color: #006666;
+}
+
+.pure-menu .pure-menu-heading, .pure-menu a {
+    color: #E99A56;
+}
+
+.wf_nav {
+    background-color: #006666;
+}
+
+/* FYI - The Woof logo main color is #E99A56 */
 
 h1,h2 {
   color: #888888;
@@ -43,7 +57,7 @@ dt, dd {
    font-size: 93%;
 }
 
-#ft {
+footer {
     font-size: 77%;
     text-align: center;
     border-top: 1px solid #aaaaaa;
@@ -51,25 +65,26 @@ dt, dd {
     margin-top: 10px;
 }
 
+header .wf_banner {
+    font-family: Trebuchet MS, Helvetica, sans-serif;
+    font-weight: bold;
+    height: 48px;
+    background-color: #006666; 
+    background-position: 20px 20px;
+    padding: 20px;
+    background-image: url(../images/_woof/logo.png);
+    background-repeat: no-repeat;
+    text-indent: 100px;
+}
+
 .wf_banner h2 {
-    color: #006666;
+    color: #E99A56;
     margin: 0px;
 }
 
 .wf_banner h3 {
-    color: #006666;
+    color: #E99A56;
     margin: 0px;
-}
-
-#hd .wf_banner {
-    font-family: Trebuchet MS, Helvetica, sans-serif;
-    font-weight: bold;
-    height: 48px;
-    background-image: url(../images/_woof/logo.png);
-    background-position: left top;
-    background-repeat: no-repeat;
-    text-indent: 100px;
-    margin-top: 20px;
 }
 
 
@@ -98,7 +113,7 @@ dt, dd {
 
 .wf_linkbox ul {
   margin-top: 0em;
-  margin-left: 0.5em;
+  padding-left: 1em;
 }
 
 .wf_linkbox ul li {
@@ -131,12 +146,14 @@ div.wf_navbox {
 }
 
 .wf_navbox ul {
-  margin-left: 1.5em;
-  margin-top: 0em;
-  margin-bottom: 0em;
+  margin-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
 }
 
 .wf_navbox li {
+  list-style-type: disc;
   list-style-image: url(../images/_woof/navarrowright.png);
   font-weight: bold;
   color: #808080;

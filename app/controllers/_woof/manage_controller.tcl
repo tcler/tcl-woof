@@ -9,15 +9,7 @@ oo::class create ManageController {
         # have defined.
         pagevar set section_layout_alias _layout
         
-        # Customize the layout as per our liking
-        pagevar set \
-            yui_page_width 750px \
-            yui_sidebar_width 160px \
-            yui_main_percent 75%
-            
         pagevar set styles {
-            stylesheets/_yui-2-8-0r4-reset-fonts-grids.css
-            stylesheets/_yui-2-8-0r4-base-min.css
             _woof.css
         }
 
