@@ -1,8 +1,10 @@
 %# Page to display configuration
 
 <h2>Configuration settings</h2>
+<p>
 <dl>
 % foreach var [lsort [config keys]] {
 <dt>[hesc $var]</dt><dd>[hesc [config get $var]]</dd>
 % }
 </dl>
+</p>
