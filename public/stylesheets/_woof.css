@@ -134,7 +134,7 @@ div.wf_navbox {
   margin-bottom: 20px;
 }
 
-.wf_navbox {
+.wf_navbox, .wf_hnavbox {
   font-size: 93%;
 }
 
@@ -142,39 +142,46 @@ div.wf_navbox {
   font-size: 93%;
   margin-bottom: 0.2em;
   margin-top: 0em;
-  color: #808080;
+  color: white;
 }
 
-.wf_navbox ul {
+.wf_navbox ul, .wf_hnavbox ul {
   margin-left: 0;
   margin-top: 0;
   margin-bottom: 0;
-  padding: 0;
+  padding-left: 1em;
 }
 
-.wf_navbox li {
-  list-style-type: disc;
-  list-style-image: url(../images/_woof/navarrowright.png);
+.wf_navbox li, .wf_hnavbox li {
+  list-style-type: none;
+  /* list-style-image: url(../images/_woof/navarrowright.png); */
   font-weight: bold;
-  color: #808080;
+  color: #e99a56;
 }
 
 .wf_navbox a:link, .wf_navbox a:visited {
   text-decoration: none;
   font-weight: normal;
-  color: #808080;
+  color: white;
 }
 
 .wf_navbox a:hover {
   /* font-weight: bold; */
   /* text-decoration: underline; */
-  color: #db7d2a;
+  color: #e99a56;
 }
 
 .wf_hnavbox {
   padding-bottom:0.5em;
   text-align:center;
   display: block;
+}
+
+.wf_hnavbox a:link, .wf_hnavbox a:visited {
+  text-decoration: none;
+  font-size: 93%;
+  font-weight: normal;
+  color: #808080;
 }
 
 .wf_top_border {
@@ -204,5 +211,9 @@ div.wf_navbox {
   background-position: right center;
   background-repeat: no-repeat;
   padding-right: 15px; /* So image does not overlap */
+}
+
+body {
+    background-color: #ffffff;
 }
 

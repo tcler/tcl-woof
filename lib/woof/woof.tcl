@@ -25,6 +25,7 @@ apply {dir {
     source [file join $dir wtf.tcl]
     source [file join $dir hutil.tcl]
     source [file join $dir route.tcl]
+    source [file join $dir pure.tcl]
 } ::woof} [file dirname [info script]]
 
 namespace eval ::woof {

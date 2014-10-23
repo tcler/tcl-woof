@@ -22,3 +22,11 @@
   [my link_to "User Guide" -module _woof::docs -controller ug -action index]
   if you have not done so already.
 </p>
+
+<p>
+[woof::pure::button "Button"] 
+[woof::pure::button "Disabled" -enabled 0] 
+[woof::pure::button "Pressed" -pressed 1] 
+[woof::pure::button "Primary" -primary 1] 
+[woof::pure::button "Settings" -url http://localhost:8015/settings]
+</p>

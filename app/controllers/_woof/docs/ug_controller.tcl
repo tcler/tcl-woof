@@ -127,8 +127,6 @@ oo::class create UgController {
             yui_main_percent 75%
             
         pagevar set styles {
-            _yui-2-8-0r4-reset-fonts-grids.css
-            _yui-2-8-0r4-base-min.css
             _woof.css
             _woof_ug.css
         }
