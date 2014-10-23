@@ -145,7 +145,7 @@ proc util::make_query_string {args} {
     foreach {k val} $args {
         # We encode k and val separately. Else "=" might
         # will get encoded
-        lappend query "[::util::url_encode $k]=[::util::url_encode $val]"
+        lappend query "[url_encode $k]=[url_encode $val]"
     }
 
     return ?[join $query &]
