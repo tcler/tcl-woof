@@ -106,6 +106,15 @@ proc wibble::static {request response} {
     dict with request {
         if {![file isdirectory $fspath] && [file exists $fspath]} {
             dict set response status 200
+            # IE 9+ will ignore CSS and Javascript if content type
+            # is not set correctly.
+            switch -exact -- [file extension $fspath] {
+                .css { set ct text/css }
+                .js   { set ct application/javascript }
+            }
+            if {[info exists ct]} {
+                dict set response header content-type $ct
+            }
             dict set response contentfile $fspath
             sendresponse $response
         } else {
