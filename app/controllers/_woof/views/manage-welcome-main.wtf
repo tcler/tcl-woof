@@ -30,3 +30,12 @@
 [woof::pure::button "Primary" -primary 1] 
 [woof::pure::button "Settings" -url http://localhost:8015/settings]
 </p>
+
+<p>
+[woof::pure::menu {
+    {Microsoft http://www.microsoft.com}
+    {Google http://www.google.com selected}
+    {}
+    {Yahoo http://www.yahoo.com disabled}
+} -direction vertical -heading Sites]
+</p>

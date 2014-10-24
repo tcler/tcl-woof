@@ -1,13 +1,15 @@
-body {
-#    margin: 10px;
-}
-
 html, button, input, select, textarea,
 .pure-g [class *= "pure-u"] {
     /* Set your content font stack here: */
     font-family: Georgia, Times, "Times New Roman", serif;
 }
 
+.pure-g > div {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 .wf_box {
-    margin: 0.5em;
+    padding: 0.5em;
 }
