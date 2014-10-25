@@ -39,3 +39,5 @@
     {Yahoo http://www.yahoo.com disabled}
 } -direction vertical -heading Sites]
 </p>
+
+[woof::pure::paginator {1 5} http://www.google.com/ -count 3 -start 2 -active 2]
