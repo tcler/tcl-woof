@@ -2,9 +2,14 @@
 
 <h2>Environment</h2>
 <p>The following environment was passed by the [::woof::webserver server_interface] server interface.
-<dl>
-% foreach var [lsort [env keys]] {
-<dt>[hesc $var]</dt><dd>[hesc [env get $var]]</dd>
-% }
-</dl>
+
+%(
+  set data {}
+  foreach var [lsort [env keys]] {
+      lappend data [list $var [env get $var]]
+  }
+%)
+
+[::woof::pure::table $data -heading {Name Value}  -borders horizontal]
+
 </p>
