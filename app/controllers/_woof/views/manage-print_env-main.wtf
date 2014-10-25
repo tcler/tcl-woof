@@ -10,6 +10,6 @@
   }
 %)
 
-[::woof::pure::table $data -heading {Name Value}  -borders horizontal]
+[::woof::pure::table $data -heading {Name Value}  -borders horizontal -stripes 1]
 
 </p>

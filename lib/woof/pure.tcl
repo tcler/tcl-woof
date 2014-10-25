@@ -179,3 +179,61 @@ proc pure::table {data args} {
     append html </table>
     return $html
 }
+
+
+proc pure::paginator {range url_prefix args} {
+    # Returns HTML for a Pure CSS formatted paginator
+    #   range - list of one or two integers denoting the range of page numbers.
+    #     If the second number is omitted, there is no upper limit.
+    #   url_prefix - the prefix of the URL to use for each page. The page
+    #     number is appended to this when constructing the URL for each
+    #     button.
+    #   -active NUMBER - the page number that is currently active
+    #   -start START - First page number to show
+    #   -count COUNT - Number of page buttons
+    
+    lassign $range lb ub
+    if {$ub eq ""} {
+        set ub 2000000000;      # Some large number
+    }
+
+    array set opts {
+        -start 1
+        -count 5
+        -active -1
+    }
+    array set opts $args
+    if {$lb > $opts(-start)} {
+        set opts(-start) $lb
+    }
+    if {($opts(-start) + $opts(-count) - 1) > $ub} {
+        set opts(-count) [expr {$ub - $opts(-start) + 1}]
+    }
+
+    set html "<ul class='pure-paginator'>\n"
+    if {$lb < $opts(-start)} {
+        append html "<li><a class='pure-button prev' href='${url_prefix}[expr {$opts(-start)-1}]'>&#171;</a></li>\n"
+    } else {
+        append html "<li><a class='pure-button prev pure-button-disabled' href='${url_prefix}$opts(-start)'>&#171;</a></li>\n"
+    }
+
+    set i $opts(-start)
+    set end [expr {$opts(-start)+$opts(-count)-1}]
+    while {$i <= $end} {
+        if {$i == $opts(-active)} {
+            append html "<li><a class='pure-button pure-button-active' href='${url_prefix}$i'>$i</a></li>\n"
+        } else {
+            append html "<li><a class='pure-button' href='${url_prefix}$i'>$i</a></li>\n"
+        }
+        incr i
+    }
+
+    if {$ub >= ($opts(-start) + $opts(-count))} {
+        append html "<li><a class='pure-button next' href='${url_prefix}[expr {$opts(-start)+$opts(-count)}]'>&#187;</a></li>\n"
+    } else {
+        append html "<li><a class='pure-button next pure-button-disabled' href='${url_prefix}[expr {$opts(-start)+$opts(-count)-1}]'>&#187;</a></li>\n"
+    }
+
+    append html "</ul>"
+    return $html
+}
