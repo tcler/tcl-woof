@@ -110,3 +110,72 @@ proc pure::menu {menudefs args} {
 
 
 }
+
+proc pure::table {data args} {
+    # Returns the HTML for a Pure CSS styled table
+    #  data - list of sublists with each sublist corresponding to a table row
+    #  -borders vertical|horizontal|both - specifies which cell borders are
+    #     drawn. By default only the vertical borders are drawn.
+    #  -heading HEADER - specifies the table heading.
+    #  -stripes BOOLEAN - if true, alternate table rows are shaded. Default
+    #     is false.
+
+    set borders vertical
+    if {[dict exists $args -borders]} {
+        set borders [dict get $args -borders]
+    }
+
+    set stripes 0
+    if {[dict exists $args -stripes]} {
+        set stripes [dict get $args -stripes]
+    }
+
+    switch -exact -- $borders {
+        horizontal {
+            set html "<table class='pure-table pure-table-horizontal'>"
+        }
+        both {
+            set html "<table class='pure-table pure-table-bordered'>"
+        }
+        default {
+            set html "<table class='pure-table'>"
+        }
+    }
+    
+    
+    if {[dict exists $args -heading]} {
+        append html "<thead><tr>"
+        foreach cell [dict get $args -heading] {
+            append html "<th>[util::hesc $cell]</th>"
+        }
+        append html "</tr></thead>\n"
+    }
+
+    if {$stripes} {
+        # Longer way because pure-table-striped does not work with IE7/8
+        set i 0
+        foreach row $data {
+            if {$i & 1} {
+                append html "<tr class='pure-table-odd'>"
+            } else {
+                append html "<tr>"
+            }
+            foreach cell $row {
+                append html "<td>[util::hesc $cell]</td>"
+            }
+            append html "</tr>\n"
+            incr i
+        }
+    } else {
+        foreach row $data {
+            append html "<tr>"
+            foreach cell $row {
+                append html "<td>[util::hesc $cell]</td>"
+            }
+            append html "</tr>\n"
+        }
+    }
+
+    append html </table>
+    return $html
+}
