@@ -41,3 +41,17 @@
 </p>
 
 [woof::pure::paginator {1 5} http://www.google.com/ -count 3 -start 2 -active 2]
+
+<p>
+[woof::pure::form {
+    fieldset {
+        input {-label Name -name name -type text}
+        input {-label Email -name email -type datetime}
+        input {-label {This is a checkbox} -name cb -type checkbox}
+    }
+    button {"Submit" -type submit -primary true}
+    button {"Reset" -type reset}
+} -layout stacked]
+</p>
+
+
