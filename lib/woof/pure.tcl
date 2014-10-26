@@ -18,13 +18,16 @@ proc pure::button {text args} {
     #  -pressed BOOLEAN - controls whether button is shown as pressed or not.
     #                     Default is 0.
     #  -primary BOOLEAN - style as a primary button (default false)
+    #  -type button|submit|reset - specifies the type of the button.
     #  -url - URL to link to
     
+    # TBD - what should the -type default be?
     array set opts {
         -classes {}
         -enabled 1
         -pressed 0
         -primary 0
+        -type button
     }
         
     array set opts $args
@@ -45,7 +48,7 @@ proc pure::button {text args} {
     if {[info exists opts(-url)]} {
         return "<a href='$opts(-url)' class='$classes'>$text</a>"
     } else {
-        return "<button class='$classes'>$text</button>"
+        return "<button type='$opts(-type)' class='$classes'>$text</button>"
     }
 }
 
@@ -236,4 +239,130 @@ proc pure::paginator {range url_prefix args} {
 
     append html "</ul>"
     return $html
+}
+
+proc pure::form {formdef args} {
+    # Returns a PureCSS styled form
+    #  formdef - form definition list as described below
+    #  -layout inline|stacked|aligned - Specifies the form layout which may
+    #     be aligned (labels next to entry fields), stacked
+    #     (labels above entry fields) or inline
+    #     (all fields on the same line, default)
+    #  -title TEXT - a legend to use for the form
+    #
+    # The form definition is specified as a list of pairs with the first
+    # element of the pair specifying the form element type, such as button,
+    # and the second its definition. These form element types are described
+    # below.
+    # 
+    # The 'fieldset' form element corresponds to a HTML <fieldset> tag.
+    # The second element of the pair is itself a form definition using
+    # the same format described here.
+    #
+    # The 'fieldgroup' form element is like fieldset except that the
+    # contained controls are visually grouped together with no padding.
+    #
+    # The 'button' form element creates a button. The second element of
+    # the pair is a list of arguments to pass to the [pure::button] command.
+    #
+    # The 'input' form element creates a label and an associated text
+    # entry field.
+    # The second element of the pair is a dictionary with the following keys
+    # and corresponding values. Keys that are optional are indicated as such.
+    #   -enabled - a boolean value (optional, default 1) that marks
+    #      the field as enabled or not
+    #   -id - Specifies the id attribute of the input field (optional)
+    #   -label - the text to use for the text entry label (optional)
+    #   -name - the name of the text entry field for the form
+    #   -placeholder - Directly translates to the placeholder attribute
+    #      in the generated HTML (optional)
+    #   -readonly - a boolean value (optional, default 0) that specifies
+    #      that the entry cannot be edited
+    #   -required - a boolean value (optional, default 0) that specifies
+    #      whether the form submission requires the field to be filled
+    #   -rounded - a boolean value (optional, default 0) that specifies
+    #      that the input field borders be rounded
+    #   -type - Specifies the type of the input field. Directly passed
+    #      through as the type attribute in the generated HTML.
+    #   -value - Initial value to display for the field (optional)
+
+    set need_control_group 0
+
+    set html "<form class='pure-form"
+    if {[dict exists $args -layout]} {
+        switch -exact -- [dict get $args -layout] {
+            stacked { append html " pure-form-stacked" }
+            aligned {
+                append html " pure-form-aligned"
+                set need_control_group 1
+            }
+        }
+    }
+    append html "'>"
+
+    foreach {elem def} $formdef {
+        append html [_parse_formdef $elem $def $need_control_group]
+    }
+    
+    append html "</form>"
+    return $html
+}
+
+proc pure::_parse_formdef {form_elem def need_control_group} {
+    switch -exact -- $form_elem {
+        fieldgroup -
+        fieldset {
+            set html "<fieldset"
+            if {$form_elem eq "fieldgroup"} {
+                append html " class='pure-group'"
+            }
+            append html ">\n"
+            foreach {elem field_def} $def {
+                append html [_parse_formdef $elem $field_def $need_control_group]
+            }
+            append html "</fieldset>\n"
+            return $html
+        }
+        button {
+            if {$need_control_group} {
+                return "<div class='pure-controls'>[button {*}$def]</div>"
+            } else {
+                return [button {*}$def]
+            }
+        }
+        input {
+            set html ""
+            if {$need_control_group} {
+                append html "<div class='pure-control-group'>"
+            }
+            if {[dict exists $def -label]} {
+                append html "<label>[util::hesc [dict get $def -label]]\n"
+            }
+            append html "<input"
+            # -name must exist else error
+            append html " name='[util::hesc [dict get $def -name]]'"
+            foreach {opt attr} {
+                -id id -placeholder placeholder -type type
+            } {
+                if {[dict exists $def $opt]} {
+                    append html " $attr='[util::hesc [dict get $def $opt]]'"
+                }
+            }
+            if {[dict exists $def -readonly] && [dict get $def -readonly]} {
+                append html " readonly"
+            }
+            if {[dict exists $def -enabled] && ![dict get $def -enabled]} {
+                append html " disabled"
+            }
+            append html "></input>\n"
+            if {[dict exists $def -label]} {
+                 append html "</label>\n"
+            }
+
+            if {$need_control_group} {
+                append html "</div>"
+            }
+            return $html
+        }
+    }
 }
