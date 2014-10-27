@@ -45,13 +45,13 @@
 <p>
 [woof::pure::form {
     fieldset {
-        input {-label Name -name name -type text}
-        input {-label Email -name email -type datetime}
+        input {-label Name -name name -type text -placeholder {Your Name} -required 1 -rounded 1}
+        input {-label Email -name email -type text -value myemail -placeholder foo}
         input {-label {This is a checkbox} -name cb -type checkbox}
     }
     button {"Submit" -type submit -primary true}
     button {"Reset" -type reset}
-} -layout stacked]
+} -layout stacked -title "My Form"]
 </p>
 
 
