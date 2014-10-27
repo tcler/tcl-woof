@@ -120,15 +120,14 @@ oo::class create UgController {
         # have defined.
         pagevar set section_layout_alias _layout
         
-        # Customize the layout as per our liking
-        pagevar set \
-            yui_page_width 750px \
-            yui_sidebar_width 160px \
-            yui_main_percent 75%
-            
         pagevar set styles {
             _woof.css
             _woof_ug.css
+        }
+
+        pagevar set layout {
+            sidebar {tag nav cssclasses {wf_nav}}
+            main {cssclasses {pure-skin-woof wf_box}}
         }
 
         # Set page title based on the section
