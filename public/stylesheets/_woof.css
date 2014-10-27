@@ -132,17 +132,23 @@ header .wf_banner {
 div.wf_navbox {
   /* margin-top: 1em; */
   margin-bottom: 20px;
+  padding-left: 1em;
+  padding-right: 1em
 }
 
-.wf_navbox, .wf_hnavbox {
+.wf_navbox {
+  font-size: 77%;
+}
+
+.wf_hnavbox {
   font-size: 93%;
 }
 
 .wf_navbox h2 {
-  font-size: 93%;
   margin-bottom: 0.2em;
   margin-top: 0em;
   color: white;
+  font-size: 100%;
 }
 
 .wf_navbox ul, .wf_hnavbox ul {
@@ -162,7 +168,15 @@ div.wf_navbox {
 .wf_navbox a:link, .wf_navbox a:visited {
   text-decoration: none;
   font-weight: normal;
+}
+
+.wf_nav .wf_navbox a:link, .wf_nav .wf_navbox a:visited {
   color: white;
+}
+
+.wf_navbox a:link, .wf_navbox a:visited {
+  color: #808080;
+  font-size: 100%;
 }
 
 .wf_navbox a:hover {

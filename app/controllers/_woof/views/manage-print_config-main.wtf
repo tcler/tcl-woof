@@ -2,9 +2,13 @@
 
 <h2>Configuration settings</h2>
 <p>
-<dl>
-% foreach var [lsort [config keys]] {
-<dt>[hesc $var]</dt><dd>[hesc [config get $var]]</dd>
-% }
-</dl>
+%(
+  set data {}
+  foreach var [lsort [config keys]] {
+      lappend data [list $var [config get $var]]
+  }
+%)
+
+[::woof::pure::table $data -heading {Name Value}  -borders horizontal -stripes 1]
+
 </p>
