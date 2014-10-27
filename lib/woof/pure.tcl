@@ -1,3 +1,5 @@
+# Pure CSS interface module
+#
 # Copyright (c) 2014, Ashok P. Nadkarni
 # All rights reserved.
 # See the file LICENSE in the Woof root directory for license
@@ -340,7 +342,12 @@ proc pure::_parse_formdef {form_elem def need_control_group} {
                 append html "<div class='pure-control-group'>"
             }
             if {[dict exists $def -label]} {
-                append html "<label>[util::hesc [dict get $def -label]]\n"
+                append html "<label>"
+                # For checkboxes and radio, labels will come after control
+                if {[dict exists $def -type] &&
+                    [dict get $def -type] ni {checkbox radio}} {
+                    append html "[util::hesc [dict get $def -label]]\n"
+                }
             }
             append html "<input"
             # -name must exist else error
@@ -369,7 +376,12 @@ proc pure::_parse_formdef {form_elem def need_control_group} {
             }
             append html "></input>\n"
             if {[dict exists $def -label]} {
-                 append html "</label>\n"
+                # For checkboxes and radio, labels will come after control
+                if {[dict exists $def -type] &&
+                    [dict get $def -type] in {checkbox radio}} {
+                    append html "[util::hesc [dict get $def -label]]\n"
+                }
+                append html "</label>\n"
             }
 
             if {$need_control_group} {

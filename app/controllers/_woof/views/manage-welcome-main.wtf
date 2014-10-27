@@ -45,9 +45,11 @@
 <p>
 [woof::pure::form {
     fieldset {
-        input {-label Name -name name -type text -placeholder {Your Name} -required 1 -rounded 1}
+        input {-label Name -name name -placeholder {Your Name} -required 1 -rounded 1}
         input {-label Email -name email -type text -value myemail -placeholder foo}
         input {-label {This is a checkbox} -name cb -type checkbox}
+        input {-label {Radio one} -name r -type radio}
+        input {-label {Radio two} -name r -type radio}
     }
     button {"Submit" -type submit -primary true}
     button {"Reset" -type reset}
