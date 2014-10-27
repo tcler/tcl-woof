@@ -298,7 +298,11 @@ proc pure::form {formdef args} {
             }
         }
     }
-    append html "'>"
+    append html "'>\n"
+
+    if {[dict exists $args -title]} {
+        append html "<legend>[util::hesc [dict get $args -title]]</legend>"
+    }
 
     foreach {elem def} $formdef {
         append html [_parse_formdef $elem $def $need_control_group]
@@ -341,6 +345,12 @@ proc pure::_parse_formdef {form_elem def need_control_group} {
             append html "<input"
             # -name must exist else error
             append html " name='[util::hesc [dict get $def -name]]'"
+            if {[dict exists $def -value]} {
+                append html " value='[util::hesc [dict get $def -value]]'"
+            }
+            if {[dict exists $def -rounded]} {
+                append html " class='pure-input-rounded'"
+            }
             foreach {opt attr} {
                 -id id -placeholder placeholder -type type
             } {
@@ -353,6 +363,9 @@ proc pure::_parse_formdef {form_elem def need_control_group} {
             }
             if {[dict exists $def -enabled] && ![dict get $def -enabled]} {
                 append html " disabled"
+            }
+            if {[dict exists $def -required] && [dict get $def -required]} {
+                append html " required"
             }
             append html "></input>\n"
             if {[dict exists $def -label]} {
