@@ -30,6 +30,8 @@ namespace eval installer {
     
     # Woof! version
     variable woof_version
+    # Do not want non-numeric characters in Windows version
+    variable woof_numeric_version
 
     # Exit code for script
     variable exit_code 0
@@ -40,6 +42,7 @@ namespace eval installer {
 
 source [file join [file dirname [info script]] .. lib woof woofversion.tcl]
 set installer::woof_version [::woof::version]
+regsub -all {[^\d\.]} $installer::woof_version \. installer::woof_numeric_version
 
 proc installer::usage {{msg ""} {code ""}} {
     # Prints a usage description and exits
@@ -96,6 +99,7 @@ proc installer::distribute {target_dir args} {
 
     variable source_root_dir
     variable woof_version
+    variable woof_numeric_version
     variable upx_exe
     variable ctcl_exe
     variable manifest_name
@@ -249,7 +253,7 @@ proc installer::distribute {target_dir args} {
         # Decompress the exe
         exec $upx_exe -d $runtime
 
-	exec $ctcl_exe write_version_resource $runtime -copyright "2014 Ashok P. Nadkarni" -timestamp now -version $woof_version -productversion $woof_version ProductName "BowWow Web Server" FileDescription "BowWow Web Server" CompanyName "Ashok P. Nadkarni" FileVersion "$woof_version.0.0" ProductVersion "$woof_version.0.0"
+	exec $ctcl_exe write_version_resource $runtime -copyright "2014 Ashok P. Nadkarni" -timestamp now -version $woof_numeric_version -productversion $woof_numeric_version ProductName "BowWow Web Server" FileDescription "BowWow Web Server" CompanyName "Ashok P. Nadkarni" FileVersion "$woof_numeric_version.0" ProductVersion "$woof_numeric_version.0"
 	exec $ctcl_exe write_icon_resource $runtime "public/images/_woof/woof_icon.ico" -name 1
         exec $tclkit [file join $src_dir tools sdx.kit] wrap ${bowwow}.exe -runtime $runtime -vfs $bowwow_dir
     }
