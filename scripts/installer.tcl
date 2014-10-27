@@ -115,7 +115,6 @@ proc installer::distribute {target_dir args} {
         -gzipper gzip
         -zipper zip
         -tarrer bsdtar
-        -sdx sdx.kit
         -force false
         -kit all
         -fromscm false
@@ -244,7 +243,8 @@ proc installer::distribute {target_dir args} {
         # TBD - make tclkit path configurable
         set tclkit [file join $src_dir thirdparty tclkits tclkit-cli.exe]
         set bowwow [file join $target_dir bowwow-${woof_version}]
-        exec $tclkit [file join $src_dir tools sdx.kit] wrap ${bowwow}.kit -vfs $bowwow_dir
+        set sdx [file join $src_dir tools sdx.kit]
+        exec $tclkit $sdx wrap ${bowwow}.kit -vfs $bowwow_dir
         set bowwow_exe [file join $target_dir bowwow-${woof_version}.exe]
         # Need to copy the executable because we cannot use it as the runtime file
         # directly
@@ -252,10 +252,11 @@ proc installer::distribute {target_dir args} {
         file copy -force $tclkit $runtime
         # Decompress the exe
         exec $upx_exe -d $runtime
-
-	exec $ctcl_exe write_version_resource $runtime -copyright "2014 Ashok P. Nadkarni" -timestamp now -version $woof_numeric_version -productversion $woof_numeric_version ProductName "BowWow Web Server" FileDescription "BowWow Web Server" CompanyName "Ashok P. Nadkarni" FileVersion "$woof_numeric_version.0" ProductVersion "$woof_numeric_version.0"
-	exec $ctcl_exe write_icon_resource $runtime "public/images/_woof/woof_icon.ico" -name 1
-        exec $tclkit [file join $src_dir tools sdx.kit] wrap ${bowwow}.exe -runtime $runtime -vfs $bowwow_dir
+        exec $tclkit $sdx wrap ${bowwow}.exe -runtime $runtime -vfs $bowwow_dir
+        exec cmd /c cd $target_dir && $tclkit $sdx mksplit [file tail ${bowwow}.exe]
+	exec $ctcl_exe write_version_resource ${bowwow}.head -copyright "2014 Ashok P. Nadkarni" -timestamp now -version $woof_numeric_version -productversion $woof_numeric_version ProductName "BowWow Web Server" FileDescription "BowWow Web Server" CompanyName "Ashok P. Nadkarni" FileVersion "$woof_numeric_version.0" ProductVersion "$woof_numeric_version.0"
+	exec $ctcl_exe write_icon_resource ${bowwow}.head "public/images/_woof/woof_icon.ico" -name 1
+        exec cmd /c copy /b /y [file nativename ${bowwow}.head]+[file nativename ${bowwow}.tail] [file nativename ${bowwow}.exe]
     }
     return
 }
@@ -348,7 +349,7 @@ proc installer::write_defaults {woof_dir} {
     variable root_dir
 
     foreach {src_path dst_path} {
-        config/_application.cfg-template       config/application.cfg
+        config/_application.cfg       config/application.cfg
         app/controllers/views/_layout.wtf  app/controllers/views/layout.wtf
     } {
         set dst_path [file join $woof_dir $dst_path]
