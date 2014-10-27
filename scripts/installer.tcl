@@ -241,7 +241,7 @@ proc installer::distribute {target_dir args} {
 
         distro::build $bowwow_dir $woof_version -manifest $manifest_name -crlf lf
         # TBD - make tclkit path configurable
-        set tclkit [file join $src_dir thirdparty tclkits tclkit-cli.exe]
+        set tclkit [file join $src_dir thirdparty tclkits tclkit-cli-x86.exe]
         set bowwow [file join $target_dir bowwow-${woof_version}]
         set sdx [file join $src_dir tools sdx.kit]
         exec $tclkit $sdx wrap ${bowwow}.kit -vfs $bowwow_dir
@@ -251,11 +251,11 @@ proc installer::distribute {target_dir args} {
         set runtime [file join $target_dir runtime.exe]
         file copy -force $tclkit $runtime
         # Decompress the exe
-        exec $upx_exe -d $runtime
+        # exec $upx_exe -d $runtime
         exec $tclkit $sdx wrap ${bowwow}.exe -runtime $runtime -vfs $bowwow_dir
         exec cmd /c cd $target_dir && $tclkit $sdx mksplit [file tail ${bowwow}.exe]
 	exec $ctcl_exe write_version_resource ${bowwow}.head -copyright "2014 Ashok P. Nadkarni" -timestamp now -version $woof_numeric_version -productversion $woof_numeric_version ProductName "BowWow Web Server" FileDescription "BowWow Web Server" CompanyName "Ashok P. Nadkarni" FileVersion "$woof_numeric_version.0" ProductVersion "$woof_numeric_version.0"
-	exec $ctcl_exe write_icon_resource ${bowwow}.head "public/images/_woof/woof_icon.ico" -name 1
+	exec $ctcl_exe write_icon_resource ${bowwow}.head "public/images/_woof/woof_icon.ico" -name TK
         exec cmd /c copy /b /y [file nativename ${bowwow}.head]+[file nativename ${bowwow}.tail] [file nativename ${bowwow}.exe]
     }
     return
