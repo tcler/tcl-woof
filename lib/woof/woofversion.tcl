@@ -2,7 +2,7 @@
 namespace eval ::woof {
     proc version {} {
         # Returns the version of Woof
-        return 0.5
+        return 0.5a1
     }
 }
 
