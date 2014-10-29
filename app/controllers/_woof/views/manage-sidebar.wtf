@@ -1,4 +1,6 @@
 [woof::pure::menu [list \
-                [list Welcome [my url_for -action welcome]] \
-                [list Environment [my url_for -action print_env]] \
-                       [list Settings [my url_for -action print_config]]]]
+                       [list Welcome [my url_for -action welcome]] \
+                       [list Environment [my url_for -action print_env]] \
+                       [list Settings [my url_for -action print_config]]] \
+     -direction vertical]
+

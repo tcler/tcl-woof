@@ -1,5 +1,4 @@
 %(
-  # Defaults for layout
   set layout {
       header {tag header cssclasses {}}
       footer {tag footer cssclasses {}}
@@ -7,9 +6,11 @@
       sidebar {tag nav cssclasses wf_box}
       supplement {tag aside cssclasses wf_box}
   }
-  # Note we cannot use dict merge because nested dict
-  dict for {key val} [pagevar get layout {}] {
-      dict set layout $key [dict merge [dict get $layout $key] $val]
+  set root_settings {}
+  if {[pagevar exists section_layout_settings section_layout_settings]} {
+      if {[dict exists $section_layout_settings root]} {
+          set root_settings [dict get $section_layout_settings root]
+      }
   }
 %)
 
@@ -83,11 +84,16 @@ $ie_compat
 
 % foreach sect $sects {
 %   if {[info exists $sect]} {
-    <div class='[set ${sect}_u] [dict get $layout $sect cssclasses]'>
-    <[dict get $layout $sect tag]>
-      [set $sect]
-    </[dict get $layout $sect tag]>
-  </div>
+%       set sect_settings {}
+%       if {[dict exists $section_layout_settings $sect]} {
+%           set sect_settings [dict get $section_layout_settings $sect]
+%       }
+%       dict set layout $sect [dict merge [dict get $layout $sect] $root_settings $sect_settings]
+        <div class='[set ${sect}_u] [dict get $layout $sect cssclasses]'>
+          <[dict get $layout $sect tag]>
+          [set $sect]
+          </[dict get $layout $sect tag]>
+        </div>
 %   }
 % }
 
