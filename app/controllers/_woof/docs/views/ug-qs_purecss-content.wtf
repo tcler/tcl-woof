@@ -1,0 +1,34 @@
+[my _code_sample {
+color: #c16e8c;
+padding: 15px;
+border-bottom: #183b75 solid;
+
+
+<div style="background-color: #efece3;">
+<img style="float: left; max-width: 50px;" src="http://world.mathigon.org/resources/Sequences/Fibonacci.jpg">
+<h2 style='color: #c16e8c'>Fibonacci Generator</h2>
+</div>
+}]
+
+[my _code_sample {
+% my variable seq
+<p>
+The first [llength $seq] numbers in the
+Fibonacci sequence are shown below:
+</p>
+%(
+  set index 0
+  set table {}
+  foreach number $seq {
+    lappend table [list [incr index] $number]
+  }
+%)
+[woof::pure::table $table -heading {Sequence Number} -stripes 1]
+<p>
+ <a href='[request url]'>Show first [incr index] in sequence</a>
+</p>
+}]
+
+<p>We are getting close to the finish line. But there is one important
+  basic task we have not covered - getting input from the user. We do that
+  next.</p>

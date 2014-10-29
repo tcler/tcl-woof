@@ -154,6 +154,8 @@ proc ::woof::safe::file_alias {subcommand args} {
 proc ::woof::safe::filecache_locate_alias {trailer args} {
     # Safe wrapper around FileCache.locate method.
 
+    # TBD - if in development mode, bypass cache so new files can be added
+
     # TBD - verify that dirs are all allowed directories
     # Note trailer is trailing file portion but could be absolute path
     # as well

@@ -21,8 +21,7 @@
   <li>A third alternative is to install a suitable web server, Tcl 8.6
     and Woof! as described in 
     the [my _chapter_link "installation"] chapter. This provides a production
-    environment but entails a few more steps for installation including
-    running the [my _chapter_link installation installer] script.
+    environment but entails a few more steps for installation.
   </li>
 </ul>
 

@@ -25,6 +25,7 @@ oo::class create UgController {
             {qs_page_layout "Laying out a Page" 1}
             {qs_story_so_far "The Story So Far" 1}
             {qs_wtf_syntax "Writing Page Templates" 1}
+            {qs_purecss "Stylin' with PureCSS" 1}
             {qs_user_input "Getting User Input" 1}
             {qs_flash "Using the Flash" 1}
             {qs_default_page "Configuring the Default Page" 1}

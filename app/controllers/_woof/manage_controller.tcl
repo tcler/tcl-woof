@@ -18,7 +18,7 @@ oo::class create ManageController {
             main {cssclasses {pure-skin-woof wf_box}}
         }
 
-        pagevar set module_subheading "Site management"
+        pagevar set MODULE_SUBHEADING "Site management"
     }
 }
 
