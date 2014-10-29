@@ -11,6 +11,10 @@
   <li>Any web server that supports CGI or SCGI interfaces.</li>
 </ul>
 
+In addition, Woof! provides an interface for writing an adapter for web servers
+that do not support either CGI or SCGI.
+</p>
+
 <p>Woof! is also available as a single-file executable,
 [my _chapter_link bowwow BowWow], on Windows, with an embedded web server
 for development or quick try-out purposes.

@@ -9,8 +9,8 @@ with the following contents:</p>
 <a href='[my url_for -action help]'>Help</a>
 }]
 
-<p>This is not the best HTML for navigation menus but it will do for
-our purposes. Note the use of the <code>url_for</code> method to
+<p>This is not the best HTML for navigation menus but it will do for now.
+Note the use of the <code>url_for</code> method to
 generate the links instead of hardcoding to something
 like <span class="wf_filename">/fibonacci/help</span>. Unlike
 hard-coded links, links generated in this manner will not need to be
@@ -18,24 +18,28 @@ changed if somewhere down the road we change the URL to
 be <span class="wf_filename">/mathsequences/fibonacci/help</span>.</p>
 
 <p>In addition to the navigation menu, let us add a header as well to
-brand our fibonacci generator. Create the file
+brand our fibonacci generator. We will style this header later, but for
+the moment it only provides a heading for the page.
 <span class="wf_filename">app/controllers/views/fibonacci-header.wtf</span>
 with the following contents:</p>
 [my _code_sample {
-<div style='padding: 10px;'>
- [my include_image images/_woof/logo.png' style "float: left;"]
- <h2 style='line-height: 3em; margin-left: 160px;'>Fibonacci Generator</h2>
-</div>
-[my include_image images/_woof/banner_separator.png']
+<h2 style='color: #808080'>Fibonacci Generator</h2>
 }]
 
-<p>Again, the HTML leaves something to be desired, and we are being
-lazy in reusing some Woof images for illustrative purposes. The result
-is shown in the browser below:</p>
+<p>The result is shown in the browser below:</p>
 
 <p class="wf_center">
 [my include_image qs_nav.png alt "Quick Start Example Navigation page"]
 </p>
+
+<p>The question arises as to why we created additional files for the header 
+and the navigation links when it would have been much easier to just modify
+our original <span class='wf_filename'>fibonacci-generate-main</span>
+content file. The purpose behind using separate files is that it provides a
+logical structure to the web page and an easy means for defining sections
+that are shared amongst multiple web pages. So in our simple example, if
+you navigate to the <span style='color: blue;'>Help</span> page, you will
+find it has also picked up the new header and navigation sections.
 
 <p>Let us now take a step back and look at how Woof! picked up the
 contents of the files we created. The gory details are available in

@@ -5,10 +5,14 @@ looking, but we want to illustrate a marginally more sophisticated
 view template). Instead of displaying the generated sequence as a
 list, we will display it in tabular form along with the index of each
 number in the sequence. We will also shade alternate rows in the
-table. As an aside, we could write this as a single command using the
-Tcl libraries but we won't as the purpose is to give a flavor for the
-WTF syntax. Here is the modified template
-in <span class="wf_filename">app/controllers/views/fibonacci-generate-main.wtf</span>:</p>
+table. In the next section, we will write this using the Woof! Pure CSS
+commands but here we do it explicitly as the purpose is to give a flavor for
+WTF syntax.
+</p>
+<p>
+Here is the modified template in
+<span class="wf_filename">app/controllers/views/fibonacci-generate-main.wtf</span>:
+</p>
 [my _code_sample {
  % my variable seq
  <p>
@@ -36,7 +40,3 @@ the output. The result looks like this:</p>
 <p class="wf_center">
 [my include_image qs_table.png alt "Quick Start Example Navigation"]
 </p>
-
-<p>We are getting close to the finish line. But there is one important
-  basic task we have not covered - getting input from the user. We do that
-  next.</p>

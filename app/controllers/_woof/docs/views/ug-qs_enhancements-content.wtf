@@ -7,11 +7,11 @@ Woof! features. We will enhance the site in the following ways:</p>
 <ul>
   <li>We will add navigation links so people can easily access the
   help and generator.</li>
-  <li>We will attempt to make the site more attractive through the use
-  of banners and stylesheets.</li>
   <li>We will make it easier to generate multiple numbers by
     allowing the user to specify how many elements of the sequence are
     to be generated.</li>
+  <li>We will attempt to make the site more attractive through the use
+    Pure CSS stylesheets and controls.</li>
   <li>Finally, we will change the default page of the site to point to
     our Fibonacci site instead of the BowWow welcome page.</li>
 </ul>
