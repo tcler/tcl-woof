@@ -561,8 +561,6 @@ oo::class create Controller {
         # URL. A relative URL is qualified with the URL root for the Woof
         # application. An absolute URL is returned as is.
 
-        # TBD - would it be faster to store the regexp in a persistent variable 
-        # so regexp is not recompiled every time
         if {![regexp -- {^[a-z0-9+.-][a-z0-9+.-]*:|^/} $resource]} {
             set resource [file join [config get url_root] $resource]
         }

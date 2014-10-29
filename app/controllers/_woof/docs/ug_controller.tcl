@@ -126,7 +126,7 @@ oo::class create UgController {
             _woof_ug.css
         }
 
-        pagevar set layout {
+        pagevar set section_layout_settings {
             sidebar {tag nav cssclasses {wf_nav}}
             main {cssclasses {pure-skin-woof wf_box}}
         }
