@@ -7,16 +7,14 @@ oo::class create ManageController {
 
         # Only use Woof default section layout, not something user might
         # have defined.
-        pagevar set section_layout_alias _layout
+        pagevar set layout _layout
         
         pagevar set styles {
             _woof.css
         }
 
-        pagevar set section_layout_settings {
-            sidebar {tag nav cssclasses {wf_nav}}
-            main {cssclasses {pure-skin-woof wf_box}}
-        }
+        pagevar set sidebar {tag nav cssclasses {wf_nav}}
+        pagevar set main {cssclasses {+ pure-skin-woof}}
 
         pagevar set MODULE_SUBHEADING "Site management"
     }
