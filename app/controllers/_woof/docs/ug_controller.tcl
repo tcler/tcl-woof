@@ -133,7 +133,7 @@ oo::class create UgController {
 
         # Set page title based on the section
         pagevar set title "Woof! - [my _heading]"
-        pagevar set module_subheading "User Guide (Version [::woof::version])"
+        pagevar set MODULE_SUBHEADING "User Guide (Version [::woof::version])"
     }
 
     method _heading {{action ""}} {

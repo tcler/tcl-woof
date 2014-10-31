@@ -98,10 +98,10 @@ specific controllers or even actions within a controller.</p>
 layout and override the constructed layout file names described
 above. You can do this by setting the 
 [my _chapter_link pagevar pagevar] value 
-<span class='wf_code'>section_layout_alias</span> as follows:</p>
+<span class='wf_code'>layout</span> as follows:</p>
 
 [my _code_sample {
-  pagevar set section_layout_alias special_layout
+  pagevar set layout special_layout
 }]
 
 <p>Woof! will then use <span class='wf_filename'>special_layout.wtf</span>
