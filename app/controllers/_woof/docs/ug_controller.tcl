@@ -119,17 +119,14 @@ oo::class create UgController {
 
         # Only use Woof default section layout, not something user might
         # have defined.
-        pagevar set section_layout_alias _layout
+        pagevar set layout _layout
         
-        pagevar set styles {
+        pagevar set stylesheets {
             _woof.css
             _woof_ug.css
         }
 
-        pagevar set section_layout_settings {
-            sidebar {tag nav cssclasses {wf_nav}}
-            main {cssclasses {pure-skin-woof wf_box}}
-        }
+        pagevar set sidebar {tag nav cssclasses {wf_nav}}
 
         # Set page title based on the section
         pagevar set title "Woof! - [my _heading]"

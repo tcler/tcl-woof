@@ -9,7 +9,7 @@ oo::class create ManageController {
         # have defined.
         pagevar set layout _layout
         
-        pagevar set styles {
+        pagevar set stylesheets {
             _woof.css
         }
 
