@@ -8,7 +8,7 @@ html, button, input, select, textarea,
  * The following is *required* for grids to work properly when padding
  * is added directly to pure-u units.
  */
-.pure-g > div {
+.pure-g > div, .pure-g > aside, .pure-g > nav, .pure-g > main {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;

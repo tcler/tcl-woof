@@ -1,6 +1,6 @@
 %(
   set layout {
-      page {width 24 skin {} stylesheets _layout.css}
+      page {width 24 skin {}}
       header {tag header cssclasses wf_header}
       footer {tag footer cssclasses wf_footer}
       main {tag main cssclasses wf_main width 14}
@@ -36,7 +36,7 @@ set ie_compat ""
 $ie_compat
 
 [my include_stylesheet _layout.css]
-% foreach ss [pagevar get styles {}] {
+% foreach ss [pagevar get stylesheets {}] {
     [my include_stylesheet $ss]
 % }
 
@@ -97,11 +97,9 @@ $ie_compat
               set tag [dict get $layout $sect tag]
           }
 %)
-        <div class='[set ${sect}_u] $cssclasses'>
-          <$tag>
-          [set $sect]
+          <$tag class='[set ${sect}_u] $cssclasses'>
+              [set $sect]
           </$tag>
-        </div>
 %(
       }
   }
