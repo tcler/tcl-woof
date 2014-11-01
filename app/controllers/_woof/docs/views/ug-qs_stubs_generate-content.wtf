@@ -26,27 +26,27 @@ to be invoked as a script:</p>
 }]
 
 <p>
-The <span class="wf_filename">url</span> command generates stubs for
+The <span class="ug-filename">url</span> command generates stubs for
 the specified relative URL(s).
 So the above commands will generate stubs for Web pages
 that can be accessed through the
-URL's <span class="wf_filename">http://localhost:8015/fibonacci/generate</span>
-and <span class="wf_filename">http://localhost:8015/fibonacci/help</span>
+URL's <span class="ug-filename">http://localhost:8015/fibonacci/generate</span>
+and <span class="ug-filename">http://localhost:8015/fibonacci/help</span>
 respectively.</p>
 
 <p>The command will first display the actions it will take in creating
 the stubs, and then prompt for the go-ahead to actually do so. In this
 Quick Start chapter, we will ignore the MVC-based naming conventions
 being used when generating the stubs. It suffices to know that the
-stub generator will create a class <span class='wf_code'>FibonacciController</span>
+stub generator will create a class <span class='ug-code'>FibonacciController</span>
 whose methods will be called to handle URL's that are prefixed
-with <span class="wf_filename">/fibonacci</span>. The stub generator
+with <span class="ug-filename">/fibonacci</span>. The stub generator
 also creates two methods
-- <span class='wf_code'>generate</span> and <span class='wf_code'>help</span> - corresponding to the
+- <span class='ug-code'>generate</span> and <span class='ug-code'>help</span> - corresponding to the
 two URL's we specified on the command line.</p>
 
 <p>If you edit the file
-<span class="wf_filename">app/controllers/fibonacci_controller.tcl</span>
+<span class="ug-filename">app/controllers/fibonacci_controller.tcl</span>
 under your BowWow directory, you will see the following contents:</p>
 
 [my _code_sample {
@@ -71,5 +71,5 @@ under your BowWow directory, you will see the following contents:</p>
 
 <p>As you can see, the stubs will generate exceptions if invoked. For
 example, navigating
-to <span class="wf_filename">http://localhost:8015/fibonacci/help</span>
+to <span class="ug-filename">http://localhost:8015/fibonacci/help</span>
 will result in an error page being displayed in the browser.</p>

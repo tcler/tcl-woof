@@ -30,12 +30,12 @@ containing a mixture of Tcl code and HTML
 markup. It starts with defining the standard HTML page headers. Within the body
 element, the layout defines three sections - the header, the main
 content and the footer. The contents of each section, if defined, are
-expected to be in the <span class='wf_code'>page</span> object. Note
+expected to be in the <span class='ug-code'>page</span> object. Note
 that the layout makes use of conditional Tcl statements to insert each
-section only if it exists. The <span class='wf_code'>fetch</span>
+section only if it exists. The <span class='ug-code'>fetch</span>
 method returns true if the page section exists and stores it in the
-variable <span class='wf_code'>content</span>.
-The [my _chapter_link page_object "<span class='wf_code'>page</span>"]
+variable <span class='ug-code'>content</span>.
+The [my _chapter_link page_object "<span class='ug-code'>page</span>"]
 object, from which the HTML content is retrieved, is constructed when
 building page sections.
 
@@ -61,13 +61,13 @@ other [my _chapter_link wtf "WTF"] file. What
 makes it different is really only the intended usage. By convention,
 the layout template is primarily be concerned with positioning of
 major HTML areas and providing standard headers. It then makes use of
-the <span class='wf_code'>page</span> object
+the <span class='ug-code'>page</span> object
 to retrieve the various page sections that contain the actual data,
 both static and dynamically retrieved from a controller.</p>
 
 <p>However, <em>there is nothing that prevents a layout from containing
 pure static HTML content, or directly accessing a controller's dynamic
-content</em>. It does not have to use the <span class="wf_code">page</span>
+content</em>. It does not have to use the <span class="ug-code">page</span>
 object. Nor does it does not have to be implemented in terms of page
 sections at all. However, as we will see, using page sections offers
 great flexibility and reuse and Woof! rendering system provides specific
@@ -98,19 +98,19 @@ specific controllers or even actions within a controller.</p>
 layout and override the constructed layout file names described
 above. You can do this by setting the 
 [my _chapter_link pagevar pagevar] value 
-<span class='wf_code'>layout</span> as follows:</p>
+<span class='ug-code'>layout</span> as follows:</p>
 
 [my _code_sample {
   pagevar set layout special_layout
 }]
 
-<p>Woof! will then use <span class='wf_filename'>special_layout.wtf</span>
+<p>Woof! will then use <span class='ug-filename'>special_layout.wtf</span>
 as the name of the layout file and look for it in the search path as described
 above.</p>
 
 <p>This kind of layout override may be done at any time before the page
 is rendered. If the above statement was executed within the constructor
-for the controller, <span class='wf_filename'>special_layout.wtf</span>
+for the controller, <span class='ug-filename'>special_layout.wtf</span>
 would be used for all action methods in the controller (unless they in turn
 overrode it). If it was executed within an action method, only the layout
 for that action method would be overridden.

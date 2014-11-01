@@ -33,7 +33,7 @@ specific controllers or even actions within a controller.</p>
   uses the default Woof! layout which references <code>main</code>
   page section. Instead of having a separate <code>main</code>
   section for each chapter (action), the user guide has only one
-  template <span class="wf_filename">ug-main.wtf</span>. This sets up
+  template <span class="ug-filename">ug-main.wtf</span>. This sets up
   the previous and next chapter links and then includes the
   statement</p>
 
@@ -56,7 +56,7 @@ processor. Currently, Woof! only supports the syntax defined
 in [my _chapter_link wtf].</p>
 
 <p>The processing of the template is done in the context of the
-[my _chapter_link controller_object "<span class='wf_code'>controller</span>"]
+[my _chapter_link controller_object "<span class='ug-code'>controller</span>"]
 object. The Tcl code in the template can therefore invoke any method of the
 controller or access any object instance variable using the standard
 Tcl syntax.</p>

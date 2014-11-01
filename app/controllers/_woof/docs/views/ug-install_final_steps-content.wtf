@@ -5,12 +5,12 @@ configuring the Web server as described in previous sections.</p>
 been done, you can verify that the installation has been successful by
 browsing to the appropriate URL. For the BowWow server, the
 URL will
-be <span class="wf_filename">http://localhost:8015</span>; for other
+be <span class="ug-filename">http://localhost:8015</span>; for other
 servers the URL will depend on how the server has been
 configured.</p>
 <p>A successful installation will bring up a page similar to the one
 below.</p>
-<p class="wf_center">
+<p class="ug-center">
 [my include_image bowwow_welcome.png alt "Woof! welcome page"]</p>
 
 <h3>Additional steps before going live</h3>
@@ -20,7 +20,7 @@ below.</p>
 <p>At some point you will want to change the default page from the one
 above to that of your own application. After you have created your
 application's default page, edit the Woof! application configuration
-file <span class="wf_filename">config/application.cfg</span> to set
+file <span class="ug-filename">config/application.cfg</span> to set
 the default page and other application-specific data. For example,</p>
 [my _code_sample {
 set app_name          "My Application"

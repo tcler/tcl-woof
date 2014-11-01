@@ -6,7 +6,7 @@ appropriately handle the request. It is the responsibility of the
 application writer to implement the specific action methods for a
 controller.</p>
 
-<h3>The <span class='wf_code'>Controller</span> class tree</h3>
+<h3>The <span class='ug-code'>Controller</span> class tree</h3>
 
 <p>When an incoming request is [my _chapter_link url_dispatcher "mapped"]
 to a controller class and action method, Woof! instantiates a controller
@@ -16,15 +16,15 @@ class. This is in turn derived from
 [my _manpage_link ::woof::Controller]
 which encapsulates all the common functionality required of a
 controller. Application writers should never directly
-modify <span class='wf_code'>Controller</span> since that will cause conflicts with
+modify <span class='ug-code'>Controller</span> since that will cause conflicts with
 Woof! updates. Instead, if common enhanced functions are to be added
 to all controllers in the application, the changes should be made to
-class <span class='wf_code'>ApplicationController</span>.</p>
+class <span class='ug-code'>ApplicationController</span>.</p>
 
 <h3>The controller object execution context</h3>
 
 <p>When a controller object is instantiated for a request, the
-base <span class='wf_code'>Controller</span> class constructor sets up an execution
+base <span class='ug-code'>Controller</span> class constructor sets up an execution
 context for the methods implementing the actions. It provides simple
 means for extracting parameters from the request, managing session
 context, cookie handling and generating HTTP headers. It also provides
@@ -34,77 +34,77 @@ redirection. </p>
 <p>The objects and commands that are made available in the execution
 context are summarized below and detailed in later sections.</p>
 
-<h4><span class='wf_code'>request</span></h4>
+<h4><span class='ug-code'>request</span></h4>
 
-<p>The [my _chapter_link request_object "<span class='wf_code'>request</span>"]
+<p>The [my _chapter_link request_object "<span class='ug-code'>request</span>"]
  object encapsulates the attributes of the received request and provides
   methods to retrieve them.</p>
 
-<h4><span class='wf_code'>response</span></h4>
+<h4><span class='ug-code'>response</span></h4>
 
 <p>Conversely,  the
-[my _chapter_link response_object "<span class='wf_code'>response</span>"]
+[my _chapter_link response_object "<span class='ug-code'>response</span>"]
 object is used to build the response to be sent back to the
 client. The application should generally not directly manipulate this
 object.</p>
 
-<h4><span class='wf_code'>page</span></h4>
+<h4><span class='ug-code'>page</span></h4>
 
-<p>The [my _chapter_link page_sections "<span class='wf_code'>page</span>"] 
+<p>The [my _chapter_link page_sections "<span class='ug-code'>page</span>"] 
 object holds the content of the web page and may be built either directly 
 or through Woof! templates.</p>
 
-<h4><span class='wf_code'>session</span></h4>
+<h4><span class='ug-code'>session</span></h4>
 
 <p>Session data, which supplies context that distinguishes between
 interactions with different clients, is maintained in
-[my _chapter_link session_object "<span class='wf_code'>session</span>"]
+[my _chapter_link session_object "<span class='ug-code'>session</span>"]
 object.</p>
 
-<h4><span class='wf_code'>params</span></h4>
+<h4><span class='ug-code'>params</span></h4>
 
 <p>Parameters passed in the client request are accessible through the 
-[my _chapter_link params_object "<span class='wf_code'>params</span>"]
+[my _chapter_link params_object "<span class='ug-code'>params</span>"]
 object.</p>
 
-<h4><span class='wf_code'>icookies</span></h4>
+<h4><span class='ug-code'>icookies</span></h4>
 
 <p>Any HTTP cookies sent in the client request can be retrieved through the 
-[my _chapter_link icookies_object "<span class='wf_code'>icookies</span>"]
+[my _chapter_link icookies_object "<span class='ug-code'>icookies</span>"]
 object.</p>
 
-<h4><span class='wf_code'>ocookies</span></h4>
+<h4><span class='ug-code'>ocookies</span></h4>
 
 <p>The 
-[my _chapter_link ocookies_object "<span class='wf_code'>ocookies</span>"]
+[my _chapter_link ocookies_object "<span class='ug-code'>ocookies</span>"]
 object contains the output cookies that are to be returned in the response to
 the client.</p>
 
-<h4><span class='wf_code'>flash</span></h4>
+<h4><span class='ug-code'>flash</span></h4>
 
 <p>The 
-[my _chapter_link flash_object "<span class='wf_code'>flash</span>"] object
+[my _chapter_link flash_object "<span class='ug-code'>flash</span>"] object
 is used as transient storage to hold data that needs to persist only between
 consecutive client requests.</p>
 
-<h4><span class='wf_code'>env</span></h4>
+<h4><span class='ug-code'>env</span></h4>
 
-<p>The [my _chapter_link env_object "<span class='wf_code'>env</span>"]
+<p>The [my _chapter_link env_object "<span class='ug-code'>env</span>"]
 object stores the environment passed in by the Web server. Generally,
 applications should use the methods of the
-[my _chapter_link request_object "<span class='wf_code'>request</span>"]
+[my _chapter_link request_object "<span class='ug-code'>request</span>"]
 object as it hides differences between web servers.</p>
 
-<h4><span class='wf_code'>headers</span></h4>
+<h4><span class='ug-code'>headers</span></h4>
 
-<p>The [my _chapter_link headers_object "<span class='wf_code'>headers</span>"]
+<p>The [my _chapter_link headers_object "<span class='ug-code'>headers</span>"]
 object contains the HTTP headers that will sent in the response to the
 client.</p>
 
 <p>The above objects are available within the action methods as well
 as in the [my _chapter_link wtf "templates"] since the latter also execute in
 the context of the controller object. In addition,
-the <span class='wf_code'>Controller</span> class provides several other utility
+the <span class='ug-code'>Controller</span> class provides several other utility
 methods. Refer to its
 [my _manpage_link ::woof::Controller "reference pages"] for more details.</p>
 

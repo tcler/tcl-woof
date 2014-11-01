@@ -7,13 +7,13 @@
 <p>BowWow comes in two forms:</p>
 <ul>
   <li>As a standalone Windows executable,
-    <span class='wf_filename'>bowwow-<em>VERSION</em>.exe</span>
+    <span class='ug-filename'>bowwow-<em>VERSION</em>.exe</span>
     which is entirely
     self-contained and has no other software dependencies. It includes
     the web server, Woof!, associated libraries and a Tcl
     interpreter. Just download and run.</li>
-  <li>A script, <span class='wf_filename'>bowwow.tcl</span> located in the
-    <span class='wf_filename'>scripts</span> directory in the standard
+  <li>A script, <span class='ug-filename'>bowwow.tcl</span> located in the
+    <span class='ug-filename'>scripts</span> directory in the standard
     distribution. This can be run by invoking it with a Tcl shell.
     </ul>
 

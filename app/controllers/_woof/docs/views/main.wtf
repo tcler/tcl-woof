@@ -1,10 +1,10 @@
 % lassign [my _neighbours] prev next
-<div class='wf_hnavbox'>
+<div class='ug-hnav'>
 % if {[llength $prev]} {
-   [my link_to [lindex $prev 1] -action [lindex $prev 0] -attrs {class leftmost}]
+   [my link_to [lindex $prev 1] -action [lindex $prev 0] -attrs {class ug-leftmost}]
 % }
 % if {[llength $next]} {
-   [my link_to [lindex $next 1] -action [lindex $next 0] -attrs {class rightmost}]
+   [my link_to [lindex $next 1] -action [lindex $next 0] -attrs {class ug-rightmost}]
 % }
 </div>
 <h2>[my _heading]</h2>
@@ -14,11 +14,11 @@
   }
 %)
 $content
-<div class='wf_hnavbox wf_navbox'>
+<div class='ug-hnav'>
 % if {[llength $prev]} {
-   [my link_to [lindex $prev 1] -action [lindex $prev 0] -attrs {class leftmost}]
+   [my link_to [lindex $prev 1] -action [lindex $prev 0] -attrs {class ug-leftmost}]
 % }
 % if {[llength $next]} {
-   [my link_to [lindex $next 1] -action [lindex $next 0] -attrs {class rightmost}]
+   [my link_to [lindex $next 1] -action [lindex $next 0] -attrs {class ug-rightmost}]
 % }
 </div>

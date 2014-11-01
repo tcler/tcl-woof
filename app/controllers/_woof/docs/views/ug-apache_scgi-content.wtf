@@ -22,7 +22,7 @@ path differences.</p>
     <li>The server only hosts the Woof! application and nothing
     else.</li>
     <li>The application is rooted at the top level,
-    i.e. <span class="wf_filename">http://www.mysite.com</span> is
+    i.e. <span class="ug-filename">http://www.mysite.com</span> is
     the entry point into the application.</li>
     <li>You have the means to modify the system configuration so that
     the Woof! SCGI server is started automatically either at boot time
@@ -32,7 +32,7 @@ path differences.</p>
 <p>The SCGI source code can be downloaded from
 the <a href="http://python.ca/scgi/">SCGI home page</a>. Follow the
 instructions in the README.txt file in
-the <span class="wf_filename">apache2</span> directory in the SCGI
+the <span class="ug-filename">apache2</span> directory in the SCGI
 distribution to build and install the module. Note this requires you
 to have the Apache build tools on your system. For Windows systems,
 you can either
@@ -41,10 +41,10 @@ using Visual C++</a> or you can download prebuilt binaries from
 the <a href="http://sourceforge.net/project/showfiles.php?group_id=250256">Woof!
 download page</a>.</p>
 <p>After installation,
-the <span class="wf_filename">mod_scgi.so</span> module should reside
-in the Apache <span class="wf_filename">modules</span> directory. The
+the <span class="ug-filename">mod_scgi.so</span> module should reside
+in the Apache <span class="ug-filename">modules</span> directory. The
 final SCGI installation step is to add the following line to the
-<span class='wf_filename'>httpd.conf</span> or equivalent.</p>
+<span class='ug-filename'>httpd.conf</span> or equivalent.</p>
 [my _code_sample {
 LoadModule scgi_module modules/mod_scgi.so
 }]
@@ -56,8 +56,8 @@ using the [my _chapter_link installer "installer script"].
 }]
 <p>This will create the Woof! 
 [my _chapter_link directory_structure "directory structure"]
-under <span class="wf_filename">/var/myapp</span>. In
-particular, the <span class="wf_filename">/var/myapp/public</span>
+under <span class="ug-filename">/var/myapp</span>. In
+particular, the <span class="ug-filename">/var/myapp/public</span>
 will contain the publically accessible directory tree that will be the
 document root for the dedicated web server. Its subdirectories are
 intended to be directly served by Apache without going through Woof!
@@ -66,7 +66,7 @@ as detailed below.</p>
 <p>Since this is the only application on the server, the document root
 for Apache must be changed to point to the Woof! public directory by
 editing the definition of DocumentRoot
-in <span class="wf_filename">httpd.conf</span>.</p>
+in <span class="ug-filename">httpd.conf</span>.</p>
 [my _code_sample {
 DocumentRoot /var/myapp/public
 <Directory "/var/myapp/public">
@@ -75,13 +75,13 @@ DocumentRoot /var/myapp/public
 </Directory>
 }]
 <p>Note that the document root points to
-the <span class="wf_filename">public</span> subdirectory, <em>not</em>
+the <span class="ug-filename">public</span> subdirectory, <em>not</em>
 the Woof! root directory. By default, Apache will now look under
-the <span class="wf_filename">/var/myapp/public</span> directory to
+the <span class="ug-filename">/var/myapp/public</span> directory to
 locate URL resources.</p>
 <h3>Step 4 - configure SCGI</h3>
 <p>Apache has to be told the SCGI server by adding the following
-to <span class="wf_filename">httpd.conf</span>:</p>
+to <span class="ug-filename">httpd.conf</span>:</p>
 [my _code_sample {
 SCGIMount / 127.0.0.1:9999
 <LocationMatch "/stylesheets|images/">
@@ -90,18 +90,18 @@ SCGIMount / 127.0.0.1:9999
 }]
 <p>The <code>SCGIMount</code> directive has two purposes. First, it
 tells Apache that all URL's starting at the
-root <span class="wf_filename">/</span> are to be passed to the SCGI
+root <span class="ug-filename">/</span> are to be passed to the SCGI
 server. Second, it indicates that the Woof! SCGI server is to be
 contacted on port 9999 on the local system. The
 <a href="http://httpd.apache.org/docs/2.2/mod/core.html#locationmatch"><code>LocationMatch</code></a>
 directive is used to disable SCGI for requests
-under <span class="wf_filename">/stylesheets</span>
-and <span class="wf_filename">/images</span> so that static files are
+under <span class="ug-filename">/stylesheets</span>
+and <span class="ug-filename">/images</span> so that static files are
 served by Apache without going through the Woof! SCGI server.</p>
 
 <p>If instead of having the Woof! application root
-at <span class="wf_filename">/</span> we
-had <span class="wf_filename">/myapp</span> as the application root
+at <span class="ug-filename">/</span> we
+had <span class="ug-filename">/myapp</span> as the application root
 URL, the above lines would need to be changed as follows:</p>
 [my _code_sample {
 AliasMatch /myapp/((stylesheets|images)/.*) "/var/myapp/public/$1"
@@ -114,7 +114,7 @@ SCGIMount /myapp 127.0.0.1:9999
 the <code>LocationMatch</code> lines have to be modified when the
 application root URL is changed. In addition, <code>AliasMatch</code>
 and <code>Directory</code> directives are needed to point to the
-Woof! <span class="wf_filename">public</span> directory in order to
+Woof! <span class="ug-filename">public</span> directory in order to
 retrieve static files.</p>
 <h3>Step 5 - starting the SCGI server</h3>
 <p>The Woof! SCGI server script that handles connections passed by

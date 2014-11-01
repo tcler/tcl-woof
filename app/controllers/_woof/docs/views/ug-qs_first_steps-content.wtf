@@ -53,7 +53,7 @@ c:\fibo> bowwow url fibonacci/generate fibonacci/help
 }]
 
 <p>Here it is assumed the command is run from the Woof! root
-  directory <span class='wf_filename'>~/fibo</span>.
+  directory <span class='ug-filename'>~/fibo</span>.
   Both forms of the commands are shown in this guide.</p>
 
 <p>The URL's used in the examples assume you are running the web server on

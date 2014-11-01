@@ -6,5 +6,5 @@ Linux as Lighttpd is not supported under Windows although there are
 some third-party distributions floating around.</p>
 <p>The following sections assume that the Lighttpd version is 1.4.x
 and that the configuration file
-is <span class="wf_filename">lighttpd.conf</span>. You will need to
+is <span class="ug-filename">lighttpd.conf</span>. You will need to
 adapt the instructions for other versions.</p>

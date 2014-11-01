@@ -3,14 +3,14 @@ Web page, for example, the header area. Page sections may be generated
 by a controller method, or from a template containing a mixture of
 HTML content and Tcl code.</p>
 
-<h3>The <span class='wf_code'>page</span> object</h3>
+<h3>The <span class='ug-code'>page</span> object</h3>
 
 <p>By convention, layouts expect to retrieve their page sections from
-the <span class='wf_code'>page</span> object, of
+the <span class='ug-code'>page</span> object, of
 class [my _manpage_link ::woof::Page], that
 is created by the controller for every request. This object will
 return the raw HTML content of a specified page section through
-its <span class='wf_code'>fetch</span> method. For example, the
+its <span class='ug-code'>fetch</span> method. For example, the
 following is a fragment from a layout template.</p>
 [my _code_sample {
   % if {[page fetch header header_content]} {
@@ -18,27 +18,27 @@ following is a fragment from a layout template.</p>
   % }
 }]
 
-<p>If the <span class='wf_code'>page</span> object has a header
+<p>If the <span class='ug-code'>page</span> object has a header
 section defined, or can generate one, it returns the content of that
-section in <span class='wf_code'>header_content</span> and
-returns <span class='wf_code'>true</span>. Otherwise it
-returns <span class='wf_code'>false</span>. The layout template
+section in <span class='ug-code'>header_content</span> and
+returns <span class='ug-code'>true</span>. Otherwise it
+returns <span class='ug-code'>false</span>. The layout template
 fragment conditionally includes that content, braced by horizontal
 rules.</p>
 
-<p>The <span class='wf_code'>page</span> object may be populated with
+<p>The <span class='ug-code'>page</span> object may be populated with
 page sections in one of two ways.</p>
 <ul>
-  <li>When a layout invokes the <span class='wf_code'>fetch</span>
+  <li>When a layout invokes the <span class='ug-code'>fetch</span>
   method to retrieve a page section that has not yet been defined,
-  the <span class='wf_code'>page</span> object will search the file
+  the <span class='ug-code'>page</span> object will search the file
   system for a suitable template from which the page section might be
   generated. This is the recommended way of producing a page section
   wherein the template provides the presentation for the page
   separately from the action method.</li>
   <li>Alternatively, an action method may directly store the HTML
   fragment for a page section in which case
-  the <span class='wf_code'>fetch</span> method simply returns the
+  the <span class='ug-code'>fetch</span> method simply returns the
   stored content for the section</li>
 </ul>
 <p>The following sections describe both these methods.</p>

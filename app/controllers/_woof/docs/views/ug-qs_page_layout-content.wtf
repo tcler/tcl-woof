@@ -1,7 +1,7 @@
 <p>For navigation, we will put links in a column on the left of the
 main area. Both pages will contain the same navigation links. For this
 purpose, create the file
-<span class="wf_filename">app/controllers/views/fibonacci-sidebar.wtf</span>
+<span class="ug-filename">app/controllers/views/fibonacci-sidebar.wtf</span>
 with the following contents:</p>
 [my _code_sample {
 <a href='[my url_for -action generate]'>Generate</a>
@@ -12,15 +12,15 @@ with the following contents:</p>
 <p>This is not the best HTML for navigation menus but it will do for now.
 Note the use of the <code>url_for</code> method to
 generate the links instead of hardcoding to something
-like <span class="wf_filename">/fibonacci/help</span>. Unlike
+like <span class="ug-filename">/fibonacci/help</span>. Unlike
 hard-coded links, links generated in this manner will not need to be
 changed if somewhere down the road we change the URL to
-be <span class="wf_filename">/mathsequences/fibonacci/help</span>.</p>
+be <span class="ug-filename">/mathsequences/fibonacci/help</span>.</p>
 
 <p>In addition to the navigation menu, let us add a header as well to
 brand our fibonacci generator. We will style this header later, but for
 the moment it only provides a heading for the page.
-<span class="wf_filename">app/controllers/views/fibonacci-header.wtf</span>
+<span class="ug-filename">app/controllers/views/fibonacci-header.wtf</span>
 with the following contents:</p>
 [my _code_sample {
 <h2 style='color: #808080'>Fibonacci Generator</h2>
@@ -28,13 +28,13 @@ with the following contents:</p>
 
 <p>The result is shown in the browser below:</p>
 
-<p class="wf_center">
+<p class="ug-center">
 [my include_image qs_nav.png alt "Quick Start Example Navigation page"]
 </p>
 
 <p>The question arises as to why we created additional files for the header 
 and the navigation links when it would have been much easier to just modify
-our original <span class='wf_filename'>fibonacci-generate-main</span>
+our original <span class='ug-filename'>fibonacci-generate-main</span>
 content file. The purpose behind using separate files is that it provides a
 logical structure to the web page and an easy means for defining sections
 that are shared amongst multiple web pages. So in our simple example, if

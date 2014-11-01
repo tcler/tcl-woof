@@ -58,24 +58,24 @@ oo::class create UgController {
             {default_dispatcher "Default URL Mapping" 2}
             {routes "URL Routes" 2}
             {url_construction "URL Construction" 2}
-            {controller_object "The <span class='wf_code'>controller</span> Object" 1}
+            {controller_object "The <span class='ug-code'>controller</span> Object" 1}
             {controller_example "A Simple Controller Example" 2}
             {implementing_controllers "Implementing Controllers" 2}
             {implementing_actions "Implementing Actions" 2}
-            {request_object "The <span class='wf_code'>request</span> Object" 1}
-            {session_object "The <span class='wf_code'>session</span> Object" 1}
-            {icookies_object "The <span class='wf_code'>icookies</span> Object" 1}
-            {flash_object "The <span class='wf_code'>flash</span> Object" 1}
-            {params_object "The <span class='wf_code'>params</span> Object" 1}
-            {env_object "The <span class='wf_code'>env</span> Object" 1}
+            {request_object "The <span class='ug-code'>request</span> Object" 1}
+            {session_object "The <span class='ug-code'>session</span> Object" 1}
+            {icookies_object "The <span class='ug-code'>icookies</span> Object" 1}
+            {flash_object "The <span class='ug-code'>flash</span> Object" 1}
+            {params_object "The <span class='ug-code'>params</span> Object" 1}
+            {env_object "The <span class='ug-code'>env</span> Object" 1}
             {response_construction "Response construction"}
-            {response_object "The <span class='wf_code'>response</span> Object" 1}
+            {response_object "The <span class='ug-code'>response</span> Object" 1}
             {normal_response "Returning a Normal Response" 1}
             {redirects "Redirecting a Request" 1}
             {error_responses "Sending Error Responses" 1}
             {response_headers "Adding HTTP Response Headers" 1}
             {sending_files "Sending Files and Non-HTML Data" 1}
-            {ocookies_object "The <span class='wf_code'>ocookies</span> Object" 1}
+            {ocookies_object "The <span class='ug-code'>ocookies</span> Object" 1}
             {page_generation "Page Generation"}
             {page_layout "Page Layout" 1}
             {default_page_layout "Default Page Layout" 2}
@@ -85,7 +85,7 @@ oo::class create UgController {
             {page_section_templates "Template Based Page Sections" 2}
             {page_section_direct "Directly Generated Page Sections" 2}
             {locating_templates "Locating Templates" 1}
-            {pagevar "The <span class='wf_code'>pagevar</span> Object" 1}
+            {pagevar "The <span class='ug-code'>pagevar</span> Object" 1}
             {static_resources "Using Static Resources" 1}
             {locating_resources "Locating Static Resources" 2}
             {using_images "Using Images" 2}
@@ -122,11 +122,8 @@ oo::class create UgController {
         pagevar set layout _layout
         
         pagevar set stylesheets {
-            _woof.css
             _woof_ug.css
         }
-
-        pagevar set sidebar {tag nav cssclasses {wf_nav}}
 
         # Set page title based on the section
         pagevar set title "Woof! - [my _heading]"
@@ -169,16 +166,16 @@ oo::class create UgController {
     method _code_sample {text {escape true}} {
         # Returns a code sample
         if {$escape} {
-            return "<pre class='wf_console_session'>[hesc [::woof::util::remove_left_margin $text]]</pre>"
+            return "<pre class='ug-console'>[hesc [::woof::util::remove_left_margin $text]]</pre>"
         } else {
-            return "<pre class='wf_console_session'>[::woof::util::remove_left_margin $text]</pre>"
+            return "<pre class='ug-console'>[::woof::util::remove_left_margin $text]</pre>"
         }
     }
 
     method _manpage_link {name {display ""}} {
         # Generates a link to manpage for a class or proc
         if {$display eq ""} {
-            set display "<span class='wf_code'>[hesc [namespace tail $name]]</span>"
+            set display "<span class='ug-code'>[hesc [namespace tail $name]]</span>"
         }
         return "<a href='http://woof.magicsplat.com/manuals/woof/index.html#$name'>$display</a>"
     }
@@ -186,7 +183,7 @@ oo::class create UgController {
     method _tcl_manpage_link {name {display ""}} {
         # Generates a link to Tcl manpage
         if {$display eq ""} {
-            set display "<span class='wf_code'>[hesc [namespace tail $name]]</span>"
+            set display "<span class='ug-code'>[hesc [namespace tail $name]]</span>"
         }
         return "<a href='http://www.tcl.tk/man/tcl8.6/TclCmd/${name}.htm'>$display</a>"
     }
@@ -206,7 +203,7 @@ oo::class create UgController {
 
     method index {} {
         # Returns the chapter links
-        append content "<div class='wf_navbox'>"
+        append content "<div class='ug-toc'>"
         set current_level -1
         foreach sec $_toc {
             lassign $sec key title level

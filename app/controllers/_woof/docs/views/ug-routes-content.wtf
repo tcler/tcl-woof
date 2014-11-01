@@ -3,7 +3,7 @@
   [my _chapter_link default_dispatcher "default URL mapping"].
   For example, you may want the URL</p>
 <pre>
-  <span class='wf_filename'>http://www.mycompany.com/support/ticket/display/123</span>
+  <span class='ug-filename'>http://www.mycompany.com/support/ticket/display/123</span>
 </pre>
 <p>to display the page corresponding to support ticket #123. This URL
   cannot be mapped to the appropriate controller by the
@@ -18,8 +18,8 @@
 
 <h3>Route definition file</h3>
 <p>Woof! reads the URL route definitions from the file
-<span class='wf_filename'>routes.cfg</span> in the
-<span class='wf_filename'>config</span> subdirectory. This file is 
+<span class='ug-filename'>routes.cfg</span> in the
+<span class='ug-filename'>config</span> subdirectory. This file is 
 is expected to contain Tcl code and is executed in a temporary
 safe Tcl interpreter. The file may contain any Tcl code compatible
 with safe interpreters. A route is defined through the
@@ -34,8 +34,8 @@ curl /finance/companies {profile quote} symbol
 }]
 
 <p>This route will match application URL paths of the form
-<span class='wf_filename'>/finance/companies/quote/csco</span> or
-<span class='wf_filename'>/finance/companies/profile/BRK.A</span> and
+<span class='ug-filename'>/finance/companies/quote/csco</span> or
+<span class='ug-filename'>/finance/companies/profile/BRK.A</span> and
 invoke the <code>quote</code> or <code>profile</code> action in the controller
 <code>finance::Companies</code> passing it a parameter <code>symbol</code>
 containing <code>csco</code> and <code>BRK.A</code> respectively. More
@@ -110,8 +110,8 @@ examples are given below.</p>
 
 <h3>Examples</h3>
 <p>These examples assume the host and application root URL 
-  <span class='wf_filename'>http://www.mycompany.com/support/</span> 
-  is stripped off (<span class='wf_filename'>support</span> being
+  <span class='ug-filename'>http://www.mycompany.com/support/</span> 
+  is stripped off (<span class='ug-filename'>support</span> being
   the application root) leaving behind a relative URL that is
   matched against routes.</p>
 
@@ -119,12 +119,12 @@ examples are given below.</p>
 [my _code_sample {
 curl /ticket index
 }]
-<p>The relative URL <span class='wf_filename'>/ticket/index</span>
+<p>The relative URL <span class='ug-filename'>/ticket/index</span>
   would successfully match against this route and presumably show a list
   of support tickets.
   The action <code>index</code> in class
   <code>Ticket</code> would be invoked. Note the URL
-  <span class='wf_filename'>/ticket/index/123</span> does not match
+  <span class='ug-filename'>/ticket/index/123</span> does not match
   this route as it has an additional URL component. In fact, this
   route definition is redundant since the
   [my _chapter_link default_dispatcher "default URL mapping"] behaviour
@@ -135,7 +135,7 @@ curl /ticket index
 [my _code_sample {
 curl /ticket display id
 }]
-<p>The relative URL <span class='wf_filename'>/ticket/display/123</span>
+<p>The relative URL <span class='ug-filename'>/ticket/display/123</span>
   would successfully match against this route.
   The action <code>display</code> in class
   <code>Ticket</code> would be invoked. The parameter with name
@@ -150,8 +150,8 @@ curl /ticket {display edit} id
 }]
 <p>This is similar to the previous route except that two actions are listed
   so both
-  <span class='wf_filename'>/ticket/display/123</span> and
-  <span class='wf_filename'>/ticket/edit/123</span> will match.
+  <span class='ug-filename'>/ticket/display/123</span> and
+  <span class='ug-filename'>/ticket/edit/123</span> will match.
 </p>
 
 <h4>Route: matching on parameter syntax</h4>
@@ -159,16 +159,16 @@ curl /ticket {display edit} id
 curl /ticket display {id:[[:digit:]]+:}
 }]
 <p>The problem with the route in the previous examples was that
-  although <span class='wf_filename'>/ticket/display/123</span>
+  although <span class='ug-filename'>/ticket/display/123</span>
   would successfully match, so would the URL
-  <span class='wf_filename'>/ticket/display/abc</span>, something that
+  <span class='ug-filename'>/ticket/display/abc</span>, something that
   is probably undesired. Adding a regular expression to the parameter
   definition ensures that only numeric strings will match the parameter
   component for <code>id</code>. The URL 
-  <span class='wf_filename'>/ticket/display/abc</span> would therefore
+  <span class='ug-filename'>/ticket/display/abc</span> would therefore
   not match the route.</p>
 
-<p>The relative URL <span class='wf_filename'>/ticket/display</span>
+<p>The relative URL <span class='ug-filename'>/ticket/display</span>
   would also not match the route definition since no parameter is
   specified.</p>
 
@@ -185,7 +185,7 @@ curl /ticket implicit:display {id:[[:digit:]]+:}
   selection mechanism so that the <code>display</code> component is
   not required in the URL. So with the route definition in this example,
   the relative URL
-  <span class='wf_filename'>/ticket/123</span> would result in
+  <span class='ug-filename'>/ticket/123</span> would result in
   same invocation of the <code>display</code> action method as above.
   Note that if you want URL's of the form shown in the previous examples 
   as well, both route definitions would need to be in place as this route
@@ -200,8 +200,8 @@ curl /ticket display {*id:[[:digit:]]+:}
 <p>Prefixing a parameter with the <code>*</code> character causes
   the parameter to collect the entire remaining portion of the URL as a
   list value. So in this example, relative URL's such as 
-  <span class='wf_filename'>/ticket/display/12</span> and
-  <span class='wf_filename'>/ticket/display/12/34/56</span>
+  <span class='ug-filename'>/ticket/display/12</span> and
+  <span class='ug-filename'>/ticket/display/12/34/56</span>
   would both be accepted, with the <code>id</code> parameter set to
   lists <code>{12}</code> and <code>{12 34 56}</code> respectively.</p>
 
@@ -218,7 +218,7 @@ curl /ticket display {*id:[[:digit:]]+:}
 
 <p>This Tcl fragment in a route definition file would set up two routes
   which would match URL's of the form
-  <span class='wf_filename'>/blog/2009/1/21</span> or
-  <span class='wf_filename'>/article/2009/1/21</span> and invoke the
+  <span class='ug-filename'>/blog/2009/1/21</span> or
+  <span class='ug-filename'>/article/2009/1/21</span> and invoke the
   <code>display</code> action on the <code>Blog</code> or <code>Article</code>
   controllers respectively.</p>

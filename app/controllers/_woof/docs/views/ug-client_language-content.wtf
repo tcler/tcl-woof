@@ -1,5 +1,5 @@
 <p>Client browsers can specify their language preferences through the
-  HTTP <span class='wf_code'>Accept-Language</span> header. For example,</p>
+  HTTP <span class='ug-code'>Accept-Language</span> header. For example,</p>
 
 [my _code_sample {
   Accept-Language: fr,de;q=0.3,en;q=0.7
@@ -7,12 +7,12 @@
 
 <p>This header indicates a preference for French, English and German
   in that order. An application can retrieve this header from the
-  [my _chapter_link env "<span class='wf_code'>env</span>"] object
+  [my _chapter_link env "<span class='ug-code'>env</span>"] object
   and parse it. However, the recommended method is to invoke the
   [my _manpage_link ::woof::Request::accept_languages] method on the
   [my _chapter_link request_object "request"] object. This will return
   the list of preferred languages in priority order. For example, for
   the above header this method will return the list 
-  <span class="wf_code">{fr en de}</span>.</p>
+  <span class="ug-code">{fr en de}</span>.</p>
 
 

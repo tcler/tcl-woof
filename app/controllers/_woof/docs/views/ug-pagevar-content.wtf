@@ -1,5 +1,5 @@
 <p>For each request, Woof! automatically creates an object called
-<span class="wf_code">pagevar</span> of class 
+<span class="ug-code">pagevar</span> of class 
 [my _manpage_link ::woof::util::Map] and intializes it to default values.
 By convention, this object contains settings related to page layout options
 and other page meta information such as title or stylesheets.</p>
@@ -7,7 +7,7 @@ and other page meta information such as title or stylesheets.</p>
 <p>For example, the Woof! 
 [my _chapter_link default_page_layout "default layout"] retrieves information
 such as size and positioning of elements from the 
-<span class="wf_code">pagevar</span> object. The following two lines in
+<span class="ug-code">pagevar</span> object. The following two lines in
 the constructor for a controller (or executed any time before the page
 is rendered)</p>
 
@@ -20,6 +20,6 @@ is rendered)</p>
   and then place the sidebar on the right hand side of a dynamic width page.</p>
 
 <p>Applications may or may not make use of the
-<span class="wf_code">pagevar</span> object but if used, it is advisable
+<span class="ug-code">pagevar</span> object but if used, it is advisable
 to use it for similar purposes as opposed to something unrelated like
 storage of application data.</p>

@@ -1,9 +1,7 @@
-<div class='wf_banner'>
 <div>
 <h2>Web Oriented Object Framework</h2>
 %if {[pagevar exists MODULE_SUBHEADING subheading]} {
    <h3>[hesc $subheading]</h3>
 % }
-</div>
 </div>
 

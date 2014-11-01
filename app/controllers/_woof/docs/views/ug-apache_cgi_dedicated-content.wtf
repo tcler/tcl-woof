@@ -4,7 +4,7 @@
   <li>This is a dedicated server and you have full control over the Apache configuration files.</li>
   <li>The server only hosts the Woof! application and nothing else.</li>
   <li>The application is rooted at the top level, i.e.
-    <span class="wf_filename">http://www.mysite.com</span> is the
+    <span class="ug-filename">http://www.mysite.com</span> is the
     entry point into the application.</li>
 </ul>
 
@@ -25,38 +25,38 @@ the configuration process.</p>
 }]
 <p>This will create the Woof! 
 [my _chapter_link directory_structure "directory structure"] under 
-<span class="wf_filename">/var/myapp</span>. In
-particular, the <span class="wf_filename">/var/myapp/public</span>
+<span class="ug-filename">/var/myapp</span>. In
+particular, the <span class="ug-filename">/var/myapp/public</span>
 will contain the publically accessible directory tree that will be the
 document root for the dedicated web server. The
-file <span class="wf_filename">cgi_server.tcl</span> in that directory
+file <span class="ug-filename">cgi_server.tcl</span> in that directory
 implements the Woof! CGI interface. The other files in the directory,
 including subdirectories, are intended to be directly served by Apache
 without going through Woof! as detailed below.</p>
 <h3>Step 2 - set the document root</h3>
 
 <p>The next step is to configure Apache by editing its configuration
-file <span class="wf_filename">conf/httpd.conf</span> (or whatever
+file <span class="ug-filename">conf/httpd.conf</span> (or whatever
 your system is configured for) in the Apache directory tree.</p>
 
 <p>Since this is the only application on the server, the document root
 for Apache must be changed to point to the Woof! public directory by
-editing the definition of <span class='wf_code'>DocumentRoot</span> in 
-<span class='wf_filename'>httpd.conf</span>.</p>
+editing the definition of <span class='ug-code'>DocumentRoot</span> in 
+<span class='ug-filename'>httpd.conf</span>.</p>
 
 [my _code_sample {
 DocumentRoot /var/myapp/public
 }]
 
 <p>Note again that the document root points to
-the <span class="wf_filename">public</span> subdirectory, <em>not</em>
+the <span class="ug-filename">public</span> subdirectory, <em>not</em>
 the Woof! root directory. By default, Apache will now look under
-the <span class="wf_filename">/var/myapp/public</span> directory to
+the <span class="ug-filename">/var/myapp/public</span> directory to
 locate URL resources.</p>
 
 <h3>Step 3 - configure CGI</h3>
-<p>We now add a <span class='wf_code'>Directory</span> section
-to <span class="wf_filename">httpd.conf</span>:</p>
+<p>We now add a <span class='ug-code'>Directory</span> section
+to <span class="ug-filename">httpd.conf</span>:</p>
 [my _code_sample {
 <Directory "/var/myapp/public">
     Options +ExecCGI
@@ -69,25 +69,25 @@ to <span class="wf_filename">httpd.conf</span>:</p>
 </Directory>
 }]
 
-<p>The <span class='wf_code'>Options</span> line enables CGI for the directory tree
-under public. Together with the <span class='wf_code'>AddHandler</span> line, it will
-allow the <span class="wf_filename">public/cgi_server.tcl</span> file
+<p>The <span class='ug-code'>Options</span> line enables CGI for the directory tree
+under public. Together with the <span class='ug-code'>AddHandler</span> line, it will
+allow the <span class="ug-filename">public/cgi_server.tcl</span> file
 to be run as a CGI script as opposed to being returned as a web
 page.</p>
 
-<p>The <span class='wf_code'>Rewrite</span> directives are needed because we want all
+<p>The <span class='ug-code'>Rewrite</span> directives are needed because we want all
 requests to be handled by the Woof! CGI handler without having to
 specify the handler in the request URL. Without these directives,
 URL's of the
-form <span class="wf_filename">http://www.mysite.com/cgi_server.tcl/...</span>
+form <span class="ug-filename">http://www.mysite.com/cgi_server.tcl/...</span>
 would have to be used to access the Woof!
-application. The <span class='wf_code'>RewriteEngine</span> directive enables URL
-rewriting. The <span class='wf_code'>RewriteRule</span> directive is what channels all
+application. The <span class='ug-code'>RewriteEngine</span> directive enables URL
+rewriting. The <span class='ug-code'>RewriteRule</span> directive is what channels all
 URL's to our Woof! CGI server. However, we need to make one exception
 - images, stylesheets and other static files should be served without
 going through the additional Woof!
-overhead. The <span class='wf_code'>RewriteCond</span> directive takes care of this
-situation. It stipulates that the following <span class='wf_code'>RewriteRule</span>
+overhead. The <span class='ug-code'>RewriteCond</span> directive takes care of this
+situation. It stipulates that the following <span class='ug-code'>RewriteRule</span>
 will only have effect if the requested file name does not exist. Thus
 requests for files within the public directory tree will be served
 without Woof! being invoked. For more details on how rewriting works,
@@ -100,7 +100,7 @@ documentation</a>.</p>
 configuration - enabling the Apache modules for CGI and URL
 rewriting. In many cases, these modules will already be enabled. If
 not, make sure the following lines are present <em>and not commented
-out</em> in the <span class='wf_filename'>httpd.conf</span>
+out</em> in the <span class='ug-filename'>httpd.conf</span>
 configuration file.</p>
 [my _code_sample {
 LoadModule cgi_module modules/mod_cgi.so

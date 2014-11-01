@@ -20,16 +20,16 @@ Enter Ctrl-C to exit...
 is the BowWow default. You can run the server on a different port by
 specifying the <code>-port <em>PORTNUMBER</em></code> command line
 option when starting the server. After starting BowWow, browsing to
-URL <span class='wf_filename'>http://localhost:8015</span>
+URL <span class='ug-filename'>http://localhost:8015</span>
 should bring up the web page below.</p>
 
-<p class="wf_center">
+<p class="ug-center">
 [my include_image bowwow_welcome.png alt "BowWow Welcome Page"]
 </p>
 
 <p>you can change the URL at which the application is rooted by
   specifying the option <code>-urlroot <em>URLROOT</em></code>. By default
-  the application URL is at <span class='wf_filename'>/</span>.</p>
+  the application URL is at <span class='ug-filename'>/</span>.</p>
 
 <p>Note that unlike the
 [my _chapter_link bowwow_exe "standalone BowWow server"],

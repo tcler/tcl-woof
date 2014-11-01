@@ -16,12 +16,12 @@ C:\bowwow>
 
 <p>As seen in the directory listing above, several new directories
 appear after BowWow is
-started. The <span class="wf_filename">app</span> directory will
+started. The <span class="ug-filename">app</span> directory will
 contain your application code and
-templates. The <span class="wf_filename">config</span> directory
+templates. The <span class="ug-filename">config</span> directory
 will contain configuration settings for the installation. The public
 directory contains files such as stylesheets and
-images. The <span class="wf_filename">temp </span>directory is the
+images. The <span class="ug-filename">temp </span>directory is the
 default location for log files, session state, and other miscelleneous
 files. Note that other directories described in 
 [my _chapter_link directory_structure] are missing as their content is
@@ -40,25 +40,25 @@ Enter Ctrl-C to exit...
 is the BowWow default. You can run the server on a different port by
 specifying the <code>-port <em>PORTNUMBER</em></code> command line
 option when starting the server. After starting BowWow, browsing to
-URL <span class='wf_filename'>http://localhost:8015</span>
+URL <span class='ug-filename'>http://localhost:8015</span>
 should bring up the web page below.</p>
 
-<p class="wf_center">
+<p class="ug-center">
 [my include_image bowwow_welcome.png alt "BowWow Welcome Page"]
 </p>
 
 <p>you can change the URL at which the application is rooted by
   specifying the option <code>-urlroot <em>URLROOT</em></code>. By default
-  the application URL is at <span class='wf_filename'>/</span>.</p>
+  the application URL is at <span class='ug-filename'>/</span>.</p>
 
 
 <h3>Built-in utilities</h3>
-<p>The <span class="wf_code">bowwow.exe</span> executable includes
+<p>The <span class="ug-code">bowwow.exe</span> executable includes
 commands for invoking the
 [my _chapter_link wag "application generation"] tools. Instead of
-invoking the <span class="wf_code">wag</span> script however, the
+invoking the <span class="ug-code">wag</span> script however, the
 commands should be directly invoked through
-  <span class="wf_code">bowwow</span>.</p>
+  <span class="ug-code">bowwow</span>.</p>
 
 [my _code_sample {
 C:\bowwow&gt;   bowwow url ?-excludeviews <em>BOOLEAN</em>? ?list of urls?

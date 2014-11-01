@@ -1,5 +1,5 @@
-<p>The <span class="wf_filename">ruffian.tcl</span> script, located
-in the <span class="wf_filename">scripts</span> subdirectory,
+<p>The <span class="ug-filename">ruffian.tcl</span> script, located
+in the <span class="ug-filename">scripts</span> subdirectory,
 generates reference pages for Woof! using the Ruff! documentation
 generator. For example,</p>
 [my _code_sample {

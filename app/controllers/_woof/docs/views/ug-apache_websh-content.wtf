@@ -26,19 +26,19 @@ configuration.</p>
 <ul>
     <li>This is a dedicated server and you have full control over the Apache configuration files.</li>
     <li>The server only hosts the Woof! application and nothing else.</li>
-    <li>The application is rooted at the top level, i.e. <span class="wf_filename">http://www.mysite.com</span> is the entry point into the application.</li>
+    <li>The application is rooted at the top level, i.e. <span class="ug-filename">http://www.mysite.com</span> is the entry point into the application.</li>
 </ul>
 <h3>Step 1 - install mod_websh</h3>
 <p><strong><em>TBD - where to download mod_websh from.</em></strong>
 For Windows systems, you can download prebuilt binaries from
 the <a href="http://sourceforge.net/project/showfiles.php?group_id=250256">Woof!
 download page</a>.</p>
-<p>After building, the <span class="wf_filename">mod_websh.so</span>
+<p>After building, the <span class="ug-filename">mod_websh.so</span>
 module and the associated
-DLL <span class="wf_filename">mod_websh<em>VERSION</em>.dll</span>
+DLL <span class="ug-filename">mod_websh<em>VERSION</em>.dll</span>
 should be copied to the
-Apache <span class="wf_filename">modules</span> directory. Then add
-the following line to the <span class="wf_filename">httpd.conf</span>
+Apache <span class="ug-filename">modules</span> directory. Then add
+the following line to the <span class="ug-filename">httpd.conf</span>
 to load the module.</p>
 [my _code_sample {
 LoadModule websh_module modules/mod_websh.so
@@ -50,17 +50,17 @@ LoadModule websh_module modules/mod_websh.so
 }]
 <p>This will create the Woof!
 <a href="directory_structure">directory structure</a> under 
-<span class="wf_filename">/var/myapp</span>. In
-particular, the <span class="wf_filename">/var/myapp/public</span>
+<span class="ug-filename">/var/myapp</span>. In
+particular, the <span class="ug-filename">/var/myapp/public</span>
 will contain the publically accessible directory tree that will be the
 document root for the dedicated web server. The
-file <span class="wf_filename">websh_server.tcl</span> will be loaded
+file <span class="ug-filename">websh_server.tcl</span> will be loaded
 by the <code>mod_websh</code> module in Apache to create the Tcl
 interpreter for handling client requests. The other files in the
 directory, including subdirectories, are intended to be directly
 served by Apache without going through Woof! as detailed below.</p>
 <p>In addition, the
-directory <span class="wf_filename">config/websh</span> will also be
+directory <span class="ug-filename">config/websh</span> will also be
 created to contain <code>mod_websh</code> configuration. The files
 here need not be modified but are simply referenced from the Apache
 configuration files as shown in subsequent steps.</p>
@@ -68,18 +68,18 @@ configuration files as shown in subsequent steps.</p>
 <p>Since this is the only application on the server, the document root
 for Apache must be changed to point to the Woof! public directory by
 editing the definition of <code>DocumentRoot</code>
-in <span class="wf_filename">httpd.conf</span>.</p>
+in <span class="ug-filename">httpd.conf</span>.</p>
 [my _code_sample {
 DocumentRoot /var/myapp/public</pre>
 }]
 <p>Note that the document root points to
-the <span class="wf_filename">public</span> subdirectory, <em>not</em>
+the <span class="ug-filename">public</span> subdirectory, <em>not</em>
 the Woof! root directory. By default, Apache will now look under
-the <span class="wf_filename">/var/myapp/public</span> directory to
+the <span class="ug-filename">/var/myapp/public</span> directory to
 locate URL resources.</p>
 <h3>Step 4 - configure mod_websh</h3>
 <p>The main Apache configuration
-file <span class="wf_filename">httpd.conf</span> has to be edited to
+file <span class="ug-filename">httpd.conf</span> has to be edited to
 pass requests to the <code>mod_websh</code> module.</p>
 [my _code_sample {
 <Directory "/var/myapp/public">
@@ -96,13 +96,13 @@ WebshConfig "/var/myapp/config/websh/websh.conf"
 }]
 <p>The <code>AddHandler</code> registers <code>mod_websh</code> as the
 handler for Tcl files; in particular, requests for
-the <span class="wf_filename">public/websh_server.tcl</span> file will
+the <span class="ug-filename">public/websh_server.tcl</span> file will
 be handled by it.</p>
 <p>The <code>Rewrite</code> directives are needed for the same reason
 they were required for CGI - we want all requests to be handled by the
 Woof! without having to specify the handler in the request
 URL. Without these directives, URL's of the
-form <span class="wf_filename">http://www.mysite.com/websh_server.tcl
+form <span class="ug-filename">http://www.mysite.com/websh_server.tcl
 ...</span> would have to be used to access the Woof!
 application. The <code>RewriteEngine</code> directive enables URL
 rewriting. The <code>RewriteRule</code> directive is what channels all
@@ -112,10 +112,10 @@ served without going through the additional Woof!
 overhead. The <code>RewriteCond</code> directive takes care of this
 situation. It stipulates that the following <code>RewriteRule</code>
 will only have effect if the requested file name does not exist. Thus
-requests for files within the <span class="wf_filename">public</span>
+requests for files within the <span class="ug-filename">public</span>
 directory tree will be served without Woof! being invoked. For other
 requests, the URL is rewritten as a request
-for <span class="wf_filename">websh_server.tcl</span> resulting
+for <span class="ug-filename">websh_server.tcl</span> resulting
 in <code>mod_websh</code> handling the request. For more details on
 how rewriting works, refer to
 the <a href="http://httpd.apache.org/docs/2.2/rewrite/">Apache

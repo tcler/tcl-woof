@@ -2,20 +2,20 @@
 processes a client request as follows:</p>
 
 <ul>
-  <li>A [my _chapter_link request_object "<span class='wf_code'>request</span>"]
+  <li>A [my _chapter_link request_object "<span class='ug-code'>request</span>"]
     object is created that encapsulates the received request with request
     parameters, cookies and other attributes extracted.</li>
-  <li>A [my _chapter_link response_object "<span class='wf_code'>response</span>"]
+  <li>A [my _chapter_link response_object "<span class='ug-code'>response</span>"]
     object is created
     to hold the response to be sent back to the client, including the
     page content, cookies, and HTTP headers.</li>
-  <li>A [my _chapter_link session_object "<span class='wf_code'>session</span>"]
+  <li>A [my _chapter_link session_object "<span class='ug-code'>session</span>"]
     context of the request
     is retrieved with a new session being created if no context is
     associated with the request.</li>
   <li>The URL received in the client request is 
     [my _chapter_link url_dispatcher "mapped"] to an appropriate
-    [my _chapter_link controller_object "<span class='wf_code'>controller</span>"]
+    [my _chapter_link controller_object "<span class='ug-code'>controller</span>"]
     class and method (action).</li>
   <li>The method is invoked to carry out the client request.</li>
   <li>If the action method did not itself generate the page content,

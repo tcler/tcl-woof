@@ -27,12 +27,12 @@
   [my _chapter_link locating_templates "search algorithm"]
   used for retrieving predefined sections. To render the main section for
   the <code>myaction</code> in the controller, Woof! will look for
-  <span class='wf_filename'>mycontroller-myaction-main.wtf</span>. Upon not
+  <span class='ug-filename'>mycontroller-myaction-main.wtf</span>. Upon not
   finding this file, it will look for
-  <span class='wf_filename'>mycontroller-main.wtf</span> and find it 
+  <span class='ug-filename'>mycontroller-main.wtf</span> and find it 
   containing the above content. When encountering the
   <code>page fetch</code> command, it will look for
-  <span class='wf_filename'>mycontroller-myaction-content.wtf</span>
+  <span class='ug-filename'>mycontroller-myaction-content.wtf</span>
   and insert it in the appropriate place.</p>
 
 <p>The advantage of this approach is that should we desire to make any

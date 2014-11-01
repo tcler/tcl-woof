@@ -23,15 +23,15 @@ Created view app/controllers/views/math-add-main.wtf.
 }]
 
 <p>This will create the
-controller <span class='wf_code'>MathController</span> and its action
-methods <span class='wf_code'>add</span>
-and <span class='wf_code'>subtract</span> as well as corresponding
+controller <span class='ug-code'>MathController</span> and its action
+methods <span class='ug-code'>add</span>
+and <span class='ug-code'>subtract</span> as well as corresponding
 views in the shown locations. Views are described in the
 [my _chapter_link page_generation] chapter; here we
 will only go into details about the controller.</p>
 
 <p>The controller file
-<span class="wf_filename">app/controllers/math_controller.tcl</span>
+<span class="ug-filename">app/controllers/math_controller.tcl</span>
 contains the following content:</p>
 [my _code_sample {
 oo::class create MathController {
@@ -74,7 +74,7 @@ method index {} {
 }]
 
 <p>The corresponding view template
-<span class="wf_filename">app/controllers/views/math-index-main.wtf</span>
+<span class="ug-filename">app/controllers/views/math-index-main.wtf</span>
 displays a form into which the addends can be entered.</p>
 [my _code_sample {
 <form method='POST' action='[my url_for -action add]'>
@@ -89,15 +89,15 @@ Enter the two numbers to be added:<br/>
 form. Details of how this template is converted into a Web page are in
 the [my _chapter_link page_generation] chapter. Here the
 only thing to note is the value set for
-the <span class='wf_code'>action</span> attribute in
-the <span class='wf_code'>form</span> tag. The Tcl
-statement <span class='wf_code'>my url_for -action add</span>
+the <span class='ug-code'>action</span> attribute in
+the <span class='ug-code'>form</span> tag. The Tcl
+statement <span class='ug-code'>my url_for -action add</span>
 generates a URL that corresponds to
-the <span class='wf_code'>add</span> action of this controller. So
+the <span class='ug-code'>add</span> action of this controller. So
 when the form's submit button is clicked, the browser will submit a
 HTTP POST request to the URL corresponding to
-the <span class='wf_code'>add</span> action of
-the <span class='wf_code'>math</span> controller. It is generally
+the <span class='ug-code'>add</span> action of
+the <span class='ug-code'>math</span> controller. It is generally
 advisable to use the url_for method wherever possible instead of
 hardcoding the link since it will generate the correct URL even when
 the top level domain or application root or even the controller name
@@ -105,13 +105,13 @@ is modified.</p>
 
 <p>Browsing to the /math/index url will bring up the following page.</p>
 
-<p class="wf_center">
+<p class="ug-center">
 [my include_image math_index.png alt "Math Index page"]
 </p>
 
 <p>Entering two numbers and clicking <strong>Calculate</strong> will
 send an HTTP POST request with the
-URL <span class="wf_filename">/math/add</span> which will be handled
+URL <span class="ug-filename">/math/add</span> which will be handled
 by the add method, the implementation of which is shown below.</p>
 
 [my _code_sample {
@@ -125,12 +125,12 @@ request are accessible through the [my _chapter_link params_object "params"]
 object using the standard [my _manpage_link ::woof::util::Map]
 interface. The code above illustrates two methods of retrieving
 parameter values from the object - using an
-explicit <span class='wf_code'>get</span> method call, and retrieval
+explicit <span class='ug-code'>get</span> method call, and retrieval
 using the parameter name prefixed with
-a <span class='wf_code'>:</span> character. By convention, values used
+a <span class='ug-code'>:</span> character. By convention, values used
 by the display template are stored in a
 [my _manpage_link ::woof::util::Map]
-object, <span class='wf_code'>pagevar</span>, in the controller
+object, <span class='ug-code'>pagevar</span>, in the controller
 context. As we see below, this is not mandated.</p>
 
 <p>The corresponding template for displaying the result is</p>
@@ -142,7 +142,7 @@ context. As we see below, this is not mandated.</p>
 
 <p>which displays the result page:</p>
 
-<p class="wf_center">
+<p class="ug-center">
 [my include_image math_result.png alt "Math Result page"]
 </p>
 
@@ -161,7 +161,7 @@ pass them to the method. Picking one of the two styles is a matter of
 personal taste.</p>
 
 <p>The new method definition also uses an instance variable instead of
-the <span class='wf_code'>pagevar</span> object to pass data to the
+the <span class='ug-code'>pagevar</span> object to pass data to the
 view template below.</p>
 
 [my _code_sample {

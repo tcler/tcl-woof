@@ -19,7 +19,7 @@
   <li>The <em>application</em> interpreter is a safe interpreter. It
     is created by the master interpreter which also loads most of the
     Woof! runtime packages into it
-    including the <span class="wf_code">woof</span> package.
+    including the <span class="ug-code">woof</span> package.
     The master interpreter also creates various
     aliased commands, such as those for the web server interfaces and
     logging, in the application interpreter.
@@ -51,20 +51,20 @@
 <p>Application-specific code is loaded in the master interpreter at
   start up time. After creation of the application interpreter, the
   master checks for the existence of the file
-  <span class='wf_filename'>app_master.tcl</span> in the
-  <span class='wf_filename'>app</span> subdirectory under the Woof!
+  <span class='ug-filename'>app_master.tcl</span> in the
+  <span class='ug-filename'>app</span> subdirectory under the Woof!
   root and loads it using the Tcl
   [my _tcl_manpage_link source] command. This file may in turn load
   other packages as well as modify the application interpreter. The
   name of the application interpreter can be obtained through the
   <code>::woof::master::app_interp</code> command.</p>
 
-<p>The path <span class='wf_filename'>app/lib</span> under the Woof! root
+<p>The path <span class='ug-filename'>app/lib</span> under the Woof! root
   directory is automatically added to the <code>auto_path</code> Tcl
   variable. If you are loading packages from other directories, they
   should be added to <code>auto_path</code> as well.</p>
 
-<p>Below is a sample <span class='wf_filename'>app_master.tcl</span>
+<p>Below is a sample <span class='ug-filename'>app_master.tcl</span>
   file which assumes the presence of a database
   package <code>db</code> and make a single command visible in the
   application interpreter.</p>

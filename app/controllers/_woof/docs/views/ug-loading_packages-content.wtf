@@ -1,25 +1,25 @@
 <p>Because it runs in safe mode, the Woof! application interpreter is
   restricted in terms of the areas of the file system it can read from. 
   By default, the interpreter can only read from the
-  <span class="wf_filename">app</span> and 
-  <span class="wf_filename">public</span> subdirectories in the Woof!
-  tree. In addition, the   <span class="wf_filename">lib</span>
+  <span class="ug-filename">app</span> and 
+  <span class="ug-filename">public</span> subdirectories in the Woof!
+  tree. In addition, the   <span class="ug-filename">lib</span>
   directory can be read during start-up but not subsequently once
   Woof! itself is loaded.</p>
 
-<p>Consequently, any <span class="wf_code">package require</span> or
-  <span class="wf_code">source</span> commands in your application
+<p>Consequently, any <span class="ug-code">package require</span> or
+  <span class="ug-code">source</span> commands in your application
   code will fail.</p>
 
 <p>To get your packages to load, you need to configure Woof! to allow
   files to be read from the directories where your libraries are
   stored. This is done by setting the variable 
-  <span class='wf_code'>lib_dirs</span> in the
+  <span class='ug-code'>lib_dirs</span> in the
   [my _chapter_link configuration "configuration file"] to a list of
   directories that should be accessible. Note that the entire subdirectory
   tree below these directories will also be accessible. Note that the
-  directories <span class='wf_filename'>app</span>
-  <span class='wf_filename'>lib</span> do not need to be listed as
+  directories <span class='ug-filename'>app</span>
+  <span class='ug-filename'>lib</span> do not need to be listed as
   they are included by default.
 </p>
 

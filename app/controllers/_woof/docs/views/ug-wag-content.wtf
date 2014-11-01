@@ -1,5 +1,5 @@
-<p>The <span class="wf_filename">wag.tcl</span> script, located
-in the <span class="wf_filename">scripts</span> subdirectory under
+<p>The <span class="ug-filename">wag.tcl</span> script, located
+in the <span class="ug-filename">scripts</span> subdirectory under
 the Woof! root, generates and verifies controller and view stubs.
 The general form of the command
 when invoked from the Woof! root directory is:</p>
