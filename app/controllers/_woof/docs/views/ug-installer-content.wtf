@@ -1,5 +1,5 @@
-<p>The <span class="wf_filename">installer.tcl</span> script in the 
-  <span class="wf_filename">scripts</span> subdirectory implements
+<p>The <span class="ug-filename">installer.tcl</span> script in the 
+  <span class="ug-filename">scripts</span> subdirectory implements
   building and installation of Woof! distributions.</p>
 
 <h3>Building a distribution</h3>
@@ -14,21 +14,21 @@ tclsh scripts/installer.tcl distribute TARGETDIR ?options?
   target directory including</p>
 <table>
   <tr>
-    <td><span class="wf_filename">woof-<em>VERSION</em>.tar.gz</span></td>
+    <td><span class="ug-filename">woof-<em>VERSION</em>.tar.gz</span></td>
     <td>Distribution for Unix with Unix line endings.</td>
   </tr>
   <tr>
-    <td><span class="wf_filename">woof-<em>VERSION</em>.zip</span></td>
+    <td><span class="ug-filename">woof-<em>VERSION</em>.zip</span></td>
     <td>Distribution for Windows with Windows style line endings.</td>
   </tr>
   <tr>
-    <td><span class="wf_filename">bowwow-<em>VERSION</em>.exe</span></td>
+    <td><span class="ug-filename">bowwow-<em>VERSION</em>.exe</span></td>
     <td>Single file [my _chapter_link bowwow BowWow] executable for Windows.</td>
   </tr>
 </table>
 
 <p>The program will return an error if the target directory
-  exists. Specify the option <span class="wf_code">-force true</span>
+  exists. Specify the option <span class="ug-code">-force true</span>
   to overwrite existing directories.
 
 <p>By default, the distribution is built from the working directory. To 
@@ -42,9 +42,9 @@ create a distribution from the contents of the source repository, specify
 
 <h3>Installing a distribution</h3>
 
-<p>After a <span class="wf_filename">.tar.gz</span> or
-<span class="wf_filename">.zip</span> distribution is unpacked into
-a directory, the <span class="wf_filename">installer.tcl</span> script
+<p>After a <span class="ug-filename">.tar.gz</span> or
+<span class="ug-filename">.zip</span> distribution is unpacked into
+a directory, the <span class="ug-filename">installer.tcl</span> script
 can then be used to install on the target system. The general syntax
 of the command is</p>
 
@@ -54,14 +54,14 @@ tclsh scripts/installer.tcl install SERVER INTERFACE ?options?
 
 <p>By default, the script will install in its current
   location. Specify the
-  <span class="wf_code">-installdir <em>INSTALLDIR</em></span> option
-  to install to directory <span class="wf_code"><em>INSTALLDIR</em></span>
+  <span class="ug-code">-installdir <em>INSTALLDIR</em></span> option
+  to install to directory <span class="ug-code"><em>INSTALLDIR</em></span>
   instead.
 
-<p>The <span class="wf_code"><em>SERVER</em></span> argument specifies
+<p>The <span class="ug-code"><em>SERVER</em></span> argument specifies
   the web server (e.g. Apache).</p>
 
-<p>The <span class="wf_code"><em>INTERFACE</em></span> argument
+<p>The <span class="ug-code"><em>INTERFACE</em></span> argument
   specifies the web server interface to be used, for example SCGI.</p>
 
 <p>See the [my _chapter_link installation] chapter for valid values,

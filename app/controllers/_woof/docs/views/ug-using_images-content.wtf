@@ -22,10 +22,10 @@
 <ul>
   <li>An absolute URL, as in the first example,</li>
   <li>A relative URL, which is treated as the file path under the
-    <span class='wf_filename'>public/images</span> subdirectory.</li>
+    <span class='ug-filename'>public/images</span> subdirectory.</li>
   <li>A file name, which will be located as described in the
     [my _chapter_link locating_resources] chapter with
-    <span class='wf_filename'>public/images</span> as the search root.</li>
+    <span class='ug-filename'>public/images</span> as the search root.</li>
 </ul>
 
 <h3>Image attributes</h3>

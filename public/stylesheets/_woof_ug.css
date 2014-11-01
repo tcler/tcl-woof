@@ -1,42 +1,205 @@
 /* Woof User Guide CSS - assumes _woof.css loaded */
 
-#bd .yui-g h2 {
-  border-bottom: thin solid #cccccc;
+.wf_header {
+    font-weight: bold;
+    height: 48px;
+    color: white;
+    background-color: #006666; 
+    background-position: 20px 20px;
+    padding: 20px;
+    background-image: url(../images/_woof/logo.png);
+    background-repeat: no-repeat;
+    text-indent: 100px;
+    color: #E99A56;
+}
+
+.wf_header h2, .wf_header h3 {
+    margin: 0px;
+}
+
+.wf_sidebar .pure-menu.pure-menu-open {
+    border-width: 0;
+    background-color: #006666;
+}
+
+.wf_sidebar .pure-menu .pure-menu-heading, .wf_sidebar .pure-menu a {
+    color: #E99A56;
+}
+
+.wf_sidebar {
+    background-color: #006666;
+}
+
+.wf_main p {
+    line-height: 1.2em;
+}
+
+.wf_main h1, .wf_main h2 {
+  color: #888888;
+  margin-bottom: 0.5em;
+}
+
+.wf_main h3, .wf_main h4 {
+  color: #777777;
+  margin-bottom: 0.5em;
+}
+
+.wf_main h4 {
+  font-size: 93%;
+}
+
+.wf_main table {
+  margin: 1em;
+  border: thin solid;
+  border-collapse: collapse;
+  border-color: #808080;
+  padding: 4;
+}
+
+.wf_main td {
+  border: thin solid;
+  border-color: #808080;
+  vertical-align: top;
+  font-size: 93%;
+}
+
+.wf_main th {
+  border: thin solid;
+  border-color: #808080;
+  padding: 4px;
+  background-color: #CCCCCC;
+}
+
+.wf_main dt, dd {
+   font-size: 93%;
+}
+
+.wf_footer {
+    font-size: 77%;
+    text-align: center;
+    border-top: 1px solid #aaaaaa;
+    /* margin-right: 180px; */
+    margin-top: 10px;
+}
+
+.wf_sidebar {
+  font-size: 77%;
+}
+
+.ug-hnav {
+  font-size: 93%;
+}
+
+.wf_sidebar h2 {
+  margin-bottom: 0.2em;
+  margin-top: 0em;
+  color: white;
+  font-size: 100%;
+}
+
+.wf_sidebar ul, .ug-hnav ul {
+  margin-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 1em;
+}
+
+.wf_sidebar > ul {
+  padding-left: 0em;
+}
+
+.wf_sidebar li, .ug-hnav li {
+  list-style-type: none;
+  /* list-style-image: url(../images/_woof/navarrowright.png); */
+  font-weight: bold;
+  color: #e99a56;
+}
+
+.wf_sidebar a:link, .wf_sidebar a:visited {
+  text-decoration: none;
+  font-weight: normal;
+  color: white;
+}
+
+.ug-hnav {
+  padding-bottom:0.5em;
+  text-align:center;
+  display: block;
+}
+
+.ug-hnav a:link, .ug-hnav a:visited {
+  text-decoration: none;
+  font-size: 93%;
+  font-weight: normal;
+  color: #808080;
+}
+
+.ug-hnav .ug-leftmost {
+  display: block;
+  float: left;
+  text-align: left;
+  background-image: url(../images/_woof/navarrowleft.png);
+  background-position: left center;
+  background-repeat: no-repeat;
+  padding-left: 15px; /* So image does not overlap */
+}
+
+.ug-hnav .ug-rightmost {
+  display: block;
+  float: right;
+  text-align: right;
+  background-image: url(../images/_woof/navarrowright.png);
+  background-position: right center;
+  background-repeat: no-repeat;
+  padding-right: 15px; /* So image does not overlap */
+  margin-right: 10px;
+}
+
+.ug-toc ul {
+  margin-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.ug-toc li {
+  list-style-type: none;
+  /* list-style-image: url(../images/_woof/navarrowright.png); */
+  color: #e99a56;
+}
+
+.ug-toc a:link, .ug-toc a:visited {
+  text-decoration: none;
+  font-weight: normal;
 }
 
 
-.wf_console_session {
+.ug-filename {
+   font-size: 93%;
+   font-family: "Courier New", Courier, monospace;
+}
+
+.ug-center {
+   text-align: center;
+}
+
+.wf_main code, .wf_main .ug-code {
+   font-family: "Courier New", Courier, monospace;
+   font-size: 93%;
+}
+
+h4 .ug-code {
+   font-size: 100%;
+}
+
+ul.ug-nobullets li {
+  list-style-type: none;
+}
+
+.ug-console {
    margin: 10px 30px;
    font-size: 85%;
    font-family: "Courier New", Courier, monospace;
    background-color: #cccccc;
    padding: 2px;
    line-height: 1.2em;
-}
-
-.wf_filename {
-   font-size: 93%;
-   font-family: "Courier New", Courier, monospace;
-}
-
-.wf_demotext {
-   font-size: 93%;
-   font-family: "Courier New", Courier, monospace;
-}
-
-.wf_center {
-   text-align: center;
-}
-
-code, .wf_code {
-   font-family: "Courier New", Courier, monospace;
-   font-size: 93%;
-}
-
-h4 .wf_code {
-   font-size: 100%;
-}
-
-ul.wf_nobullets li {
-  list-style-type: none;
 }

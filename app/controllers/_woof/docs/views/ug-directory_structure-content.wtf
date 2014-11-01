@@ -2,7 +2,7 @@
 structure described below under the installation directory specified for 
 the [my _chapter_link installer "installer"] script.</p>
 
-<h3>Directory <span class="wf_filename">public</span></h3>
+<h3>Directory <span class="ug-filename">public</span></h3>
 <p>This directory and its subdirectories contain all the files that
 are publicly accessible through the Web server. This includes the
 scripts that interface Woof! with the Web server as well as static
@@ -10,55 +10,55 @@ resources like images. For example, the CGI script resides in this
 directory. Generally, files within this directory tree will be served
 directly by the Web server without invoking any Woof! code.</p>
 
-<h3>Directory <span class="wf_filename">public/stylesheets</span></h3>
+<h3>Directory <span class="ug-filename">public/stylesheets</span></h3>
 <p>This directory is the root of the directory tree containing all CSS
 stylesheets referenced by the application code.
 <b>TBD - describe the controller based search paths.</b>
 </p>
 
-<h3>Directory <span class="wf_filename">public/images</span></h3>
+<h3>Directory <span class="ug-filename">public/images</span></h3>
 <p>This directory is the root of directory tree containing all images
 referenced by the application code.
 <b>TBD - describe the controller based search paths.</b>
 </p>
 
-<h3>Directory <span class="wf_filename">public/javascript</span></h3>
+<h3>Directory <span class="ug-filename">public/javascript</span></h3>
 <p>This directory is the root of directory tree containing Javascript
 referenced by the application code.
 <b>TBD - describe the controller based search paths.</b>
 </p>
 
-<h3>Directory <span class="wf_filename">lib</span></h3>
+<h3>Directory <span class="ug-filename">lib</span></h3>
 <p>This directory contains the code for Woof! itself and any
 supporting libraries that may be required by Woof!.
 This directory is not present with
 the <a href="bowwow">BowWow</a> server as the relevant bits are
 included in the BowWow server itself.</p>
 
-<h3>Directory <span class="wf_filename">scripts</span></h3>
+<h3>Directory <span class="ug-filename">scripts</span></h3>
 <p>This directory contains various utility scripts for generating
 application stubs, documentation and so on. Like
-the <span class="wf_filename">lib</span> directory, this directory is
+the <span class="ug-filename">lib</span> directory, this directory is
 not present with the BowWow server as the server subsumes the
 functionality.</p>
 
-<h3>Directory <span class="wf_filename">app</span></h3>
+<h3>Directory <span class="ug-filename">app</span></h3>
 <p>This directory is the root of directory tree containing all
 application code.</p>
 
-<h3>Directory <span class="wf_filename">app/controllers</span></h3>
+<h3>Directory <span class="ug-filename">app/controllers</span></h3>
 <p>The bulk of the application code, including the controller classes
 and view templates reside in this directory tree. When modules or
 namespaces are in use, each subdirectory in the tree corresponds to a
 module or namespace component. All controllers defined in that
 namespace are located in that subdirectory. Additionally, a
-subdirectory calls <span class="wf_filename">views</span> within that
+subdirectory calls <span class="ug-filename">views</span> within that
 module subdirectory contains the view templates specific to those
 controllers.</p>
 
-<h3>Directory <span class="wf_filename">config</span></h3>
+<h3>Directory <span class="ug-filename">config</span></h3>
 <p>This directory contains all configuration files.</p>
 
-<h3>Directory <span class="wf_filename">temp</span></h3>
+<h3>Directory <span class="ug-filename">temp</span></h3>
 <p>Depending on the configuration settings, this directory may be used
 for temporary files such as error logs and session files.</p>

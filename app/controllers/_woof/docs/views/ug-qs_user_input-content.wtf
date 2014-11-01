@@ -4,12 +4,12 @@ functionality. If the user wants the first 30 numbers in the sequence,
 we should provide a way to do that without clicking repeatedly. What
 we want is the following Web page:</p>
 
-<p class="wf_center">
+<p class="ug-center">
   [my include_image qs_form.png alt "Quick Start Example Form"]</p>
 
 <p>There is now an entry box for the user to enter the length of the
 sequence desired. To implement this, we first modify the page template in
-<span class="wf_filename">app/controllers/views/fibonacci-generate-main.wtf </span>as below:</p>
+<span class="ug-filename">app/controllers/views/fibonacci-generate-main.wtf </span>as below:</p>
 [my _code_sample {
     % my variable seq
     <p>
@@ -42,7 +42,7 @@ form will be submitted to the same URL resulting in
 the <code>generate </code>method being called.</p>
 
 <p>We now have to modify the generate method in
-the <span class="wf_filename">fibonacci_controller.tcl</span> file
+the <span class="ug-filename">fibonacci_controller.tcl</span> file
 accordingly. It now needs to handle the original request as well as
 the requests posted through the <code>Generate</code>
 button. Moreover, we will also add some simple validation to

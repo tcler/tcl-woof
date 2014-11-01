@@ -1,5 +1,5 @@
-<p>The <span class="wf_filename">scgi_winservice.tcl</span> script, located
-  in the <span class="wf_filename">scripts</span> subdirectory under
+<p>The <span class="ug-filename">scgi_winservice.tcl</span> script, located
+  in the <span class="ug-filename">scripts</span> subdirectory under
   the Woof! root, is used for installing and running Woof! as an
   [my _chapter_link start_scgi "SCGI"] server
   under Windows.</p>

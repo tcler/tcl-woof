@@ -15,7 +15,7 @@ may need to enable it as shown below.</p>
     Lighttpd configuration files.</li>
     <li>The server only hosts the Woof! application and nothing else.</li>
     <li>The application is rooted at the top level,
-    i.e. <span class="wf_filename">http://www.mysite.com</span> is the
+    i.e. <span class="ug-filename">http://www.mysite.com</span> is the
     entry point into the application.</li>
     <li>You have the means to modify the system configuration so that
     the Woof! SCGI server is started automatically either at boot time
@@ -29,25 +29,25 @@ using the [my _chapter_link installer "installer script"].
 }]
 <p>The above command will create the
 Woof! <a href="directory_structure">directory structure</a>
-under <span class="wf_filename">/var/myapp</span>. In particular,
-the <span class="wf_filename">/var/myapp/public</span> will contain
+under <span class="ug-filename">/var/myapp</span>. In particular,
+the <span class="ug-filename">/var/myapp/public</span> will contain
 the publically accessible directory tree that will be the document
 root for the dedicated web server. The
-file <span class="wf_filename">scgi_server.tcl</span> in that
+file <span class="ug-filename">scgi_server.tcl</span> in that
 directory implements the Woof! CGI interface. The other files in the
 directory, including subdirectories, are intended to be directly
 served by Lighttpd without going through Woof! as detailed below.</p>
 <h3>Step 2 - set the document root</h3>
 <p>Since this is the only application on the server, the document root
 for Lighttpd must be changed to point to the Woof! public directory by
-editing <span class="wf_filename">lighttpd.conf</span>.</p>
+editing <span class="ug-filename">lighttpd.conf</span>.</p>
 [my _code_sample {
 server.document-root = "/var/myapp/public"
 }]
 <p>Note that the document root points to
-the <span class="wf_filename">public</span> subdirectory, <em>not</em>
+the <span class="ug-filename">public</span> subdirectory, <em>not</em>
 the Woof! root directory. By default, Lighttpd will now look under
-the <span class="wf_filename">/var/myapp/public</span> directory to
+the <span class="ug-filename">/var/myapp/public</span> directory to
 locate URL resources.</p>
 <h3>Step 3 - configure SCGI</h3>
 <p>Next, SCGI has to be configured and enabled in Lighttpd. First, look for the definition of <code>server.modules</code> and add <code>mod_scgi</code> to enable SCGI. The definition will look similar to the following depending on what other modules you have configured:</p>

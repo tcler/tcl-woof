@@ -7,7 +7,7 @@ stored as a cookie.</p>
 
 <p>The cookie values are sent by the client as part of the
 HTTP headers and are made available to action methods and
-templates in Woof! through the <span class='wf_code'>icookies</span> 
+templates in Woof! through the <span class='ug-code'>icookies</span> 
 object. This object, of class [my _manpage_link ::woof::CookiesIn] provides a
 standard [my _manpage_link ::woof::Map]
 interface for retrieving the values associated with cookies. For

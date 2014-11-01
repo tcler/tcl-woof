@@ -1,28 +1,28 @@
 <p>When Woof! is installed, it installs a file
-<span class="wf_filename">app/controllers/views/_layout.wtf</span>
+<span class="ug-filename">app/controllers/views/_layout.wtf</span>
 that contains a page layout. Furthermore, it copies this file to 
-<span class="wf_filename">app/controllers/views/layout.wtf</span>
+<span class="ug-filename">app/controllers/views/layout.wtf</span>
 which makes it the default page layout for all controllers that do not
 themselves specialize the layout as described in
 [my _chapter_link page_layout].</p>
 
 <p>An application may of course replace this default layout in
-<span class="wf_filename">app/controllers/views/layout.wtf</span> with
+<span class="ug-filename">app/controllers/views/layout.wtf</span> with
 its own version. However, the default layout described here
 provides sufficient flexibility for many applications.</p>
 
 <p>The default Woof! page layout 
   divides a Web page into five page sections:</p>
 <ul>
-  <li>The <span class='wf_code'>header</span> section which contains
+  <li>The <span class='ug-code'>header</span> section which contains
   content, such as a banner, that pat the top of a page.</li>
-  <li>The <span class='wf_code'>footer</span> section
+  <li>The <span class='ug-code'>footer</span> section
   contains content that is to appear at the bottom of a page.</li>
-  <li>The <span class='wf_code'>sidebar</span>, which may contain elements
+  <li>The <span class='ug-code'>sidebar</span>, which may contain elements
     such as navigation links that appear alongside the main content.</li>
-  <li>The <span class='wf_code'>main</span> section
+  <li>The <span class='ug-code'>main</span> section
   contains the primary content of the main page.</li>
-  <li>The <span class='wf_code'>supplement</span> section contains
+  <li>The <span class='ug-code'>supplement</span> section contains
   content related to the main content, such as additional related
   links, advertising.</li>
 </ul>

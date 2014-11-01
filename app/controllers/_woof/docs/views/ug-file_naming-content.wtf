@@ -6,17 +6,17 @@
 <h3>Directory ownership</h3>
 <p>Among the directories described in [my _chapter_link directory_structure],
 Woof! is assumed to own all directories except the
-<span class="wf_filename">public</span>
-<span class="wf_filename">app</span>
-<span class="wf_filename">temp</span> and
-<span class="wf_filename">config</span>
+<span class="ug-filename">public</span>
+<span class="ug-filename">app</span>
+<span class="ug-filename">temp</span> and
+<span class="ug-filename">config</span>
 subdirectories. In this context, <em>own</em> means that applications
 should not place their files in any other directories except those
 listed above as they might be overwritten on upgrades. 
 
 <h3>File ownership</h3>
 <p>Even within the application-owned directories, Woof! expects to own
-  files whose names begin with the <span class='wf_filename'>_</span>
+  files whose names begin with the <span class='ug-filename'>_</span>
   (underscore) character and all files and nested subdirectories inside
   subdirectories that begin with that character. These may be
   overwritten on an upgrade.</p>

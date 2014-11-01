@@ -7,11 +7,11 @@
   in which case the [my _chapter_link configuration "configuration variable"]
   <code>log_dir</code> specifies the directory in which the logs will
   be stored. By default, this is the
-  <span class='wf_filename'>temp</span> directory under the Woof!
+  <span class='ug-filename'>temp</span> directory under the Woof!
   root. Note that Woof! itself does not currently rotate logs.
   The name of the log file is specified by the
   variable <code>log_file</code> which is set to
-  <span class='wf_filename'>woof.log</span> by default.
+  <span class='ug-filename'>woof.log</span> by default.
 </p>
 
 <p>Log messages have one of the following <em>levels</em> associated

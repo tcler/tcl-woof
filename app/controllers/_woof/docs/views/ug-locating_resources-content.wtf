@@ -8,21 +8,21 @@
 
 <p>When linking to a local file, Woof! expects the file to not
   include any directory components and to be located
-  somewhere under the <span class='wf_filename'>public</span>
+  somewhere under the <span class='ug-filename'>public</span>
   directory.
   Woof! follows a similar procedure for locating static file resources
   associated with a controller that it does for 
   [my _chapter_link locating_templates "locating page templates"].
   It will first check for the existence of the file in a directory
   corresponding to the controller module under a subdirectory of
-  <span class='wf_filename'>public</span> that is specific to that
+  <span class='ug-filename'>public</span> that is specific to that
   resource type. If not found
   there, it will progressively check higher up in the directory
   path.</p>
 
 <h4>Example: locating an image file</h4>
 <p>Assume the page generation for the controller URL
-  <span class='wf_filename'>investor_relations/documents/annual_report</span>
+  <span class='ug-filename'>investor_relations/documents/annual_report</span>
   invokes the command</p>
 [my _code_sample {
   [my include_image logo.png alt "header logo"]
@@ -34,15 +34,15 @@
   the file in the following order:</p>
 
 % set arrow "&#x2192;"
-<ul class='wf_nobullets'>
-  <li><span class="wf_filename">public/images/investor_relations/documents/logo.png</span></li>
-  <li>$arrow <span class="wf_filename">public/images/investor_relations/logo.png</span></li>
-  <li>$arrow <span class="wf_filename">public/images/logo.png</span></li>
+<ul class='ug-nobullets'>
+  <li><span class="ug-filename">public/images/investor_relations/documents/logo.png</span></li>
+  <li>$arrow <span class="ug-filename">public/images/investor_relations/logo.png</span></li>
+  <li>$arrow <span class="ug-filename">public/images/logo.png</span></li>
 </ul>
 
 <p>Note that because Woof! is looking for an image, the root of the
-  search tree is the <span class='wf_filename'>images</span>
-  subdirectory under <span class='wf_filename'>public</span>. If
+  search tree is the <span class='ug-filename'>images</span>
+  subdirectory under <span class='ug-filename'>public</span>. If
   looking for a stylesheet, the root of the search would have been the
-  <span class='wf_filename'>stylesheets</span> subdirectory</span>.
+  <span class='ug-filename'>stylesheets</span> subdirectory</span>.
 </p>

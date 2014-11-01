@@ -3,7 +3,7 @@
   performance reasons, it is best that these are directly served by
   the hosting web server without going through Woof!. By convention
   (actually default configuration), such resources are expected to
-  reside in the <span class='wf_filename'>public</span> subdirectory
+  reside in the <span class='ug-filename'>public</span> subdirectory
   under the Woof! root. As described in the 
   [my _chapter_link installation] chapter, the web server is configured
   so that files under this directory can be directly served to the

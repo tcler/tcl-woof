@@ -1,11 +1,11 @@
 <p>One way for an application to achieve multi-lingual capability is
   to use Tcl's message catalog facility through the standard
-  <a href="http://www.tcl.tk/man/tcl8.6/TclCmd/msgcat.htm"><span class="wf_code">msgcat</span></a>
+  <a href="http://www.tcl.tk/man/tcl8.6/TclCmd/msgcat.htm"><span class="ug-code">msgcat</span></a>
   package.</p>
 
 <p>The application can [my _chapter_link client_language "retrieve"]
   the client's preferred language and then make use of
-  <span class="wf_code">msgcat</span> commands from the page section
+  <span class="ug-code">msgcat</span> commands from the page section
   template to generate content in the appropriate language. See the 
-  <span class="wf_code">msgcat</span> documentation for more
+  <span class="ug-code">msgcat</span> documentation for more
   information.</p>

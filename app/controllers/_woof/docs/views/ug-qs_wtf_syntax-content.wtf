@@ -11,7 +11,7 @@ WTF syntax.
 </p>
 <p>
 Here is the modified template in
-<span class="wf_filename">app/controllers/views/fibonacci-generate-main.wtf</span>:
+<span class="ug-filename">app/controllers/views/fibonacci-generate-main.wtf</span>:
 </p>
 [my _code_sample {
  % my variable seq
@@ -37,6 +37,6 @@ with the <code>%</code> character are treated as Tcl code. In the
 above template, the <code>foreach</code> loop encloses the HTML for a
 single row in the table and each iteration of the loop adds one row to
 the output. The result looks like this:</p>
-<p class="wf_center">
+<p class="ug-center">
 [my include_image qs_table.png alt "Quick Start Example Navigation"]
 </p>

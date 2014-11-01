@@ -1,12 +1,12 @@
-<p>For every request, Woof! initializes a <span class='wf_code'>response</span>
+<p>For every request, Woof! initializes a <span class='ug-code'>response</span>
 object, of class [my _manpage_link #::woof::Response "Response"],
 to hold the data that will be sent back to the client. This data
 includes the HTTP status line, HTTP headers, and content.</p>
 
 <p>Except in some special cases, applications should not directly use
-the <span class='wf_code'>response</span> object. Rather, the response is constructed
+the <span class='ug-code'>response</span> object. Rather, the response is constructed
 using the commands provided by the controller and the facilities
 described in [my _chapter_link page_generation]
 For example, a HTTP redirect is preferably done using
-the controller's <span class='wf_code'>redirect</span> method, as opposed to directly
-manipulating the <span class='wf_code'>response</span> object.</p>
+the controller's <span class='ug-code'>redirect</span> method, as opposed to directly
+manipulating the <span class='ug-code'>response</span> object.</p>

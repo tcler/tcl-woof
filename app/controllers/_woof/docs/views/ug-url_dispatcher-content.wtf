@@ -33,7 +33,7 @@ scheme   authority      url_root      |   controller |   parameters |
 <table>
 <tr>
   <td><code>scheme</code> and <code>authority</code></td>
-  <td><span class=wf_filename>http://www.mycompany.com</span></td>
+  <td><span class=ug-filename>http://www.mycompany.com</span></td>
   <td>The protocol and host specification
     have very little to do with Woof!. Basically, these components are
     used by the client and network infrastructure to deliver the request
@@ -41,7 +41,7 @@ scheme   authority      url_root      |   controller |   parameters |
 </tr>
 <tr>
   <td><code>url_root</code></td>
-  <td><span class='wf_filename'>/myproduct</span></td>
+  <td><span class='ug-filename'>/myproduct</span></td>
   <td>
     <p>In our example, this is the root URL for our Woof! application. The
       website may host many applications implemented using various
@@ -49,7 +49,7 @@ scheme   authority      url_root      |   controller |   parameters |
       <code>myproduct</code>.
       In this case, the value of the <code>url_root</code>
       [my _chapter_link configuration configuration] variable
-      would be set to <span class='wf_filename'>/myproduct</span> and in
+      would be set to <span class='ug-filename'>/myproduct</span> and in
       addition the hosting web server would be configured to invoke
       Woof! for all requests under it as described in the
       [my _chapter_link installation] chapter.</p>
@@ -61,21 +61,21 @@ scheme   authority      url_root      |   controller |   parameters |
 </tr>
 <tr>
   <td><code>module</code></td>
-  <td><span class='wf_filename'>support</span></td>
+  <td><span class='ug-filename'>support</span></td>
   <td>Controllers implementing related functionality can be grouped into
     modules. This is an optional component and need not be always present.
   </td>
 </tr>
 <tr>
   <td><code>controller</code></td>
-  <td><span class='wf_filename'>ticket</span></td>
+  <td><span class='ug-filename'>ticket</span></td>
   <td>The next component is the controller which implements a support
     ticket tracking system.
   </td>
 </tr>
 <tr>
   <td><code>action</code></td>
-  <td><span class='wf_filename'>display</span></td>
+  <td><span class='ug-filename'>display</span></td>
   <td>This specifies the action method to be invoked in the
     controller, which in this
     case specifies a page showing a support ticket.
@@ -83,7 +83,7 @@ scheme   authority      url_root      |   controller |   parameters |
 </tr>
 <tr>
   <td><code>parameters</code></td>
-  <td><span class='wf_filename'>id=123</span></td>
+  <td><span class='ug-filename'>id=123</span></td>
   <td>This optional component specifies parameters to be passed to
     the action method. The parameters can be retrieved through
     the [my _chapter_link params_object "params object"].
@@ -91,7 +91,7 @@ scheme   authority      url_root      |   controller |   parameters |
 </tr>
 <tr>
   <td><code>fragment</code></td>
-  <td><span class='wf_filename'>section</span></td>
+  <td><span class='ug-filename'>section</span></td>
   <td>This is actually never seen by Woof! in an incoming request. It is
     used strictly by the client to locate a particular section or
     fragment within received content. Woof! may however generate links

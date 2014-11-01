@@ -3,11 +3,11 @@
 <p>By default, all methods exported by a controller class are accessible
 through a URL. Note this refers to the leaf controller class exports
 and not any methods it inherits. Without an explicit
-<span class="wf_code">export</span> statement, exports all methods
+<span class="ug-code">export</span> statement, exports all methods
 beginning with a lower case letters and no others. Alternatively, you
 can use the Tcl class definition commands
-<span class="wf_code">export</span> and
-<span class="wf_code">unexport</span> to control what methods are
+<span class="ug-code">export</span> and
+<span class="ug-code">unexport</span> to control what methods are
 exported.</p>
 
 <p>However, using Tcl's built-in mechanisms has the problem that
@@ -88,15 +88,15 @@ oo::define Sample {
 }]
 
 <p>In the second case, Woof! will send an error to the client if its
-  request does not contain parameters <span class="wf_code">p1</span>
-  and <span class="wf_code">p2</span>. This could be avoided by the
+  request does not contain parameters <span class="ug-code">p1</span>
+  and <span class="ug-code">p2</span>. This could be avoided by the
   standard Tcl default value mechanism for method arguments.
   Note that the method may still
   retrieve additional parameters from the
-  <span class="wf_code">params</span> object as appropriate.</p>
+  <span class="ug-code">params</span> object as appropriate.</p>
 
 <p>If the method has a variable number of parameters, as indicated by
-  a trailing <span class="wf_code">args</span> parameter, Woof! will
+  a trailing <span class="ug-code">args</span> parameter, Woof! will
   append all additional query parameters (ie. those not defined as
   method parameters) to the method call as alternating parameter name
   and value pairs.</p>
@@ -106,9 +106,9 @@ oo::define Sample {
 
 <p>When Woof! does not find a controller method with the name
   specified for the action, it invokes the method 
-  <span class="wf_code">_missing_action</span> on the class. The
+  <span class="ug-code">_missing_action</span> on the class. The
   default implementation of this in class
-  <span class="wf_code">Controller</span> generates a <b>Page not
+  <span class="ug-code">Controller</span> generates a <b>Page not
     found.</b> error page.</p>
 
 <p>A controller may usefully override this method. For example, the

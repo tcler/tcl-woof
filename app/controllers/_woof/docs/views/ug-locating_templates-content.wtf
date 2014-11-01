@@ -7,32 +7,32 @@ or action.
 
 <p>When Woof! needs to retrieve a page section with name <em>SECTION</em>
   for responding to a client request with a URL that is mapped to a
-  controller <span class='wf_code'><em>CONTROLLER</em></span> and
-  action <span class='wf_code'><em>ACTION</em></span>, it follows the search
+  controller <span class='ug-code'><em>CONTROLLER</em></span> and
+  action <span class='ug-code'><em>ACTION</em></span>, it follows the search
   procedure below. (When looking for a page layout template, <em>SECTION</em>
-  will be <span class='wf_filename'>layout</span>.)</p>
+  will be <span class='ug-filename'>layout</span>.)</p>
 
 <ul>
   <li>Woof! will first check for the existence of the file
-    <span class="wf_filename"><em>CONTROLLER</em>-<em>ACTION</em>-<em>SECTION</em>.wtf</span>
-    in the <span class="wf_filename">views</span> subdirectory of the
+    <span class="ug-filename"><em>CONTROLLER</em>-<em>ACTION</em>-<em>SECTION</em>.wtf</span>
+    in the <span class="ug-filename">views</span> subdirectory of the
     directory where the controller module is located. This would
     correspond to a case where the layout or section was specific to
     that particular action for that particular controller.</li>
   <li>If the file does not exist, it then looks for the file
-    <span class="wf_filename"><em>CONTROLLER</em>-<em>SECTION</em>.wtf</span>
+    <span class="ug-filename"><em>CONTROLLER</em>-<em>SECTION</em>.wtf</span>
     in that
-    same <span class="wf_filename">views</span> subdirectory. This corresponds
+    same <span class="ug-filename">views</span> subdirectory. This corresponds
     to a layout or section that is shared among all actions of the controller 
     that do not themselves have an action-specific template.</li>
   <li>If neither is found, Woof! looks for a file
-    <span class="wf_filename"><em>SECTION</em>.wtf</span> in that
-    same <span class="wf_filename">views</span> subdirectory. This corresponds
+    <span class="ug-filename"><em>SECTION</em>.wtf</span> in that
+    same <span class="ug-filename">views</span> subdirectory. This corresponds
     to a layout or section shared by all controllers within a module that do not
     themselves have a controller-specific template.
   <li>Finally, Woof! searches for a file
-    <span class="wf_filename"><em>SECTION</em>.wtf</span> in all
-    <span class="wf_filename">views </span>subdirectories
+    <span class="ug-filename"><em>SECTION</em>.wtf</span> in all
+    <span class="ug-filename">views </span>subdirectories
     working upwards through all
     parent module directories of the controller. The first file found is
     used as the template. This corresponds to the inheritance
@@ -80,12 +80,12 @@ by the application:</p>
 
 <p>Assuming the above layout, a common header page section for the
 entire site can be defined by the contents of the
-file <span class="wf_filename">app/controllers/views/header.wtf</span>. All
+file <span class="ug-filename">app/controllers/views/header.wtf</span>. All
 URL's for the site will automatically show its content wherever the
-layout file inserts the page section named <span class='wf_code'>header</span>.
+layout file inserts the page section named <span class='ug-code'>header</span>.
 A different header section can be defined for a particular controller,
-say <span class="wf_filename">blogs</span>, by creating the
-  file <span class="wf_filename">app/controllers/views/blogs-header.wtf</span>.
+say <span class="ug-filename">blogs</span>, by creating the
+  file <span class="ug-filename">app/controllers/views/blogs-header.wtf</span>.
   The command</p>
 
 [my _code_sample {
@@ -93,36 +93,36 @@ page fetch header content
 }]
 
 <p>in the layout will then fetch the header section content from this file 
-for all URL's for the <span class="wf_filename">blogs</span> controller
-and from <span class="wf_filename">app/controllers/views/header.wtf</span>
+for all URL's for the <span class="ug-filename">blogs</span> controller
+and from <span class="ug-filename">app/controllers/views/header.wtf</span>
 for all other controllers.
 
 <h3>Example: Inheriting templates</h3>
 
 <p>As another example, imagine the website has a separate
-module, <span class='wf_code'>site::admin</span>, that is used for managing the
+module, <span class='ug-code'>site::admin</span>, that is used for managing the
 website itself. So the URL
-<span class="wf_filename">http://www.mywebsite.com/site/admin/user/show</span>
-(for example) would be mapped to the <span class='wf_code'>show</span> action method
-in the controller <span class='wf_code'>user</span> (implemented in class
-<span class='wf_code'>UserController</span>) in the 
-<span class='wf_code'>site::admin</span> module.
-To render the <span class='wf_code'>header</span> page section, Woof! will look
+<span class="ug-filename">http://www.mywebsite.com/site/admin/user/show</span>
+(for example) would be mapped to the <span class='ug-code'>show</span> action method
+in the controller <span class='ug-code'>user</span> (implemented in class
+<span class='ug-code'>UserController</span>) in the 
+<span class='ug-code'>site::admin</span> module.
+To render the <span class='ug-code'>header</span> page section, Woof! will look
 for templates in the following order:</p>
 % set arrow "&#x2192;"
-<ul class='wf_nobullets'>
-  <li><span class="wf_filename">app/controllers/site/admin/views/user-show-header.wtf</span></li>
-  <li>$arrow <span class="wf_filename">app/controllers/site/admin/views/user-header.wtf</span></li>
-  <li>$arrow <span class="wf_filename">app/controllers/site/admin/views/header.wtf</span></li>
-  <li>$arrow <span class="wf_filename">app/controllers/site/views/header.wtf</span></li>
-  <li>$arrow <span class="wf_filename">app/controllers/views/header.wtf</span></li>
+<ul class='ug-nobullets'>
+  <li><span class="ug-filename">app/controllers/site/admin/views/user-show-header.wtf</span></li>
+  <li>$arrow <span class="ug-filename">app/controllers/site/admin/views/user-header.wtf</span></li>
+  <li>$arrow <span class="ug-filename">app/controllers/site/admin/views/header.wtf</span></li>
+  <li>$arrow <span class="ug-filename">app/controllers/site/views/header.wtf</span></li>
+  <li>$arrow <span class="ug-filename">app/controllers/views/header.wtf</span></li>
 </ul>
 
 <p>Note that when searching up the directory hierarchy, Woof! only
 uses the section name and does not look for the controller and action
 specific templates (such
-as <span class="wf_filename">user-show-header.wtf</span>
-or <span class="wf_filename">user-header.wtf</span>). This is by design
+as <span class="ug-filename">user-show-header.wtf</span>
+or <span class="ug-filename">user-header.wtf</span>). This is by design
 as it does not make sense for a file specific for a controller and/or
 action to show up outside the controller content directory.</p>
 

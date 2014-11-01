@@ -1,4 +1,3 @@
-<div class='wf_linkbox'>
 <h2>Documentation</h2>
 <ul>
   <li>
@@ -11,4 +10,3 @@
     <a href='[my url_for_static woof_manual.html]'>Reference</a>
   </li>
 </ul>
-</div>

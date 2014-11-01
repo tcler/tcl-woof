@@ -1,12 +1,12 @@
 <p>Complementary to the icookies object that provides access to HTTP
 cookies sent by the client, Woof also provides
-the <span class='wf_code'>ocookies</span> object which allows the application a
+the <span class='ug-code'>ocookies</span> object which allows the application a
 convenient means of manipulating HTTP cookies on the client. This
 object, belonging to class [my _manpage_link ::woof::CookiesOut],
 provides an interface for setting values, as well as attributes, for
 cookies. When the response is sent to a client, Woof! will
-automatically include <span class='wf_code'>Set-Cookie</span> headers to set the
-values for all keys defined in the <span class='wf_code'>ocookies</span> object. Below
+automatically include <span class='ug-code'>Set-Cookie</span> headers to set the
+values for all keys defined in the <span class='ug-code'>ocookies</span> object. Below
 are some examples where the cookie name is <em>cname</em> and value
 is <em>cvalue</em>.</p>
 
@@ -24,7 +24,7 @@ attributes take their default values.</p>
 ocookies setwithattr cname cvalue -expires [clock add [clock seconds] 1 hour 30 minutes]
 }]
 
-<p>In this example, we set the cookie to expire after an hour and a half making use of Tcl's <span class='wf_code'>clock</span> command.</p>
+<p>In this example, we set the cookie to expire after an hour and a half making use of Tcl's <span class='ug-code'>clock</span> command.</p>
 
 <h3>Setting a cookie to never expire</h3>
 

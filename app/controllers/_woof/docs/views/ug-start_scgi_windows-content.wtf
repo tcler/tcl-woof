@@ -1,7 +1,7 @@
 <p>While developing with Woof!, you can simply directly start Woof! as
 an SCGI server by directly invoking the Woof! SCGI server
 script. For example, the following console command in the Woof! root
-directory <span class="wf_filename">c:\\myapp</span></p>
+directory <span class="ug-filename">c:\\myapp</span></p>
 
 [my _code_sample {
 c:\myapp> tclsh lib\woof\webservers\scgi_server.tcl
@@ -21,7 +21,7 @@ c:\myapp> tclsh lib\woof\webservers\scgi_server.tcl -port 10000
 <p>To run Woof! in production mode, where the Woof! process must be
 running independently of anybody being logged in, it must be installed
 as a Windows service using
-the <span class="wf_filename">scripts\\scgi_winservice.tcl</span>
+the <span class="ug-filename">scripts\\scgi_winservice.tcl</span>
 script. For example,</p>
 
 [my _code_sample {
@@ -79,7 +79,7 @@ service. For more details, see
 
 <h3>Uninstalling the Woof! service</h3>
 <p>If you no longer wish to run Woof! as a service, you can use the
-<span class='wf_filename'>scgi_winservice.tcl</span> script to uninstall it:</p>
+<span class='ug-filename'>scgi_winservice.tcl</span> script to uninstall it:</p>
 [my _code_sample {
 c:\myapp> tclsh scripts\scgi_winservice.tcl -service woofscgi uninstall
 }]
@@ -88,7 +88,7 @@ c:\myapp> tclsh scripts\scgi_winservice.tcl -service woofscgi uninstall
 <p>By default, the Woof! service will run under the Windows
 LocalSystem account. For security reasons, you may want to change to
 run under a less privileges account. You can do this through
-the <span class="wf_filename">Log on</span> pane in the property sheet
+the <span class="ug-filename">Log on</span> pane in the property sheet
 for the service in Windows Service Control Manager. If you do this,
 make sure the account has access to the resources (file system,
 databases etc.) used by your Woof! application.</p>

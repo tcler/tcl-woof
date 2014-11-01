@@ -28,7 +28,7 @@ configuration of the web server to not expose your application source
 code over the web.</p>
 <h3>Installing the distribution</h3>
 <p>After unpacking the distribution, running the 
-<span class='wf_code'>installer</span>
+<span class='ug-code'>installer</span>
 script installs the
 Woof! components for the specified web server and interface. For
 example, the following command, executed from the woof distribution

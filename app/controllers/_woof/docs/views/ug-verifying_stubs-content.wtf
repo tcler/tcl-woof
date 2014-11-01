@@ -1,7 +1,7 @@
-<p>When generating stubs using <span class='wf_code'>wag</span>, it
+<p>When generating stubs using <span class='ug-code'>wag</span>, it
 is sometimes easy to lose track of which stubs have actually been
 implemented and which are still to be
-written. The <span class='wf_code'>verify</span> command
+written. The <span class='ug-code'>verify</span> command
 provides a way of checking which stubs remain to be written.</p>
 
 <p>The example below is a continuation of the one in the previous section.</p>
@@ -17,5 +17,5 @@ MathController:
 }]
 
 <p>The output shows that we have not actually implemented the stubs
-for the <span class='wf_code'>multiply</span> action method and
+for the <span class='ug-code'>multiply</span> action method and
 corresponding view.</p>

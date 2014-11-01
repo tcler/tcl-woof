@@ -23,7 +23,7 @@ below.</p>
 <ul>
     <li>You have full control over IIS configuration.</li>
     <li>The server hosts the Woof! application alongside other applications.</li>
-    <li>The application is rooted at /myapp, i.e. <span class="wf_filename">http://www.mysite.com/myapp</span> is the entry point into the application.</li>
+    <li>The application is rooted at /myapp, i.e. <span class="ug-filename">http://www.mysite.com/myapp</span> is the entry point into the application.</li>
     <li>You have the means to modify the system configuration so that the Woof! SCGI server is started automatically either at boot time or when IIS is started.</li>
 </ul>
 
@@ -38,17 +38,17 @@ using the [my _chapter_link installer "installer script"].</p>
 <p>
   This will create the Woof!  
   [my _chapter_link directory_structure "directory structure"]
-  under <span class="wf_filename">/myappdir</span>. In particular,
-  the <span class="wf_filename">/myappdir/public</span> will contain the
+  under <span class="ug-filename">/myappdir</span>. In particular,
+  the <span class="ug-filename">/myappdir/public</span> will contain the
   publically accessible directory tree that will be the document root
   for the Woof! application.</p>
 <p>Since the Woof! application is not rooted
-  at <span class="wf_filename">/</span> we also need to tell Woof! the
-  application root URI, <span class="wf_filename">/myapp</span> in our
+  at <span class="ug-filename">/</span> we also need to tell Woof! the
+  application root URI, <span class="ug-filename">/myapp</span> in our
   case. For this purpose, we add the line below to the Woof!
   application [my _chapter_link configuration "configuration file"],
   which in our example will reside
-  at <span class="wf_filename">/myappdir/config/application.cfg</span>.</p>
+  at <span class="ug-filename">/myappdir/config/application.cfg</span>.</p>
 
 [my _code_sample {
 set url_root /myapp
@@ -67,10 +67,10 @@ instructions.</p>
 
 <p>Download the extension from the <code>isapi_scgi</code> 
 <a href="https://sourceforge.net/projects/twapi/files/">download
-area</a>. Extract the <span class="wf_filename">isapi_scgi.dll</span>
+area</a>. Extract the <span class="ug-filename">isapi_scgi.dll</span>
 file from the downloaded archive and place it in
-the <span class="wf_filename">public</span> folder of your Woof!
-installation (<span class="wf_filename">/myapp/public</span> in our
+the <span class="ug-filename">public</span> folder of your Woof!
+installation (<span class="ug-filename">/myapp/public</span> in our
 example).</p>
 
 <h3>Step 3 - configure the application in IIS</h3>
@@ -79,18 +79,18 @@ example).</p>
 Windows XP. Installation under IIS 6 will be
 similar. The session shown configures IIS such that the extension will
 be accessed under the
-URL <span class="wf_filename">/myapp/isapi_scgi.dll/</span>. All
+URL <span class="ug-filename">/myapp/isapi_scgi.dll/</span>. All
 requests to URLs below this will be passed by the extension to the
 SCGI server. In a later step, we will configure a IIS URL rewriter to
 hide the use of the DLL so requests
-under <span class="wf_filename">/myapp</span> will be passed to the
+under <span class="ug-filename">/myapp</span> will be passed to the
 SCGI server.</p>
 
 <p>Start up the MMC IIS manager and create a new virtual
-directory, <span class="wf_filename">myapp</span>, under the default
+directory, <span class="ug-filename">myapp</span>, under the default
 Web site as shown in the screen shot below.</p>
 
-<p class='wf_center'>
+<p class='ug-center'>
 [my include_image iis_scgi_new_directory.png alt "Initial MMC screen"]
 </p>
 
@@ -98,18 +98,18 @@ Web site as shown in the screen shot below.</p>
 the <strong>Next</strong> button after filling the fields in each
 wizard screen as shown in the sequence below.</p>
 
-<p class='wf_center'>
+<p class='ug-center'>
 [my include_image iis_scgi_wizard.png alt "Initial MMC wizard screen"]
 </p>
 
 <p>When prompted for the alias,
-type <span class="wf_filename">myapp</span>. This is the URL root
+type <span class="ug-filename">myapp</span>. This is the URL root
 under which we want the Woof! application to be accessed and must be
 the same as the value of the <code>url_root</code> Woof! configuration
 variable we used in Step 1 except for leaving out the leading
 slash.</p>
 
-<p class="wf_center">
+<p class="ug-center">
 [my include_image iis_scgi_wizard_alias.png alt "MMC wizard alias screen"]
 </p>
 
@@ -117,33 +117,33 @@ slash.</p>
 for the application. Here we enter the path to the public subdirectory
 under our Woof! installation.</p>
 
-<p class="wf_center">
+<p class="ug-center">
 [my include_image iis_scgi_wizard_dir.png alt "MMC wizard directory screen"]
 </p>
 <p>When configuring directory permissions, we must select
 the <strong>Execute</strong> check box as shown below
-as <span class="wf_filename">isapi_scgi.dll</span> is a ISAPI
+as <span class="ug-filename">isapi_scgi.dll</span> is a ISAPI
 extension and requires this permission to run.</p>
-<p class="wf_center">
+<p class="ug-center">
 [my include_image iis_scgi_wizard_permissions.png alt "MMC wizard permissions screen"]
 </p>
 <p>Finally, click <strong>Finish</strong> to complete the wizard.</p>
-<p class="wf_center">
+<p class="ug-center">
 [my include_image iis_scgi_wizard_finish.png alt "MMC wizard finish screen"]
 </p>
 <p>After finishing the wizard, right click on the newly
-created <span class="wf_filename">myapp</span> virtual directory and
+created <span class="ug-filename">myapp</span> virtual directory and
 configure its properties as shown below.</p>
-<p class="wf_center">
+<p class="ug-center">
 [my include_image iis_scgi_myapp_directory.png alt "myapp directory screen"]
 </p>
-<p class="wf_center">
+<p class="ug-center">
 [my include_image iis_scgi_myapp_properties.png alt "myapp properties screen"]
 </p>
 <p>As shown in the <strong>Properties</strong> page, as entered in the
-wizard, the <span class="wf_filename">myapp</span> virtual directory
+wizard, the <span class="ug-filename">myapp</span> virtual directory
 is mapped to our physical publically accessible
-directory, <span class="wf_filename">/myappdir/public</span> and
+directory, <span class="ug-filename">/myappdir/public</span> and
 the <strong>Execute Permissions</strong> setting allows executables to
 run. The only change we make is setting the <strong>Application
 Protection</strong> value to <code>Low</code> instead
@@ -158,9 +158,9 @@ required if you are running the default SCGI configuration.</p>
 <p>This step is optional but is usually desirable for various
 reasons. The configuration steps described so far will result in the
 Woof! SCGI server being invoked for URL's starting
-with <span class="wf_filename">http://www.mysite.com/myapp/isapi_scgi.dll</span>. A
+with <span class="ug-filename">http://www.mysite.com/myapp/isapi_scgi.dll</span>. A
 URL rewrite filter will allow this root URL to be changed
-to <span class="wf_filename">http://www.mysite.com/myapp</span>
+to <span class="ug-filename">http://www.mysite.com/myapp</span>
 instead. This step is optional but is recommended for all the reasons
 listed
 in <a href="http://www.addedbytes.com/apache/url-rewriting-for-beginners/">Added
@@ -182,7 +182,7 @@ differ. Use of IIRF 2.x is described in the
 <p>Follow Ionics' excellent 
 <a href="http://cheeso.members.winisp.net/Iirf12Help/frames.htm">installation
 instructions</a> to install IIRF. Then add the following lines to the
-IIRF configuration file <span class="wf_filename">IsapiRewrite4.ini</span>
+IIRF configuration file <span class="ug-filename">IsapiRewrite4.ini</span>
 in the IIRF directory.</p>
 [my _code_sample {
 RewriteRule ^/myapp/images/(.*)$     /myapp/images/$1 [L]
@@ -194,12 +194,12 @@ RewriteRule ^/myapp(.*)$            /myapp/isapi_scgi.dll$1 [U,L]
 <p>The first two lines ensure no rewriting is done for images and
 stylesheets in the public directory that we want directly served by
 IIS. The remaining lines rewrite URL's for which there is actual
-existing file to <span class="wf_filename">isapi_scgi.dll</span> which
+existing file to <span class="ug-filename">isapi_scgi.dll</span> which
 will then pass the request on to the Woof! SCGI server.</p>
 
 <p>For performance reasons, once you have verified correct IIRF
 operation, you may also want to add the following line
-to <span class="wf_filename">IsapiRewrite4.ini</span> to reduce
+to <span class="ug-filename">IsapiRewrite4.ini</span> to reduce
 overhead by turning off logging in IIRF.</p>
 [my _code_sample {
 RewriteLogLevel 0

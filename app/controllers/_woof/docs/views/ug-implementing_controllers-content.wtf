@@ -1,17 +1,17 @@
-<h3>The <span class='wf_code'>ApplicationController</span> class</h3>
+<h3>The <span class='ug-code'>ApplicationController</span> class</h3>
 
-<p>The <span class='wf_code'>ApplicationController</span> class is
+<p>The <span class='ug-code'>ApplicationController</span> class is
   defined to allow 
   the application programmer to add controller behaviours that are
   common to all application controllers without having the modify
-  the <span class='wf_code'>Controller</span> class.</p> 
+  the <span class='ug-code'>Controller</span> class.</p> 
 
 
 <p>To ensure future compatibility, application writers should not
-  directly modify the <span class='wf_code'>Controller</span> class
+  directly modify the <span class='ug-code'>Controller</span> class
   and should not directly inherit from it. Instead, all controllers
   should be defined to inherit from
-  <span class="wf_code">ApplicationController</span>.
+  <span class="ug-code">ApplicationController</span>.
   Woof! itself does not add any new
   variables or methods in this class and promises not to modify it in
   future releases.
@@ -42,14 +42,14 @@ oo::class create SampleController {
 }]
 
 <p>As discussed above, the class derives from
-<span class="wf_code">ApplicationController</span>. The constructor
+<span class="ug-code">ApplicationController</span>. The constructor
 passes any specified arguments to its base class and then completes
 initialization. It is important to call the base class constructor
 before using any of the standard objects such as 
-<span class="wf_code">request</span>,
-<span class="wf_code">session</span> etc.
+<span class="ug-code">request</span>,
+<span class="ug-code">session</span> etc.
 created by the base
-<span class="wf_code">Controller</span> class.</p>
+<span class="ug-code">Controller</span> class.</p>
 
 <p>The initialization steps may include
   application-specific code as well as some standard Woof!
@@ -59,7 +59,7 @@ created by the base
 
 <h3>Controller class names and namespaces</h3>
 <p>Controller classes are read into the
-<span class="wf_code">::woof::app</span> namespace.
+<span class="ug-code">::woof::app</span> namespace.
 One important point to note is that the class name does not have
 any namespace qualifiers in its definition. 
 Even if the controller is defined to be in a
@@ -68,23 +68,23 @@ namespace. Woof! will automatically instantiate the class into the
 appropriate namespace based on the module name.</p>
 
 <p>For example, assuming
-the application URL root is <span class="wf_filename">/</span>, the
-URL <span class="wf_filename">/mod1/mod2/my_sample/index</span>
-corresponds to the <span class="wf_code">index</span> action in
-controller <span class="wf_code">my_sample</span> in the module
-<span class="wf_code">mod1::mod2</span>. The corresponding controller
+the application URL root is <span class="ug-filename">/</span>, the
+URL <span class="ug-filename">/mod1/mod2/my_sample/index</span>
+corresponds to the <span class="ug-code">index</span> action in
+controller <span class="ug-code">my_sample</span> in the module
+<span class="ug-code">mod1::mod2</span>. The corresponding controller
 implementation will be located under the Woof! directory in the file
-<span class="wf_filename">app/controllers/mod1/mod2/sample_controller.tcl</span>.
+<span class="ug-filename">app/controllers/mod1/mod2/sample_controller.tcl</span>.
 The controller class as defined in the sample above (without any
 namespace qualifiers), will be created as
-<span class="wf_code">::woof::app::mod1::mod2::MySample</span>.</p>
+<span class="ug-code">::woof::app::mod1::mod2::MySample</span>.</p>
 
 <p>If at all namespace qualifiers are used, the
 class name must be fully qualified and begin with 
-<span class="wf_code">::woof::app</span> and include the module
+<span class="ug-code">::woof::app</span> and include the module
 namespaces if any. So the class definition above could have been
 defined with the fully qualified name
-<span class="wf_code">::woof::app::mod1::mod2::MySample</span>
+<span class="ug-code">::woof::app::mod1::mod2::MySample</span>
 but this is not recommended.</p>
 
 
@@ -96,7 +96,7 @@ but this is not recommended.</p>
   in the source file implementing the controller. To facilitate this,
   Woof! provides the [my _manpage_link ::woof::uses] command that can be
   used to import the base class definition. For example, the file
-  <span class="wf_filename">sample_controller.tcl</span> shown above
+  <span class="ug-filename">sample_controller.tcl</span> shown above
   could be modified as shown below:</p>
 
 [my _code_sample {
@@ -120,15 +120,15 @@ but this is not recommended.</p>
 }]
  
 <p>Woof! will then look for, and automatically load the file
-  <span class="wf_filename">base_controller.tcl</span>.</p>
+  <span class="ug-filename">base_controller.tcl</span>.</p>
 
-<p>The argument provided to the <span class="wf_code">uses</span>
+<p>The argument provided to the <span class="ug-code">uses</span>
   command must be either an unqualified class name, in which case the
   corresponding file is expected to be in the same directory as the
-  controller file calling <span class="wf_code">uses</span>, or it
+  controller file calling <span class="ug-code">uses</span>, or it
   must be qualified with a relative namespace, in which case the
   corresponding file is located relative to the
-  <span class="wf_filename">app/controllers</span> directory under the
+  <span class="ug-filename">app/controllers</span> directory under the
   Woof! root.</p>
 
 

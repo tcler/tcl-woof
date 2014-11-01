@@ -30,13 +30,13 @@
 </ul>    
     
 <p>For example, if the application is rooted at
-  <span class="wf_filename">/myapp</span>, the URL
-  <span class="wf_filename">/myapp/alpha/beta/gamma/delta</span>, will
+  <span class="ug-filename">/myapp</span>, the URL
+  <span class="ug-filename">/myapp/alpha/beta/gamma/delta</span>, will
   be mapped to the action <code>delta</code> in the controller
   <code>gamma</code> in the module <code>{alpha beta}</code>. The
   controller class will be <code>GammaController</code> and be loaded
   from the file
-  <span class="wf_filename">app/controllers/alpha/beta/gamma_controller.tcl</span>
+  <span class="ug-filename">app/controllers/alpha/beta/gamma_controller.tcl</span>
   in the Woof! directory.
 </p>
 

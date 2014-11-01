@@ -22,7 +22,7 @@ variable references.</p>
 }]
 
 <p>In this WTF fragment, the text between
-the <span class='wf_code'>[]</span> characters is evaluated as Tcl
+the <span class='ug-code'>[]</span> characters is evaluated as Tcl
 code and replaced by the result of the evaluation in effect printing
 the current date. The exact syntax and semantics of processing is
 defined by Tcl's subst command which is in fact used as the basic
@@ -66,7 +66,7 @@ delimiters to enclose a block of Tcl code. For example, the lines
 <h3>Template context</h3>
 
 <p>The processing of WTF fragments is implemented by the
-command <span class='wf_code'>html_frag</span><sup>1</sup> in the
+command <span class='ug-code'>html_frag</span><sup>1</sup> in the
 context of the caller. In the case of Woof!, this context is the
 controller object handling the request. Therefore all commands and
 variables defined in the context of that controller's methods are
@@ -78,13 +78,13 @@ template scope.</p>
 <h3>Comments</h3>
 
 <p>You can insert comments into an HTML file by starting a line with
-the sequence <span class='wf_code'>%#</span>. 
-The <span class='wf_code'>%</span> indicates this is Tcl line, and
-the <span class='wf_code'>#</span> is
+the sequence <span class='ug-code'>%#</span>. 
+The <span class='ug-code'>%</span> indicates this is Tcl line, and
+the <span class='ug-code'>#</span> is
 the Tcl comment character.</p>
 % # TBD - escaping special HTML characters
 % # TBD - block Tcl code using %(%)
 
 <p><sup>1</sup> This command is based on an enhanced form of
-the <span class='wf_code'>substify</span> command from
+the <span class='ug-code'>substify</span> command from
 the <a href="http://wiki.tcl.tk/18455">Tcl wiki</a>.</p>

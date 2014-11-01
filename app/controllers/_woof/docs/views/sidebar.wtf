@@ -1,6 +1,4 @@
-<div class='wf_navbox'>
 <h2>Table of Contents</h2>
 <hr>
 % my variable _toc
 [::woof::util::make_navigation_links $_toc [my action]]
-</div>

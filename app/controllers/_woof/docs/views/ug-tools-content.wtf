@@ -2,7 +2,7 @@
   development process. This chapter describes these tools.</p>
 
 <p>These tools are generally implemented as Tcl scripts in the 
-  <span class='wf_filename'>scripts</span> subdirectory and are invoked as</p>
+  <span class='ug-filename'>scripts</span> subdirectory and are invoked as</p>
 
 [my _code_sample {
 ~/woof> tclsh scripts/<em>SCRIPTFILE arguments</em>

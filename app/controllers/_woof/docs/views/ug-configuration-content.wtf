@@ -1,14 +1,14 @@
 <p>Woof! configurations settings are stored in the
-  subdirectory <span class="wf_filename">config</span> under the Woof!
+  subdirectory <span class="ug-filename">config</span> under the Woof!
   root directory. The configuration is stored in two files:</p>
 
 <table>
   <tr>
-    <td><span class="wf_filename">_woof.cfg</span></td>
+    <td><span class="ug-filename">_woof.cfg</span></td>
     <td>This file contains default configuration settings shipped as
       part of Woof! and generally should not be edited.</td>
   </tr><tr>
-    <td><span class="wf_filename">application.cfg</span></td>
+    <td><span class="ug-filename">application.cfg</span></td>
     <td>This file contains site-specific configuration settings and
       can be edited to override the default settings.</td>
   </tr>
@@ -16,18 +16,18 @@
 
 <p>Both files are expected to contain Tcl code. Woof! reads its
 configuration by executing the files
-<span class="wf_filename">application.cfg</span>
-and <span class="wf_filename">_woof.cfg</span>, in that order, in a
+<span class="ug-filename">application.cfg</span>
+and <span class="ug-filename">_woof.cfg</span>, in that order, in a
 special temporary Tcl interpreter.
 A configuration variable is any variable that is
 set in either file that does not begin with an underscore
-(<span class="wf_filename">_</span>).</p>
+(<span class="ug-filename">_</span>).</p>
 
-<p>Note that <span class="wf_filename">_woof.cfg</span> sets variables using
+<p>Note that <span class="ug-filename">_woof.cfg</span> sets variables using
 the <code>init</code> command which will only set the variable if it
 has not already been set. This ensures
-that <span class="wf_filename">_woof.cfg</span> does not override
-variables set in <span class="wf_filename">application.cfg</span>.</p>
+that <span class="ug-filename">_woof.cfg</span> does not override
+variables set in <span class="ug-filename">application.cfg</span>.</p>
 
 <p>The configuration files are actually executed in
 a <a href="http://www.tcl.tk/man/tcl8.6/TclCmd/interp.htm#M43">safe

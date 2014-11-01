@@ -4,12 +4,12 @@ a particular resource has been relocated to be accessible under a
 different URL.</p>
 
 <p>In Woof!, the
-[my _chapter_link controller_object "<span class='wf_code'>controller</span>"]
+[my _chapter_link controller_object "<span class='ug-code'>controller</span>"]
 object provides the
 [my _manpage_link ::woof::Controller::redirect]
 method which sends a HTTP redirect response back to the
 client. Following are some examples of redirection assuming the
-original request was made to <span class="wf_filename">http://www.mybank.com/accounts/create</span>.</p>
+original request was made to <span class="ug-filename">http://www.mybank.com/accounts/create</span>.</p>
 
 <h3>Redirecting to a different action</h3>
 
@@ -17,8 +17,8 @@ original request was made to <span class="wf_filename">http://www.mybank.com/acc
 method create {} { my redirect -action new }
 }]
 
-<p>Here, we treat <span class='wf_code'>create</span> as a synonym for
-the <span class='wf_code'>new</span> method, and simply redirect the browser
+<p>Here, we treat <span class='ug-code'>create</span> as a synonym for
+the <span class='ug-code'>new</span> method, and simply redirect the browser
 accordingly. Note that the redirection defaults will result in
 generation of a URL that corresponds to the host and controller
 specified in the current request. Only the action method is
@@ -39,8 +39,8 @@ method create {} {
 <p>In this modified example, the method checks if the user has logged
 on, and if not, redirects the browser to the login page. Unlike the
 previous example, we are now redirecting to a new
-controller, <span class='wf_code'>login</span>. Moreover, since
-the <span class='wf_code'>-action</span> option is not specified, the default action
+controller, <span class='ug-code'>login</span>. Moreover, since
+the <span class='ug-code'>-action</span> option is not specified, the default action
 of the new controller is used.</p>
 
 <h3>Redirecting to a URL</h3>
@@ -68,7 +68,7 @@ in the browser).</p>
 <h3>Redirects and rendering</h3>
 <p>Note that because only one response can be sent back to the client,
 an application cannot redirect a request and simultaneously generate a
-Web page as a response. Therefore, using <span class='wf_code'>redirect</span>
+Web page as a response. Therefore, using <span class='ug-code'>redirect</span>
 together with either an implicit or explicit call
 to [my _manpage_link ::woof::Controller::render]
 is not permitted and will raise an error.</p>
