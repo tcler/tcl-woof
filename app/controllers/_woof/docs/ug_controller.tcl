@@ -101,7 +101,13 @@ oo::class create UgController {
             {error_display "Error Pages" 2}
             {error_generation "Generating Exceptions" 2}
             {logging "The Logging Interface" 1}
-            {yui "The Yahoo User Interface library" 1}
+            {purecss "Pure CSS controls" 1}
+            {purecss_buttons "Pure CSS buttons" 2}
+            {purecss_menu "Pure CSS menus" 2}
+            {purecss_table "Pure CSS tables" 2}
+            {purecss_paginator "Pure CSS paginator" 2}
+            {purecss_form "Pure CSS forms" 2}
+            {purecss_skins "Skinning using Pure CSS"}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 1}
             {wag "wag - Woof! Application Generator" 1}
@@ -170,6 +176,14 @@ oo::class create UgController {
         } else {
             return "<pre class='ug-console'>[::woof::util::remove_left_margin $text]</pre>"
         }
+    }
+
+    method _code_sample_with_output {text {escape true}} {
+        append html "[my _code_sample $text $escape]"
+        append html "<div style='margin-left: 2em;'>"
+        append html [uplevel 1 [list subst $text]]
+        append html </div>
+        return $html
     }
 
     method _manpage_link {name {display ""}} {

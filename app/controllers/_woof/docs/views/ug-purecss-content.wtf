@@ -1,0 +1,17 @@
+<p>
+Woof! includes commands for generating Web page components that use Pure CSS
+styles. These include
+
+<ul>
+  <li>Buttons
+  <li>Menus
+  <li>Tables
+  <li>Paginators
+  <li>Forms and related input fields
+</ul>
+</p>
+
+Moreover, you can use the
+<a href='http://yui.github.io/skinbuilder/?mode=pure'>Pure CSS Skin Builder</a>
+to customize their appearance. The following sections describe these
+commands.

@@ -1,0 +1,32 @@
+<p>
+  Pure CSS styles buttons are created with the 
+[my _manpage_link "woof::pure::button" <code>woof::pure::button</code>]
+command. The command takes several options, some examples of which
+are shown below. See the command 
+[my _manpage_link "woof::pure::button" documentation] for the full list.
+</p><p>
+A standard button to invoke a Javascript script when clicked.
+[my _code_sample_with_output {
+  [woof::pure::button "Click me" -onclick {alert("You clicked me!");}]
+}]
+</p><p>
+A disabled button.
+[my _code_sample_with_output {
+  [woof::pure::button "Disabled" -enabled 0]
+}]
+</p><p>
+A pressed button.
+[my _code_sample_with_output {
+  [woof::pure::button "Pressed" -pressed 1]
+}]
+</p><p>
+A button visually marked as primary.
+[my _code_sample_with_output {
+  [woof::pure::button "Primary" -primary 1]
+}]
+</p><p>
+A button linking to a URL.
+[my _code_sample_with_output {
+[woof::pure::button "Table of Contents" -url index]
+}]
+

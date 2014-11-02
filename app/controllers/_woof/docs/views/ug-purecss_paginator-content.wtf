@@ -1,0 +1,35 @@
+<p>
+Pure CSS also provides a paginator control which can be constructed with the
+[my _manpage_link "woof::pure::paginator" <code>woof::pure::paginator</code>]
+command.
+%(
+  set pagenum [params get pagenum 1]
+  if {![string is integer -strict $pagenum] || $pagenum < 1} {
+      set pagenum 1
+  }
+  if {$pagenum > 5} {
+    set pagenum 5
+  }
+
+  set start [expr {$pagenum - 1}]
+  if {$start < 1} {
+      set start 1
+  } elseif {$start >= 4} {
+      set start 3
+  }
+
+%)
+
+<p>
+[my _code_sample_with_output {
+  [woof::pure::paginator {1 5} ?pagenum= -count 3 -start $start -active $pagenum]
+}]
+</p>
+<p style='max-width: 20em; color: #006666; border-style:solid;padding:1em;margin-left:2em;text-align:center'>
+You are on page $pagenum!
+</p>
+<p>
+The paginator control needs appropriate processing on the server side when
+a button is clicked to extract the requested page number and display
+the appropriate page.
+</p>
