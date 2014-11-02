@@ -17,6 +17,7 @@ proc pure::button {text args} {
     #    This is HTML-escaped before display.
     #  -classes CSSCLASSES - additional CSS classes to style the button.
     #  -enabled BOOLEAN - controls whether button is enabled (default) or not
+    #  -onclick JAVASCRIPT - Javascript to execute when the button is clicked
     #  -pressed BOOLEAN - controls whether button is shown as pressed or not.
     #                     Default is 0.
     #  -primary BOOLEAN - style as a primary button (default false)
@@ -50,7 +51,12 @@ proc pure::button {text args} {
     if {[info exists opts(-url)]} {
         return "<a href='$opts(-url)' class='$classes'>$text</a>"
     } else {
-        return "<button type='$opts(-type)' class='$classes'>$text</button>"
+        if {[info exists opts(-onclick)]} {
+            # TBD - does the Javascript need to be escaped?
+            return "<button type='$opts(-type)' class='$classes' onClick='$opts(-onclick)'>$text</button>"
+        } else {
+            return "<button type='$opts(-type)' class='$classes'>$text</button>"
+        }
     }
 }
 
@@ -86,20 +92,22 @@ proc pure::menu {menudefs args} {
     # attributes for the menu item.
     # Currently defined attributes are 
     #  selected - the menu item is shown selected
-    #  disabled - the menu item is shown disabled
     # Unknown attributes values are ignored.
+    #
+    # If the target URL is empty, the menu item is shown disabled.
     append html "<ul>"
     foreach def $menudefs {
         if {[llength $def] == 0} {
             append html "<li class='pure-menu-separator'></li>"
             continue
         }
+        set url [lindex $def 1]
         set cssclasses {}
         set attrs [lrange $def 2 end]
         if {"selected" in $attrs} {
             lappend cssclasses "pure-menu-selected"
         }
-        if {"disabled" in $attrs} {
+        if {$url eq ""} {
             lappend cssclasses "pure-menu-disabled"
         }
         if {[llength $cssclasses]} {
@@ -107,13 +115,10 @@ proc pure::menu {menudefs args} {
         } else {
             append html "<li>"
         }
-        append html "<a href='[lindex $def 1]'>[util::hesc [lindex $def 0]]</a></li>"
+        append html "<a href='$url'>[util::hesc [lindex $def 0]]</a></li>"
     }
 
     return "${html}</ul></div>"
-    
-
-
 }
 
 proc pure::table {data args} {
@@ -216,8 +221,8 @@ proc pure::paginator {range url_prefix args} {
     }
 
     set html "<ul class='pure-paginator'>\n"
-    if {$lb < $opts(-start)} {
-        append html "<li><a class='pure-button prev' href='${url_prefix}[expr {$opts(-start)-1}]'>&#171;</a></li>\n"
+    if {$lb < $opts(-active)} {
+        append html "<li><a class='pure-button prev' href='${url_prefix}[expr {$opts(-active)-1}]'>&#171;</a></li>\n"
     } else {
         append html "<li><a class='pure-button prev pure-button-disabled' href='${url_prefix}$opts(-start)'>&#171;</a></li>\n"
     }
@@ -233,8 +238,12 @@ proc pure::paginator {range url_prefix args} {
         incr i
     }
 
-    if {$ub >= ($opts(-start) + $opts(-count))} {
-        append html "<li><a class='pure-button next' href='${url_prefix}[expr {$opts(-start)+$opts(-count)}]'>&#187;</a></li>\n"
+    if {$ub > $opts(-active)} {
+        if {$opts(-active) < $opts(-start) || $opts(-active) >= $end} {
+            append html "<li><a class='pure-button next' href='${url_prefix}[expr {$opts(-start)+$opts(-count)}]'>&#187;</a></li>\n"
+        } else {
+            append html "<li><a class='pure-button next' href='${url_prefix}[expr {$opts(-active)+1}]'>&#187;</a></li>\n"
+        }
     } else {
         append html "<li><a class='pure-button next pure-button-disabled' href='${url_prefix}[expr {$opts(-start)+$opts(-count)-1}]'>&#187;</a></li>\n"
     }
@@ -338,20 +347,33 @@ proc pure::_parse_formdef {form_elem def need_control_group} {
         }
         input {
             set html ""
+            if {[dict exists $def -type]} {
+                set input_type [dict get $def -type]
+            } else {
+                set input_type ""
+            }
+            
             if {$need_control_group} {
-                append html "<div class='pure-control-group'>"
+                if {$input_type in {checkbox radio}} {
+                    append html "<div class='pure-controls'>"
+                } else {
+                    append html "<div class='pure-control-group'>"
+                }
             }
             if {[dict exists $def -label]} {
-                append html "<label>"
+                if {$input_type in {checkbox radio}} {
+                    append html "<label for='[dict get $def -name]' class='pure-$input_type'>"
+                } else {
+                    append html "<label>"
+                }
                 # For checkboxes and radio, labels will come after control
-                if {[dict exists $def -type] &&
-                    [dict get $def -type] ni {checkbox radio}} {
-                    append html "[util::hesc [dict get $def -label]]\n"
+                if {$input_type ni {checkbox radio}} {
+                    append html "[util::hesc [dict get $def -label]]</label>\n"
                 }
             }
             append html "<input"
             # -name must exist else error
-            append html " name='[util::hesc [dict get $def -name]]'"
+            append html " id='[dict get $def -name]' name='[util::hesc [dict get $def -name]]'"
             if {[dict exists $def -value]} {
                 append html " value='[util::hesc [dict get $def -value]]'"
             }
@@ -377,8 +399,7 @@ proc pure::_parse_formdef {form_elem def need_control_group} {
             append html "></input>\n"
             if {[dict exists $def -label]} {
                 # For checkboxes and radio, labels will come after control
-                if {[dict exists $def -type] &&
-                    [dict get $def -type] in {checkbox radio}} {
+                if {$input_type in {checkbox radio}} {
                     append html "[util::hesc [dict get $def -label]]\n"
                 }
                 append html "</label>\n"

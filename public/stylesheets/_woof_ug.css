@@ -1,5 +1,14 @@
 /* Woof User Guide CSS - assumes _woof.css loaded */
 
+/* Override _layout.css */
+.wf_main {
+    padding-top: 0em;
+}
+.wf_sidebar {
+    padding-top: 0.5em;
+}
+
+/* Customize page sections */
 .wf_header {
     font-weight: bold;
     height: 48px;
@@ -46,28 +55,6 @@
 
 .wf_main h4 {
   font-size: 93%;
-}
-
-.wf_main table {
-  margin: 1em;
-  border: thin solid;
-  border-collapse: collapse;
-  border-color: #808080;
-  padding: 4;
-}
-
-.wf_main td {
-  border: thin solid;
-  border-color: #808080;
-  vertical-align: top;
-  font-size: 93%;
-}
-
-.wf_main th {
-  border: thin solid;
-  border-color: #808080;
-  padding: 4px;
-  background-color: #CCCCCC;
 }
 
 .wf_main dt, dd {
@@ -122,6 +109,7 @@
 }
 
 .ug-hnav {
+  padding-top:0.5em;    
   padding-bottom:0.5em;
   text-align:center;
   display: block;
@@ -196,7 +184,7 @@ ul.ug-nobullets li {
 }
 
 .ug-console {
-   margin: 10px 30px;
+   margin: 2em 2em;
    font-size: 85%;
    font-family: "Courier New", Courier, monospace;
    background-color: #cccccc;
