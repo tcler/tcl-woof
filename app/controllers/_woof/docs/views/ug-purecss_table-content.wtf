@@ -1,0 +1,42 @@
+<p>
+Pure CSS tables are created with the
+[my _manpage_link "woof::pure::table" <code>woof::pure::table</code>]
+and have several associated styling options.
+</p><p>
+The default table layout is shown below. The table data is provided as
+the first argument in the form of a nested list each element of which
+is a sublist containing a row with each element of the sublist being
+a cell.
+[my _code_sample_with_output {
+  [::woof::pure::table {
+    {{Row1 Col1} {Row1 Col2} {Row1 Col3}}
+    {{Row2 Col1} {Row2 Col2} {Row2 Col3}}
+  }]
+}]
+</p><p>
+An optional heading can be specified with the <code>-heading</code> option.
+[my _code_sample_with_output {
+  [::woof::pure::table {
+    {{Row1 Col1} {Row1 Col2} {Row1 Col3}}
+    {{Row2 Col1} {Row2 Col2} {Row2 Col3}}
+  } -heading {{Column 1} {Column 2} {Column 3}}]
+}]
+</p><p>
+The <code>-borders</code> option controls table borders. For example,
+specifying a value of <code>horizontal</code> displays borders only between
+rows.
+[my _code_sample_with_output {
+  [::woof::pure::table {
+    {{Row1 Col1} {Row1 Col2} {Row1 Col3}}
+    {{Row2 Col1} {Row2 Col2} {Row2 Col3}}
+  } -borders horizontal]
+}]
+</p><p>
+Alternatively, rows can be striped.
+[my _code_sample_with_output {
+  [::woof::pure::table {
+    {{Row1 Col1} {Row1 Col2} {Row1 Col3}}
+    {{Row2 Col1} {Row2 Col2} {Row2 Col3}}
+  } -heading {{Column 1} {Column 2} {Column 3}} -stripes 1]
+}]
+</p>
