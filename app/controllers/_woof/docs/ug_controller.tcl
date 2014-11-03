@@ -107,7 +107,7 @@ oo::class create UgController {
             {purecss_table "Pure CSS tables" 2}
             {purecss_paginator "Pure CSS paginator" 2}
             {purecss_form "Pure CSS forms" 2}
-            {purecss_skins "Skinning using Pure CSS"}
+            {purecss_skins "Skinning using Pure CSS" 2}
             {tools "Tools and Utilities"}
             {installer "installer - Installation Utility" 1}
             {wag "wag - Woof! Application Generator" 1}

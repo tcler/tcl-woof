@@ -273,8 +273,9 @@ proc pure::form {formdef args} {
     # The 'fieldgroup' form element is like fieldset except that the
     # contained controls are visually grouped together with no padding.
     #
-    # The 'button' form element creates a button. The second element of
-    # the pair is a list of arguments to pass to the [pure::button] command.
+    # The 'buttons' form element creates one or more buttons groups.
+    # The second element of the pair is a list each element of which
+    # is a list of arguments to pass to the [pure::button] command.
     #
     # The 'input' form element creates a label and an associated text
     # entry field.
@@ -338,12 +339,16 @@ proc pure::_parse_formdef {form_elem def need_control_group} {
             append html "</fieldset>\n"
             return $html
         }
-        button {
-            if {$need_control_group} {
-                return "<div class='pure-controls'>[button {*}$def]</div>"
-            } else {
-                return [button {*}$def]
+        buttons {
+            set html "<fieldset class='pure-controls'>\n"
+            # Note whitespace separator between buttons required so
+            # they do not abut each other
+            set sep ""
+            foreach elem $def {
+                append html $sep "[button {*}$elem]"
+                set sep \n
             }
+            append html "</fieldset>"
         }
         input {
             set html ""
@@ -362,7 +367,7 @@ proc pure::_parse_formdef {form_elem def need_control_group} {
             }
             if {[dict exists $def -label]} {
                 if {$input_type in {checkbox radio}} {
-                    append html "<label for='[dict get $def -name]' class='pure-$input_type'>"
+                    append html "<label class='pure-$input_type'>"
                 } else {
                     append html "<label>"
                 }
@@ -373,7 +378,7 @@ proc pure::_parse_formdef {form_elem def need_control_group} {
             }
             append html "<input"
             # -name must exist else error
-            append html " id='[dict get $def -name]' name='[util::hesc [dict get $def -name]]'"
+            append html " name='[util::hesc [dict get $def -name]]'"
             if {[dict exists $def -value]} {
                 append html " value='[util::hesc [dict get $def -value]]'"
             }
@@ -396,13 +401,13 @@ proc pure::_parse_formdef {form_elem def need_control_group} {
             if {[dict exists $def -required] && [dict get $def -required]} {
                 append html " required"
             }
-            append html "></input>\n"
+            append html ">\n"
             if {[dict exists $def -label]} {
                 # For checkboxes and radio, labels will come after control
                 if {$input_type in {checkbox radio}} {
                     append html "[util::hesc [dict get $def -label]]\n"
+                    append html "</label>\n"
                 }
-                append html "</label>\n"
             }
 
             if {$need_control_group} {

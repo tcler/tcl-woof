@@ -7,13 +7,16 @@ command based on a form definition. An example is shown below.
   [woof::pure::form {
     fieldset {
         input {-label Name -name name -type text -placeholder {Your Name} -required 1}
-        input {-label DOB -name dob -type date -required 1}
-        input {-label {Bank Account} -name acct -type text -placeholder {Your account number}}
-        input {-label {Yes, I would like to receive $1,000,000 from your Nigerian account for doing nothing} -name cb -type checkbox}
+        input {-label DOB -name dob -type date}
+        input {-label {Bank Account} -name acct -type text -placeholder {Your account number} -required 1}
+        input {-label Password -name pass -type password -placeholder {Enter your banking password} -required 1}
+        input {-label {Yes, I authorize withdrawal of $1000 from my account for verification} -name cb -type checkbox}
         input {-label {I'm a greedy pig} -name personality -type radio}
         input {-label {No, I am just a gullible fool} -name personality -type radio}
     }
-    button {"Submit" -type submit -primary true}
-    button {"Reset" -type reset}
+    buttons {
+        {"Submit" -type submit -primary true}
+        {"Reset" -type reset}
+    }
   } -layout aligned -title "Fill out the form to get money for free!"]
 }]
