@@ -22,38 +22,3 @@
   [my link_to "User Guide" -module _woof::docs -controller ug -action index]
   if you have not done so already.
 </p>
-
-<p>
-[woof::pure::button "Button"] 
-[woof::pure::button "Disabled" -enabled 0] 
-[woof::pure::button "Pressed" -pressed 1] 
-[woof::pure::button "Primary" -primary 1] 
-[woof::pure::button "Settings" -url http://localhost:8015/settings]
-</p>
-
-<p>
-[woof::pure::menu {
-    {Microsoft http://www.microsoft.com}
-    {Google http://www.google.com selected}
-    {}
-    {Yahoo http://www.yahoo.com disabled}
-} -direction vertical -heading Sites]
-</p>
-
-[woof::pure::paginator {1 5} http://www.google.com/ -count 3 -start 2 -active 2]
-
-<p>
-[woof::pure::form {
-    fieldset {
-        input {-label Name -name name -placeholder {Your Name} -required 1 -rounded 1}
-        input {-label Email -name email -type text -value myemail -placeholder foo}
-        input {-label {This is a checkbox} -name cb -type checkbox}
-        input {-label {Radio one} -name r -type radio}
-        input {-label {Radio two} -name r -type radio}
-    }
-    button {"Submit" -type submit -primary true}
-    button {"Reset" -type reset}
-} -layout stacked -title "My Form"]
-</p>
-
-
