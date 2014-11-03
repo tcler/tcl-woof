@@ -128,8 +128,10 @@ oo::class create UgController {
         pagevar set layout _layout
         
         pagevar set stylesheets {
-            _woof_ug.css
+            _woof_ug.css pure-skin-ug.css
         }
+
+        pagevar set main {cssclasses {+ pure-skin-ug}}
 
         # Set page title based on the section
         pagevar set title "Woof! - [my _heading]"
