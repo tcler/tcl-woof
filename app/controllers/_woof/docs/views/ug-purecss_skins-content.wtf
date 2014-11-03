@@ -1,0 +1,53 @@
+<p>
+  You can choose a <em>skin</em>, essentially a color scheme with settings for
+  other visual attributes like padding, rounded corners etc., for
+  Pure CSS form elements. The examples in the previous sections used
+  a skin specifically generated for this guide.
+</p>
+<p>
+  The steps required to use a Pure CSS skin are as follows:
+  <ul>
+    <li>Use the online
+      <a href="http://yui.github.io/skinbuilder/?mode=pure">PureCSS skin builder</a> to define your scheme.
+    <li>From the <span class='ug-ui'>Code</span> tab on that page, 
+      specify a CSS class name for your scheme and copy the
+      the generated CSS definitions to a CSS file in an appropriate
+      directory as described in the
+      [my _chapter_link directory_structure "Directory Structure"]
+      section.
+    <li>Modify your application's <code>Controller</code> constructor
+      to include the stylesheet and to specify the skin's CSS class
+      name for the appropriate sections.
+  </ul>
+</p>
+<p>
+  As an example, to create the skin for this guide, the CSS generated
+  by the skin builder was saved to the file
+  <span class='ug-filename'>pure-skin-ug.css</span> in the
+  <span class='ug-filename'>public/stylesheets</span> directory.
+</p>
+<p>
+  The following lines were added to the constructor for the
+  <code>UgController</code> class.
+</p>
+[my _code_sample {
+pagevar set stylesheets {
+    _woof_ug.css pure-skin-ug.css
+}
+pagevar set main {cssclasses {+ pure-skin-ug}}
+}]
+<p>
+  The first command loads the common CSS definitions for this guide
+  and the CSS skin. The second command specifies that the 
+  skin be added to the <code>main</code> page section.
+</p>
+
+<p>
+  Note two points about the use of skins.
+  <ul>
+    <li>First, the default layout allows for different skins to be used 
+    for each page section.
+    <li>Second, since the skins are loaded via the constructor, they
+      can be switched at run time, for example based on user preferences.
+  </ul>
+</p>

@@ -13,8 +13,6 @@ oo::class create ManageController {
             _woof.css
         }
 
-        pagevar set main {cssclasses {+ xpure-skin-woof}}
-
         pagevar set MODULE_SUBHEADING "Site management"
     }
 }
