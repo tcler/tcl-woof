@@ -1,6 +1,5 @@
-<p>Now that we have the blown away the competition on the look and
-feel front&nbsp;(!), let us turn our attention to enhancing
-functionality. If the user wants the first 30 numbers in the sequence,
+<p>
+If the user wants the first 30 numbers in the sequence,
 we should provide a way to do that without clicking repeatedly. What
 we want is the following Web page:</p>
 
@@ -11,30 +10,29 @@ we want is the following Web page:</p>
 sequence desired. To implement this, we first modify the page template in
 <span class="ug-filename">app/controllers/views/fibonacci-generate-main.wtf </span>as below:</p>
 [my _code_sample {
+    [woof::pure::form {
+        input {-label "Count to generate" -name numfibos -type text -required 1}
+        buttons {{Generate -type submit -primary true} {Reset -type reset}}
+    } -layout aligned]
+    <hr>
     % my variable seq
     <p>
     The first [llength $seq] numbers in the 
     Fibonacci sequence are shown below:</p>
-    <table>
-    <tr><th>Position</th><th>Value</th></tr>
-    % set index 0
-    % foreach number $seq {
-        <tr style='background-color: [expr {$index & 1 ? "#cccccc" : "white"}];'>
-          <td>[incr index]</td><td>$number</td>
-        </tr>
-    % }
-    </table>
-    <p><a href='[request url]'>More</a>
-    <hr>
-    <form method='POST'>
-    Generate the first
-    <input type='text' name='numfibos' value='[incr index]' size='3'>
-    numbers.
-    <input type='submit' value='Generate!'>
-    </form>
+    %(
+      set index 0
+      set table {}
+      foreach number $seq {
+          lappend table [list [incr index] $number]
+      }
+      %)
+    [woof::pure::table $table -heading {Sequence Number} -stripes 1]
+    <p>
+    <a href='[request url]'>Show first [incr index] in sequence</a>
+    </p>
 }]
 <p>The only significant change made is that we have added a form
-element at the bottom to allow the user to enter the desired length of
+element at the top to allow the user to enter the desired length of
 the generated sequence. We have named this field
 as <code>numfibos</code>. When
 the <span class="wf_demotext">Generate</span> button is clicked, the

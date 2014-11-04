@@ -1,33 +1,78 @@
-[my _code_sample {
-color: #c16e8c;
-padding: 15px;
-border-bottom: #183b75 solid;
-
-
-<div style="background-color: #efece3;">
-<img style="float: left; max-width: 50px;" src="http://world.mathigon.org/resources/Sequences/Fibonacci.jpg">
-<h2 style='color: #c16e8c'>Fibonacci Generator</h2>
-</div>
-}]
-
-[my _code_sample {
-% my variable seq
 <p>
-The first [llength $seq] numbers in the
-Fibonacci sequence are shown below:
+Our page is now sufficiently ugly that we can no longer put off styling it.
+We do this by first creating a CSS file that will provide the basic look
+for our pages.
 </p>
-%(
-  set index 0
-  set table {}
-  foreach number $seq {
-    lappend table [list [incr index] $number]
-  }
-%)
-[woof::pure::table $table -heading {Sequence Number} -stripes 1]
 <p>
- <a href='[request url]'>Show first [incr index] in sequence</a>
+Create the file
+<span class='ug-filename'>public/stylesheets/fibonacci.css</span> with
+the following content.
 </p>
+[my _code_sample {
+ .wf_header {
+    color: #c16e8c;
+    background-color: #efece3;
+    padding: 15px;
+    border-bottom: #183b75 solid;
+    background-image: url(http://world.mathigon.org/resources/Sequences/Fibonacci.jpg);
+    background-repeat: no-repeat;
+ }
 }]
+<p>
+We then create a skin using the
+<a href="http://yui.github.io/skinbuilder/?mode=pure">PureCSS skin builder</a>
+as described in the
+[my _chapter_link purecss_skins "PureCSS Skins"] chapter, matching
+colors with the great man's headgear. We save the corresponding CSS in the
+<span class='ug-filename'>public/stylesheets/pure-skin-fibonacci.css</span>
+file. We could have saved the generated CSS in the 
+<span class='ug-filename'>fibonacci.css</span> as well but keeping it
+separately allows us to change skins more easily in the future.
+</p>
+We then add the following lines to the
+<code>FibonacciController</code> constructor.
+</p>
+[my _code_sample {
+pagevar set stylesheets { fibonacci.css pure-skin-fibonacci.css } 
+pagevar set main {cssclasses {+ pure-skin-fibonacci}}
+pagevar set sidebar {cssclasses {+ pure-skin-fibonacci}}
+}]
+<p>
+The first of these lines links our generated page to the CSS stylesheets
+we just created. The second and third lines have the effect of <em>adding</em>
+the created skin to the <code>main</code> and <code>sidebar</code>
+page sections. Note that the skin for each page section is separately
+assigned and is optional.
+</p>
+<p>
+Finally we modify the
+<span class='ug-filename'>app/controllers/views/fibonacci-generate-main.wtf</span>
+file to use Pure CSS tables.
+[my _code_sample {
+ % my variable seq
+ <p>
+ The first [llength $seq] numbers in the
+ Fibonacci sequence are shown below:
+ </p>
+ %(
+   set index 0
+   set table {}
+   foreach number $seq {
+     lappend table [list [incr index] $number]
+   }
+ %)
+ [woof::pure::table $table -heading {Sequence Number} -stripes 1]
+ <p>
+  <a href='[request url]'>Show first [incr index] in sequence</a>
+ </p>
+}]
+<p>
+Our page now looks like this.
+
+
+TBD - INSERT IMAGE
+</p>
+
 
 <p>We are getting close to the finish line. But there is one important
   basic task we have not covered - getting input from the user. We do that

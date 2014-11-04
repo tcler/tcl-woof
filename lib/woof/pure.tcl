@@ -277,6 +277,11 @@ proc pure::form {formdef args} {
     # The second element of the pair is a list each element of which
     # is a list of arguments to pass to the [pure::button] command.
     #
+    #
+    # The 'button' form element creates a single button. The second
+    # element of the pair is the list of arguments to pass to the 
+    # [pure::button] command.
+    #
     # The 'input' form element creates a label and an associated text
     # entry field.
     # The second element of the pair is a dictionary with the following keys
