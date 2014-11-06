@@ -25,8 +25,8 @@ components within an application.</p>
 <p>Woof! currently provides the view and controller components of the
 MVC architecture. It is not clear that model component belongs to a
 Web framework although most other frameworks do include that component
-as well. (The possibility exists that the author discounts the model
-simply because it has not been implemented in Woof! as yet!)</p>
+as well.
+</p>
 <p>When a client request is received, its URL is
 [my _chapter_link url_dispatch "mapped"] to an
 appropriate [my _chapter_link controller_object "controller class"]. An

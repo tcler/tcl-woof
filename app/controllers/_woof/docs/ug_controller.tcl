@@ -79,7 +79,7 @@ oo::class create UgController {
             {page_generation "Page Generation"}
             {page_layout "Page Layout" 1}
             {default_page_layout "Default Page Layout" 2}
-            {extending_default_layout "Extending the Default Layout" 2}
+            {extending_default_layout "Extending the Default Layout" 3}
             {custom_page_layout "Custom Page Layout" 2}
             {page_sections "Page Sections" 1}
             {page_section_templates "Template Based Page Sections" 2}
@@ -193,7 +193,7 @@ oo::class create UgController {
         if {$display eq ""} {
             set display "<span class='ug-code'>[hesc [namespace tail $name]]</span>"
         }
-        return "<a href='http://woof.magicsplat.com/manuals/woof/index.html#$name'>$display</a>"
+        return "<a href='[my url_for_static woof_manual.html -subdir _woof]#$name'>$display</a>"
     }
 
     method _tcl_manpage_link {name {display ""}} {

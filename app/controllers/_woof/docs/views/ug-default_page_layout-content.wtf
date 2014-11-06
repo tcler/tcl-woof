@@ -15,16 +15,20 @@ provides sufficient flexibility for many applications.</p>
   divides a Web page into five page sections:</p>
 <ul>
   <li>The <span class='ug-code'>header</span> section which contains
-  content, such as a banner, that pat the top of a page.</li>
+  content, such as a banner, that appears at the top of a page.
   <li>The <span class='ug-code'>footer</span> section
-  contains content that is to appear at the bottom of a page.</li>
-  <li>The <span class='ug-code'>sidebar</span>, which may contain elements
-    such as navigation links that appear alongside the main content.</li>
+  contains content that is to appear at the bottom of a page.
   <li>The <span class='ug-code'>main</span> section
-  contains the primary content of the main page.</li>
+  contains the primary content of the main page.
+  <li>The <span class='ug-code'>sidebar</span>, which may contain elements
+    such as navigation links that appear alongside the main content.
+    The default layout positions this on the left of the
+    <span class='ug-code'>main</span> section.
   <li>The <span class='ug-code'>supplement</span> section contains
-  content related to the main content, such as additional related
-  links, advertising.</li>
+    content related to the main content, such as additional related
+    links, advertising.
+    The default layout positions this on the right of the
+    <span class='ug-code'>main</span> section.
 </ul>
 
 <p><strong>All sections in the default layout are optional</strong>. Sections
@@ -34,116 +38,79 @@ provides sufficient flexibility for many applications.</p>
   content may be generated either through template files or directly
   created by application code.</p>
 
-<h3>Customizing the default layout</h3>
-
-<p>Note that the default layout provides some basic but commonly
-  useful options for customizing the appearance of the web page,
-  including the size and location of the sections, page widths and so
-  on. These options are passed through the
-  [my _chapter_link pagevar_object "<code>pagevar</code>"] object
-  and are set in either the controller constructor or action method
-  depending on how widely the options are to be applied.</p>
-
-<p>These default layout options are summarized below. For more details
-  see the comments in the layout file.</p>
-<table>
-  <tr>
-    <td><code>yui_page_width</code></td>
-    <td>Determines the width of the web page. May be either a fixed width
-      (see the layout file for valid values) or the
-      keyword <code>fluid</code> (default) which will cause the web page to
-      fill the browser window.</td>
-  </tr>
-  <tr>
-    <td><code>yui_no_margin</code></td>
-    <td>If set to <code>false</code> (default), a margin is set around
-    the whole web page. If set to <code>true</code>, no margin is
-    present which can cause bleeding of content into the browser
-    window decorations.</td>
-  </tr>
-  <tr>
-    <td><code>yui_sidebar_pos</code></td>
-    <td>Controls positioning of the <code>sidebar</code> page section. 
-      Must be one of <code>left</code> (default) or <code>right</code>. The
-      <code>supplement</code> page section is automatically placed on
-      the other side.</td>
-  </tr>
-  <tr>
-    <td><code>yui_sidebar_width</code></td>
-    <td>Specifies the width of the sidebar. If positioned on the left,
-      this must be one of <code>160px</code>, <code>180px</code> (default)
-      or <code>300px</code>. If positioned on the right, it must be
-      one of <code>180px</code> (default), <code>240px</code> 
-      or <code>300px</code>.
-      </td>
-  </tr>
-  <tr>
-    <td><code>yui_main_percent</code></td>
-    <td>Percentage of the width remaining (after the sidebar), taken
-      up by the <code>main</code> page section. Must be one of
-      <code>25%</code>, <code>33%</code>, <code>50%</code>,
-      <code>66%</code>, or <code>75%</code>. This is ignored if the
-      <code>supplement</code> page section is empty as in
-      that the <code>main</code> section
-      takes up the entire remaining width.
-    </td>
-  </tr>
-</table>
-
-<p>Woof! uses the [my _chapter_link YUI "YUI"] stylesheets to provide
+<p>Woof! uses the [my _chapter_link purecss "Pure CSS"] stylesheets to provide
   the underlying styles infrastructure for the default layout. The appropriate
-  style classes are chosen based on the values of the above settings. The
-  defaults and allowed values are part of YUI.</p>
+  style classes are chosen based on which page sections being present.</p>
 
-<h4>Example</h4>
-
-<p>The sample code below shows how an application might customize the
-  default layout. In this example, we set up the options in the
-  <code>ApplicationController</code> class constructor so it will
-  apply to all pages in the application unless overridden by a
-  controller or action. If you want to customize for a specific controller,
-  you could do this customization in the constructor for that controller
-  instead.
+<h3>Customizing the default layout sections</h3>
+<p>
+The default layout sections can be customized to some degree through
+the corresponding key of the same name in the
+[my _chapter_link pagevar_object "<code>pagevar</code>"]. The value
+should be a dictionary containing the settings for the section. For example,
 </p>
-
 [my _code_sample {
-  oo::class create ApplicationController {
-      superclass ::woof::Controller
-      constructor args {
-          next {*}$args  ;# Call base constructor first
-          pagevar set   yui_page_width 750px   yui_sidebar_width 160px
+ pagevar set sidebar {tag aside cssclasses {+ appcss pure-skin-app}}
+}]
+<p>
+  The above specifies that the <code>aside</code> tag be used for
+  the <code>sidebar</code> section and the specified CSS classes be added to 
+  it.
+<p>
+  The <code>pagevar</code> element as well as individual settings are all
+  optional and defaults are used for missing values. The table below shows
+  the settings and defaults.
+</p>
+%(
+  set table_def {
+      {
+          <code>tag</code>
+          {The HTML tag to use wrap the section. The <code>header</code>,
+              <code>footer</code>, <code>main</code>, <code>sidebar</code>
+              and <code>supplement</code> default to the
+              <code>header</code>, <code>footer</code>, <code>main</code>,
+              <code>nav</code> and <code>aside</code> HTML tags respectively.}
+      }
+      {
+          <code>cssclasses</code>
+          {
+              By default, the tags used to wrap the page sections
+              <code>header</code>,
+              <code>footer</code>, <code>main</code>, <code>sidebar</code>
+              and <code>supplement</code> are added to the CSS classes
+              <code>wf_header</code>, <code>wf_footer</code>,
+              <code>wf_main</code>, <code>wf_sidebar</code> and
+              <code>wf_supplement</code> respectively. If the
+              dictionary contains <code>cssclasses</code>, its value
+              should be a list (possibly empty) of CSS class names that will
+              replace the default class. As a special case, if the first
+              element of this list is <code>+</code>, the remaining list
+              elements will
+              be added to the default instead of replacing it.
+          }
       }
   }
-}]
+%)
+[woof::pure::table $table_def -heading {Setting Description} -raw 1 -stripes 1]
+
+<p>
+  The CSS classes have a default style defined in the file 
+  <span class='wf_filename'>public/stylesheets/_layout.css</span> that is 
+  always loaded by the default layout. The
+  application can override or modify these classes
+  as desired in a separate CSS file and arrange for it to be loaded
+  as described in [my _chapter_link using_stylesheets].
+</p>
+
 
 <h3>Default layout boilerplate</h3>
 
 <p>In addition to laying out the page, the default layout template
-  also includes some common HTML boilerplate. By convention, the layout
-  template fetches this boilerplate from the
-  [my _chapter_link pagevar_object "pagevar object"]. Applications
+  also includes some common HTML boilerplate such as the page title.
+  The layout template fetches this boilerplate from the
+  [my _chapter_link pagevar pagevar] object. Applications
   can set the appropriate values in <code>pagevar</code> any time
-  before the page is rendered.
+  before the page is rendered. See [my _chapter_link pagevar]
+  for the various properties that can be set.
 </p>
 
-<p>Currently, the following elements of the <code>pagevar</code>
-  object are used.</p>
-<table>
-<tr>
-  <td><code>title</code></td>
-  <td>The title to use for the page. If not
-    set, the [my _chapter_link configuration "configuration variable"]
-    <code>app_name</code> is used.</td>
-</tr>
-<tr>
-  <td><code>styles</code></td>
-  <td>The list of stylesheets to include in the page. Each element of
-    this list is linked into the page using the
-    [my _chapter_link using_stylesheets "include_stylesheet"]
-    method. If not set, includes a default stylesheet based on
-    [my _chapter_link yui YUI].
-    If you do not want any stylesheets at all, set the value to an
-    empty list.
-  </td>
-</tr>
-</table>
