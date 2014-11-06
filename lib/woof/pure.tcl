@@ -129,6 +129,13 @@ proc pure::table {data args} {
     #  -heading HEADER - specifies the table heading.
     #  -stripes BOOLEAN - if true, alternate table rows are shaded. Default
     #     is false.
+    #  -raw BOOLEAN - if true, heading and cell contents are not HTML-escaped.
+    #     Default is false.
+
+    set raw 0
+    if {[dict exists $args -raw]} {
+        set raw [dict get $args -raw]
+    }
 
     set borders vertical
     if {[dict exists $args -borders]} {
@@ -156,7 +163,10 @@ proc pure::table {data args} {
     if {[dict exists $args -heading]} {
         append html "<thead><tr>"
         foreach cell [dict get $args -heading] {
-            append html "<th>[util::hesc $cell]</th>"
+            if {! $raw} {
+                set cell [util::hesc $cell]
+            }
+            append html "<th>$cell</th>"
         }
         append html "</tr></thead>\n"
     }
@@ -171,7 +181,10 @@ proc pure::table {data args} {
                 append html "<tr>"
             }
             foreach cell $row {
-                append html "<td>[util::hesc $cell]</td>"
+                if {! $raw} {
+                    set cell [util::hesc $cell]
+                }
+                append html "<td>$cell</td>"
             }
             append html "</tr>\n"
             incr i
@@ -180,7 +193,10 @@ proc pure::table {data args} {
         foreach row $data {
             append html "<tr>"
             foreach cell $row {
-                append html "<td>[util::hesc $cell]</td>"
+                if {! $raw} {
+                    set cell [util::hesc $cell]
+                }
+                append html "<td>$cell</td>"
             }
             append html "</tr>\n"
         }
