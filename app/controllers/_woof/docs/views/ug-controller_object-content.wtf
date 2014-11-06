@@ -6,6 +6,11 @@ appropriately handle the request. It is the responsibility of the
 application writer to implement the specific action methods for a
 controller.</p>
 
+<p>
+In Woof!, the controller constructor is also responsible for selecting any
+view related settings, such as skins, stylesheets etc.
+</p>
+
 <h3>The <span class='ug-code'>Controller</span> class tree</h3>
 
 <p>When an incoming request is [my _chapter_link url_dispatcher "mapped"]

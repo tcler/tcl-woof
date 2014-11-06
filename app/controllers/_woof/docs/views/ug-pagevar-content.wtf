@@ -4,22 +4,49 @@
 By convention, this object contains settings related to page layout options
 and other page meta information such as title or stylesheets.</p>
 
-<p>For example, the Woof! 
-[my _chapter_link default_page_layout "default layout"] retrieves information
-such as size and positioning of elements from the 
-<span class="ug-code">pagevar</span> object. The following two lines in
-the constructor for a controller (or executed any time before the page
-is rendered)</p>
+<p>
+These <code>pagevar</code> values may
+be set in either the controller constructor and/or action method
+depending on how widely they are to be applied.</p>
 
+<p>Applications may define their own keys and store them and associated data 
+in the <span class="ug-code">pagevar</span> object but to avoid conflicts
+with Woof! usage, it is advisable to have the keys start with an upper
+case character.</p>
+
+<p>The keys currently defined by Woof! are described below.</p>
+
+<h3><code>layout</code></h3>
+<p>Allows overriding of the constructed name of the layout file for
+  the current request. See [my _chapter_link page_layout] for details.</p>
+
+<h3><span class='ug-code'>title</span></h3>
+<p>The default layout uses this as the title for the page. 
+  Usually set by the application controller as </p>
 [my _code_sample {
    pagevar set title "My Application"
-   pagevar set yui_sidebar_pos right yui_page_width fluid
 }]
+<p>
+If unset, defaults
+to the <span class='ug-code'>name</span> setting in the 
+<span class='ug-code'>app</span> section of the
+[my _chapter_link configuration "configuration file"].
+</p>
 
-<p>will set the title for the page in the first line, 
-  and then place the sidebar on the right hand side of a dynamic width page.</p>
+<h3><span class='ug-code'>stylesheets</span></h3>
+<p>The list of stylesheets to include in the page, if any. 
+Each element of this list is linked into the page using 
+the [my _chapter_link using_stylesheets {include_stylesheet}] method.
+</p>
 
-<p>Applications may or may not make use of the
-<span class="ug-code">pagevar</span> object but if used, it is advisable
-to use it for similar purposes as opposed to something unrelated like
-storage of application data.</p>
+<h3><span class='ug-code'>header, footer, main, sidebar, supplement</span></h3>
+<p>
+Each of these keys contains a dictionary that specifies settings for the
+corresponding page section in the default layout. 
+The content of this dictionary are detailed in 
+[my _chapter_link customizing_default_layout_sections].
+</p>
+
+
+
+

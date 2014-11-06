@@ -196,3 +196,7 @@ ul.ug-nobullets li {
    padding: 2px;
    line-height: 1.2em;
 }
+
+.wf_main tbody {
+    vertical-align: top;
+}

@@ -26,9 +26,10 @@ positions the various page sections within the body.</p>
 }]
 
 <p>The above layout is defined in [my _chapter_link wtf] (WTF) format
-containing a mixture of Tcl code and HTML 
+(with apologies if the acronym hurts anybody's sensibilities).
+This is a mixture of Tcl code and HTML 
 markup. It starts with defining the standard HTML page headers. Within the body
-element, the layout defines three sections - the header, the main
+element, the above layout defines three sections - the header, the main
 content and the footer. The contents of each section, if defined, are
 expected to be in the <span class='ug-code'>page</span> object. Note
 that the layout makes use of conditional Tcl statements to insert each
@@ -38,6 +39,12 @@ variable <span class='ug-code'>content</span>.
 The [my _chapter_link page_object "<span class='ug-code'>page</span>"]
 object, from which the HTML content is retrieved, is constructed when
 building page sections.
+
+<p>
+Woof! comes with a default layout, described in the
+[my _chapter_link default_page_layout next] section, so in many
+cases you need not explicitly write one yourself.
+</p>
 
 <h3>Defining page sections in layouts</h3>
 
