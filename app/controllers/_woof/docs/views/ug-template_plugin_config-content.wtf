@@ -1,0 +1,13 @@
+<p>
+  A template processor is selected for every page section. Every page
+  section within a single page may of course use a different template format.
+  This selection is made based on the file extension of the page template.
+  The priority order of template processors is configurable for the
+    case where templates in multiple formats are available for a page section.
+    Note however that in most cases, such a situation is probably a bug
+    as the lower priority template will never get selected.
+</p>
+
+how added to app config
+
+order of selection

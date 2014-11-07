@@ -1,0 +1,29 @@
+<p>
+Although Woof! provides its own built-in template processor that uses 
+the WTF format, you can also install other template processors that can
+be used either in lieu of, or in addition to, the WTF processor.
+</p>
+
+<p>
+  Adding a new template processor to Woof! involves the following steps:
+  <ul>
+    <li>Implement wrappers for the template processor that present the
+      interface expected by Woof!
+    <li>Arrange for the template processor to be loaded and made accessible
+      to the Woof! application interpreter.
+    <li>Configure the mapping between page section templates and the
+      associated template processors as well as their priority order.
+  </ul>
+</p>
+
+<p>
+  We describe these steps in the following sections. For illustration
+  purposes, we will show how you can add support for Markdown format 
+  text.
+</p>
+<p class='ug-note'>
+  Strictly speaking, Markdown is a text formatting language and
+  not a template language. However, it is very convenient for 
+  creating static content and the steps involved in integrating it
+  are the same as for a true template processor.
+</p>
