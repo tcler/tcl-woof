@@ -200,3 +200,8 @@ ul.ug-nobullets li {
 .wf_main tbody {
     vertical-align: top;
 }
+
+.ug-note {
+    font-style: italic;
+    font-size: smaller;
+}

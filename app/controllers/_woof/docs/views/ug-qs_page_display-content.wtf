@@ -1,5 +1,11 @@
+<p class='ug-note'>
+  This Quick Start chapter only describes templates that use the WTF format.
+  However, note that you can add your own template processors to Woof! as
+  described in [my _chapter_link template_plugins].
+</p>
+
 <p>Having generated the new sequence, we now need a page to actually
-display it to the user.&nbsp;The page for this method is automatically
+display it to the user. The page for this method is automatically
 generated from its view template
 <span class="ug-filename">app/controllers/views/fibonacci-generate-main.wtf</span>. 
 Currently, that still contains a stub so we will edit it to contain the 

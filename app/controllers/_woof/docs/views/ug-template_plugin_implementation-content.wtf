@@ -1,0 +1,84 @@
+<p>
+A template processor plug-in basically wraps the API provided by
+the template processor implementation into the interface expected by Woof!
+The plug-in is required to implement a single command with two subcommands
+<code>compile</code> and <code>render</code>.
+</p>
+
+<p>
+When Woof! processes a template for the first time, it reads it from
+the file on the disk and passes it to the
+<code>compile</code> command. The output from the command is then passed to the
+<code>render</code> command which should return the HTML to be included
+in the generated page. Note that returned HTML should be a HTML fragment,
+not a whole HTML page.
+</p>
+
+<p>
+In effect what the two step sequence does is to allow
+template processors to convert a template into an internal form that
+is amenable to quicker processing by the rendering step which 
+then inserts the dynamic data.
+In addition, Woof! caches the compiled form of the template since that
+does not depend on the dynamic parts of the page. The
+next request for the page directly calls the <code>render</code>
+command and bypasses
+the read from disk and compile steps, resulting in much faster processing.
+</p>
+
+<p>
+  Note that the template processor compile step should not depend on
+  any dynamic data.
+</p>
+
+<p>
+We will illustrate the steps by implementing Markdown support for Woof!
+page sections. We will make use of the <code>hoedown</code> package
+which implements a Markdown processor.
+The required code is shown below.
+</p>
+
+[my _code_sample {
+    package require hoedown
+
+    namespace eval woof::hoedown {
+        proc compile {in} {
+            return [::hoedown::render $in]
+        }
+        proc render {in} {
+            return $in
+        }
+
+        # Create the woof::hoedown command with subcommand compile and render
+        namespace export compile render
+        namespace ensemble create
+    }
+
+    [::woof::master::app_interp] alias ::woof::hoedown ::woof::hoedown
+}]
+
+<p>
+The interface is very simple, with all the hard work being implemented
+by the <code>hoedown</code> package. As we mentioned previously, Markdown
+is a text format and not a template processor and hence does not deal
+with dynamic data. Thus the <code>render</code>
+command simply returns its input.
+</p>
+<p class='ug-note'>
+Do not confuse the <code>render</code> command of the 
+<code>hoedown</code> package with our <code>::woof:hoedown::render</code>
+command; they happen to have the same name by coincidence.
+</p>
+<p>
+We have to now arrange for this code to be loaded.
+The mechanisms for doing this are detailed in [my _chapter_link interpreter].
+We follow the instructions there.
+The above code fragment is short enough that we can directly save it in
+the <span class='ug-filename'>app/app_master.tcl</span> file so it is
+loaded into the master interpreter. The last line then
+makes the command available to the application interpreter.
+</p>
+<p>
+  The final step is in arranging our <code>hoedown</code> template
+processor to be called for the appropriate files. We describe that next.
+</p>

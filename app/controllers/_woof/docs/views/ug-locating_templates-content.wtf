@@ -42,10 +42,13 @@ or action.
     action specific names further up the module hierarchy.</li>
 </ul>
 
-<p>The above algorithm is slightly modified when the client indicates a
-  preferred language. Details are given in
-  [my _chapter_link language_specific_pages].</p>
-
+<p>The above algorithm is slightly modified in two instances:
+  <ul>
+    <li>When the client indicates a preferred language. This is discussed
+      in [my _chapter_link language_specific_pages].
+    <li>When a template processor plug-in is installed. This is discussed
+      in [my _chapter_link template_plugins].
+</p>
 
 <h3>Example: Sharing templates</h3>
 

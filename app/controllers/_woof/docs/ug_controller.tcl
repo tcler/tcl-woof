@@ -85,13 +85,15 @@ oo::class create UgController {
             {page_section_templates "Template Based Page Sections" 2}
             {page_section_direct "Directly Generated Page Sections" 2}
             {locating_templates "Locating Templates" 1}
+            {template_plugins "Template Processor Plug-Ins" 1}
+            {template_plugin_implementation "Implementing Template Processors" 2}
+            {template_plugin_config "Configuring Template Processors" 2}
             {pagevar "The <span class='ug-code'>pagevar</span> Object" 1}
             {static_resources "Using Static Resources" 1}
             {locating_resources "Locating Static Resources" 2}
             {using_images "Using Images" 2}
             {using_stylesheets "Using Stylesheets" 2}
             {wtf "Woof! Template Format" 1}
-            {wtf_mistakes "Common WTF errors" 2}
             {localization "Localization"}
             {client_language "Client Language Preference" 1}
             {message_catalogs "Using Message Catalogs" 1}
