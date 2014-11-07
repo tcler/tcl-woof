@@ -53,8 +53,8 @@ should be a dictionary containing the settings for the section. For example,
  pagevar set sidebar {tag aside cssclasses {+ appcss pure-skin-app}}
 }]
 <p>
-  The above specifies that the <code>aside</code> tag be used for
-  the <code>sidebar</code> section and the specified CSS classes be added to 
+  The above specifies that the <code>aside</code> tag be used for the
+  <code>sidebar</code> section and the specified CSS classes be added to 
   it.
 <p>
   The <code>pagevar</code> element as well as individual settings are all

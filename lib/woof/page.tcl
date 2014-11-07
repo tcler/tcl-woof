@@ -1,4 +1,4 @@
-# Copyright (c) 2009, Ashok P. Nadkarni
+# Copyright (c) 2009-2014, Ashok P. Nadkarni
 # All rights reserved.
 # See the file LICENSE in the Woof root directory for license
 
@@ -6,13 +6,13 @@ namespace eval ::woof {
     # Templates are compiled and cached when first encountered.
     # Should really be a "common" variable in Page but don't know
     # how to do that, and not sure about performance impact.
-    # template_file_paths maps the controller/action/section to a file path.
+    # template_paths maps the controller/action/section to a file path.
     # compiled_templates is indexed by file path and contains
     # the corresponding compiled file contents.
     variable compiled_templates
     array set compiled_templates {}
-    variable template_files
-    set template_file_paths [dict create]
+    variable template_paths
+    set template_paths [dict create]
 
     # Used to generate variable names for holding template processed output
     variable template_output_counter 0
@@ -146,9 +146,9 @@ oo::class create Page {
             # As as aside, note that by keeping two separate caches,
             # we save on memory space
             # since multiple controller/actions will map to the same filename
-            if {[dict exists $::woof::template_file_paths $controller_name $action $search_dirs $name $_context(languages)]} {
+            if {[dict exists $::woof::template_paths $controller_name $action $search_dirs $name $_context(languages)]} {
                 # Get the compiled template for the file name
-                set tpath [dict get $::woof::template_file_paths $controller_name $action $search_dirs $name $_context(languages)]
+                set tpath [dict get $::woof::template_paths $controller_name $action $search_dirs $name $_context(languages)]
                 if {[info exists ::woof::compiled_templates($tpath)]} {
                     set ct $::woof::compiled_templates($tpath)
                 }
@@ -159,6 +159,9 @@ oo::class create Page {
             # Compiled template not in cache for whatever reason. Locate it.
             # We try each possible location.
             
+            set processors [::woof::config get template_processors]
+            set exts [dict keys $processors]
+
             # Note that we set cachecontrol to ignore in the calls to
             # filecache_locate since we are caching the compiled template,
             # there is no point caching the original template.
@@ -180,14 +183,16 @@ oo::class create Page {
                 # Add lang-independent last. May already be in list, no matter
                 lappend dirs $dir
                 set tpath [::woof::filecache_locate \
-                               ${controller_name}-${action}-${name}.wtf \
+                               ${controller_name}-${action}-${name} \
                                -dirs $dirs \
+                               -extensions $exts \
                                -relativeroot $view_root \
                                -cachecontrol ignore]
                 if {$tpath eq ""} {
                     # Not there, try controller-specific, action-independent one
                     set tpath [::woof::filecache_locate \
-                                   ${controller_name}-${name}.wtf \
+                                   ${controller_name}-${name} \
+                                   -extensions $exts \
                                    -dirs $dirs \
                                    -relativeroot $view_root \
                                    -cachecontrol ignore]
@@ -203,8 +208,9 @@ oo::class create Page {
                     lappend dirs [file join $search_dir views]
                 }
                 set tpath [::woof::filecache_locate \
-                               ${name}.wtf \
+                               ${name} \
                                -dirs $dirs \
+                               -extensions $exts \
                                -relativeroot $view_root \
                                -cachecontrol ignore]
             }
@@ -215,16 +221,16 @@ oo::class create Page {
             }
 
             # Cache the filename
-            dict set ::woof::template_file_paths $controller_name $action $search_dirs $name $_context(languages) $tpath
+            dict set ::woof::template_paths $controller_name $action $search_dirs $name $_context(languages) $tpath
 
-            # Compile the template and store it in the cache. We supply
-            # a dynamically generated name as the output variable where
-            # the output content will stored when the compiled template
-            # is run. Note again, that cachecontrol for filecache_read
+            # Compile the template and store it in the cache as a pair
+            # consisting of the template processor and the compiled template
+            
+            set processor [dict get $processors [string tolower [file extension $tpath]]]
+            # Note again, that cachecontrol for filecache_read
             # is hardcoded to ignore for reasons stated above.
-            set ct [::woof::wtf::compile_template \
-                        [::woof::filecache_read $tpath -cachecontrol ignore] \
-                        ::woof::template_output[incr ::woof::template_output_counter]]
+            set ct [list $processor \
+                        [$processor compile [::woof::filecache_read $tpath -cachecontrol ignore]]]
             set ::woof::compiled_templates($tpath) $ct
         }
 
@@ -235,13 +241,7 @@ oo::class create Page {
         # context and the result is stored in $varname and also
         # as the content of the page section internally.
         if {$varname ne ""} {
-            # First element of compiled template is the output variable
-            # name. Make sure we empty it
-            set output_var_name [lindex $ct 0]
-            set $output_var_name ""
-            uplevel 1 [list ::woof::wtf::run_compiled_template $ct]
-            set _sections($name) [set $output_var_name]
-            set $output_var_name ""; # So as to release memory
+            set _sections($name) [uplevel 1 [list [lindex $ct 0] render [lindex $ct 1]]]
             upvar $varname content
             set content $_sections($name)
         }

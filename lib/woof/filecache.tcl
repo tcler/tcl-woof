@@ -72,6 +72,10 @@ oo::class create FileCache {
         #     Each of these is joined with the
         #     tail and the resulting path is checked. Each directory path
         #     in the list may be either absolute or relative.
+        #   -extensions EXTLIST - list of extensions to try in each directory.
+        #     Each extension should begin with a period. If this list is
+        #     not specified or empty, the look up is done without any 
+        #     extension added to the file name.
         #   -relativeroot ROOTPATH - the root path to use for all elements in
         #     the DIRLIST value specified with the -dirs option
         #     that are relative paths. Defaults to the -relativeroot
@@ -88,6 +92,7 @@ oo::class create FileCache {
         
         array set opts [list -cachecontrol readwrite \
                             -dirs [list .] \
+                            -extensions {} \
                             -relativeroot $_relativeroot]
         array set opts $args
 
@@ -97,11 +102,11 @@ oo::class create FileCache {
             # causes disk accesses that we want to avoid. This means
             # the same file may show up multiple times in the cache if
             # callers use different syntactic forms, but that's ok
-            if {[dict exists $_locations $opts(-relativeroot) $opts(-dirs) $tail]} {
+            if {[dict exists $_locations $opts(-relativeroot) $opts(-dirs) $opts(-extensions) $tail]} {
                 # Return absolute path or empty string (non-existent file)
                 # Note no need to call _jailed once it is in cache
                 # as _jails cannot change after construction.
-                return [dict get $_locations $opts(-relativeroot) $opts(-dirs) $tail]
+                return [dict get $_locations $opts(-relativeroot) $opts(-dirs) $opts(-extensions) $tail]
             }
         }
 
@@ -116,10 +121,20 @@ oo::class create FileCache {
 
                 # TBD - should we use fileutil::fullnormalize instead ?
                 set path [file normalize $tail]
-                if {(! [file isfile $path]) || ! [my _jailed $path]} {
-                    # File does not exist or is not a regular file
-                    # or is outside allowed areas
-                    set path ""
+                if {[llength $opts(-extensions)] == 0} {
+                    if {(! [file isfile $path]) || ! [my _jailed $path]} {
+                        # File does not exist or is not a regular file
+                        # or is outside allowed areas
+                        set path ""
+                    }
+                } else {
+                    foreach ext $opts(-extensions) {
+                        if {[file isfile ${path}$ext] && [my _jailed ${path}$ext]} {
+                            # File is a regular file and in allowed areas
+                            append path $ext
+                            break
+                        }
+                    }
                 }
             }
             relative {
@@ -137,10 +152,23 @@ oo::class create FileCache {
                     # exactly what we want.
                     # TBD - should we use fileutil::fullnormalize instead ?
                     set possible_path [file normalize [file join $opts(-relativeroot) $dir $tail]]
-                    if {[file isfile $possible_path] &&
-                        [my _jailed $possible_path]} {
-                        # File exists and is not outside jail
-                        set path $possible_path
+                    if {[llength $opts(-extensions)] == 0} {
+                        if {[file isfile $possible_path] &&
+                            [my _jailed $possible_path]} {
+                            # File exists and is not outside jail
+                            set path $possible_path
+                        }
+                    } else {
+                        foreach ext $opts(-extensions) {
+                            if {[file isfile ${possible_path}$ext] &&
+                                [my _jailed ${possible_path}$ext]} {
+                                # File exists and is not outside jail
+                                set path ${possible_path}$ext
+                                break
+                            }
+                        }
+                    }
+                    if {$path ne ""} {
                         break
                     }
                 }

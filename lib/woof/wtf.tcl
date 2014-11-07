@@ -69,9 +69,30 @@ proc wtf::compile_template {in {var OUT}} {
     return [list $var [substify $in $var]]
 }
 
+
 proc wtf::run_compiled_template {ct} {
     uplevel 1 [lindex $ct 1]
     return [lindex $ct 0]
+}
+
+proc wtf::compile {in} {
+    variable _wtf_output_ctr
+    set var [namespace current]::_wtf_output_[incr _wtf_output_ctr]
+    return [list $var [substify $in $var]]
+}
+
+proc wtf::render {ct} {
+    # The first element is the name of the variable that will contain
+    # generated output. Second element is the string to execute in caller's
+    # context. The variable might have been used before so empty it
+    # first.
+    set var [lindex $ct 0]
+    set $var "";                 # Just to be sure
+    uplevel 1 [lindex $ct 1]
+
+    # Return the output at the same time resetting to "" so memory
+    # gets freed when request ends
+    return [set $var][set $var ""]
 }
 
 proc wtf::html_frag {content args} {
@@ -112,5 +133,7 @@ proc wtf::table {data {ncols 2} args} {
 
 
 namespace eval wtf {
-    namespace export html_frag
+    namespace export html_frag compile render
+
+    namespace ensemble create
 }

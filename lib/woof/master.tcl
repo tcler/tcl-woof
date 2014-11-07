@@ -161,7 +161,7 @@ proc ::woof::safe::filecache_locate_alias {trailer args} {
     # as well
     
     set opts {}
-    foreach opt {-relativeroot -cachecontrol -dirs} {
+    foreach opt {-relativeroot -cachecontrol -dirs -extensions} {
         if {[dict exists $args $opt]} {
             lappend opts $opt [dict get $args $opt]
         }
