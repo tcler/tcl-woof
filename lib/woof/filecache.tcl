@@ -92,7 +92,7 @@ oo::class create FileCache {
         
         array set opts [list -cachecontrol readwrite \
                             -dirs [list .] \
-                            -extensions {} \
+                            -extensions {{}} \
                             -relativeroot $_relativeroot]
         array set opts $args
 
@@ -111,6 +111,7 @@ oo::class create FileCache {
         }
 
         # Not in cache, search the directory path
+        set path ""
         switch -exact -- [file pathtype $tail] {
             volumerelative -
             absolute {
@@ -120,20 +121,14 @@ oo::class create FileCache {
                 # in normalized form if the file exists. $dirs is ignored.
 
                 # TBD - should we use fileutil::fullnormalize instead ?
-                set path [file normalize $tail]
-                if {[llength $opts(-extensions)] == 0} {
-                    if {(! [file isfile $path]) || ! [my _jailed $path]} {
-                        # File does not exist or is not a regular file
-                        # or is outside allowed areas
-                        set path ""
-                    }
-                } else {
-                    foreach ext $opts(-extensions) {
-                        if {[file isfile ${path}$ext] && [my _jailed ${path}$ext]} {
-                            # File is a regular file and in allowed areas
-                            append path $ext
-                            break
-                        }
+                set path_prefix [file normalize $tail]
+                foreach ext $opts(-extensions) {
+                    set possible_path "${path_prefix}$ext"
+                    if {[file isfile $possible_path] &&
+                        [my _jailed $possible_path]} {
+                        # File is a regular file and in allowed areas
+                        set path $possible_path
+                        break
                     }
                 }
             }
@@ -145,27 +140,19 @@ oo::class create FileCache {
                 # normalized form.  Paths that are themselves relative
                 # are qualified with the path specified with the
                 # -relativeroot option.
-                set path ""
                 foreach dir $opts(-dirs) {
                     # Note that the file join command will ignore 
                     # $opts(-relativeroot) if $dir is not relative. That's
                     # exactly what we want.
                     # TBD - should we use fileutil::fullnormalize instead ?
-                    set possible_path [file normalize [file join $opts(-relativeroot) $dir $tail]]
-                    if {[llength $opts(-extensions)] == 0} {
+                    set path_prefix [file normalize [file join $opts(-relativeroot) $dir $tail]]
+                    foreach ext $opts(-extensions) {
+                        set possible_path "${path_prefix}$ext"
                         if {[file isfile $possible_path] &&
                             [my _jailed $possible_path]} {
                             # File exists and is not outside jail
                             set path $possible_path
-                        }
-                    } else {
-                        foreach ext $opts(-extensions) {
-                            if {[file isfile ${possible_path}$ext] &&
-                                [my _jailed ${possible_path}$ext]} {
-                                # File exists and is not outside jail
-                                set path ${possible_path}$ext
-                                break
-                            }
+                            break
                         }
                     }
                     if {$path ne ""} {
