@@ -1,13 +1,46 @@
 <p>
-  A template processor is selected for every page section. Every page
-  section within a single page may of course use a different template format.
-  This selection is made based on the file extension of the page template.
-  The priority order of template processors is configurable for the
-    case where templates in multiple formats are available for a page section.
-    Note however that in most cases, such a situation is probably a bug
-    as the lower priority template will never get selected.
+The template processor that is selected for a page section is based
+on the file extension of the corresponding file. This mapping between
+file extensions and template processors is configured in the
+[my _chapter_link configuration "configuration file"] by setting the
+<code>template_processors</code> variable.
 </p>
 
-how added to app config
+<p>
+To add our Markdown template processor, we add the following to
+the <span class='ug-filename'>config/application.cfg</span> configuration
+file.
+</p>
 
-order of selection
+[my _code_sample {
+  init template_processors {
+    .wtf  ::woof::wtf
+    .md   ::woof::hoedown
+  }
+}]
+
+<p>
+  Files whose extensions <span class='wf-filename'>.md</span> will now
+  be processed with the <code>::woof::hoedown</code> command implemented
+  in the previous section. Note it is important to include the WTF
+  entry as well; otherwise, WTF files, including the default layout,
+  will not be processed.
+</p>
+
+<p>
+  The order of entries in the above list is important. When Woof! looks
+  for a template for a page section, it will look for files with the extensions
+  in the order specified. Generally though, a situation where there
+  are two template files that differ only in their extension is a bug
+  as only the one whose extension comes first in the list will ever be used.
+</p>
+
+<p>
+  Note that the template search mechanism described in 
+  [my _chapter_link locating_templates] which prefers more specific
+  templates over inherited ones still takes precedence over
+  the order of file extensions. For example, the file
+  <span class='ug-filename'><em>CONTROLLER-ACTION-SECTION</em>.md</span>
+  template will be selected in preference to
+  <span class='ug-filename'><em>CONTROLLER-SECTION</em>.wtf</span>.
+</p>
