@@ -26,7 +26,7 @@ positions the various page sections within the body.</p>
 }]
 
 <p>The above layout is defined in [my _chapter_link wtf] (WTF) format
-(with apologies if the acronym hurts anybody's sensibilities).
+(with apologies for hurting anyone's sensibilities).
 This is a mixture of Tcl code and HTML 
 markup. It starts with defining the standard HTML page headers. Within the body
 element, the above layout defines three sections - the header, the main

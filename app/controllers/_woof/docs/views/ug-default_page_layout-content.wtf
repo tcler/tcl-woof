@@ -31,13 +31,32 @@ provides sufficient flexibility for many applications.</p>
     <span class='ug-code'>main</span> section.
 </ul>
 
-<p><strong>All sections in the default layout are optional</strong>. Sections
-  that are empty are omitted from the generated Web page with the
-  exception of the main section which is always generated (as an empty section
-  if no content is defined for it). Section
-  content may be generated either through template files or directly
-  created by application code.</p>
+<p>
+  Section content may be generated either through template files or directly
+  created by application code.
+</p>
 
+<p><strong>All sections in the default layout are optional</strong>. 
+  Sections
+  for whom no template exists and which have not been 
+  [my _chapter_link page_section_direct "directly stored"]
+  are automatically omitted from the generated Web page.
+</p>
+
+<p>
+  Moreover, if a controller wants to make the visibility of a section
+  a runtime decision, it can do so by setting the 
+  <code>sections</code> key in
+  [my _chapter_link pagevar_object "<code>pagevar</code>"]. For example,
+</p>
+[my _code_sample {
+ pagevar set sections {header main}
+}]
+<p>
+will hide the sidebar, supplement and footer sections even if templates
+are defined for them. This can be set any time in the controller or
+action method before the page is rendered.
+</p>
 <p>Woof! uses the [my _chapter_link purecss "Pure CSS"] stylesheets to provide
   the underlying styles infrastructure for the default layout. The appropriate
   style classes are chosen based on which page sections being present.</p>
@@ -45,7 +64,7 @@ provides sufficient flexibility for many applications.</p>
 <h3>Customizing the default layout sections</h3>
 <p>
 The default layout sections can be customized to some degree through
-the corresponding key of the same name in the
+the corresponding key of the same name in
 [my _chapter_link pagevar_object "<code>pagevar</code>"]. The value
 should be a dictionary containing the settings for the section. For example,
 </p>
