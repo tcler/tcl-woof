@@ -46,7 +46,7 @@ $ie_compat
 
 <div class='pure-g'>
 %(
-  set sects {header sidebar main supplement footer}
+  set sects [pagevar get sections {header sidebar main supplement footer}]
   foreach sect $sects {
       page fetch $sect $sect
   }
@@ -79,7 +79,8 @@ $ie_compat
 
 %(
   set html ""
-  foreach sect $sects {
+  # Note the order of sects is important for layout to come out right
+  foreach sect {header sidebar main supplement footer} {
       if {[info exists $sect]} {
           set sect_settings [pagevar get $sect {}]
           set cssclasses [dict get $layout $sect cssclasses]
