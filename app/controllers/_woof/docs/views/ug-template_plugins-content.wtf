@@ -1,7 +1,8 @@
 <p>
 Although Woof! provides its own built-in template processor that uses 
 the WTF format, you can also install other template processors that can
-be used either in lieu of, or in addition to, the WTF processor.
+be used either in lieu of, or in addition to, the WTF processor. Even
+within a single page, different sections may use different processors.
 </p>
 
 <p>

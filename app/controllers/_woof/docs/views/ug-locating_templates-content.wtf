@@ -47,7 +47,7 @@ or action.
     <li>When the client indicates a preferred language. This is discussed
       in [my _chapter_link language_specific_pages].
     <li>When a template processor plug-in is installed. This is discussed
-      in [my _chapter_link template_plugins].
+      in [my _chapter_link template_plugin_config].
 </p>
 
 <h3>Example: Sharing templates</h3>
