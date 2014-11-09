@@ -1,6 +1,16 @@
-[woof::pure::menu [list \
-                       [list Welcome [my url_for -action welcome]] \
-                       [list Environment [my url_for -action print_env]] \
-                       [list Settings [my url_for -action print_config]]] \
-     -direction vertical]
+%(
+  set selected [file tail [request request_uri]]
+  set menu [list \
+                [list Welcome [my url_for -action welcome]] \
+                [list Environment [my url_for -action print_env]] \
+                [list Settings [my url_for -action print_config]]]
+
+  switch -exact -- $selected {
+      print_env { lset menu {1 2} selected }
+      print_config { lset menu {2 2} selected }
+      default { lset menu {0 2} selected }
+  }
+%)
+
+[woof::pure::menu $menu -direction vertical]
 

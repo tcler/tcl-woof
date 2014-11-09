@@ -97,9 +97,9 @@ should be a dictionary containing the settings for the section. For example,
               <code>header</code>,
               <code>footer</code>, <code>main</code>, <code>sidebar</code>
               and <code>supplement</code> are added to the CSS classes
-              <code>wf_header</code>, <code>wf_footer</code>,
-              <code>wf_main</code>, <code>wf_sidebar</code> and
-              <code>wf_supplement</code> respectively. If the
+              <code>wf-header</code>, <code>wf_footer</code>,
+              <code>wf-main</code>, <code>wf_sidebar</code> and
+              <code>wf-supplement</code> respectively. If the
               dictionary contains <code>cssclasses</code>, its value
               should be a list (possibly empty) of CSS class names that will
               replace the default class. As a special case, if the first
@@ -114,7 +114,7 @@ should be a dictionary containing the settings for the section. For example,
 
 <p>
   The CSS classes have a default style defined in the file 
-  <span class='wf_filename'>public/stylesheets/_layout.css</span> that is 
+  <span class='ug-filename'>public/stylesheets/_layout.css</span> that is 
   always loaded by the default layout. The
   application can override or modify these classes
   as desired in a separate CSS file and arrange for it to be loaded

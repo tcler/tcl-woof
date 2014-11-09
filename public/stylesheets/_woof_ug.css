@@ -1,15 +1,15 @@
 /* Woof User Guide CSS - assumes _woof.css loaded */
 
 /* Override _layout.css */
-.wf_main {
+.wf-main {
     padding-top: 0em;
 }
-.wf_sidebar {
+.wf-sidebar {
     padding-top: 0.5em;
 }
 
 /* Customize page sections */
-.wf_header {
+.wf-header {
     font-weight: bold;
     height: 48px;
     color: white;
@@ -22,46 +22,46 @@
     color: #E99A56;
 }
 
-.wf_header h2, .wf_header h3 {
+.wf-header h2, .wf-header h3 {
     margin: 0px;
 }
 
-.wf_sidebar .pure-menu.pure-menu-open {
+.wf-sidebar .pure-menu.pure-menu-open {
     border-width: 0;
     background-color: #006666;
 }
 
-.wf_sidebar .pure-menu .pure-menu-heading, .wf_sidebar .pure-menu a {
+.wf-sidebar .pure-menu .pure-menu-heading, .wf-sidebar .pure-menu a {
     color: #E99A56;
 }
 
-.wf_sidebar {
+.wf-sidebar {
     background-color: #006666;
 }
 
-.wf_main p {
+.wf-main p {
     line-height: 1.2em;
 }
 
-.wf_main h1, .wf_main h2 {
+.wf-main h1, .wf-main h2 {
   color: #888888;
   margin-bottom: 0.5em;
 }
 
-.wf_main h3, .wf_main h4 {
+.wf-main h3, .wf-main h4 {
   color: #777777;
   margin-bottom: 0.5em;
 }
 
-.wf_main h4 {
+.wf-main h4 {
   font-size: 93%;
 }
 
-.wf_main dt, dd {
+.wf-main dt, dd {
    font-size: 93%;
 }
 
-.wf_footer {
+.wf-footer {
     font-size: 77%;
     text-align: center;
     border-top: 1px solid #aaaaaa;
@@ -69,7 +69,7 @@
     margin-top: 10px;
 }
 
-.wf_sidebar {
+.wf-sidebar {
   font-size: 77%;
 }
 
@@ -77,32 +77,32 @@
   font-size: 93%;
 }
 
-.wf_sidebar h2 {
+.wf-sidebar h2 {
   margin-bottom: 0.2em;
   margin-top: 0em;
   color: white;
   font-size: 100%;
 }
 
-.wf_sidebar ul, .ug-hnav ul {
+.wf-sidebar ul, .ug-hnav ul {
   margin-left: 0;
   margin-top: 0;
   margin-bottom: 0;
   padding-left: 1em;
 }
 
-.wf_sidebar > ul {
+.wf-sidebar > ul {
   padding-left: 0em;
 }
 
-.wf_sidebar li, .ug-hnav li {
+.wf-sidebar li, .ug-hnav li {
   list-style-type: none;
   /* list-style-image: url(../images/_woof/navarrowright.png); */
   font-weight: bold;
   color: #e99a56;
 }
 
-.wf_sidebar a:link, .wf_sidebar a:visited {
+.wf-sidebar a:link, .wf-sidebar a:visited {
   text-decoration: none;
   font-weight: normal;
   color: white;
@@ -170,12 +170,12 @@
    text-align: center;
 }
 
-.wf_main code, .wf_main .ug-code {
+.wf-main code, .wf-main .ug-code {
    font-family: "Courier New", Courier, monospace;
    font-size: 93%;
 }
 
-.wf_main .ug-ui {
+.wf-main .ug-ui {
     color: blue;
 }
 
@@ -197,7 +197,7 @@ ul.ug-nobullets li {
    line-height: 1.2em;
 }
 
-.wf_main tbody {
+.wf-main tbody {
     vertical-align: top;
 }
 

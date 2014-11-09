@@ -2,7 +2,7 @@
 
 /* FYI - The Woof logo main color is #E99A56 */
 
-.wf_header {
+.wf-header {
     font-weight: bold;
     height: 48px;
     color: white;
@@ -15,30 +15,35 @@
     color: #E99A56;
 }
 
-.wf_header h2, .wf_header h3 {
+.wf-header h2, .wf-header h3 {
     margin: 0px;
 }
 
-.wf_sidebar .pure-menu.pure-menu-open {
+.wf-sidebar .pure-menu.pure-menu-open {
     border-width: 0;
     background-color: #006666;
 }
 
-.wf_sidebar .pure-menu .pure-menu-heading, .wf_sidebar .pure-menu a {
+.wf-sidebar .pure-menu .pure-menu-heading, .wf-sidebar .pure-menu a {
     color: #E99A56;
 }
 
-.wf_sidebar {
+.wf-sidebar .pure-menu .pure-menu-selected a {
+    color: #006666;
+    background-color: #E99A56;
+}
+
+.wf-sidebar {
     background-color: #006666;
 }
 
-.wf_main h1, .wf_main h2 {
+.wf-main h1, .wf-main h2 {
     color: #888888;
     margin-bottom: 0.5em;
     margin-top: 0.5em;
 }
 
-.wf_supplement h2 {
+.wf-supplement h2 {
   color: #177f75; /* #21b6a8; */
   margin-bottom: 0.2em;
   /* margin-top: 1.5em; */
@@ -46,29 +51,29 @@
   font-size: 93%;
 }
 
-.wf_supplement {
+.wf-supplement {
   font-size: 93%;
 }
 
-.wf_supplement ul {
+.wf-supplement ul {
   margin-top: 0em;
   padding-left: 1em;
 }
 
-.wf_supplement ul li {
+.wf-supplement ul li {
   list-style: none;
 }
 
-.wf_supplement a {
+.wf-supplement a {
   color: #177f75;
   text-decoration: none;
 }
 
-.wf_supplement li a:hover {
+.wf-supplement li a:hover {
   font-weight: bold;
 }
 
-.wf_footer p {
+.wf-footer p {
   text-align: center;
   font-size: smaller;
   color: #808080;
