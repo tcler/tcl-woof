@@ -64,9 +64,8 @@ proc pure::button {text args} {
 
 proc pure::menu {menudefs args} {
     # Returns the HTML for a Pure CSS styled menu
-    #
     #  menudefs - list of menu definitions
-    #  -classes - list of additional CSS classes to add to the menu
+    #  -classes CLASSES - list of additional CSS classes to add to the menu
     #  -orient DIRECTION - specifies orientation of the menu. By default,
     #   it is displayed horizontally. See below for possible other values.
     #  -heading TEXT - text to display as the heading for the menu
