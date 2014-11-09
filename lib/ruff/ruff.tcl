@@ -22,7 +22,7 @@ if {[info commands dict] == ""} {
 }
 
 namespace eval ruff {
-    variable version 0.4.1
+    variable version 0.4.2
 
     variable names
     set names(display) "Ruff!"
@@ -359,7 +359,11 @@ proc ruff::parse {lines} {
                 # Any paragraph that begins with the word 'Returns' is treated
                 # as a description of the return value irrespective of where
                 # it occurs. It is returned as a list of lines.
-                _change_state return result
+                if {$result(state) eq "init"} {
+                    _change_state summary result
+                } else {
+                    _change_state return result
+                }
                 lappend result(fragment) $line
             }
             {^\s+} {
@@ -410,6 +414,17 @@ proc ruff::parse {lines} {
     }
     _change_state finish result; # To process any leftovers in result(fragment)
 
+    # Special case where the Returns is also the summary
+    if {![dict exists $result(output) return] &&
+        [dict exists $result(output) summary]} {
+        set summary_line [lindex [dict get $result(output) summary] 0]
+        if {[string match -nocase "returns *" $summary_line]} {
+            dict set result(output) return [dict get $result(output) summary]
+        }
+    }
+    
+
+    #ruff
     # Returns a list of key value pairs where key is one 
     # of 'parameter', 'option', 'bulletlist', 'deflist', 'parameter',
     # 'preformatted', 'paragraph' or 'return',
@@ -756,7 +771,8 @@ proc ruff::extract_proc_or_method {proctype procname param_names param_defaults 
                         set params($name) [join $desc " "]
                     } else {
                         #TBD - how to handle this? For now, assume it's
-                        #a parameter as well
+                        #a parameter as well. Perhaps it might be a possible
+                        #token in the args parameter
                         app::log_error "Parameter '$name' not listed in arguments for '$procname'"
                         set params($name) [join $desc " "]
                     }
