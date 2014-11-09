@@ -63,6 +63,7 @@ proc pure::button {text args} {
 proc pure::menu {menudefs args} {
     # Returns the HTML for a Pure CSS styled menu
     #  menudefs - list of menu definitions
+    #  -classes - list of additional CSS classes to add to the menu
     #  -direction horizontal|vertical - specifies whether the menu is 
     #   displayed horizontally (default) or vertically
     #  -heading TEXT - text to display as the heading for the menu
@@ -79,7 +80,11 @@ proc pure::menu {menudefs args} {
         append html " pure-menu-horizontal"
     }
 
-    append html "'>"
+    if {[dict exists $args -classes]} {
+        append html " [join [dict get $args -classes]]'>"
+    } else {
+        append html "'>"
+    }
 
     if {[dict exists $args -heading]} {
         append html "<a class='pure-menu-heading'>[util::hesc [dict get $args -heading]]</a>"

@@ -9,7 +9,7 @@ Create the file
 the following content.
 </p>
 [my _code_sample {
- .wf_header {
+ .wf-header {
     color: #c16e8c;
     background-color: #efece3;
     padding: 15px;

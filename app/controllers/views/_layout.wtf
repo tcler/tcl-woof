@@ -1,11 +1,11 @@
 %(
   set layout {
       page {width 24 skin {}}
-      header {tag header cssclasses wf_header}
-      footer {tag footer cssclasses wf_footer}
-      main {tag main cssclasses wf_main width 14}
-      sidebar {tag nav cssclasses wf_sidebar width 5}
-      supplement {tag aside cssclasses wf_supplement width 5}
+      header {tag header cssclasses wf-header}
+      footer {tag footer cssclasses wf-footer}
+      main {tag main cssclasses wf-main width 14}
+      sidebar {tag nav cssclasses wf-sidebar width 5}
+      supplement {tag aside cssclasses wf-supplement width 5}
   }
 %)
 

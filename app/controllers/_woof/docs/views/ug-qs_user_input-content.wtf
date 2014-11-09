@@ -35,7 +35,7 @@ sequence desired. To implement this, we first modify the page template in
 element at the top to allow the user to enter the desired length of
 the generated sequence. We have named this field
 as <code>numfibos</code>. When
-the <span class="wf_demotext">Generate</span> button is clicked, the
+the <span class="ug-ui">Generate</span> button is clicked, the
 form will be submitted to the same URL resulting in
 the <code>generate </code>method being called.</p>
 
