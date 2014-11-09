@@ -395,6 +395,8 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_cmd'>version</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the <a href='#::woof::version'>version</a> of Woof</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns the <a href='#::woof::version'>version</a> of Woof</p>
 
 
 
@@ -438,6 +440,8 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p class='linkline'><a href='#::woof::Controller'>Controller</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns the name of the <a href='#::woof::Controller::action'>action</a> specified in the current request.</p>
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>action</span> </div></p>
 <h6 class='ruff'>Return value</h6>
+<p class='ruff'>Returns the name of the <a href='#::woof::Controller::action'>action</a> specified in the current request.</p>
+<h6 class='ruff'>Description</h6>
 <p class='ruff'>Returns the name of the <a href='#::woof::Controller::action'>action</a> specified in the current request.</p>
 
 <h5 class='ruff'><a name='::woof::Controller::include_image'>include_image</a><span class='ns_scope'> [<a href='#::woof::Controller'>::woof::Controller</a>]</span></h5>
@@ -681,12 +685,16 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>cookies</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns a list of all <a href='#::woof::CookiesOut::cookies'>cookies</a>. Each element of the returned list is a cookie value, including attributes if any, that can be used as the value of a HTTP Set-Cookie header.</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns a list of all <a href='#::woof::CookiesOut::cookies'>cookies</a>. Each element of the returned list is a cookie value, including attributes if any, that can be used as the value of a HTTP Set-Cookie header.</p>
 
 <h5 class='ruff'><a name='::woof::CookiesOut::count'>count</a><span class='ns_scope'> [<a href='#::woof::CookiesOut'>::woof::CookiesOut</a>]</span></h5>
 
 <p class='linkline'><a href='#::woof::CookiesOut'>CookiesOut</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns the number of defined <a href='#::woof::CookiesOut::cookies'>cookies</a>.</p>
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>count</span> </div></p>
 <h6 class='ruff'>Return value</h6>
+<p class='ruff'>Returns the number of defined <a href='#::woof::CookiesOut::cookies'>cookies</a>.</p>
+<h6 class='ruff'>Description</h6>
 <p class='ruff'>Returns the number of defined <a href='#::woof::CookiesOut::cookies'>cookies</a>.</p>
 
 <h5 class='ruff'><a name='::woof::CookiesOut::exists'>exists</a><span class='ns_scope'> [<a href='#::woof::CookiesOut'>::woof::CookiesOut</a>]</span></h5>
@@ -729,14 +737,12 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>keys</span> <span class='ruff_arg'>pattern</span></div></p>
 <h6 class='ruff'>Parameters</h6>
 <table class='ruff_deflist'>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>pattern</span></td><td class='ruff_defitem'>(optional, default <span class='ruff_const'>*</span>)</td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>pattern</span></td><td class='ruff_defitem'>(optional, default <span class='ruff_const'>*</span>)  pattern to match using the same  syntax as the Tcl string match command.</td></tr>
 </table>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns a list of defined cookie names matching a pattern</p>
 <h6 class='ruff'>Description</h6>
-<table class='ruff_deflist'>
-<tr><td class='ruff_defitem'>pattern</td><td class='ruff_defitem'> pattern to match using the same  syntax as the Tcl string match command.</td></tr>
-</table>
+<p class='ruff'>Returns a list of defined cookie names matching a pattern</p>
 
 <h5 class='ruff'><a name='::woof::CookiesOut::set'>set</a><span class='ns_scope'> [<a href='#::woof::CookiesOut'>::woof::CookiesOut</a>]</span></h5>
 
@@ -1142,7 +1148,6 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the URL path where the application is rooted.</p>
 <h6 class='ruff'>Description</h6>
-<p class='ruff'>This is NOT necessarily the same as the <span class='ruff_const'>url_root</span> value in the Woof! config dictionary and is dependent on how the web server is configured. For example, with IIS using SCGI, /myapp maybe mapped to /myapp/isapi_scgi.dll. This method will return the latter though the former is the value of <span class='ruff_const'>url_root</span> in the configuration file.</p>
 <p class='ruff'>Note the returned path does not include the <a href='#::woof::Request::protocol'>protocol</a>, <a href='#::woof::Request::host'>host</a> or <a href='#::woof::Request::port'>port</a> number.</p>
 
 <h5 class='ruff'><a name='::woof::Request::delete?'>delete?</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
@@ -1151,12 +1156,16 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>delete?</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns true if the HTTP request method was a DELETE and false otherwise.</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns true if the HTTP request method was a DELETE and false otherwise.</p>
 
 <h5 class='ruff'><a name='::woof::Request::formatted_host_with_port'>formatted_host_with_port</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
 
 <p class='linkline'><a href='#::woof::Request'>Request</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns the <a href='#::woof::Request::host'>host</a> and <a href='#::woof::Request::port'>port</a> associated with this request. If the request came over the standard <a href='#::woof::Request::port'>port</a> for the <a href='#::woof::Request::protocol'>protocol</a>, it is not included in the returned string.</p>
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>formatted_host_with_port</span> </div></p>
 <h6 class='ruff'>Return value</h6>
+<p class='ruff'>Returns the <a href='#::woof::Request::host'>host</a> and <a href='#::woof::Request::port'>port</a> associated with this request. If the request came over the standard <a href='#::woof::Request::port'>port</a> for the <a href='#::woof::Request::protocol'>protocol</a>, it is not included in the returned string.</p>
+<h6 class='ruff'>Description</h6>
 <p class='ruff'>Returns the <a href='#::woof::Request::host'>host</a> and <a href='#::woof::Request::port'>port</a> associated with this request. If the request came over the standard <a href='#::woof::Request::port'>port</a> for the <a href='#::woof::Request::protocol'>protocol</a>, it is not included in the returned string.</p>
 
 <h5 class='ruff'><a name='::woof::Request::get?'>get?</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
@@ -1165,6 +1174,8 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>get?</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns true if the HTTP request method was a GET and false otherwise.</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns true if the HTTP request method was a GET and false otherwise.</p>
 
 <h5 class='ruff'><a name='::woof::Request::get_or_head?'>get_or_head?</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
 
@@ -1172,12 +1183,16 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>get_or_head?</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns true if the HTTP request method was a GET or HEAD and false otherwise.</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns true if the HTTP request method was a GET or HEAD and false otherwise.</p>
 
 <h5 class='ruff'><a name='::woof::Request::head?'>head?</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
 
 <p class='linkline'><a href='#::woof::Request'>Request</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns true if the HTTP request method was a HEAD and false otherwise.</p>
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>head?</span> </div></p>
 <h6 class='ruff'>Return value</h6>
+<p class='ruff'>Returns true if the HTTP request method was a HEAD and false otherwise.</p>
+<h6 class='ruff'>Description</h6>
 <p class='ruff'>Returns true if the HTTP request method was a HEAD and false otherwise.</p>
 
 <h5 class='ruff'><a name='::woof::Request::host'>host</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
@@ -1190,6 +1205,8 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>port</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the <a href='#::woof::Request::port'>port</a> on which the request was received.</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns the <a href='#::woof::Request::port'>port</a> on which the request was received.</p>
 
 <h5 class='ruff'><a name='::woof::Request::post?'>post?</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
 
@@ -1197,12 +1214,16 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>post?</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns true if the HTTP request method was a POST and false otherwise.</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns true if the HTTP request method was a POST and false otherwise.</p>
 
 <h5 class='ruff'><a name='::woof::Request::protocol'>protocol</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
 
 <p class='linkline'><a href='#::woof::Request'>Request</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns the connection <a href='#::woof::Request::protocol'>protocol</a> over which the request was received.</p>
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>protocol</span> </div></p>
 <h6 class='ruff'>Return value</h6>
+<p class='ruff'>Returns the connection <a href='#::woof::Request::protocol'>protocol</a> over which the request was received.</p>
+<h6 class='ruff'>Description</h6>
 <p class='ruff'>Returns the connection <a href='#::woof::Request::protocol'>protocol</a> over which the request was received.</p>
 
 <h5 class='ruff'><a name='::woof::Request::query_string'>query_string</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
@@ -1220,12 +1241,16 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>referer</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the HTTP_REFERER header in the request if present, else an empty string</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns the HTTP_REFERER header in the request if present, else an empty string</p>
 
 <h5 class='ruff'><a name='::woof::Request::remote_addr'>remote_addr</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
 
 <p class='linkline'><a href='#::woof::Request'>Request</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns the address of the remote client if available, else an empty string.</p>
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>remote_addr</span> </div></p>
 <h6 class='ruff'>Return value</h6>
+<p class='ruff'>Returns the address of the remote client if available, else an empty string.</p>
+<h6 class='ruff'>Description</h6>
 <p class='ruff'>Returns the address of the remote client if available, else an empty string.</p>
 
 <h5 class='ruff'><a name='::woof::Request::request_method'>request_method</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
@@ -1234,12 +1259,16 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>request_method</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the HTTP method in the request.</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns the HTTP method in the request.</p>
 
 <h5 class='ruff'><a name='::woof::Request::request_uri'>request_uri</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
 
 <p class='linkline'><a href='#::woof::Request'>Request</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns the request URI (the portion after the hostname/<a href='#::woof::Request::port'>port</a>) for the request.</p>
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>request_uri</span> </div></p>
 <h6 class='ruff'>Return value</h6>
+<p class='ruff'>Returns the request URI (the portion after the hostname/<a href='#::woof::Request::port'>port</a>) for the request.</p>
+<h6 class='ruff'>Description</h6>
 <p class='ruff'>Returns the request URI (the portion after the hostname/<a href='#::woof::Request::port'>port</a>) for the request.</p>
 
 <h5 class='ruff'><a name='::woof::Request::resource_url'>resource_url</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
@@ -1257,6 +1286,8 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>ssl?</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns true if the request came over an SSL connection and false otherwise.</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns true if the request came over an SSL connection and false otherwise.</p>
 
 <h5 class='ruff'><a name='::woof::Request::standard_port'>standard_port</a><span class='ns_scope'> [<a href='#::woof::Request'>::woof::Request</a>]</span></h5>
 
@@ -1272,6 +1303,8 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p class='linkline'><a href='#::woof::Request'>Request</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns the full URL for the request</p>
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>url</span> </div></p>
 <h6 class='ruff'>Return value</h6>
+<p class='ruff'>Returns the full URL for the request</p>
+<h6 class='ruff'>Description</h6>
 <p class='ruff'>Returns the full URL for the request</p>
 
 
@@ -1290,7 +1323,7 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <tr><td class='ruff_defitem'><a href='#::woof::Response::redirect'>redirect</a></td><td class='ruff_defitem'>Sets the response to be a HTTP redirect</td></tr>
 <tr><td class='ruff_defitem'><a href='#::woof::Response::reset'>reset</a></td><td class='ruff_defitem'>Currently not implemented.</td></tr>
 <tr><td class='ruff_defitem'><a href='#::woof::Response::status'>status</a></td><td class='ruff_defitem'>Sets or returns the HTTP response status code to be sent to the client.</td></tr>
-<tr><td class='ruff_defitem'><a href='#::woof::Response::status_line'>status_line</a></td><td class='ruff_defitem'>Returns the full HTTP response line.</td></tr>
+<tr><td class='ruff_defitem'><a href='#::woof::Response::status_line'>status_line</a></td><td class='ruff_defitem'>Returns the HTTP response status line to be sent to the client.</td></tr>
 </table>
 
 <h5 class='ruff'><a name='::woof::Response::constructor'>constructor</a><span class='ns_scope'> [<a href='#::woof::Response'>::woof::Response</a>]</span></h5>
@@ -1427,10 +1460,12 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 
 <h5 class='ruff'><a name='::woof::Response::status_line'>status_line</a><span class='ns_scope'> [<a href='#::woof::Response'>::woof::Response</a>]</span></h5>
 
-<p class='linkline'><a href='#::woof::Response'>Response</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns the full HTTP response line.</p>
+<p class='linkline'><a href='#::woof::Response'>Response</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns the HTTP response <a href='#::woof::Response::status'>status</a> line to be sent to the client.</p>
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>status_line</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the full HTTP response line.</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns the HTTP response <a href='#::woof::Response::status'>status</a> line to be sent to the client.</p>
 
 
 
@@ -1502,12 +1537,16 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>id</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the session <a href='#::woof::Session::id'>id</a> for this session.</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns the session <a href='#::woof::Session::id'>id</a> for this session.</p>
 
 <h5 class='ruff'><a name='::woof::Session::id_name'>id_name</a><span class='ns_scope'> [<a href='#::woof::Session'>::woof::Session</a>]</span></h5>
 
 <p class='linkline'><a href='#::woof::Session'>Session</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns the name of the key used for the session <a href='#::woof::Session::id'>id</a></p>
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>id_name</span> </div></p>
 <h6 class='ruff'>Return value</h6>
+<p class='ruff'>Returns the name of the key used for the session <a href='#::woof::Session::id'>id</a></p>
+<h6 class='ruff'>Description</h6>
 <p class='ruff'>Returns the name of the key used for the session <a href='#::woof::Session::id'>id</a></p>
 
 <h5 class='ruff'><a name='::woof::Session::load'>load</a><span class='ns_scope'> [<a href='#::woof::Session'>::woof::Session</a>]</span></h5>
@@ -1572,16 +1611,13 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_cmd'>help</span> <span class='ruff_arg'>facility</span> <span class='ruff_arg'>symbol</span></div></p>
 <h6 class='ruff'>Parameters</h6>
 <table class='ruff_deflist'>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>facility</span></td><td class='ruff_defitem'></td></tr>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>symbol</span></td><td class='ruff_defitem'></td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>facility</span></td><td class='ruff_defitem'> the error facility, generally WOOF or WOOF_USER</td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>symbol</span></td><td class='ruff_defitem'> the symbolic name of the error</td></tr>
 </table>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the <a href='#::woof::errors::help'>help</a> message, if any, associated with the given facility and symbol.</p>
 <h6 class='ruff'>Description</h6>
-<table class='ruff_deflist'>
-<tr><td class='ruff_defitem'>facility</td><td class='ruff_defitem'> the error facility, generally WOOF or WOOF_USER</td></tr>
-<tr><td class='ruff_defitem'>symbol</td><td class='ruff_defitem'> the symbolic name of the error</td></tr>
-</table>
+<p class='ruff'>Returns the <a href='#::woof::errors::help'>help</a> message, if any, associated with the given facility and symbol.</p>
 
 
 
@@ -1593,7 +1629,7 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_cmd'>button</span> <span class='ruff_arg'>text</span> <span class='ruff_arg'>args</span></div></p>
 <h6 class='ruff'>Parameters</h6>
 <table class='ruff_deflist'>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>text</span></td><td class='ruff_defitem'></td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>text</span></td><td class='ruff_defitem'> text to display in the <a href='#::woof::pure::button'>button</a>.    This is HTML-escaped before display.</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>args</span></td><td class='ruff_defitem'>Additional options.</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-classes CSSCLASSES</span></td><td class='ruff_defitem'> additional CSS classes to style the <a href='#::woof::pure::button'>button</a>.</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-enabled BOOLEAN</span></td><td class='ruff_defitem'> controls whether <a href='#::woof::pure::button'>button</a> is enabled (default) or not</td></tr>
@@ -1605,9 +1641,7 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the HTML for a Pure CSS styled <a href='#::woof::pure::button'>button</a></p>
 <h6 class='ruff'>Description</h6>
-<table class='ruff_deflist'>
-<tr><td class='ruff_defitem'>text</td><td class='ruff_defitem'> text to display in the <a href='#::woof::pure::button'>button</a>.    This is HTML-escaped before display.</td></tr>
-</table>
+<p class='ruff'>Returns the HTML for a Pure CSS styled <a href='#::woof::pure::button'>button</a></p>
 <table class='ruff_deflist'>
 <tr><td class='ruff_defitem'>-<span class='ruff_cmd'>url</span></td><td class='ruff_defitem'> URL to link to</td></tr>
 </table>
@@ -1620,7 +1654,7 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_cmd'>form</span> <span class='ruff_arg'>formdef</span> <span class='ruff_arg'>args</span></div></p>
 <h6 class='ruff'>Parameters</h6>
 <table class='ruff_deflist'>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>formdef</span></td><td class='ruff_defitem'></td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>formdef</span></td><td class='ruff_defitem'> <a href='#::woof::pure::form'>form</a> definition list as described below</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>args</span></td><td class='ruff_defitem'>Additional options.</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-layout inline|stacked|aligned</span></td><td class='ruff_defitem'> Specifies the <a href='#::woof::pure::form'>form</a> layout which may     be aligned (labels next to entry fields), stacked     (labels above entry fields) or inline     (all fields on the same line, default)</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-title TEXT</span></td><td class='ruff_defitem'> a legend to use for the <a href='#::woof::pure::form'>form</a></td></tr>
@@ -1628,14 +1662,6 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns a PureCSS styled <a href='#::woof::pure::form'>form</a></p>
 <h6 class='ruff'>Description</h6>
-<table class='ruff_deflist'>
-<tr><td class='ruff_defitem'>formdef</td><td class='ruff_defitem'> <a href='#::woof::pure::form'>form</a> definition list as described below</td></tr>
-</table>
-<p class='ruff'>The <a href='#::woof::pure::form'>form</a> definition is specified as a list of pairs with the first element of the pair specifying the <a href='#::woof::pure::form'>form</a> element type, such as <a href='#::woof::pure::button'>button</a>, and the second its definition. These <a href='#::woof::pure::form'>form</a> element types are described below.</p>
-<p class='ruff'>The <span class='ruff_const'>fieldset</span> <a href='#::woof::pure::form'>form</a> element corresponds to a HTML &lt;fieldset&gt; tag. The second element of the pair is itself a <a href='#::woof::pure::form'>form</a> definition using the same format described here.</p>
-<p class='ruff'>The <span class='ruff_const'>fieldgroup</span> <a href='#::woof::pure::form'>form</a> element is like fieldset except that the contained controls are visually grouped together with no padding.</p>
-<p class='ruff'>The <span class='ruff_const'>buttons</span> <a href='#::woof::pure::form'>form</a> element creates one or more buttons groups. The second element of the pair is a list each element of which is a list of arguments to pass to the [pure::button] command.</p>
-<p class='ruff'>The '<a href='#::woof::pure::button'>button</a>' <a href='#::woof::pure::form'>form</a> element creates a single <a href='#::woof::pure::button'>button</a>. The second element of the pair is the list of arguments to pass to the [pure::button] command.</p>
 <p class='ruff'>The <span class='ruff_const'>input</span> <a href='#::woof::pure::form'>form</a> element creates a label and an associated text entry field. The second element of the pair is a dictionary with the following <span class='ruff_cmd'>keys</span> and corresponding values. Keys that are optional are indicated as such.</p>
 <table class='ruff_deflist'>
 <tr><td class='ruff_defitem'>-enabled</td><td class='ruff_defitem'> a boolean value (optional, default 1) that marks      the field as enabled or not</td></tr>
@@ -1658,24 +1684,20 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_cmd'>menu</span> <span class='ruff_arg'>menudefs</span> <span class='ruff_arg'>args</span></div></p>
 <h6 class='ruff'>Parameters</h6>
 <table class='ruff_deflist'>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>menudefs</span></td><td class='ruff_defitem'></td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>menudefs</span></td><td class='ruff_defitem'> list of <a href='#::woof::pure::menu'>menu</a> definitions</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>args</span></td><td class='ruff_defitem'>Additional options.</td></tr>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>-direction horizontal|vertical</span></td><td class='ruff_defitem'> specifies whether the <a href='#::woof::pure::menu'>menu</a> is   displayed horizontally (default) or vertically</td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>-classes CLASSES</span></td><td class='ruff_defitem'> list of additional CSS classes to add to the <a href='#::woof::pure::menu'>menu</a></td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-heading TEXT</span></td><td class='ruff_defitem'> text to display as the heading for the <a href='#::woof::pure::menu'>menu</a></td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>-orient DIRECTION</span></td><td class='ruff_defitem'> specifies orientation of the <a href='#::woof::pure::menu'>menu</a>. By default,   it is displayed horizontally. See below for possible other values.</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-state open|closed</span></td><td class='ruff_defitem'> specifies whether to display the <a href='#::woof::pure::menu'>menu</a> as     open (default) or closed</td></tr>
 </table>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the HTML for a Pure CSS styled <a href='#::woof::pure::menu'>menu</a></p>
 <h6 class='ruff'>Description</h6>
-<table class='ruff_deflist'>
-<tr><td class='ruff_defitem'>menudefs</td><td class='ruff_defitem'> list of <a href='#::woof::pure::menu'>menu</a> definitions</td></tr>
-</table>
-<p class='ruff'><span class='ruff_arg'>menudefs</span> should be a list with each element defining one item in the <a href='#::woof::pure::menu'>menu</a>. Each element is a sublist consisting of the text to display, the target URL for the item and zero or more attributes for the <a href='#::woof::pure::menu'>menu</a> item. Currently defined attributes are</p>
+<p class='ruff'>If the target URL is empty, the <a href='#::woof::pure::menu'>menu</a> item is shown disabled.</p>
 <table class='ruff_deflist'>
 <tr><td class='ruff_defitem'>selected</td><td class='ruff_defitem'> the <a href='#::woof::pure::menu'>menu</a> item is shown selected</td></tr>
 </table>
-<p class='ruff'>Unknown attributes values are ignored.</p>
-<p class='ruff'>If the target URL is empty, the <a href='#::woof::pure::menu'>menu</a> item is shown disabled.</p>
 
 
 
@@ -1685,8 +1707,8 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_cmd'>paginator</span> <span class='ruff_arg'>range</span> <span class='ruff_arg'>url_prefix</span> <span class='ruff_arg'>args</span></div></p>
 <h6 class='ruff'>Parameters</h6>
 <table class='ruff_deflist'>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>range</span></td><td class='ruff_defitem'></td></tr>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>url_prefix</span></td><td class='ruff_defitem'></td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>range</span></td><td class='ruff_defitem'> list of one or two integers denoting the range of page numbers.     If the second number is omitted, there is no upper limit.</td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>url_prefix</span></td><td class='ruff_defitem'> the prefix of the URL to use for each page. The page     number is appended to this when constructing the URL for each     <a href='#::woof::pure::button'>button</a>.</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>args</span></td><td class='ruff_defitem'>Additional options.</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-active NUMBER</span></td><td class='ruff_defitem'> the page number that is currently active</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-count COUNT</span></td><td class='ruff_defitem'> Number of page buttons</td></tr>
@@ -1695,10 +1717,7 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns HTML for a Pure CSS formatted <a href='#::woof::pure::paginator'>paginator</a></p>
 <h6 class='ruff'>Description</h6>
-<table class='ruff_deflist'>
-<tr><td class='ruff_defitem'>range</td><td class='ruff_defitem'> list of one or two integers denoting the range of page numbers.     If the second number is omitted, there is no upper limit.</td></tr>
-<tr><td class='ruff_defitem'>url_prefix</td><td class='ruff_defitem'> the prefix of the URL to use for each page. The page     number is appended to this when constructing the URL for each     <a href='#::woof::pure::button'>button</a>.</td></tr>
-</table>
+<p class='ruff'>Returns HTML for a Pure CSS formatted <a href='#::woof::pure::paginator'>paginator</a></p>
 
 
 
@@ -1708,18 +1727,17 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_cmd'>table</span> <span class='ruff_arg'>data</span> <span class='ruff_arg'>args</span></div></p>
 <h6 class='ruff'>Parameters</h6>
 <table class='ruff_deflist'>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>data</span></td><td class='ruff_defitem'></td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>data</span></td><td class='ruff_defitem'> list of sublists with each sublist corresponding to a <a href='#::woof::pure::table'>table</a> row</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>args</span></td><td class='ruff_defitem'>Additional options.</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-borders vertical|horizontal|both</span></td><td class='ruff_defitem'> specifies which cell borders are     drawn. By default only the vertical borders are drawn.</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-heading HEADER</span></td><td class='ruff_defitem'> specifies the <a href='#::woof::pure::table'>table</a> heading.</td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>-raw BOOLEAN</span></td><td class='ruff_defitem'> if true, heading and cell contents are not HTML-escaped.     Default is false.</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-stripes BOOLEAN</span></td><td class='ruff_defitem'> if true, alternate <a href='#::woof::pure::table'>table</a> rows are shaded. Default     is false.</td></tr>
 </table>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the HTML for a Pure CSS styled <a href='#::woof::pure::table'>table</a></p>
 <h6 class='ruff'>Description</h6>
-<table class='ruff_deflist'>
-<tr><td class='ruff_defitem'>data</td><td class='ruff_defitem'> list of sublists with each sublist corresponding to a <a href='#::woof::pure::table'>table</a> row</td></tr>
-</table>
+<p class='ruff'>Returns the HTML for a Pure CSS styled <a href='#::woof::pure::table'>table</a></p>
 
 
 
@@ -1732,20 +1750,14 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <h6 class='ruff'>Parameters</h6>
 <table class='ruff_deflist'>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>routes</span></td><td class='ruff_defitem'></td></tr>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>curl</span></td><td class='ruff_defitem'></td></tr>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>action</span></td><td class='ruff_defitem'></td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>curl</span></td><td class='ruff_defitem'>  URL fragment for the controller</td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>action</span></td><td class='ruff_defitem'> name of the <span class='ruff_cmd'>action</span></td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>args</span></td><td class='ruff_defitem'>Additional options.</td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>-parameters PARAMLIST</span></td><td class='ruff_defitem'> dictionary containing parameter values</td></tr>
 </table>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns a URL constructed from specified controller, <span class='ruff_cmd'>action</span> and parameters</p>
 <h6 class='ruff'>Description</h6>
-<table class='ruff_deflist'>
-<tr><td class='ruff_defitem'>curl</td><td class='ruff_defitem'>  URL fragment for the controller</td></tr>
-<tr><td class='ruff_defitem'><span class='ruff_cmd'>action</span></td><td class='ruff_defitem'> name of the <span class='ruff_cmd'>action</span></td></tr>
-</table>
-<p class='ruff'>The command searches for route definitions whose controller URL matches the one passed in and whose <span class='ruff_cmd'>action</span> definitions include the <span class='ruff_cmd'>action</span> passed in.</p>
-<p class='ruff'>In addition, if the route being matched has parameter definitions, each parameter must be included in PARAMLIST or have a default specified. In the former case, the parameter value must satisfy the match expression of the route definition, if any.</p>
 <p class='ruff'>The first route matching the above conditions is used to <a href='#::woof::route::construct'>construct</a> a relative URL. If any parameters from PARAMLIST were left over, they are included as query parameters.</p>
 
 
@@ -1874,18 +1886,14 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_cmd'>dict_get</span> <span class='ruff_arg'>dict</span> <span class='ruff_arg'>key</span> <span class='ruff_arg'>default_value</span></div></p>
 <h6 class='ruff'>Parameters</h6>
 <table class='ruff_deflist'>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>dict</span></td><td class='ruff_defitem'></td></tr>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>key</span></td><td class='ruff_defitem'></td></tr>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>default_value</span></td><td class='ruff_defitem'></td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>dict</span></td><td class='ruff_defitem'> the dictionary</td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>key</span></td><td class='ruff_defitem'> the key to retrieve. Nested <span class='ruff_cmd'>keys</span> are not supported</td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>default_value</span></td><td class='ruff_defitem'> default value to return if key is not present</td></tr>
 </table>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns the value for a key from a dictionary and a default if the key is not present</p>
 <h6 class='ruff'>Description</h6>
-<table class='ruff_deflist'>
-<tr><td class='ruff_defitem'>dict</td><td class='ruff_defitem'> the dictionary</td></tr>
-<tr><td class='ruff_defitem'>key</td><td class='ruff_defitem'> the key to retrieve. Nested <span class='ruff_cmd'>keys</span> are not supported</td></tr>
-<tr><td class='ruff_defitem'>default_value</td><td class='ruff_defitem'> default value to return if key is not present</td></tr>
-</table>
+<p class='ruff'>Returns the value for a key from a dictionary and a default if the key is not present</p>
 
 
 
@@ -1934,14 +1942,12 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_cmd'>generate_name</span> <span class='ruff_arg'>prefix</span></div></p>
 <h6 class='ruff'>Parameters</h6>
 <table class='ruff_deflist'>
-<tr><td class='ruff_defitem'><span class='ruff_arg'>prefix</span></td><td class='ruff_defitem'>(optional, default <span class='ruff_const'>::woof::id_</span>)</td></tr>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>prefix</span></td><td class='ruff_defitem'>(optional, default <span class='ruff_const'>::woof::id_</span>)  a prefix to be used for the name</td></tr>
 </table>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns a new generated name</p>
 <h6 class='ruff'>Description</h6>
-<table class='ruff_deflist'>
-<tr><td class='ruff_defitem'>prefix</td><td class='ruff_defitem'> a prefix to be used for the name</td></tr>
-</table>
+<p class='ruff'>Returns a new generated name</p>
 
 
 
@@ -2266,6 +2272,8 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>dirty?</span> </div></p>
 <h6 class='ruff'>Return value</h6>
 <p class='ruff'>Returns true if the object has been modified since it was constructed and false otherwise</p>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>Returns true if the object has been modified since it was constructed and false otherwise</p>
 
 <h5 class='ruff'><a name='::woof::util::DirtyMap::init'>init</a><span class='ns_scope'> [<a href='#::woof::util::DirtyMap'>::woof::util::DirtyMap</a>]</span></h5>
 
@@ -2352,6 +2360,8 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <p class='linkline'><a href='#::woof::util::Map'>Map</a>, <a href='#_top'>Top</a></p><p class='ruff'>Returns the number of <a href='#::woof::util::Map::keys'>keys</a> in the object.</p>
 <p><div class='ruff_synopsis'><span class='ruff_arg'>OBJECT</span> <span class='ruff_cmd'>count</span> </div></p>
 <h6 class='ruff'>Return value</h6>
+<p class='ruff'>Returns the number of <a href='#::woof::util::Map::keys'>keys</a> in the object.</p>
+<h6 class='ruff'>Description</h6>
 <p class='ruff'>Returns the number of <a href='#::woof::util::Map::keys'>keys</a> in the object.</p>
 
 <h5 class='ruff'><a name='::woof::util::Map::exists'>exists</a><span class='ns_scope'> [<a href='#::woof::util::Map'>::woof::util::Map</a>]</span></h5>
@@ -2475,6 +2485,16 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 
 <h1 class='ruff'><a name='::woof::wtf'>::woof::wtf</a></h1>
 <h2 class='ruff'><a name='::woof::wtf-Commands'>Commands</a></h2>
+<h4 class='ruff'><a name='::woof::wtf::compile'>compile</a><span class='ns_scope'> [<a href='#::woof::wtf'>::woof::wtf</a>]</span></h4>
+
+<p class='linkline'><a href='#::woof::wtf'>wtf</a>, <a href='#_top'>Top</a></p><p><div class='ruff_synopsis'><span class='ruff_cmd'>compile</span> <span class='ruff_arg'>in</span></div></p>
+<h6 class='ruff'>Parameters</h6>
+<table class='ruff_deflist'>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>in</span></td><td class='ruff_defitem'></td></tr>
+</table>
+
+
+
 <h4 class='ruff'><a name='::woof::wtf::compile_template'>compile_template</a><span class='ns_scope'> [<a href='#::woof::wtf'>::woof::wtf</a>]</span></h4>
 
 <p class='linkline'><a href='#::woof::wtf'>wtf</a>, <a href='#_top'>Top</a></p><p><div class='ruff_synopsis'><span class='ruff_cmd'>compile_template</span> <span class='ruff_arg'>in</span> <span class='ruff_arg'>var</span></div></p>
@@ -2494,6 +2514,19 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 <tr><td class='ruff_defitem'><span class='ruff_arg'>content</span></td><td class='ruff_defitem'></td></tr>
 <tr><td class='ruff_defitem'><span class='ruff_arg'>args</span></td><td class='ruff_defitem'>Additional options.</td></tr>
 </table>
+
+
+
+<h4 class='ruff'><a name='::woof::wtf::render'>render</a><span class='ns_scope'> [<a href='#::woof::wtf'>::woof::wtf</a>]</span></h4>
+
+<p class='linkline'><a href='#::woof::wtf'>wtf</a>, <a href='#_top'>Top</a></p><p class='ruff'>The first element is the name of the variable that will contain generated output. Second element is the string to execute in caller's context. The variable might have been used before so empty it first.</p>
+<p><div class='ruff_synopsis'><span class='ruff_cmd'>render</span> <span class='ruff_arg'>ct</span></div></p>
+<h6 class='ruff'>Parameters</h6>
+<table class='ruff_deflist'>
+<tr><td class='ruff_defitem'><span class='ruff_arg'>ct</span></td><td class='ruff_defitem'></td></tr>
+</table>
+<h6 class='ruff'>Description</h6>
+<p class='ruff'>The first element is the name of the variable that will contain generated output. Second element is the string to execute in caller's context. The variable might have been used before so empty it first.</p>
 
 
 
@@ -2530,5 +2563,5 @@ Woof! - Web Oriented Object Framework (V0.5a1)
 
 
 
-</div></div><div class='yui-b navbox'><h1><a href='#Introduction'>Introduction</a></h1><h1><a href='#::woof'>::woof</a></h1><h2><a href='#::woof-Commands'>Commands</a></h2><h4><a class='tooltip' href='#::woof::handle_request'>handle_request<span>Called by a webserver to handle a client request.</span></a></h4><h4><a class='tooltip' href='#::woof::init'>init<span>Called by the master interpreter to initialize the safe web interpreter in which requests are processed.</span></a></h4><h4><a class='tooltip' href='#::woof::read_routes'>read_routes<span>Reads the routing configuration from disk.</span></a></h4><h4><a class='tooltip' href='#::woof::source_file'>source_file<span>Sources a file into the interpreter</span></a></h4><h4><a class='tooltip' href='#::woof::url_build'>url_build<span>Construct a URL for a controller and action</span></a></h4><h4><a class='tooltip' href='#::woof::url_crack'>url_crack<span>Construct application request context from a URL.</span></a></h4><h4><a class='tooltip' href='#::woof::url_for_file'>url_for_file<span>Constructs a URL for a static file in the Woof tree</span></a></h4><h4><a class='tooltip' href='#::woof::version'>version<span>Returns the version of Woof</span></a></h4><h2><a href='#::woof-Classes'>Classes</a></h2><h3><a href='#::woof::Controller'>Controller</a></h3><h5><a class='tooltip' href='#::woof::Controller::constructor'>constructor<span>Base class for Woof controller classes.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::action'>action<span>Returns the name of the action specified in the current request.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::include_image'>include_image<span>Generates a HTML image tag</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::include_javascript'>include_javascript<span>Generates a javascript script link</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::include_stylesheet'>include_stylesheet<span>Generates a stylesheet link</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::link_to'>link_to<span>Generate a HTML link tag for a URL based on the given arguments</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::process'>process<span>Called to invoke a specific action in a controller.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::redirect'>redirect<span>Redirects client to a different URL.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::render'>render<span>Generates content for the web page.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::url_for'>url_for<span>Constructs a URL based on the passed options and current request.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::url_for_static'>url_for_static<span>Constructs URL for a static resource such as an image.</span></a></h5><h3><a href='#::woof::CookiesIn'>CookiesIn</a></h3><h5><a class='tooltip' href='#::woof::CookiesIn::constructor'>constructor<span>Provides an interface to contains cookies received as part of a request as a Map object.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesIn::lazy_load'>lazy_load<span>Loads the cookie values on demand.</span></a></h5><h3><a href='#::woof::CookiesOut'>CookiesOut</a></h3><h5><a class='tooltip' href='#::woof::CookiesOut::constructor'>constructor<span>The CookiesOut class encapsulates cookies that are to be sent in the response to the client.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::clear'>clear<span>Removes all cookies matching a pattern .</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::cookies'>cookies<span>Returns a list of all cookies. Each element of the returned list is a cookie value, including attributes if any, that can be used as the value of a HTTP Set-Cookie header.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::count'>count<span>Returns the number of defined cookies.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::exists'>exists<span>Check the existence of a cookie and optionally return its value.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::freeze'>freeze<span>Makes the object read-only so no further updates to cookies are possible.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::get'>get<span>Retrieves the value associated with a cookie</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::keys'>keys<span>Returns a list of defined cookie names matching a pattern</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::set'>set<span>Sets the values of one or more cookies.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::setwithattr'>setwithattr<span>Sets the value and attributes of a cookie</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::unknown'>unknown<span>Provides shorthand methods for setting and getting cookie values.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::unset'>unset<span>Removes a previously defined cookie.</span></a></h5><h3><a href='#::woof::DevModeOnly'>DevModeOnly</a></h3><h5><a href='#::woof::DevModeOnly::constructor'>constructor</a></h5><h3><a href='#::woof::Environment'>Environment</a></h3><h5><a class='tooltip' href='#::woof::Environment::constructor'>constructor<span>Constructs a Map object as provided by the web server.</span></a></h5><h5><a class='tooltip' href='#::woof::Environment::lazy_load'>lazy_load<span>Loads the environment values on demand.</span></a></h5><h3><a href='#::woof::Flash'>Flash</a></h3><h5><a class='tooltip' href='#::woof::Flash::constructor'>constructor<span>Container for storage of temporary data that needs to be passed between actions, potentially across separate client requests.</span></a></h5><h5><a class='tooltip' href='#::woof::Flash::keep'>keep<span>Marks data that would be cleared as persistent until the next request.</span></a></h5><h5><a class='tooltip' href='#::woof::Flash::persistents'>persistents<span>Get all persistent keys stored in the flash.</span></a></h5><h5><a class='tooltip' href='#::woof::Flash::transient'>transient<span>Stores data in the flash only for the current request.</span></a></h5><h3><a href='#::woof::LocalClientOnly'>LocalClientOnly</a></h3><h5><a href='#::woof::LocalClientOnly::constructor'>constructor</a></h5><h3><a href='#::woof::Page'>Page</a></h3><h5><a class='tooltip' href='#::woof::Page::constructor'>constructor<span>The Page object contains HTML content for page sections.</span></a></h5><h5><a class='tooltip' href='#::woof::Page::content_type'>content_type<span>Sets the content type of the page</span></a></h5><h5><a class='tooltip' href='#::woof::Page::fetch'>fetch<span>Check the existence of a page section and optionally return its content.</span></a></h5><h5><a class='tooltip' href='#::woof::Page::store'>store<span>Sets the content of the specified section.</span></a></h5><h3><a href='#::woof::Params'>Params</a></h3><h5><a class='tooltip' href='#::woof::Params::constructor'>constructor<span>Contains the form and query string values associated with a request.</span></a></h5><h5><a class='tooltip' href='#::woof::Params::lazy_load'>lazy_load<span>Loads the query parameter values on demand.</span></a></h5><h3><a href='#::woof::Request'>Request</a></h3><h5><a class='tooltip' href='#::woof::Request::constructor'>constructor<span>A Request object holds various attributes and context associated with a received client request.</span></a></h5><h5><a href='#::woof::Request::accept_languages'>accept_languages</a></h5><h5><a class='tooltip' href='#::woof::Request::application_url'>application_url<span>Returns the URL path where the application is rooted.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::delete?'>delete?<span>Returns true if the HTTP request method was a DELETE and false otherwise.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::formatted_host_with_port'>formatted_host_with_port<span>Returns the host and port associated with this request. If the request came over the standard port for the protocol, it is not included in the returned string.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::get?'>get?<span>Returns true if the HTTP request method was a GET and false otherwise.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::get_or_head?'>get_or_head?<span>Returns true if the HTTP request method was a GET or HEAD and false otherwise.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::head?'>head?<span>Returns true if the HTTP request method was a HEAD and false otherwise.</span></a></h5><h5><a href='#::woof::Request::host'>host</a></h5><h5><a class='tooltip' href='#::woof::Request::port'>port<span>Returns the port on which the request was received.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::post?'>post?<span>Returns true if the HTTP request method was a POST and false otherwise.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::protocol'>protocol<span>Returns the connection protocol over which the request was received.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::query_string'>query_string<span>Returns the query string portion of request.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::referer'>referer<span>Returns the HTTP_REFERER header in the request if present, else an empty string</span></a></h5><h5><a class='tooltip' href='#::woof::Request::remote_addr'>remote_addr<span>Returns the address of the remote client if available, else an empty string.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::request_method'>request_method<span>Returns the HTTP method in the request.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::request_uri'>request_uri<span>Returns the request URI (the portion after the hostname/port) for the request.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::resource_url'>resource_url<span>Returns the resource URL path within the application root URL.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::ssl?'>ssl?<span>Returns true if the request came over an SSL connection and false otherwise.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::standard_port'>standard_port<span>Returns the standard port used for the protocol over which the connection was received.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::url'>url<span>Returns the full URL for the request</span></a></h5><h3><a href='#::woof::Response'>Response</a></h3><h5><a class='tooltip' href='#::woof::Response::constructor'>constructor<span>Constructs an object for returning data to the client.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::charset'>charset<span>Set or retrieves the charset attribute sent with the Content-Type header in the HTTP response.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::content'>content<span>Sets or returns the content for the HTTP response</span></a></h5><h5><a class='tooltip' href='#::woof::Response::content_type'>content_type<span>Sets or returns the Content-Type header of the HTTP response.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::cookies'>cookies<span>Invokes the CookiesOut object containing the cookies to be sent to the client.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::headers'>headers<span>Retrieves or sets the HTTP headers defined in the object.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::last_modified'>last_modified<span>Sets or returns the Last-Modified header of the HTTP response.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::location'>location<span>Sets or returns the Location header to be sent in the HTTP response.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::redirect'>redirect<span>Sets the response to be a HTTP redirect</span></a></h5><h5><a class='tooltip' href='#::woof::Response::reset'>reset<span>Currently not implemented.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::status'>status<span>Sets or returns the HTTP response status code to be sent to the client.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::status_line'>status_line<span>Returns the full HTTP response line.</span></a></h5><h3><a href='#::woof::Session'>Session</a></h3><h5><a class='tooltip' href='#::woof::Session::constructor'>constructor<span>Container for persistent session data.</span></a></h5><h5><a class='tooltip' href='#::woof::Session::commit'>commit<span>Commits the session content to persistent storage.</span></a></h5><h5><a class='tooltip' href='#::woof::Session::id'>id<span>Returns the session id for this session.</span></a></h5><h5><a class='tooltip' href='#::woof::Session::id_name'>id_name<span>Returns the name of the key used for the session id</span></a></h5><h5><a class='tooltip' href='#::woof::Session::load'>load<span>Loads session data from session storage</span></a></h5><h5><a class='tooltip' href='#::woof::Session::new?'>new?<span>Indicates if this session was created in this request</span></a></h5><h1><a href='#::woof::app'>::woof::app</a></h1><h2><a href='#::woof::app-Commands'>Commands</a></h2><h4><a class='tooltip' href='#::woof::app::uses'>uses<span>Finds and loads a controller class</span></a></h4><h1><a href='#::woof::errors'>::woof::errors</a></h1><h2><a href='#::woof::errors-Commands'>Commands</a></h2><h4><a class='tooltip' href='#::woof::errors::exception'>exception<span>Raises a Tcl exception in Woof canonical format.</span></a></h4><h4><a class='tooltip' href='#::woof::errors::help'>help<span>Returns the help message, if any, associated with the given facility and symbol.</span></a></h4><h1><a href='#::woof::pure'>::woof::pure</a></h1><h2><a href='#::woof::pure-Commands'>Commands</a></h2><h4><a class='tooltip' href='#::woof::pure::button'>button<span>Returns the HTML for a Pure CSS styled button</span></a></h4><h4><a class='tooltip' href='#::woof::pure::form'>form<span>Returns a PureCSS styled form</span></a></h4><h4><a class='tooltip' href='#::woof::pure::menu'>menu<span>Returns the HTML for a Pure CSS styled menu</span></a></h4><h4><a class='tooltip' href='#::woof::pure::paginator'>paginator<span>Returns HTML for a Pure CSS formatted paginator</span></a></h4><h4><a class='tooltip' href='#::woof::pure::table'>table<span>Returns the HTML for a Pure CSS styled table</span></a></h4><h1><a href='#::woof::route'>::woof::route</a></h1><h2><a href='#::woof::route-Commands'>Commands</a></h2><h4><a class='tooltip' href='#::woof::route::construct'>construct<span>Returns a URL constructed from specified controller, action and parameters</span></a></h4><h4><a class='tooltip' href='#::woof::route::parse_routes'>parse_routes<span>Parses the specified routes file</span></a></h4><h4><a class='tooltip' href='#::woof::route::read_routes'>read_routes<span>Reads a file containing route definitions.</span></a></h4><h4><a class='tooltip' href='#::woof::route::select'>select<span>Matches the specified URL against the list of route definitions</span></a></h4><h1><a href='#::woof::route::test'>::woof::route::test</a></h1><h2><a href='#::woof::route::test-Commands'>Commands</a></h2><h4><a href='#::woof::route::test::init'>init</a></h4><h1><a href='#::woof::util'>::woof::util</a></h1><h2><a href='#::woof::util-Commands'>Commands</a></h2><h4><a href='#::woof::util::charset_iana2tcl'>charset_iana2tcl</a></h4><h4><a href='#::woof::util::charset_tcl2iana'>charset_tcl2iana</a></h4><h4><a class='tooltip' href='#::woof::util::contained_path'>contained_path<span>Checks if the specified path is a descendent of the specified directory</span></a></h4><h4><a class='tooltip' href='#::woof::util::dict_get'>dict_get<span>Returns the value for a key from a dictionary and a default if the key is not present</span></a></h4><h4><a class='tooltip' href='#::woof::util::dict_pop'>dict_pop<span>Removes and returns the value for a key from a dictionary and a default if the key is not present.</span></a></h4><h4><a class='tooltip' href='#::woof::util::export_all'>export_all<span>Exports all procs in *caller's* namespace that do not begin with an underscore</span></a></h4><h4><a class='tooltip' href='#::woof::util::format_http_date'>format_http_date<span>Format a date and time as required by HTTP</span></a></h4><h4><a class='tooltip' href='#::woof::util::generate_name'>generate_name<span>Returns a new generated name</span></a></h4><h4><a class='tooltip' href='#::woof::util::generate_session_id'>generate_session_id<span>Generate a session identifier.</span></a></h4><h4><a class='tooltip' href='#::woof::util::http_response_code'>http_response_code<span>Maps HTTP response codes to a HTTP response strings</span></a></h4><h4><a class='tooltip' href='#::woof::util::http_select_header_value'>http_select_header_value<span>Select a content attribute for a HTTP response</span></a></h4><h4><a class='tooltip' href='#::woof::util::http_sorted_header_values'>http_sorted_header_values<span>Parses a multi-valued HTTP header string and returns the values sorted by their quality attribute</span></a></h4><h4><a class='tooltip' href='#::woof::util::make_navigation_links'>make_navigation_links<span>Generates HTML for a list based navigation tree</span></a></h4><h4><a class='tooltip' href='#::woof::util::make_query_string'>make_query_string<span>Constructs a URL query string from the given arguments</span></a></h4><h4><a class='tooltip' href='#::woof::util::make_relative_url'>make_relative_url<span>Construct a URL path relative to a base URL</span></a></h4><h4><a class='tooltip' href='#::woof::util::memoize'>memoize<span>Evaluates and caches a command result</span></a></h4><h4><a class='tooltip' href='#::woof::util::mixcase'>mixcase<span>Converts an identifier containing underscores into mixed case</span></a></h4><h4><a class='tooltip' href='#::woof::util::quoted_split'>quoted_split<span>Splits a string into a list based on the specified criteria</span></a></h4><h4><a class='tooltip' href='#::woof::util::remove_left_margin'>remove_left_margin<span>Removes the left margin from the lines in the specified text</span></a></h4><h4><a class='tooltip' href='#::woof::util::scan_http_date'>scan_http_date<span>Converts a HTTP formatted date to seconds since the epoch</span></a></h4><h4><a href='#::woof::util::tag_attr_fragment'>tag_attr_fragment</a></h4><h4><a class='tooltip' href='#::woof::util::unmixcase'>unmixcase<span>Converts an mixed case identifier to a lower case one with underscores</span></a></h4><h4><a class='tooltip' href='#::woof::util::url_decode'>url_decode<span>Decode a www-url-encoded string</span></a></h4><h4><a class='tooltip' href='#::woof::util::url_encode'>url_encode<span>Encode a string in www-url-encoded format</span></a></h4><h2><a href='#::woof::util-Classes'>Classes</a></h2><h3><a href='#::woof::util::DirtyMap'>DirtyMap</a></h3><h5><a class='tooltip' href='#::woof::util::DirtyMap::constructor'>constructor<span>Constructs a Map with the additional functionality that state is maintained about whether the contents have been modified.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::clean'>clean<span>Marks the object as being unmodified.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::clear'>clear<span>Calls Map::clear with all arguments and marks the object dirty.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::dirty'>dirty<span>Marks the object as being modified.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::dirty?'>dirty?<span>Returns true if the object has been modified since it was constructed and false otherwise</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::init'>init<span>Calls Map::init with all arguments and marks the object dirty.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::set'>set<span>Calls Map::set with all arguments and marks the object dirty.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::unset'>unset<span>Calls Map::unset with all arguments and marks the object dirty.</span></a></h5><h3><a href='#::woof::util::Map'>Map</a></h3><h5><a class='tooltip' href='#::woof::util::Map::constructor'>constructor<span>Constructs a dictionary-like object with additional functionality.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::clear'>clear<span>Removes all keys matching the specified pattern from the object.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::count'>count<span>Returns the number of keys in the object.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::exists'>exists<span>Check the existence of a key and optionally return its value.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::freeze'>freeze<span>Makes the object read-only.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::get'>get<span>Retrieves values associated with keys.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::hget'>hget<span>Retrieves the value of a key in HTML encoded form.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::init'>init<span>Initialize uninitialized keys.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::keys'>keys<span>Returns the list of keys contained in the object.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::lazy_load'>lazy_load<span>Abstract method to fill in missing values for keys.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::pop'>pop<span>Retrieves the value associated with a key and removes the key from the object.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::set'>set<span>Sets the values of one or more keys in the object.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::unset'>unset<span>Removes one or more keys from the object.</span></a></h5><h1><a href='#::woof::wtf'>::woof::wtf</a></h1><h2><a href='#::woof::wtf-Commands'>Commands</a></h2><h4><a href='#::woof::wtf::compile_template'>compile_template</a></h4><h4><a href='#::woof::wtf::html_frag'>html_frag</a></h4><h4><a href='#::woof::wtf::run_compiled_template'>run_compiled_template</a></h4><h4><a href='#::woof::wtf::substify'>substify</a></h4><h4><a href='#::woof::wtf::table'>table</a></h4></div></div><div id='ft'><div style='float: right;'>Document generated by Ruff!</div><div>&copy; 2014 Ashok P. Nadkarni</div></div>
+</div></div><div class='yui-b navbox'><h1><a href='#Introduction'>Introduction</a></h1><h1><a href='#::woof'>::woof</a></h1><h2><a href='#::woof-Commands'>Commands</a></h2><h4><a class='tooltip' href='#::woof::handle_request'>handle_request<span>Called by a webserver to handle a client request.</span></a></h4><h4><a class='tooltip' href='#::woof::init'>init<span>Called by the master interpreter to initialize the safe web interpreter in which requests are processed.</span></a></h4><h4><a class='tooltip' href='#::woof::read_routes'>read_routes<span>Reads the routing configuration from disk.</span></a></h4><h4><a class='tooltip' href='#::woof::source_file'>source_file<span>Sources a file into the interpreter</span></a></h4><h4><a class='tooltip' href='#::woof::url_build'>url_build<span>Construct a URL for a controller and action</span></a></h4><h4><a class='tooltip' href='#::woof::url_crack'>url_crack<span>Construct application request context from a URL.</span></a></h4><h4><a class='tooltip' href='#::woof::url_for_file'>url_for_file<span>Constructs a URL for a static file in the Woof tree</span></a></h4><h4><a class='tooltip' href='#::woof::version'>version<span>Returns the version of Woof</span></a></h4><h2><a href='#::woof-Classes'>Classes</a></h2><h3><a href='#::woof::Controller'>Controller</a></h3><h5><a class='tooltip' href='#::woof::Controller::constructor'>constructor<span>Base class for Woof controller classes.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::action'>action<span>Returns the name of the action specified in the current request.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::include_image'>include_image<span>Generates a HTML image tag</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::include_javascript'>include_javascript<span>Generates a javascript script link</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::include_stylesheet'>include_stylesheet<span>Generates a stylesheet link</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::link_to'>link_to<span>Generate a HTML link tag for a URL based on the given arguments</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::process'>process<span>Called to invoke a specific action in a controller.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::redirect'>redirect<span>Redirects client to a different URL.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::render'>render<span>Generates content for the web page.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::url_for'>url_for<span>Constructs a URL based on the passed options and current request.</span></a></h5><h5><a class='tooltip' href='#::woof::Controller::url_for_static'>url_for_static<span>Constructs URL for a static resource such as an image.</span></a></h5><h3><a href='#::woof::CookiesIn'>CookiesIn</a></h3><h5><a class='tooltip' href='#::woof::CookiesIn::constructor'>constructor<span>Provides an interface to contains cookies received as part of a request as a Map object.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesIn::lazy_load'>lazy_load<span>Loads the cookie values on demand.</span></a></h5><h3><a href='#::woof::CookiesOut'>CookiesOut</a></h3><h5><a class='tooltip' href='#::woof::CookiesOut::constructor'>constructor<span>The CookiesOut class encapsulates cookies that are to be sent in the response to the client.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::clear'>clear<span>Removes all cookies matching a pattern .</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::cookies'>cookies<span>Returns a list of all cookies. Each element of the returned list is a cookie value, including attributes if any, that can be used as the value of a HTTP Set-Cookie header.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::count'>count<span>Returns the number of defined cookies.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::exists'>exists<span>Check the existence of a cookie and optionally return its value.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::freeze'>freeze<span>Makes the object read-only so no further updates to cookies are possible.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::get'>get<span>Retrieves the value associated with a cookie</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::keys'>keys<span>Returns a list of defined cookie names matching a pattern</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::set'>set<span>Sets the values of one or more cookies.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::setwithattr'>setwithattr<span>Sets the value and attributes of a cookie</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::unknown'>unknown<span>Provides shorthand methods for setting and getting cookie values.</span></a></h5><h5><a class='tooltip' href='#::woof::CookiesOut::unset'>unset<span>Removes a previously defined cookie.</span></a></h5><h3><a href='#::woof::DevModeOnly'>DevModeOnly</a></h3><h5><a href='#::woof::DevModeOnly::constructor'>constructor</a></h5><h3><a href='#::woof::Environment'>Environment</a></h3><h5><a class='tooltip' href='#::woof::Environment::constructor'>constructor<span>Constructs a Map object as provided by the web server.</span></a></h5><h5><a class='tooltip' href='#::woof::Environment::lazy_load'>lazy_load<span>Loads the environment values on demand.</span></a></h5><h3><a href='#::woof::Flash'>Flash</a></h3><h5><a class='tooltip' href='#::woof::Flash::constructor'>constructor<span>Container for storage of temporary data that needs to be passed between actions, potentially across separate client requests.</span></a></h5><h5><a class='tooltip' href='#::woof::Flash::keep'>keep<span>Marks data that would be cleared as persistent until the next request.</span></a></h5><h5><a class='tooltip' href='#::woof::Flash::persistents'>persistents<span>Get all persistent keys stored in the flash.</span></a></h5><h5><a class='tooltip' href='#::woof::Flash::transient'>transient<span>Stores data in the flash only for the current request.</span></a></h5><h3><a href='#::woof::LocalClientOnly'>LocalClientOnly</a></h3><h5><a href='#::woof::LocalClientOnly::constructor'>constructor</a></h5><h3><a href='#::woof::Page'>Page</a></h3><h5><a class='tooltip' href='#::woof::Page::constructor'>constructor<span>The Page object contains HTML content for page sections.</span></a></h5><h5><a class='tooltip' href='#::woof::Page::content_type'>content_type<span>Sets the content type of the page</span></a></h5><h5><a class='tooltip' href='#::woof::Page::fetch'>fetch<span>Check the existence of a page section and optionally return its content.</span></a></h5><h5><a class='tooltip' href='#::woof::Page::store'>store<span>Sets the content of the specified section.</span></a></h5><h3><a href='#::woof::Params'>Params</a></h3><h5><a class='tooltip' href='#::woof::Params::constructor'>constructor<span>Contains the form and query string values associated with a request.</span></a></h5><h5><a class='tooltip' href='#::woof::Params::lazy_load'>lazy_load<span>Loads the query parameter values on demand.</span></a></h5><h3><a href='#::woof::Request'>Request</a></h3><h5><a class='tooltip' href='#::woof::Request::constructor'>constructor<span>A Request object holds various attributes and context associated with a received client request.</span></a></h5><h5><a href='#::woof::Request::accept_languages'>accept_languages</a></h5><h5><a class='tooltip' href='#::woof::Request::application_url'>application_url<span>Returns the URL path where the application is rooted.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::delete?'>delete?<span>Returns true if the HTTP request method was a DELETE and false otherwise.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::formatted_host_with_port'>formatted_host_with_port<span>Returns the host and port associated with this request. If the request came over the standard port for the protocol, it is not included in the returned string.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::get?'>get?<span>Returns true if the HTTP request method was a GET and false otherwise.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::get_or_head?'>get_or_head?<span>Returns true if the HTTP request method was a GET or HEAD and false otherwise.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::head?'>head?<span>Returns true if the HTTP request method was a HEAD and false otherwise.</span></a></h5><h5><a href='#::woof::Request::host'>host</a></h5><h5><a class='tooltip' href='#::woof::Request::port'>port<span>Returns the port on which the request was received.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::post?'>post?<span>Returns true if the HTTP request method was a POST and false otherwise.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::protocol'>protocol<span>Returns the connection protocol over which the request was received.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::query_string'>query_string<span>Returns the query string portion of request.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::referer'>referer<span>Returns the HTTP_REFERER header in the request if present, else an empty string</span></a></h5><h5><a class='tooltip' href='#::woof::Request::remote_addr'>remote_addr<span>Returns the address of the remote client if available, else an empty string.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::request_method'>request_method<span>Returns the HTTP method in the request.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::request_uri'>request_uri<span>Returns the request URI (the portion after the hostname/port) for the request.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::resource_url'>resource_url<span>Returns the resource URL path within the application root URL.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::ssl?'>ssl?<span>Returns true if the request came over an SSL connection and false otherwise.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::standard_port'>standard_port<span>Returns the standard port used for the protocol over which the connection was received.</span></a></h5><h5><a class='tooltip' href='#::woof::Request::url'>url<span>Returns the full URL for the request</span></a></h5><h3><a href='#::woof::Response'>Response</a></h3><h5><a class='tooltip' href='#::woof::Response::constructor'>constructor<span>Constructs an object for returning data to the client.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::charset'>charset<span>Set or retrieves the charset attribute sent with the Content-Type header in the HTTP response.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::content'>content<span>Sets or returns the content for the HTTP response</span></a></h5><h5><a class='tooltip' href='#::woof::Response::content_type'>content_type<span>Sets or returns the Content-Type header of the HTTP response.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::cookies'>cookies<span>Invokes the CookiesOut object containing the cookies to be sent to the client.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::headers'>headers<span>Retrieves or sets the HTTP headers defined in the object.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::last_modified'>last_modified<span>Sets or returns the Last-Modified header of the HTTP response.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::location'>location<span>Sets or returns the Location header to be sent in the HTTP response.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::redirect'>redirect<span>Sets the response to be a HTTP redirect</span></a></h5><h5><a class='tooltip' href='#::woof::Response::reset'>reset<span>Currently not implemented.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::status'>status<span>Sets or returns the HTTP response status code to be sent to the client.</span></a></h5><h5><a class='tooltip' href='#::woof::Response::status_line'>status_line<span>Returns the HTTP response status line to be sent to the client.</span></a></h5><h3><a href='#::woof::Session'>Session</a></h3><h5><a class='tooltip' href='#::woof::Session::constructor'>constructor<span>Container for persistent session data.</span></a></h5><h5><a class='tooltip' href='#::woof::Session::commit'>commit<span>Commits the session content to persistent storage.</span></a></h5><h5><a class='tooltip' href='#::woof::Session::id'>id<span>Returns the session id for this session.</span></a></h5><h5><a class='tooltip' href='#::woof::Session::id_name'>id_name<span>Returns the name of the key used for the session id</span></a></h5><h5><a class='tooltip' href='#::woof::Session::load'>load<span>Loads session data from session storage</span></a></h5><h5><a class='tooltip' href='#::woof::Session::new?'>new?<span>Indicates if this session was created in this request</span></a></h5><h1><a href='#::woof::app'>::woof::app</a></h1><h2><a href='#::woof::app-Commands'>Commands</a></h2><h4><a class='tooltip' href='#::woof::app::uses'>uses<span>Finds and loads a controller class</span></a></h4><h1><a href='#::woof::errors'>::woof::errors</a></h1><h2><a href='#::woof::errors-Commands'>Commands</a></h2><h4><a class='tooltip' href='#::woof::errors::exception'>exception<span>Raises a Tcl exception in Woof canonical format.</span></a></h4><h4><a class='tooltip' href='#::woof::errors::help'>help<span>Returns the help message, if any, associated with the given facility and symbol.</span></a></h4><h1><a href='#::woof::pure'>::woof::pure</a></h1><h2><a href='#::woof::pure-Commands'>Commands</a></h2><h4><a class='tooltip' href='#::woof::pure::button'>button<span>Returns the HTML for a Pure CSS styled button</span></a></h4><h4><a class='tooltip' href='#::woof::pure::form'>form<span>Returns a PureCSS styled form</span></a></h4><h4><a class='tooltip' href='#::woof::pure::menu'>menu<span>Returns the HTML for a Pure CSS styled menu</span></a></h4><h4><a class='tooltip' href='#::woof::pure::paginator'>paginator<span>Returns HTML for a Pure CSS formatted paginator</span></a></h4><h4><a class='tooltip' href='#::woof::pure::table'>table<span>Returns the HTML for a Pure CSS styled table</span></a></h4><h1><a href='#::woof::route'>::woof::route</a></h1><h2><a href='#::woof::route-Commands'>Commands</a></h2><h4><a class='tooltip' href='#::woof::route::construct'>construct<span>Returns a URL constructed from specified controller, action and parameters</span></a></h4><h4><a class='tooltip' href='#::woof::route::parse_routes'>parse_routes<span>Parses the specified routes file</span></a></h4><h4><a class='tooltip' href='#::woof::route::read_routes'>read_routes<span>Reads a file containing route definitions.</span></a></h4><h4><a class='tooltip' href='#::woof::route::select'>select<span>Matches the specified URL against the list of route definitions</span></a></h4><h1><a href='#::woof::route::test'>::woof::route::test</a></h1><h2><a href='#::woof::route::test-Commands'>Commands</a></h2><h4><a href='#::woof::route::test::init'>init</a></h4><h1><a href='#::woof::util'>::woof::util</a></h1><h2><a href='#::woof::util-Commands'>Commands</a></h2><h4><a href='#::woof::util::charset_iana2tcl'>charset_iana2tcl</a></h4><h4><a href='#::woof::util::charset_tcl2iana'>charset_tcl2iana</a></h4><h4><a class='tooltip' href='#::woof::util::contained_path'>contained_path<span>Checks if the specified path is a descendent of the specified directory</span></a></h4><h4><a class='tooltip' href='#::woof::util::dict_get'>dict_get<span>Returns the value for a key from a dictionary and a default if the key is not present</span></a></h4><h4><a class='tooltip' href='#::woof::util::dict_pop'>dict_pop<span>Removes and returns the value for a key from a dictionary and a default if the key is not present.</span></a></h4><h4><a class='tooltip' href='#::woof::util::export_all'>export_all<span>Exports all procs in *caller's* namespace that do not begin with an underscore</span></a></h4><h4><a class='tooltip' href='#::woof::util::format_http_date'>format_http_date<span>Format a date and time as required by HTTP</span></a></h4><h4><a class='tooltip' href='#::woof::util::generate_name'>generate_name<span>Returns a new generated name</span></a></h4><h4><a class='tooltip' href='#::woof::util::generate_session_id'>generate_session_id<span>Generate a session identifier.</span></a></h4><h4><a class='tooltip' href='#::woof::util::http_response_code'>http_response_code<span>Maps HTTP response codes to a HTTP response strings</span></a></h4><h4><a class='tooltip' href='#::woof::util::http_select_header_value'>http_select_header_value<span>Select a content attribute for a HTTP response</span></a></h4><h4><a class='tooltip' href='#::woof::util::http_sorted_header_values'>http_sorted_header_values<span>Parses a multi-valued HTTP header string and returns the values sorted by their quality attribute</span></a></h4><h4><a class='tooltip' href='#::woof::util::make_navigation_links'>make_navigation_links<span>Generates HTML for a list based navigation tree</span></a></h4><h4><a class='tooltip' href='#::woof::util::make_query_string'>make_query_string<span>Constructs a URL query string from the given arguments</span></a></h4><h4><a class='tooltip' href='#::woof::util::make_relative_url'>make_relative_url<span>Construct a URL path relative to a base URL</span></a></h4><h4><a class='tooltip' href='#::woof::util::memoize'>memoize<span>Evaluates and caches a command result</span></a></h4><h4><a class='tooltip' href='#::woof::util::mixcase'>mixcase<span>Converts an identifier containing underscores into mixed case</span></a></h4><h4><a class='tooltip' href='#::woof::util::quoted_split'>quoted_split<span>Splits a string into a list based on the specified criteria</span></a></h4><h4><a class='tooltip' href='#::woof::util::remove_left_margin'>remove_left_margin<span>Removes the left margin from the lines in the specified text</span></a></h4><h4><a class='tooltip' href='#::woof::util::scan_http_date'>scan_http_date<span>Converts a HTTP formatted date to seconds since the epoch</span></a></h4><h4><a href='#::woof::util::tag_attr_fragment'>tag_attr_fragment</a></h4><h4><a class='tooltip' href='#::woof::util::unmixcase'>unmixcase<span>Converts an mixed case identifier to a lower case one with underscores</span></a></h4><h4><a class='tooltip' href='#::woof::util::url_decode'>url_decode<span>Decode a www-url-encoded string</span></a></h4><h4><a class='tooltip' href='#::woof::util::url_encode'>url_encode<span>Encode a string in www-url-encoded format</span></a></h4><h2><a href='#::woof::util-Classes'>Classes</a></h2><h3><a href='#::woof::util::DirtyMap'>DirtyMap</a></h3><h5><a class='tooltip' href='#::woof::util::DirtyMap::constructor'>constructor<span>Constructs a Map with the additional functionality that state is maintained about whether the contents have been modified.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::clean'>clean<span>Marks the object as being unmodified.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::clear'>clear<span>Calls Map::clear with all arguments and marks the object dirty.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::dirty'>dirty<span>Marks the object as being modified.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::dirty?'>dirty?<span>Returns true if the object has been modified since it was constructed and false otherwise</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::init'>init<span>Calls Map::init with all arguments and marks the object dirty.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::set'>set<span>Calls Map::set with all arguments and marks the object dirty.</span></a></h5><h5><a class='tooltip' href='#::woof::util::DirtyMap::unset'>unset<span>Calls Map::unset with all arguments and marks the object dirty.</span></a></h5><h3><a href='#::woof::util::Map'>Map</a></h3><h5><a class='tooltip' href='#::woof::util::Map::constructor'>constructor<span>Constructs a dictionary-like object with additional functionality.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::clear'>clear<span>Removes all keys matching the specified pattern from the object.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::count'>count<span>Returns the number of keys in the object.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::exists'>exists<span>Check the existence of a key and optionally return its value.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::freeze'>freeze<span>Makes the object read-only.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::get'>get<span>Retrieves values associated with keys.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::hget'>hget<span>Retrieves the value of a key in HTML encoded form.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::init'>init<span>Initialize uninitialized keys.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::keys'>keys<span>Returns the list of keys contained in the object.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::lazy_load'>lazy_load<span>Abstract method to fill in missing values for keys.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::pop'>pop<span>Retrieves the value associated with a key and removes the key from the object.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::set'>set<span>Sets the values of one or more keys in the object.</span></a></h5><h5><a class='tooltip' href='#::woof::util::Map::unset'>unset<span>Removes one or more keys from the object.</span></a></h5><h1><a href='#::woof::wtf'>::woof::wtf</a></h1><h2><a href='#::woof::wtf-Commands'>Commands</a></h2><h4><a href='#::woof::wtf::compile'>compile</a></h4><h4><a href='#::woof::wtf::compile_template'>compile_template</a></h4><h4><a href='#::woof::wtf::html_frag'>html_frag</a></h4><h4><a class='tooltip' href='#::woof::wtf::render'>render<span>The first element is the name of the variable that will contain generated output. Second element is the string to execute in caller's context. The variable might have been used before so empty it first.</span></a></h4><h4><a href='#::woof::wtf::run_compiled_template'>run_compiled_template</a></h4><h4><a href='#::woof::wtf::substify'>substify</a></h4><h4><a href='#::woof::wtf::table'>table</a></h4></div></div><div id='ft'><div style='float: right;'>Document generated by Ruff!</div><div>&copy; 2014 Ashok P. Nadkarni</div></div>
 </div></body></html>
