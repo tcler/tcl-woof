@@ -12,5 +12,5 @@
   }
 %)
 
-[woof::pure::menu $menu -direction vertical]
+[woof::pure::menu $menu -direction md]
 
