@@ -13,16 +13,18 @@ namespace eval pure {
 
 proc pure::button {text args} {
     # Returns the HTML for a Pure CSS styled button
-    #  text - text to display in the button. 
+    # text - text to display in the button. 
     #    This is HTML-escaped before display.
-    #  -classes CSSCLASSES - additional CSS classes to style the button.
-    #  -enabled BOOLEAN - controls whether button is enabled (default) or not
-    #  -onclick JAVASCRIPT - Javascript to execute when the button is clicked
-    #  -pressed BOOLEAN - controls whether button is shown as pressed or not.
+    # -classes CSSCLASSES - additional CSS classes to style the button.
+    # -enabled BOOLEAN - controls whether button is enabled (default) or not
+    # -onclick JAVASCRIPT - Javascript to execute when the button is clicked
+    # -pressed BOOLEAN - controls whether button is shown as pressed or not.
     #                     Default is 0.
-    #  -primary BOOLEAN - style as a primary button (default false)
-    #  -type button|submit|reset - specifies the type of the button.
-    #  -url - URL to link to
+    # -primary BOOLEAN - style as a primary button (default false)
+    # -type button|submit|reset - specifies the type of the button.
+    # -url - URL to link to
+    #
+
     
     # TBD - what should the -type default be?
     array set opts {
@@ -62,29 +64,65 @@ proc pure::button {text args} {
 
 proc pure::menu {menudefs args} {
     # Returns the HTML for a Pure CSS styled menu
+    #
     #  menudefs - list of menu definitions
     #  -classes - list of additional CSS classes to add to the menu
-    #  -direction horizontal|vertical - specifies whether the menu is 
-    #   displayed horizontally (default) or vertically
+    #  -orient DIRECTION - specifies orientation of the menu. By default,
+    #   it is displayed horizontally. See below for possible other values.
     #  -heading TEXT - text to display as the heading for the menu
     #  -state open|closed - specifies whether to display the menu as
     #     open (default) or closed
     
-    set html "<div class='pure-menu"
+    set orient horizontal
+    if {[dict exists $args -orient]} {
+        set orient [dict get $args -orient]
+    }
+
+    #ruff
+    # The orientation of the menu is controlled through '-orient' option.
+    # The values 'horizontal' (default) and 'vertical' display the menu in
+    # the corresponding direction. The values 'sm', 'md', 'lg' and 'xl'
+    # are intended to be used in responsive web pages. They correspond
+    # to the small, medium, large and extra-large screen widths as
+    # defined by Pure CSS. Specifying one of these values will result
+    # in a menu that displays vertically at the specified screen width
+    # and above while displaying horizontally at smaller screen widths.
+    # For example, '-orient md' will result in a menu that displays
+    # vertically at widths of medium and above, and horizontally at
+    # smaller widths.
+
+    switch -exact -- $orient {
+        sm - md - lg - xl {
+            # Recurse to generate two menu defs - one vertical and one
+            # horizontal - wrapped by a screen size class
+            dict unset args -direction
+            if {[dict exists $args -classes]} {
+                set classes [dict get $args -classes]
+                dict unset args -classes
+            }
+            return "[menu $menudefs {*}$args -direction vertical -classes [linsert $classes 0 wf-r-$orient]][menu $menudefs {*}$args -direction horizontal -classes [linsert $classes 0 wf-r-${orient}-]]"
+        }
+        default {
+            # Will error out for bad values
+            set classes [dict get {
+                vertical "pure-menu"
+                horizontal "pure-menu pure-menu-horizontal"
+            }]
+        }
+    }
+    
 
     if {![dict exists $args -state] || [dict get $args -state] eq "open"} {
-        append html " pure-menu-open"
+        append classes " pure-menu-open"
     }
 
-    if {![dict exists $args -direction] || [dict get $args -direction] eq "horizontal"} {
-        append html " pure-menu-horizontal"
-    }
+    set html "<div class='$classes"
 
     if {[dict exists $args -classes]} {
-        append html " [join [dict get $args -classes]]'>"
-    } else {
-        append html "'>"
+        append classes " [join [dict get $args -classes]]"
     }
+
+    set html "<div class='$classes'>"
 
     if {[dict exists $args -heading]} {
         append html "<a class='pure-menu-heading'>[util::hesc [dict get $args -heading]]</a>"
@@ -128,6 +166,7 @@ proc pure::menu {menudefs args} {
 
 proc pure::table {data args} {
     # Returns the HTML for a Pure CSS styled table
+    #
     #  data - list of sublists with each sublist corresponding to a table row
     #  -borders vertical|horizontal|both - specifies which cell borders are
     #     drawn. By default only the vertical borders are drawn.
@@ -214,6 +253,7 @@ proc pure::table {data args} {
 
 proc pure::paginator {range url_prefix args} {
     # Returns HTML for a Pure CSS formatted paginator
+    #
     #   range - list of one or two integers denoting the range of page numbers.
     #     If the second number is omitted, there is no upper limit.
     #   url_prefix - the prefix of the URL to use for each page. The page
@@ -275,6 +315,7 @@ proc pure::paginator {range url_prefix args} {
 
 proc pure::form {formdef args} {
     # Returns a PureCSS styled form
+    #
     #  formdef - form definition list as described below
     #  -layout inline|stacked|aligned - Specifies the form layout which may
     #     be aligned (labels next to entry fields), stacked
