@@ -20,3 +20,53 @@ html, button, input, select, textarea,
 .wf-header, .wf-footer {
     /* Placeholder for any default header/footer settings */
 }
+
+/*
+ * Classes for selectively showing / hiding divs at different screen sizes.
+ * The sm, md, lg, xl correspond to Pure CSS screen sizes. Classes
+ * without the "-" suffix are intended to be displayed only at that
+ * screen size and above. Classes with the "-" suffix are intended to
+ * be shown only BELOW that screen size.
+ */
+
+/* Defaults. Will effectively be applied when screen is even smaller than sm */
+.wf-r-sm-, .wf-r-md-, .wf-r-lg-, .wf-r-xl- {
+    display: block;
+}
+.wf-r-sm, .wf-r-md, .wf-r-lg, .wf-r-xl {
+    display: none;
+}
+
+/* Now override for various screen sizes */
+@media screen and (min-width: 35.5em) {
+    .wf-r-sm {
+	display: block;
+    }
+    .wf-r-sm- {
+	display: none;
+    }
+}
+@media screen and (min-width: 48em) {
+    .wf-r-md {
+	display: block;
+    }
+    .wf-r-md- {
+	display: none;
+    }
+}
+@media screen and (min-width: 64em) {
+    .wf-r-lg {
+	display: block;
+    }
+    .wf-r-lg- {
+	display: none;
+    }
+}
+@media screen and (min-width: 80em) {
+    .wf-r-xl {
+	display: block;
+    }
+    .wf-r-xl- {
+	display: none;
+    }
+}
