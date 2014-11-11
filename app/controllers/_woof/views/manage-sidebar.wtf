@@ -12,5 +12,4 @@
   }
 %)
 
-[woof::pure::menu $menu -direction md]
-
+[woof::pure::menu $menu -orient sm]

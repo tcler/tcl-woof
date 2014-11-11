@@ -1,4 +1,10 @@
+<div class='wf-r-sm'>
 <h2>Table of Contents</h2>
 <hr>
 % my variable _toc
 [::woof::util::make_navigation_links $_toc [my action]]
+</div>
+
+<div class='wf-r-sm-' style='float:right;'>
+  <a href='[my url_for -action index]'>Go to Table of Contents</a>
+</div>

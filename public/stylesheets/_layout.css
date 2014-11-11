@@ -14,11 +14,17 @@ html, button, input, select, textarea,
 }
 
 .wf-main, .wf-sidebar, .wf-supplement {
-    padding: 1em;
+    padding: 0.5em;
 }
-
 .wf-header, .wf-footer {
     /* Placeholder for any default header/footer settings */
+}
+
+@media screen and (min-width: 35.5em) {
+    /* Increase padding for larger screens */
+    .wf-main, .wf-sidebar, .wf-supplement {
+	padding: 1em;
+    }
 }
 
 /*

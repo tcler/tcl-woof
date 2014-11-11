@@ -3,16 +3,25 @@
 /* FYI - The Woof logo main color is #E99A56 */
 
 .wf-header {
-    font-weight: bold;
-    height: 48px;
-    color: white;
     background-color: #006666; 
-    background-position: 20px 20px;
-    padding: 20px;
-    background-image: url(../images/_woof/logo.png);
-    background-repeat: no-repeat;
-    text-indent: 100px;
+    padding: 5px;
+    text-indent: 10px;
     color: #E99A56;
+    font-size: small;
+}
+
+/* Add background image and use normal fonts if screen wide enough */
+@media screen and (min-width: 35.5em) {
+    .wf-header {
+	font-size: 100%;
+	font-weight: bold;
+	height: 48px;
+	background-position: 20px 20px;
+	padding: 20px;
+	background-image: url(../images/_woof/logo.png);
+	background-repeat: no-repeat;
+	text-indent: 100px;
+    }
 }
 
 .wf-header h2, .wf-header h3 {
@@ -35,6 +44,11 @@
 
 .wf-sidebar {
     background-color: #006666;
+}
+
+.wf-sidebar .pure-menu-horizontal a {
+    font-size: small;
+    padding: 5px 5px;
 }
 
 .wf-main h1, .wf-main h2 {
