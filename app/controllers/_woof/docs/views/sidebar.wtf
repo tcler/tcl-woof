@@ -5,6 +5,3 @@
 [::woof::util::make_navigation_links $_toc [my action]]
 </div>
 
-<div class='wf-r-sm-' style='float:right;'>
-  <a href='[my url_for -action index]'>Go to Table of Contents</a>
-</div>
