@@ -154,13 +154,18 @@ proc pure::menu {menudefs args} {
         }
         if {$url eq ""} {
             lappend cssclasses "pure-menu-disabled"
+            # Disabled entries should even have a href attribute. An empty
+            # href will take to top of page
+            set href ""
+        } else {
+            set href " href='$url'"
         }
         if {[llength $cssclasses]} {
             append html "<li class='[join $cssclasses]'>"
         } else {
             append html "<li>"
         }
-        append html "<a href='$url'>[util::hesc [lindex $def 0]]</a></li>"
+        append html "<a$href>[util::hesc [lindex $def 0]]</a></li>"
     }
 
     return "${html}</ul></div>"
