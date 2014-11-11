@@ -1,0 +1,16 @@
+<div class='wf-r-sm'>
+<h2>Web Oriented Object Framework</h2>
+%if {[pagevar exists MODULE_SUBHEADING subheading]} {
+   <h3>[hesc $subheading]</h3>
+% }
+</div>
+
+<div class='pure-g wf-r-sm-'>
+<div class='pure-u-3-5'>
+% set subheading [pagevar get MODULE_SUBHEADING ""]
+  <span style='font-weight:bold;'>Woof!<br>[hesc $subheading]</span>
+</div>
+<div class='pure-u-2-5'>
+  <a href='[my url_for -action index]' style='color:white; float:right;text-decoration:none;'>Table of Contents <span style='font-size:larger;'>\U00BB</span></a>
+</div>
+</div>
