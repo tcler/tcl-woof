@@ -4,14 +4,16 @@ Pure CSS styled menus can be created with the
 command. The menus have an optional heading. Each menu item is linked
 to a URL and is shown disabled if the URL is empty. 
 Empty menu items act as separators.
-</p><p>
+Note that Pure CSS menus are single-level and cannot be nested.
+</p>
+<p>
 [my _code_sample_with_output {
   [woof::pure::menu {
     {Microsoft http://www.microsoft.com}
     {Google http://www.google.com selected}
     {}
     {Yahoo ""}
-  } -direction vertical -heading Sites]
+  } -orient vertical -heading Sites]
 }]
 </p><p>
 Menus can also be shown horizontally.
@@ -21,9 +23,23 @@ Menus can also be shown horizontally.
     {Google http://www.google.com selected}
     {}
     {Yahoo ""}
-  } -direction horizontal -heading Sites]
+  } -orient horizontal -heading Sites]
 }]
 </p>
+
+<h3>Responsive menus</h3>
 <p>
-Note that Pure CSS menus are single-level and cannot be nested.
+For responsive web site, you can specify the orientation of the
+menu to be dependent on the screen width. If you shrink the width
+of your browser window, the menu below will change from a vertical
+to a horizontal orientation as the width falls below the
+<code>sm</code> (small) screen size.
+[my _code_sample_with_output {
+  [woof::pure::menu {
+    {Microsoft http://www.microsoft.com}
+    {Google http://www.google.com selected}
+    {}
+    {Yahoo ""}
+  } -orient sm -heading Sites]
+}]
 </p>
