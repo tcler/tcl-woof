@@ -1,3 +1,7 @@
+% # NOTE
+% # In order to avoid conflicts with application variable names,
+% # the layout uses all uppercase names for local variables.
+
 % # Start off with the boilerplate HTML
 <!doctype html>
 <html>
@@ -7,7 +11,7 @@
     <title>[pagevar get title [config :app_name]]</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
 %(
-set ie_compat {
+set IE_COMPAT {
 
     <!--[if lte IE 8]>
 	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-old-ie-min.css">
@@ -22,11 +26,11 @@ set ie_compat {
 }
 %)
 
-$ie_compat
+$IE_COMPAT
 
 [my include_stylesheet _layout.css]
-% foreach ss [pagevar get stylesheets {}] {
-    [my include_stylesheet $ss]
+% foreach SS [pagevar get stylesheets {}] {
+    [my include_stylesheet $SS]
 % }
 
 </head>
@@ -37,11 +41,10 @@ $ie_compat
 
   # Note the order of sections is important for non-responsive
   # layout to come out right
-  set section_order {header sidebar main supplement footer}
+  set SECTION_ORDER {header sidebar main supplement footer}
 
   # Defaults
-  set layout {
-      width 24
+  set LAYOUT {
       header {tag header cssclasses wf-header}
       footer {tag footer cssclasses wf-footer}
       main {tag main cssclasses wf-main width 14}
@@ -49,20 +52,21 @@ $ie_compat
       supplement {tag aside cssclasses wf-supplement width 5}
   }
 
-  set sections [pagevar get sections $section_order]
-  set responsive_threshold ""
-  if {[pagevar exists responsive_settings responsive_settings]} {
-      if {[dict exists $responsive_settings sections]} {
-          set responsive_sections [dict get $responsive_settings sections]
+  set SECTIONS [pagevar get sections $SECTION_ORDER]
+  set RESPONSIVE_THRESHOLD ""
+  if {[pagevar exists responsive_settings RESPONSIVE_SETTINGS]} {
+      if {[dict exists $RESPONSIVE_SETTINGS sections]} {
+          set RESPONSIVE_SECTIONS [dict get $RESPONSIVE_SETTINGS sections]
       } else {
-          set responsive_sections $sections
+          set RESPONSIVE_SECTIONS $SECTIONS
       }
-      if {[dict exists $responsive_settings threshold]} {
-          set responsive_threshold [dict get $responsive_settings threshold]
+      if {[dict exists $RESPONSIVE_SETTINGS threshold]} {
+          set RESPONSIVE_THRESHOLD [dict get $RESPONSIVE_SETTINGS threshold]
       } else {
-          set responsive_threshold sm
+          set RESPONSIVE_THRESHOLD sm
       }
   }
+
 %)
 
 
@@ -70,81 +74,80 @@ $ie_compat
 
 <div class='pure-g'>
 %(
-  foreach sect $sections {
-      page fetch $sect section($sect)
+  foreach SECT $SECTIONS {
+      page fetch $SECT CONTENT($SECT)
   }
-  set header_u "pure-u-1-1"
-  set footer_u "pure-u-1-1"
-  if {[info exists section(main)]} {
-      if {[info exists section(sidebar)] &&
-          [info exists section(supplement)]} {
-          if {$responsive_threshold ne ""} {
-              set main_u "pure-u-1 pure-u-${responsive_threshold}-14-24"
-              set supplement_u "pure-u-1 pure-u-${responsive_threshold}-5-24"
-              set sidebar_u "pure-u-1 pure-u-${responsive_threshold}-5-24"
+  set PUREU(header) "pure-u-1-1"
+  set PUREU(footer) "pure-u-1-1"
+  if {[info exists CONTENT(main)]} {
+      if {[info exists CONTENT(sidebar)] &&
+          [info exists CONTENT(supplement)]} {
+          if {$RESPONSIVE_THRESHOLD ne ""} {
+              set PUREU(main) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-14-24"
+              set PUREU(supplement) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-5-24"
+              set PUREU(sidebar) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-5-24"
           } else {
-              set main_u "pure-u-14-24"
-              set supplement_u "pure-u-5-24"
-              set sidebar_u "pure-u-5-24"
+              set PUREU(main) "pure-u-14-24"
+              set PUREU(supplement) "pure-u-5-24"
+              set PUREU(sidebar) "pure-u-5-24"
           }
-      } elseif {[info exists section(sidebar)]} {
-          if {$responsive_threshold ne ""} {
-              set main_u "pure-u-1 pure-u-${responsive_threshold}-19-24"
-              set sidebar_u "pure-u-1 pure-u-${responsive_threshold}-5-24"
+      } elseif {[info exists CONTENT(sidebar)]} {
+          if {$RESPONSIVE_THRESHOLD ne ""} {
+              set PUREU(main) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-19-24"
+              set PUREU(sidebar) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-5-24"
           } else {
-              set main_u "pure-u-19-24"
-              set sidebar_u "pure-u-5-24"
+              set PUREU(main) "pure-u-19-24"
+              set PUREU(sidebar) "pure-u-5-24"
           }
-      } elseif {[info exists section(supplement)]} {
-          if {$responsive_threshold ne ""} {
-              set main_u "pure-u-1 pure-u-${responsive_threshold}-19-24"
-              set supplement_u "pure-u-1 pure-u-${responsive_threshold}-5-24"
+      } elseif {[info exists CONTENT(supplement)]} {
+          if {$RESPONSIVE_THRESHOLD ne ""} {
+              set PUREU(main) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-19-24"
+              set PUREU(supplement) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-5-24"
           } else {
-              set main_u "pure-u-19-24"
-              set supplement_u "pure-u-5-24"
+              set PUREU(main) "pure-u-19-24"
+              set PUREU(supplement) "pure-u-5-24"
           }
       } else {
-          set main_u "pure-u-1-1"
+          set PUREU(main) "pure-u-1-1"
       }
   } else {
-      if {[info exists section(sidebar)] && [info exists section(supplement)]} {
-          if {$responsive_threshold ne ""} {
-              set supplement_u "pure-u-1 pure-u-${responsive_threshold}-1-2"
-              set sidebar_u "pure-u-1 pure-u-${responsive_threshold}-1-2"
+      if {[info exists CONTENT(sidebar)] && [info exists CONTENT(supplement)]} {
+          if {$RESPONSIVE_THRESHOLD ne ""} {
+              set PUREU(supplement) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-1-2"
+              set PUREU(sidebar) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-1-2"
           } else {
-              set supplement_u "pure-u-1-2"
-              set sidebar_u "pure-u-1-2"
+              set PUREU(supplement) "pure-u-1-2"
+              set PUREU(sidebar) "pure-u-1-2"
           }
-      } elseif {[info exists section(sidebar)]} {
-          set sidebar_u "pure-u-1-1"
-          set supplement_u "pure-u-1-1"
+      } elseif {[info exists CONTENT(sidebar)]} {
+          set PUREU(sidebar) "pure-u-1-1"
+          set PUREU(supplement) "pure-u-1-1"
       }
   }
 %)
 
 %(
-  set html ""
   # Note the order of sections is important for layout to come out right
-  foreach sect $section_order {
-      if {[info exists section($sect)]} {
-          set sect_settings [pagevar get $sect {}]
-          set cssclasses [dict get $layout $sect cssclasses]
-          if {[dict exists $sect_settings cssclasses]} {
-              set sect_cssclasses [dict get $sect_settings cssclasses]
-              if {[lindex $sect_cssclasses 0] eq "+"} {
-                  lappend cssclasses {*}[lrange $sect_cssclasses 1 end]
+  foreach SECT $SECTION_ORDER {
+      if {[info exists CONTENT($SECT)]} {
+          set SECT_SETTINGS [pagevar get $SECT {}]
+          set CSSCLASSES [dict get $LAYOUT $SECT cssclasses]
+          if {[dict exists $SECT_SETTINGS cssclasses]} {
+              set SECT_CSSCLASSES [dict get $SECT_SETTINGS cssclasses]
+              if {[lindex $SECT_CSSCLASSES 0] eq "+"} {
+                  lappend CSSCLASSES {*}[lrange $SECT_CSSCLASSES 1 end]
               } else {
-                  set cssclasses $sect_cssclasses
+                  set CSSCLASSES $SECT_CSSCLASSES
               }
           }
-          if {[dict exists $sect_settings tag]} {
-              set tag [dict get $sect_settings tag]
+          if {[dict exists $SECT_SETTINGS tag]} {
+              set tag [dict get $SECT_SETTINGS tag]
           } else {
-              set tag [dict get $layout $sect tag]
+              set tag [dict get $LAYOUT $SECT tag]
           }
 %)
-          <$tag class='[set ${sect}_u] $cssclasses'>
-              $section($sect)
+          <$tag class='$PUREU($SECT) $CSSCLASSES'>
+              $CONTENT($SECT)
           </$tag>
 %(
       }

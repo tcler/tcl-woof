@@ -693,8 +693,8 @@ oo::class create Controller {
         # templates. Inadvertent name clashes may occur. Also performance?
         # NO MORE - my variable {*}[info object vars [self]]
 
-        if {[page fetch layout content -alias [pagevar get layout _layout]]} {
-            return [list [page content_type] $content]
+        if {[page fetch layout _content -alias [pagevar get layout _layout]]} {
+            return [list [page content_type] $_content]
         } else {
             exception WOOF MissingTemplate "No layout template found for controller [dict get $_dispatchinfo controller], action [dict get $_dispatchinfo action]."
         }
