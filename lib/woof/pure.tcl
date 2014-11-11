@@ -94,19 +94,22 @@ proc pure::menu {menudefs args} {
         sm - md - lg - xl {
             # Recurse to generate two menu defs - one vertical and one
             # horizontal - wrapped by a screen size class
-            dict unset args -direction
+            dict unset args -orient
+            set classes ""
             if {[dict exists $args -classes]} {
                 set classes [dict get $args -classes]
                 dict unset args -classes
             }
-            return "[menu $menudefs {*}$args -direction vertical -classes [linsert $classes 0 wf-r-$orient]][menu $menudefs {*}$args -direction horizontal -classes [linsert $classes 0 wf-r-${orient}-]]"
+            set html [menu $menudefs {*}$args -orient vertical -classes [linsert $classes 0 wf-r-$orient]]
+            append html \n [menu $menudefs {*}$args -orient horizontal -classes [linsert $classes 0 wf-r-${orient}-]]
+            return $html
         }
         default {
             # Will error out for bad values
             set classes [dict get {
                 vertical "pure-menu"
                 horizontal "pure-menu pure-menu-horizontal"
-            }]
+            } $orient]
         }
     }
     
