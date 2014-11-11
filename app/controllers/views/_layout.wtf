@@ -67,6 +67,9 @@ $IE_COMPAT
       }
   }
 
+
+  array set WIDTHS [dict merge {sidebar 1 supplement 1 main 3} [pagevar get widths {}]]
+  set WIDTHS(total) [expr {$WIDTHS(sidebar) + $WIDTHS(supplement) + $WIDTHS(main)}]
 %)
 
 
@@ -83,43 +86,47 @@ $IE_COMPAT
       if {[info exists CONTENT(sidebar)] &&
           [info exists CONTENT(supplement)]} {
           if {$RESPONSIVE_THRESHOLD ne ""} {
-              set PUREU(main) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-14-24"
-              set PUREU(supplement) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-5-24"
-              set PUREU(sidebar) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-5-24"
+              set PUREU(main) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-$WIDTHS(main)-$WIDTHS(total)"
+              set PUREU(supplement) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-$WIDTHS(supplement)-$WIDTHS(total)"
+              set PUREU(sidebar) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-$WIDTHS(sidebar)-$WIDTHS(total)"
           } else {
-              set PUREU(main) "pure-u-14-24"
-              set PUREU(supplement) "pure-u-5-24"
-              set PUREU(sidebar) "pure-u-5-24"
+              set PUREU(main) "pure-u-$WIDTHS(main)-$WIDTHS(total)"
+              set PUREU(supplement) "pure-u-$WIDTHS(supplement)-$WIDTHS(total)"
+              set PUREU(sidebar) "pure-u-$WIDTHS(sidebar)-$WIDTHS(total)"
           }
       } elseif {[info exists CONTENT(sidebar)]} {
+          incr WIDTHS(main) $WIDTHS(supplement)
           if {$RESPONSIVE_THRESHOLD ne ""} {
-              set PUREU(main) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-19-24"
-              set PUREU(sidebar) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-5-24"
+              set PUREU(main) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-$WIDTHS(main)-$WIDTHS(total)"
+              set PUREU(sidebar) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-$WIDTHS(sidebar)-$WIDTHS(total)"
           } else {
-              set PUREU(main) "pure-u-19-24"
-              set PUREU(sidebar) "pure-u-5-24"
+              set PUREU(main) "pure-u-$WIDTHS(main)-$WIDTHS(total)"
+              set PUREU(sidebar) "pure-u-$WIDTHS(sidebar)-$WIDTHS(total)"
           }
       } elseif {[info exists CONTENT(supplement)]} {
+          incr WIDTHS(main) $WIDTHS(sidebar)
           if {$RESPONSIVE_THRESHOLD ne ""} {
-              set PUREU(main) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-19-24"
-              set PUREU(supplement) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-5-24"
+              set PUREU(main) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-$WIDTHS(main)-$WIDTHS(total)"
+              set PUREU(supplement) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-$WIDTHS(supplement)-$WIDTHS(total)"
           } else {
-              set PUREU(main) "pure-u-19-24"
-              set PUREU(supplement) "pure-u-5-24"
+              set PUREU(main) "pure-u-$WIDTHS(main)-$WIDTHS(total)"
+              set PUREU(supplement) "pure-u-$WIDTHS(supplement)-$WIDTHS(total)"
           }
       } else {
           set PUREU(main) "pure-u-1-1"
       }
   } else {
+      # No main section. Should we add its width somewhere as we do above?
       if {[info exists CONTENT(sidebar)] && [info exists CONTENT(supplement)]} {
           if {$RESPONSIVE_THRESHOLD ne ""} {
-              set PUREU(supplement) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-1-2"
-              set PUREU(sidebar) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-1-2"
+              set PUREU(supplement) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-$WIDTHS(supplement)-$WIDTHS(total)"
+              set PUREU(sidebar) "pure-u-1 pure-u-${RESPONSIVE_THRESHOLD}-$WIDTHS(sidebar)-$WIDTHS(total)"
           } else {
-              set PUREU(supplement) "pure-u-1-2"
-              set PUREU(sidebar) "pure-u-1-2"
+              set PUREU(supplement) "pure-u-$WIDTHS(supplement)-$WIDTHS(total)"
+              set PUREU(sidebar) "pure-u-$WIDTHS(sidebar)-$WIDTHS(total)"
           }
       } elseif {[info exists CONTENT(sidebar)]} {
+          # Only one of these two will be actually used
           set PUREU(sidebar) "pure-u-1-1"
           set PUREU(supplement) "pure-u-1-1"
       }
