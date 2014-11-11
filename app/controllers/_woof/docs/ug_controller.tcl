@@ -133,6 +133,8 @@ oo::class create UgController {
             _woof_ug.css pure-skin-ug.css
         }
 
+        pagevar set responsive_settings { threshold sm }
+
         pagevar set main {cssclasses {+ pure-skin-ug}}
 
         # Set page title based on the section

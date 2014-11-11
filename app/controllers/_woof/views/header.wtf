@@ -1,7 +1,13 @@
-<div>
+<div class='wf-r-sm'>
 <h2>Web Oriented Object Framework</h2>
 %if {[pagevar exists MODULE_SUBHEADING subheading]} {
    <h3>[hesc $subheading]</h3>
 % }
 </div>
+
+<div class='wf-r-sm-'>
+% set subheading [pagevar get MODULE_SUBHEADING ""]
+   <h3>Woof! [hesc $subheading]</h3>
+</div>
+
 
