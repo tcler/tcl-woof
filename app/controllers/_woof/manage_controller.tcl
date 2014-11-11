@@ -9,6 +9,8 @@ oo::class create ManageController {
         # have defined.
         pagevar set layout _layout
         
+        pagevar set responsive_settings { threshold sm }
+
         pagevar set stylesheets {
             _woof.css
         }
