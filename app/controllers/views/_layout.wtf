@@ -1,14 +1,4 @@
-%(
-  set layout {
-      page {width 24 skin {}}
-      header {tag header cssclasses wf-header}
-      footer {tag footer cssclasses wf-footer}
-      main {tag main cssclasses wf-main width 14}
-      sidebar {tag nav cssclasses wf-sidebar width 5}
-      supplement {tag aside cssclasses wf-supplement width 5}
-  }
-%)
-
+%# Start off with the boilerplate HTML
 <!doctype html>
 <html>
 <head>
@@ -41,35 +31,91 @@ $ie_compat
 
 </head>
 
+
+%(
+  # Figure out what layout is to be used
+
+  # Note the order of sections is important for non-responsive
+  # layout to come out right
+  set section_order {header sidebar main supplement footer}
+
+  # Defaults
+  set layout {
+      width 24
+      header {tag header cssclasses wf-header}
+      footer {tag footer cssclasses wf-footer}
+      main {tag main cssclasses wf-main width 14}
+      sidebar {tag nav cssclasses wf-sidebar width 5}
+      supplement {tag aside cssclasses wf-supplement width 5}
+  }
+
+  set sections [pagevar get sections $section_order]
+  set responsive_threshold ""
+  if {[pagevar exists responsive_settings responsive_settings]} {
+      if {[dict exists $responsive_settings sections]} {
+          set responsive_sections [dict get $responsive_settings sections]
+      } else {
+          set responsive_sections $sections
+      }
+      if {[dict exists $responsive_settings threshold]} {
+          set responsive_threshold [dict get $responsive_settings threshold]
+      } else {
+          set responsive_threshold sm
+      }
+  }
+%)
+
+
 <body>
 
 <div class='pure-g'>
 %(
-  set sects [pagevar get sections {header sidebar main supplement footer}]
-  foreach sect $sects {
-      page fetch $sect $sect
+  foreach sect $sections {
+      page fetch $sect section($sect)
   }
   set header_u "pure-u-1-1"
   set footer_u "pure-u-1-1"
-  if {[info exists main]} {
-      if {[info exists sidebar] && [info exists supplement]} {
-          set main_u "pure-u-1 pure-u-md-14-24"
-          set supplement_u "pure-u-1 pure-u-md-5-24"
-          set sidebar_u "pure-u-1 pure-u-md-5-24"
-      } elseif {[info exists sidebar]} {
-          set main_u "pure-u-1 pure-u-md-19-24"
-          set sidebar_u "pure-u-1 pure-u-md-5-24"
-      } elseif {[info exists supplement]} {
-          set main_u "pure-u-1 pure-u-md-19-24"
-          set supplement_u "pure-u-1 pure-u-md-5-24"
+  if {[info exists section(main)]} {
+      if {[info exists section(sidebar)] &&
+          [info exists section(supplement)]} {
+          if {$responsive_threshold ne ""} {
+              set main_u "pure-u-1 pure-u-${responsive_threshold}-14-24"
+              set supplement_u "pure-u-1 pure-u-${responsive_threshold}-5-24"
+              set sidebar_u "pure-u-1 pure-u-${responsive_threshold}-5-24"
+          } else {
+              set main_u "pure-u-14-24"
+              set supplement_u "pure-u-5-24"
+              set sidebar_u "pure-u-5-24"
+          }
+      } elseif {[info exists section(sidebar)]} {
+          if {$responsive_threshold ne ""} {
+              set main_u "pure-u-1 pure-u-${responsive_threshold}-19-24"
+              set sidebar_u "pure-u-1 pure-u-${responsive_threshold}-5-24"
+          } else {
+              set main_u "pure-u-19-24"
+              set sidebar_u "pure-u-5-24"
+          }
+      } elseif {[info exists section(supplement)]} {
+          if {$responsive_threshold ne ""} {
+              set main_u "pure-u-1 pure-u-${responsive_threshold}-19-24"
+              set supplement_u "pure-u-1 pure-u-${responsive_threshold}-5-24"
+          } else {
+              set main_u "pure-u-19-24"
+              set supplement_u "pure-u-5-24"
+          }
       } else {
           set main_u "pure-u-1-1"
       }
   } else {
-      if {[info exists sidebar] && [info exists supplement]} {
-          set supplement_u "pure-u-1 pure-u-md-1-2"
-          set sidebar_u "pure-u-1 pure-u-md-1-2"
-      } elseif {[info exists sidebar]} {
+      if {[info exists section(sidebar)] && [info exists section(supplement)]} {
+          if {$responsive_threshold ne ""} {
+              set supplement_u "pure-u-1 pure-u-${responsive_threshold}-1-2"
+              set sidebar_u "pure-u-1 pure-u-${responsive_threshold}-1-2"
+          } else {
+              set supplement_u "pure-u-1-2"
+              set sidebar_u "pure-u-1-2"
+          }
+      } elseif {[info exists section(sidebar)]} {
           set sidebar_u "pure-u-1-1"
           set supplement_u "pure-u-1-1"
       }
@@ -78,9 +124,9 @@ $ie_compat
 
 %(
   set html ""
-  # Note the order of sects is important for layout to come out right
-  foreach sect {header sidebar main supplement footer} {
-      if {[info exists $sect]} {
+  # Note the order of sections is important for layout to come out right
+  foreach sect $section_order {
+      if {[info exists section($sect)]} {
           set sect_settings [pagevar get $sect {}]
           set cssclasses [dict get $layout $sect cssclasses]
           if {[dict exists $sect_settings cssclasses]} {
@@ -98,7 +144,7 @@ $ie_compat
           }
 %)
           <$tag class='[set ${sect}_u] $cssclasses'>
-              [set $sect]
+              $section($sect)
           </$tag>
 %(
       }
