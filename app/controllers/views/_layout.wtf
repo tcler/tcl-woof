@@ -47,9 +47,9 @@ $IE_COMPAT
   set LAYOUT {
       header {tag header cssclasses wf-header}
       footer {tag footer cssclasses wf-footer}
-      main {tag main cssclasses wf-main width 14}
-      sidebar {tag nav cssclasses wf-sidebar width 5}
-      supplement {tag aside cssclasses wf-supplement width 5}
+      main {tag main cssclasses wf-main}
+      sidebar {tag nav cssclasses wf-sidebar}
+      supplement {tag aside cssclasses wf-supplement}
   }
 
   set SECTIONS [pagevar get sections $SECTION_ORDER]

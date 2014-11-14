@@ -14,22 +14,22 @@ oo::class create UgController {
         set _toc {
             {index "Detailed Table of Contents"}
             {preface Preface}
-            {system_requirements "System Requirements"}
-            {quick_start "Quick Start"}
-            {qs_first_steps "First Steps" 1}
-            {qs_stubs_generate "Generating Stubs" 1}
-            {qs_stubs_implement "Implementing the Stubs" 1}
-            {qs_session "Keeping State" 1}
-            {qs_page_display "Displaying the Page" 1}
-            {qs_enhancements "Enhancing the Application" 1}
-            {qs_page_layout "Laying out a Page" 1}
-            {qs_story_so_far "The Story So Far" 1}
-            {qs_wtf_syntax "Writing Page Templates" 1}
+            {system_requirements "System requirements"}
+            {quick_start "Quick start"}
+            {qs_first_steps "First steps" 1}
+            {qs_stubs_generate "Generating stubs" 1}
+            {qs_stubs_implement "Implementing the stubs" 1}
+            {qs_session "Keeping state" 1}
+            {qs_page_display "Displaying the page" 1}
+            {qs_enhancements "Enhancing the application" 1}
+            {qs_page_layout "Laying out a page" 1}
+            {qs_story_so_far "The story so far" 1}
+            {qs_wtf_syntax "Writing page templates" 1}
             {qs_purecss "Stylin' with PureCSS" 1}
-            {qs_user_input "Getting User Input" 1}
-            {qs_flash "Using the Flash" 1}
-            {qs_default_page "Configuring the Default Page" 1}
-            {qs_finish "Finishing Up" 1}
+            {qs_user_input "Getting user input" 1}
+            {qs_flash "Using the flash" 1}
+            {qs_default_page "Configuring the default page" 1}
+            {qs_finish "Finishing up" 1}
             {installation "Installation"}
             {install_under_apache "Woof! under Apache 2" 1}
             {apache_cgi_dedicated "Dedicated CGI on Apache" 2}
@@ -43,66 +43,75 @@ oo::class create UgController {
             {start_scgi "Running as an SCGI server" 1}
             {start_scgi_linux "SCGI on Linux" 2}
             {start_scgi_windows "SCGI on Windows" 2}
-            {install_final_steps "Verifying the Installation" 1}
-            {basics "Woof! Basics"}
-            {mvc "The Model-View-Controller Architecture" 1}
-            {interpreter "The Woof! Interpreter Model" 1}
-            {loading_packages "Loading Packages" 2}
-            {filesystem_layout "File System Layout" 1}
-            {directory_structure "Directory Structure" 2}
-            {file_naming  "File Naming and Ownership" 2}
-            {configuration "Configuration Settings" 1}
-            {development_aids "Development Aids" 1}
-            {request_handling "Request Handling"}
+            {install_final_steps "Verifying the installation" 1}
+            {basics "Woof! basics"}
+            {mvc "The Model-View-Controller architecture" 1}
+            {interpreter "The Woof! interpreter model" 1}
+            {loading_packages "Loading packages" 2}
+            {filesystem_layout "File system layout" 1}
+            {directory_structure "Directory structure" 2}
+            {file_naming  "File naming and ownership" 2}
+            {configuration "Configuration settings" 1}
+            {development_aids "Development aids" 1}
+            {request_handling "Request handling"}
             {url_dispatcher "URL Mapping" 1}
-            {default_dispatcher "Default URL Mapping" 2}
-            {routes "URL Routes" 2}
-            {url_construction "URL Construction" 2}
-            {controller_object "The <span class='ug-code'>controller</span> Object" 1}
-            {controller_example "A Simple Controller Example" 2}
-            {implementing_controllers "Implementing Controllers" 2}
-            {implementing_actions "Implementing Actions" 2}
-            {request_object "The <span class='ug-code'>request</span> Object" 1}
-            {session_object "The <span class='ug-code'>session</span> Object" 1}
-            {icookies_object "The <span class='ug-code'>icookies</span> Object" 1}
-            {flash_object "The <span class='ug-code'>flash</span> Object" 1}
-            {params_object "The <span class='ug-code'>params</span> Object" 1}
-            {env_object "The <span class='ug-code'>env</span> Object" 1}
+            {default_dispatcher "Default URL mapping" 2}
+            {routes "URL routes" 2}
+            {url_construction "URL construction" 2}
+            {controller_object "The <span class='ug-code'>controller</span> object" 1}
+            {controller_example "A simple controller example" 2}
+            {implementing_controllers "Implementing controllers" 2}
+            {implementing_actions "Implementing actions" 2}
+            {request_object "The <span class='ug-code'>request</span> object" 1}
+            {session_object "The <span class='ug-code'>session</span> object" 1}
+            {icookies_object "The <span class='ug-code'>icookies</span> object" 1}
+            {flash_object "The <span class='ug-code'>flash</span> object" 1}
+            {params_object "The <span class='ug-code'>params</span> object" 1}
+            {env_object "The <span class='ug-code'>env</span> object" 1}
             {response_construction "Response construction"}
-            {response_object "The <span class='ug-code'>response</span> Object" 1}
-            {normal_response "Returning a Normal Response" 1}
-            {redirects "Redirecting a Request" 1}
-            {error_responses "Sending Error Responses" 1}
-            {response_headers "Adding HTTP Response Headers" 1}
-            {sending_files "Sending Files and Non-HTML Data" 1}
-            {ocookies_object "The <span class='ug-code'>ocookies</span> Object" 1}
-            {page_generation "Page Generation"}
-            {page_layout "Page Layout" 1}
-            {default_page_layout "Default Page Layout" 2}
-            {extending_default_layout "Extending the Default Layout" 3}
-            {custom_page_layout "Custom Page Layout" 2}
-            {page_sections "Page Sections" 1}
-            {page_section_templates "Template Based Page Sections" 2}
-            {page_section_direct "Directly Generated Page Sections" 2}
-            {locating_templates "Locating Templates" 1}
-            {template_plugins "Template Processor Plug-Ins" 1}
-            {template_plugin_implementation "Implementing Template Processors" 2}
-            {template_plugin_config "Configuring Template Processors" 2}
-            {pagevar "The <span class='ug-code'>pagevar</span> Object" 1}
-            {static_resources "Using Static Resources" 1}
-            {locating_resources "Locating Static Resources" 2}
-            {using_images "Using Images" 2}
-            {using_stylesheets "Using Stylesheets" 2}
+            {response_object "The <span class='ug-code'>response</span> object" 1}
+            {normal_response "Returning a normal response" 1}
+            {redirects "Redirecting a request" 1}
+            {error_responses "Sending error responses" 1}
+            {response_headers "Adding HTTP response headers" 1}
+            {sending_files "Sending files and non-HTML data" 1}
+            {ocookies_object "The <span class='ug-code'>ocookies</span> object" 1}
+            {page_generation "Page generation"}
+            {page_layout "Page layout" 1}
+            {default_page_layout "Default page layout" 2}
+            {page_title "Setting the page title" 3}
+            {default_layout_tailoring "Tailoring the default layout" 3}
+            {extending_default_layout "Extending the default layout" 3}
+            {custom_page_layout "Custom page layout" 2}
+            {page_sections "Page sections" 1}
+            {page_section_templates "Template based page sections" 2}
+            {page_section_direct "Directly generated page sections" 2}
+            {locating_templates "Locating templates" 1}
+            {template_plugins "Template processor plug-ins" 1}
+            {template_plugin_implementation "Implementing template processors" 2}
+            {template_plugin_config "Configuring template processors" 2}
+            {pagevar "The <span class='ug-code'>pagevar</span> object" 1}
+            {static_resources "Using static resources" 1}
+            {locating_resources "Locating static resources" 2}
+            {using_images "Using images" 2}
+            {using_stylesheets "Using stylesheets" 2}
             {wtf "Woof! Template Format" 1}
+            {responsive_web_design "Responsive web design"}
+            {purecss_screen_widths "Pure CSS screen widths" 1}
+            {enabling_responsive_pages "Enabling responsive pages" 1}
+            {setting_responsive_threshold "Setting the responsive threshold" 1}
+            {responsive_section_layout "Responsive section layout" 1}
+            {responsive_content_visibility "Displaying responsive content" 1}
+            {responsive_menus "Responsive menus" 1}
             {localization "Localization"}
-            {client_language "Client Language Preference" 1}
-            {message_catalogs "Using Message Catalogs" 1}
-            {language_specific_pages "Language-Specific Page Templates" 1}
-            {library "The Woof! Library"}
-            {error_handling "Error Handling" 1}
-            {error_display "Error Pages" 2}
-            {error_generation "Generating Exceptions" 2}
-            {logging "The Logging Interface" 1}
+            {client_language "Client language preference" 1}
+            {message_catalogs "Using message catalogs" 1}
+            {language_specific_pages "Language-specific page templates" 1}
+            {library "The Woof! library"}
+            {error_handling "Error handling" 1}
+            {error_display "Error pages" 2}
+            {error_generation "Generating exceptions" 2}
+            {logging "The Logging interface" 1}
             {purecss "Pure CSS controls" 1}
             {purecss_buttons "Pure CSS buttons" 2}
             {purecss_menu "Pure CSS menus" 2}
@@ -110,18 +119,18 @@ oo::class create UgController {
             {purecss_paginator "Pure CSS paginator" 2}
             {purecss_form "Pure CSS forms" 2}
             {purecss_skins "Skinning using Pure CSS" 2}
-            {tools "Tools and Utilities"}
-            {installer "installer - Installation Utility" 1}
+            {tools "Tools and utilities"}
+            {installer "installer - installation utility" 1}
             {wag "wag - Woof! Application Generator" 1}
             {generating_stubs "Generating controller stubs" 2}
             {verifying_stubs "Verifying controller stubs" 2}
-            {bowwow "bowwow - a Lightweight Web Server" 1}
+            {bowwow "bowwow - a Lightweight web Server" 1}
             {bowwow_exe "bowwow.exe standalone executable" 2}
             {bowwow_script "bowwow.tcl script" 2}
-            {console "console - Interactive Console" 1}
-            {ruffian "ruffian - Documentation Generator" 1}
-            {scgi_winservice "scgi_winservice - Woof! Windows Service" 1}
-            {recommended_reading "Recommended Reading"}
+            {console "console - interactive console" 1}
+            {ruffian "ruffian - documentation generator" 1}
+            {scgi_winservice "scgi_winservice - Woof! Windows service" 1}
+            {recommended_reading "Recommended reading"}
             {acknowledgements "Acknowledgements"}
         }
 
@@ -184,12 +193,32 @@ oo::class create UgController {
         }
     }
 
+    method _filename {path} {
+        return "<span class='ug-filename'>[::woof::util::hesc $path]</span>"
+    }
+
+    method _ui {text} {
+        return "<span class='ug-ui'>[::woof::util::hesc $text]</span>"
+    }
+
+    method _code {text} {
+        return "<span class='ug-code'>[::woof::util::hesc $text]</span>"
+    }
+
     method _code_sample_with_output {text {escape true}} {
         append html "[my _code_sample $text $escape]"
         append html "<div style='margin-left: 2em;'>"
         append html [uplevel 1 [list subst $text]]
         append html </div>
         return $html
+    }
+
+    method _note {text} {
+        return "<p class='ug-note'>NOTE: [::woof::util::hesc $text]</p>"
+    }
+
+    method _note {text} {
+        append html "<table class='ug-note'><tbody><tr><td>NOTE</td><td>[::woof::util::hesc $text]</td></tr></tbody></table>"
     }
 
     method _manpage_link {name {display ""}} {

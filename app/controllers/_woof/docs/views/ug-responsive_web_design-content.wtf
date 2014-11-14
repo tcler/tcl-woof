@@ -1,0 +1,37 @@
+<p>
+With the proliferation of devices with screens of different sizes, the
+one size (or a few) fits all philosophy of web page design does not
+always work. What looks good on your desktop display may not show up
+well on your smartphone in terms of both looks and usability.
+</p>
+<p>
+One solution is to have a entirely separate web site geared towards smaller
+devices. While that might afford the most flexibility and best user
+experience, maintaining multiple web sites is an expensive proposition.
+An alternative approach that provides many, if not all, of the same benefits
+has become popular. This approach, termed <em>responsive web design</em>,
+makes use of various techniques to display the same content differently
+based on the device screen geometry (or to be more precise, the
+browser window size).
+</p>
+<p>
+Responsive techniques include
+<ul>
+  <li>Choice of display fonts
+  <li>Selective display of non-essential content
+  <li>Automatic image scaling
+  <li>Different page layouts
+  <li>Use of different controls
+</ul>
+</p>
+
+<p>
+Pure CSS provides several capabilities to make it easier to implement
+responsive web sites. Woof! layers on these and provides some additional
+features. This chapter describes their use.
+</p>
+
+[my _note {
+Again, the description in this chapter assumes use of the default layout
+but the techniques may be applied to custom layouts as well.
+}]

@@ -4,6 +4,9 @@
 # All rights reserved.
 # See the file LICENSE in the Woof root directory for license
 
+# TBD - add raw/noescape support for all commands
+# TBD - add text/p capability to forms.
+
 # Commands in this file will be defined relative to whatever namespace
 # they are sourced in.
 

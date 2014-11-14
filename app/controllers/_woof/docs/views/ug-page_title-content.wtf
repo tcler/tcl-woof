@@ -1,0 +1,12 @@
+<p>
+  The default layout template retrieves the page title from the
+  [my _code title] key in the [my _chapter_link pagevar pagevar] object.
+  This is generally be set by the application controller as </p>
+[my _code_sample {
+   pagevar set title "My Application"
+}]
+<p>
+If unset, it defaults to the [my _code "name"] setting in the 
+[my _code "app"] section of the
+[my _chapter_link configuration "configuration file"].
+</p>
