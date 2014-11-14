@@ -1,0 +1,17 @@
+<p>
+In order for the default layout to generate responsive web pages, the
+key [my _code responsive_settings] must exist in the
+[my _chapter_link pagevar [my _code pagevar]] object.
+Setting this key to an empty value is sufficient to enable
+responsive web pages.
+</p>
+[my _code_sample {
+  pagevar set response_settings {}
+}]
+<p>
+The value for [my _code response_settings] should be a dictionary
+that configures certain parameters used for responsive web pages. Setting
+the dictionary to empty will enable responsive pages using defaults
+for these parameters. These parameters, their effects and the defaults
+are covered in subsequent sections.
+</p>

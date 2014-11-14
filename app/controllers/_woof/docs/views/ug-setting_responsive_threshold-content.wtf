@@ -1,0 +1,22 @@
+<p>
+Responsive web pages display differently based on whether the browser or
+device width is greater or less than some threshold.  Pure CSS defines
+four screen widths for this purpose as described
+[my _chapter_link purecss_screen_widths earlier]. Woof! applications
+may choose any of these thresholds by setting the
+[my _code threshold] key in the [my _code response_settings]
+entry of the [my _code pagevar] object. For example,
+</p>
+[my _code_sample {
+   pagevar set response_settings {
+     threshold md
+   }
+}]
+<p>
+will set the responsive threshold to [my _code md] (or medium). This means
+the generated pages will show differently for screen widths smaller
+than medium than for widths medium and above.
+</p>
+<p>
+If unspecified in [my _code response_settings], the [my _code threshold] value defaults to [my _code sm].
+</p>

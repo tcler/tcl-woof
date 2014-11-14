@@ -1,0 +1,20 @@
+<p>
+Pure CSS defines breakpoints or thresholds for classifying screen widths.
+
+The built-in screen width definitions in Pure CSS are shown in the
+table below. Note however you can change these thresholds using
+tools on the <a href='http://purecss.io'>Pure CSS</a> web site.
+</p>
+[woof::pure::table {
+ { sm { >= 568px } }
+ { md {>= 768px} }
+ { lg {>= 1024px} }
+ { xl {>= 1280px} }
+} -heading {{Key} {Screen width}}]
+
+<p>
+In essence, these allow you to control at what screen widths the
+responsive behaviour takes effect and Woof! makes use of these
+thresholds for specifying its own behaviour as described in subsequent
+sections.
+</p>

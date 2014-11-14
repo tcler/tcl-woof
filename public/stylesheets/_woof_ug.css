@@ -103,12 +103,18 @@
   padding-left: 0em;
 }
 
+.wf-sidebar li {
+    /* So hanging indent for continuation menu items */
+    text-indent: -1em;
+}
+
 .wf-sidebar li, .ug-hnav li {
   list-style-type: none;
   /* list-style-image: url(../images/_woof/navarrowright.png); */
   font-weight: bold;
   color: #e99a56;
 }
+
 
 .wf-sidebar a:link, .wf-sidebar a:visited {
   text-decoration: none;
@@ -209,7 +215,12 @@ ul.ug-nobullets li {
     vertical-align: top;
 }
 
-.ug-note {
+table.ug-note td {
     font-style: italic;
-    font-size: smaller;
+    vertical-align: middle;
+    padding: 0.5em;
+}
+
+table.ug-note td:first-child {
+    border-right: thin solid grey;
 }

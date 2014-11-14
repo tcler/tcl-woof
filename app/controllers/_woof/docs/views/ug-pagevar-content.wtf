@@ -1,52 +1,49 @@
 <p>For each request, Woof! automatically creates an object called
-<span class="ug-code">pagevar</span> of class 
+[my _code "pagevar"] of class 
 [my _manpage_link ::woof::util::Map] and intializes it to default values.
 By convention, this object contains settings related to page layout options
 and other page meta information such as title or stylesheets.</p>
 
 <p>
-These <code>pagevar</code> values may
+These [my _code "pagevar"] values may
 be set in either the controller constructor and/or action method
 depending on how widely they are to be applied.</p>
 
 <p>Applications may define their own keys and store them and associated data 
-in the <span class="ug-code">pagevar</span> object but to avoid conflicts
+in the [my _code "pagevar"] object but to avoid conflicts
 with Woof! usage, it is advisable to have the keys start with an upper
 case character.</p>
 
 <p>The keys currently defined by Woof! are described below.</p>
 
-<h3><code>layout</code></h3>
+<h3>[my _code "layout"]</h3>
 <p>Allows overriding of the constructed name of the layout file for
   the current request. See [my _chapter_link page_layout] for details.</p>
 
-<h3><span class='ug-code'>title</span></h3>
+<h3>[my _code "title"]</h3>
 <p>The default layout uses this as the title for the page. 
-  Usually set by the application controller as </p>
-[my _code_sample {
-   pagevar set title "My Application"
-}]
-<p>
-If unset, defaults
-to the <span class='ug-code'>name</span> setting in the 
-<span class='ug-code'>app</span> section of the
-[my _chapter_link configuration "configuration file"].
-</p>
+  See [my _chapter_link page_title].
 
-<h3><span class='ug-code'>stylesheets</span></h3>
+<h3>[my _code "stylesheets"]</h3>
 <p>The list of stylesheets to include in the page, if any. 
 Each element of this list is linked into the page using 
 the [my _chapter_link using_stylesheets {include_stylesheet}] method.
 </p>
 
-<h3><span class='ug-code'>header, footer, main, sidebar, supplement</span></h3>
+<h3>[my _code "header, footer, main, sidebar, supplement"]</h3>
 <p>
 Each of these keys contains a dictionary that specifies settings for the
 corresponding page section in the default layout. 
 The content of this dictionary are detailed in 
-[my _chapter_link customizing_default_layout_sections].
+[my _chapter_link default_layout_tailoring].
 </p>
 
+<h3>[my _code widths]</h3>
+Specifies the relative widths of page sections.
+See [my _chapter_link default_layout_tailoring] for details.
 
-
-
+<h3>[my _code responsive_settings]</h3>
+The presence of this key results in the default layout generating
+a responsive web page.
+A description of the contents of this key are provided in the 
+[my _chapter_link responsive_web_design] chapter.
