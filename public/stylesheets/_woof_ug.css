@@ -5,7 +5,10 @@
     padding-top: 0em;
 }
 .wf-sidebar {
-    padding-top: 0.5em;
+    padding: 0em;
+}
+.wf-sidebar > div {
+    padding: 0.6em;
 }
 
 /* Customize page sections */

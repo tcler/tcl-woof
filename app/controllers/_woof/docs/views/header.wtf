@@ -11,6 +11,8 @@
   <span style='font-weight:bold;'>Woof!<br>[hesc $subheading]</span>
 </div>
 <div class='pure-u-2-5'>
-  <a href='[my url_for -action index]' style='color:white; float:right;text-decoration:none;'>Table of Contents <span style='font-size:larger;'>\U00BB</span></a>
+  <br><a href='[my url_for -action index]' onClick="return ugShowToc();" style='color:white; float:right;text-decoration:none;'>Table of Contents</a>
 </div>
 </div>
+
+%# href='[my url_for -action index]' 

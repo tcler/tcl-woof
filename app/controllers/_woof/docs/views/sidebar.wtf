@@ -1,4 +1,4 @@
-<div class='wf-r-sm'>
+<div id='toc' class='wf-r-sm'>
 <h2>Table of Contents</h2>
 <hr>
 % my variable _toc

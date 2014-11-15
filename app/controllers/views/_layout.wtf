@@ -28,6 +28,10 @@ set IE_COMPAT {
 
 $IE_COMPAT
 
+% foreach JS [pagevar get scripts {}] {
+    [my include_javascript $JS]
+% }
+
 [my include_stylesheet _layout.css]
 % foreach SS [pagevar get stylesheets {}] {
     [my include_stylesheet $SS]
