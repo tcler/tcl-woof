@@ -1,6 +1,6 @@
 <p>
 Pure CSS styled menus can be created with the
-[my _manpage_link "woof::pure::menu" <code>woof::pure::menu</code>]
+[my _manpage_link "::woof::pure::menu" ::woof::pure::menu]
 command. The menus have an optional heading. Each menu item is linked
 to a URL and is shown disabled if the URL is empty. 
 Empty menu items act as separators.

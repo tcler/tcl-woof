@@ -18,5 +18,6 @@ the generated pages will show differently for screen widths smaller
 than medium than for widths medium and above.
 </p>
 <p>
-If unspecified in [my _code response_settings], the [my _code threshold] value defaults to [my _code sm].
+If unspecified in [my _code response_settings],
+the [my _code threshold] value defaults to [my _code sm] (small).
 </p>

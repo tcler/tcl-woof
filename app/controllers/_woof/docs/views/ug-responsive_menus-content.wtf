@@ -1,1 +1,6 @@
-responsive menus
+<p>
+Responsive web pages often show menus in a vertical navigation pane if the
+window is wide enough or as a horizontal bar on narrow windows. This
+type of design is directly supported in Woof! through the
+[my _manpage_link "::woof::pure::menu" ::woof::pure::menu] command.
+See [my _chapter_link purecss_menu] for details.
