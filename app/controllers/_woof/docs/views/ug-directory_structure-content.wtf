@@ -13,19 +13,19 @@ directly by the Web server without invoking any Woof! code.</p>
 <h3>Directory <span class="ug-filename">public/stylesheets</span></h3>
 <p>This directory is the root of the directory tree containing all CSS
 stylesheets referenced by the application code.
-<b>TBD - describe the controller based search paths.</b>
+See [my _chapter_link locating_resources] for how stylesheets are located.
 </p>
 
 <h3>Directory <span class="ug-filename">public/images</span></h3>
 <p>This directory is the root of directory tree containing all images
 referenced by the application code.
-<b>TBD - describe the controller based search paths.</b>
+See [my _chapter_link locating_resources] for how images are located.
 </p>
 
-<h3>Directory <span class="ug-filename">public/javascript</span></h3>
+<h3>Directory <span class="ug-filename">public/js</span></h3>
 <p>This directory is the root of directory tree containing Javascript
 referenced by the application code.
-<b>TBD - describe the controller based search paths.</b>
+See [my _chapter_link locating_resources] for how Javascript files are located.
 </p>
 
 <h3>Directory <span class="ug-filename">lib</span></h3>

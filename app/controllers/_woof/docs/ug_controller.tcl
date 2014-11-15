@@ -95,6 +95,7 @@ oo::class create UgController {
             {locating_resources "Locating static resources" 2}
             {using_images "Using images" 2}
             {using_stylesheets "Using stylesheets" 2}
+            {using_javascript "Using Javascript" 2}
             {wtf "Woof! Template Format" 1}
             {responsive_web_design "Responsive web design"}
             {purecss_screen_widths "Pure CSS screen widths" 1}
@@ -138,6 +139,8 @@ oo::class create UgController {
         # have defined.
         pagevar set layout _layout
         
+        pagevar set scripts { _woof_ug.js }
+
         pagevar set stylesheets {
             _woof_ug.css pure-skin-ug.css
         }
