@@ -206,13 +206,14 @@ oo::class create UgController {
     }
 
     method _code_sample_with_output {text {escape true}} {
-        append html "[my _code_sample $text $escape]"
-        append html "<div style='margin-left: 2em;'>"
-        append html [uplevel 1 [list subst $text]]
-        append html </div>
+        append html "[my _code_sample $text $escape]\n"
+        append html [my _sample_output [uplevel 1 [list subst $text]]]
         return $html
     }
 
+    method _sample_output html {
+        return "<div class='ug-sample'>$html</div>"
+    }
     method _note {text} {
         return "<p class='ug-note'>NOTE: [::woof::util::hesc $text]</p>"
     }

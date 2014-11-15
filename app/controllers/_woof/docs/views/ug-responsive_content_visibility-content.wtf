@@ -1,2 +1,36 @@
-Use of wf-r-sm and wf-r-sm-
+<p>
+In a responsive web page with constrained screen width, you may want to
+hide or show different content depending on the screen width. Woof! facilitates
+this by defining CSS classes that show or hide content depending on
+screen width. These classes are shown in the table below.
+</p>
 
+%(
+  set tab {}
+  foreach rcls {sm md lg xl} {
+      lappend tab [list "<span style='white-space:nowrap;'>[my _code wf-r-${rcls}-]</span>" "Display if width is <em>less than</em> the [my _code $rcls] threshold."]
+      lappend tab [list "<span style='white-space:nowrap;'>[my _code wf-r-${rcls}]</span>" "Display if width is <em>greater than or equal to</em> the [my _code sm] threshold."]
+  }
+%)
+[woof::pure::table $tab -heading {Class Description} -raw 1]
+<p>
+These classes can be used in combination to generate pages with different
+content for different screen widths. This is illustrated in the example below.
+If you are using a desktop browser and
+maximize the browser window width, 
+then narrow it down continuously, you will see the displayed content
+below the example change.
+
+[my _code_sample_with_output {
+<p>
+  This line will always display.
+  <div class='wf-r-lg'>This will only show up in a very wide window.</div>
+  <div class='wf-r-sm'>This content will only display on a window that is not too narrow.</div>
+  <div class='wf-r-sm-'>This content will only display on a narrow window.</div>
+</p>
+}]
+
+<p>
+You can even see this effect for this user guide. As you narrow the window,
+the sidebar containing the table of contents will disappear.
+</p>

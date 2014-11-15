@@ -1,9 +1,26 @@
 <p>
 The most immediate impact of enabling responsive web pages is related
-to how the page sections are layed out.
+to how the page sections are layed out. In a non-responsive page,
+page sections are layed out as described in 
+[my _chapter_link default_page_layout] - the header and footer
+occupying the full screen width at the top and bottom, and the 
+sidebar, main and supplement sections positioned as columns between them.
+</p>
+<p>
+In a responsive page, this layout is changed as follows.
+</p>
+<ul>
+<li>On screens with
+width greater than or equal to the configured 
+[my _chapter_link setting_responsive_threshold threshold]
+the layout is unchanged.
+<li>On screens smaller than the threshold however,
+the layout is changed so that every section occupies the entire width
+of the screen in the order header, sidebar, main, supplement and footer.
+</ul>
 
-
-How responsive sections are positioned
-
-Hiding responsive sections
-
+<p>
+In addition to changing the positioning, you may also want to hide content or
+show different content in a responsive page. This is discussed in the next
+section.
+</p>
