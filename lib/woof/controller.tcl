@@ -484,7 +484,7 @@ oo::class create Controller {
         # Right now we encode only query above
         # TBD - Moreover who does the HTML encoding in actual hrefs?
         # TBD - does anchor come before/after query?
-        return set url "$protocol://$host_port$url"
+        return "$protocol://$host_port$url"
     }
 
     method link_to {html args} {
@@ -561,7 +561,7 @@ oo::class create Controller {
         # URL. A relative URL is qualified with the URL root for the Woof
         # application. An absolute URL is returned as is.
 
-        if {![regexp -- {^[a-z0-9+.-][a-z0-9+.-]*:|^/} $resource]} {
+        if {![regexp -nocase -- {(?:^[a-z0-9+.-]+:)|(?:^/)} $resource]} {
             set resource [file join [config get url_root] $resource]
         }
 
@@ -569,11 +569,50 @@ oo::class create Controller {
         # -fullyqualify BOOLEAN - if true, a fully qualified URL (includes
         #  scheme and host) is returned in all cases.
         #  
-        if {[::woof::util::dict_get $args -fullyqualify true]} {
+        if {[::woof::util::dict_get $args -fullyqualify true] &&
+            ![regexp -nocase -- {^[a-z0-9+.-]+:} $resource]} {
             return [my url_for -urlpath $resource -fullyqualify true]
         } else {
             return $resource
         }
+    }
+
+    method url_for_stylesheet {stylesheet args} {
+        # Constructs the URL for a stylesheet
+        # stylesheet - identifies the stylesheet, may be a file name, relative 
+        #  or absolute url (see url_for_static)
+        # args - may be either a variable number of alternating attribute
+        #  and value elements or a single list argument containing them
+        #  See url_for_static for options.
+        # Returns the constructed URL.
+
+        return [my url_for_static $stylesheet -subdir stylesheets {*}$args]
+    }
+
+    method url_for_image {image args} {
+        # Constructs the URL for a stylesheet
+        # image - identifies the image, may be a file name, relative 
+        #  or absolute url (see url_for_static)
+        #
+        # args - may be either a variable number of alternating attribute
+        #  and value elements or a single list argument containing them
+        #  See url_for_static for options.
+        # Returns the constructed URL.
+
+        return [my url_for_static $image -subdir images {*}$args]
+    }
+
+    method url_for_javascript {js args} {
+        # Constructs the URL for a Javascript resource
+        # hs - identifies the Javascript resource, may be a file name, relative 
+        #  or absolute url (see url_for_static)
+        #
+        # args - may be either a variable number of alternating attribute
+        #  and value elements or a single list argument containing them
+        #  See url_for_static for options.
+        # Returns the constructed URL.
+
+        return [my url_for_static $js -subdir js {*}$args]
     }
 
     method include_image {image args} {
@@ -590,7 +629,7 @@ oo::class create Controller {
 
         set attrs [::woof::util::tag_attr_fragment \
                        [dict merge {alt Image} $args]]
-        return "<img src='[my url_for_static $image -subdir images]' $attrs>"
+        return "<img src='[my url_for_image $image]' $attrs>"
     }
 
     method include_stylesheet {stylesheet args} {
@@ -607,7 +646,7 @@ oo::class create Controller {
 
         set attrs [::woof::util::tag_attr_fragment \
                        [dict merge {rel stylesheet type text/css} $args]]
-        return "<link href='[my url_for_static $stylesheet -subdir stylesheets]' $attrs>"
+        return "<link href='[my url_for_stylesheet $stylesheet]' $attrs>"
     }
 
     method include_javascript {js args} {
@@ -624,7 +663,7 @@ oo::class create Controller {
 
         set attrs [::woof::util::tag_attr_fragment \
                        [dict merge {type text/javascript} $args]]
-        return "<script src='[my url_for_static $js -subdir js]' $attrs></script>"
+        return "<script src='[my url_for_javascript $js]' $attrs></script>"
     }
 
 

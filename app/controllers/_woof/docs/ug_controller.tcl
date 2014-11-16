@@ -139,11 +139,11 @@ oo::class create UgController {
         # have defined.
         pagevar set layout _layout
         
-        pagevar set scripts { _woof_ug.js }
+        pagevar lappend scripts [my url_for_javascript _woof_ug.js]
 
-        pagevar set stylesheets {
-            _woof_ug.css pure-skin-ug.css
-        }
+        pagevar lappend stylesheets \
+            [my url_for_stylesheet _woof_ug.css] \
+            [my url_for_stylesheet pure-skin-ug.css]
 
         pagevar set responsive_settings { threshold sm }
 
@@ -217,6 +217,7 @@ oo::class create UgController {
     method _sample_output html {
         return "<div class='ug-sample'>$html</div>"
     }
+
     method _note {text} {
         return "<p class='ug-note'>NOTE: [::woof::util::hesc $text]</p>"
     }

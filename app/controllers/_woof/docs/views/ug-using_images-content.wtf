@@ -1,45 +1,59 @@
-<p>Linking to images is done through the 
+<h3>Generating the URL for an image</h3>
+<p>
+You can generate the URL for an image with the 
+[my _manpage_link ::woof::Controller::url_for_image] controller
+method. This will return a URL pointing to an image file. For example,
+</p>
+[my _code_sample {
+[my url_for_image logo.png]
+}]
+<p>will generate</p>
+
+[my _sample_output [hesc [my url_for_image logo.png]]]
+
+<p>
+  The above example converts a image file name to a URL. The file
+  is located as described in the
+  [my _chapter_link locating_resources] chapter with
+  <span class='ug-filename'>public/images</span> as the search root.
+</p>
+
+<p>Alternatively, you can also pass in relative or absolute URLs
+  (though the latter is only useful in the context of 
+  [my _code include_image] described below). For example, a relative
+  URL can be passed in as 
+</p>
+[my _code_sample {
+[my url_for_image images/_woof/logo.png]
+}]
+<p>which will generate</p>
+[my _sample_output [hesc [my url_for_image images/_woof/logo.png]]]
+<p>Note that the relative URL is always assumed to be relative to
+  the URL root for the Woof! application.
+</p>
+
+<h3>Generating a link for an image</h3>
+Alternatively, you can generate the entire link for an image
+with the 
 [my _manpage_link ::woof::Controller::include_image] controller
-  method. This method generates <code>[hesc <img>]</code>
-  tags based on either URL's or
-  file names. For example, within a template, the following will
-  generate a <code>[hesc <img>]</code> tag:</p>
+method. Any additional attributes can also be passed to the command.
+For example,
 [my _code_sample {
-[my include_image http://www.images.com/some/external/image.png alt "external URL"]
+[my include_image http://example.com/absolute/url/image.png alt "Absolute URL image"]
 }]
+<p>will generate</p>
 
-<p>As will this:</p>
-[my _code_sample {
-[my include_image some/local/image.png alt "URL relative to Woof root"]
-}]
+[my _sample_output [hesc [my include_image http://example.com/absolute/url/image.png alt "Absolute URL image"]]]
 
-<p>Or this:</p>
-[my _code_sample {
-[my include_image image.png alt "Local file name"]
-}]
-
-<p>These examples show the various targets for the links.</p>
-<ul>
-  <li>An absolute URL, as in the first example,</li>
-  <li>A relative URL, which is treated as the file path under the
-    <span class='ug-filename'>public/images</span> subdirectory.</li>
-  <li>A file name, which will be located as described in the
-    [my _chapter_link locating_resources] chapter with
-    <span class='ug-filename'>public/images</span> as the search root.</li>
-</ul>
-
-<h3>Image attributes</h3>
-<p>Any additional attributes to be added to
+<p>The additional attributes to be added to
   the <code>&lt;img&gt;</code> tag can be passed to <code>include_image</code>
   as additional arguments or as a single dictionary argument. For
-  example,
+  example, the following two commands
 [my _code_sample {
-  [my include_image image.png alt "Image description" class "imgclass"]
+  [my include_image logo.png alt logo class imgclass]
+  [my include_image logo.png {alt logo class imgclass}]
 }]
 
-<p>and</p>
-[my _code_sample {
-  [my include_image image.png {alt "Image description" class "imgclass"}]
-}]
+<p>will have the same effect:
 
-<p>will have the same effect.</p>
+[my _sample_output "[hesc [my include_image logo.png alt logo class imgclass]]<br>[hesc [my include_image logo.png {alt logo class imgclass}]]"]

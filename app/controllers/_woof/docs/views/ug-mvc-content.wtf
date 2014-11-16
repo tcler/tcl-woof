@@ -28,7 +28,7 @@ Web framework although most other frameworks do include that component
 as well.
 </p>
 <p>When a client request is received, its URL is
-[my _chapter_link url_dispatch "mapped"] to an
+[my _chapter_link url_dispatcher "mapped"] to an
 appropriate [my _chapter_link controller_object "controller class"]. An
 instance of the controller is created to handle the request. The URL
 mapping also specifies an <em>action</em> (method in the class) to be

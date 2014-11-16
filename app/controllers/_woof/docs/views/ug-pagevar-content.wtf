@@ -24,10 +24,14 @@ case character.</p>
 <p>The default layout uses this as the title for the page. 
   See [my _chapter_link page_title].
 
+<h3>[my _code "scripts"]</h3>
+<p>The list of URL's to Javascript resources to include in the page, if any. 
+Each URL in this list is linked into the page.
+</p>
+
 <h3>[my _code "stylesheets"]</h3>
-<p>The list of stylesheets to include in the page, if any. 
-Each element of this list is linked into the page using 
-the [my _chapter_link using_stylesheets {include_stylesheet}] method.
+<p>The list of URL's to stylesheets to include in the page, if any. 
+Each URL in this list is linked into the page.
 </p>
 
 <h3>[my _code "header, footer, main, sidebar, supplement"]</h3>
