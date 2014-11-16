@@ -13,7 +13,8 @@ catch {util::Map destroy}
 oo::class create util::Map {
     # IMPLEMENTOR'S NOTE: 
     #  There is an assumption that all methods that modify the map go
-    #  through one of the methods set, unset, init and clear. For example,
+    #  through one of the methods set, unset, lappend, init and clear. 
+    #  For example,
     #  the freeze method assumes this and so does the derived class
     #  DirtyMap. TBD - perhaps a trace mechanism would be a better way
     #  to track modifications.
@@ -161,7 +162,7 @@ oo::class create util::Map {
         # the redefinitions!
 
         set msg "Attempt to modify frozen object \[self] through method \[self method] with arguments \[join \$args ,]"
-        set methods {set init unset clear}
+        set methods {set lappend init unset clear}
         foreach m  $methods {
             oo::objdefine [self] method $m args "throw \[list WTF INTERNAL \"$msg\"] \"$msg\""
         }
@@ -183,6 +184,13 @@ oo::class create util::Map {
             set args [lindex $args 0]
         }
         array set _map $args
+    }
+
+    method lappend {key args} {
+        # Appends given arguments to the list value for the specified key
+        # args - values to append to the entry
+
+        lappend _map($key) {*}$args
     }
 
     method init {args} {
@@ -284,28 +292,36 @@ oo::class create util::DirtyMap {
 
     method set args {
         # Calls Map::set with all arguments and marks the object dirty.
-        # args - passed on Map::set
+        # args - passed on to Map::set
+        next {*}$args
+        set _dirty true
+    }
+
+    method lappend {key args} {
+        # Calls Map::lappend with all arguments and marks the object dirty.
+        # key - passed on to Map::lappend
+        # args - passed on to Map::lappend
         next {*}$args
         set _dirty true
     }
 
     method init args {
         # Calls Map::init with all arguments and marks the object dirty.
-        # args - passed on Map::init
+        # args - passed on to Map::init
         next {*}$args
         set _dirty true
     }
 
     method unset args {
         # Calls Map::unset with all arguments and marks the object dirty.
-        # args - passed on Map::set
+        # args - passed on to Map::set
         next {*}$args
         set _dirty true
     }
 
     method clear args {
         # Calls Map::clear with all arguments and marks the object dirty.
-        # args - passed on Map::clear
+        # args - passed on to Map::clear
         next {*}$args
         set _dirty true
     }

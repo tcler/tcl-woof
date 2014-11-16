@@ -1,34 +1,52 @@
-<p>Linking to stylesheets is done through the 
+<h3>Generating the URL for a stylesheet</h3>
+<p>
+You can generate the URL for a stylesheet with the 
+[my _manpage_link ::woof::Controller::url_for_stylesheet] controller
+method. This will return a URL pointing to a stylesheet file. For example,
+</p>
+[my _code_sample {
+[my url_for_stylesheet _woof_ug.css]
+}]
+<p>will generate</p>
+
+[my _sample_output [hesc [my url_for_stylesheet _woof_ug.css]]]
+
+<p>
+  The above example converts a stylesheet file name to a URL. The file
+  is located as described in the
+  [my _chapter_link locating_resources] chapter with
+  <span class='ug-filename'>public/stylesheets</span> as the search root.
+</p>
+
+<p>Alternatively, you can also pass in relative or absolute URLs
+  (though the latter is only useful in the context of 
+  [my _code include_stylesheet] described below). For example, a relative
+  URL can be passed in as 
+</p>
+[my _code_sample {
+[my url_for_stylesheet stylesheets/_woof/_woof_ug.css]
+}]
+<p>which will generate</p>
+[my _sample_output [hesc [my url_for_stylesheet stylesheets/_woof/_woof_ug.css]]]
+<p>Note that the relative URL is always assumed to be relative to
+  the URL root for the Woof! application.
+</p>
+
+<h3>Generating a link for a stylesheet</h3>
+Alternatively, you can generate the entire link for a stylesheet
+with the 
 [my _manpage_link ::woof::Controller::include_stylesheet] controller
-  method. This method generates <code>[hesc <link>]</code>
-  tags based on either URL's or
-  file names. For example, within a template, the following will
-  generate a <code>[hesc <link>]</code> tag:</p>
+method. Any additional attributes can also be passed to the command.
+For example,
 [my _code_sample {
-[my include_stylesheet http://yui.yahooapis.com/2.8.0r4/build/reset/reset-min.css]
+[my include_stylesheet http://example.com/absolute/url/style.css]
+[my include_stylesheet _woof.css]
 }]
+<p>will generate</p>
 
-<p>As will this:</p>
-[my _code_sample {
-[my include_stylesheet relative/local/url.css]
-}]
+[my _sample_output "[hesc [my include_stylesheet http://example.com/absolute/url/style.css]]<br>[hesc [my include_stylesheet _woof.css]]"]
 
-<p>Or this:</p>
-[my _code_sample {
-[my include_image mystyle.css]
-}]
-
-<p>These examples show the various targets for the links.</p>
-<ul>
-  <li>An absolute URL, as in the first example,</li>
-  <li>A relative URL, which is treated as the file path under the
-    <span class='ug-filename'>public/stylesheets</span> subdirectory.</li>
-  <li>A file name, which will be located as described in the
-    [my _chapter_link locating_resources] chapter with
-    <span class='ug-filename'>public/stylesheets</span> as the
-    search root.</li>
-</ul>
-
+<p>respectively.
 <h3>Stylesheets in the default layout</h3>
 <p>The default layout will
   automatically include links to stylesheets if the

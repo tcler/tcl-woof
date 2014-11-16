@@ -1,0 +1,53 @@
+<h3>Generating the URL for Javascript resources</h3>
+<p>
+You can generate the URL for an Javscript resource with the 
+[my _manpage_link ::woof::Controller::url_for_javascript] controller
+method. This will return a URL pointing to the resource. For example,
+</p>
+[my _code_sample {
+[my url_for_javascript _woof.js]
+}]
+<p>will generate</p>
+
+[my _sample_output [hesc [my url_for_javascript _woof.js]]]
+
+<p>
+  The file
+  is located as described in the
+  [my _chapter_link locating_resources] chapter with
+  <span class='ug-filename'>public/js</span> as the search root.
+</p>
+
+<p>Alternatively, you can also pass in relative or absolute URLs
+  (though the latter is only useful in the context of 
+  [my _code include_javascript] described below). For example, a relative
+  URL can be passed in as 
+</p>
+[my _code_sample {
+[my url_for_javascript js/_woof/_woof.js]
+}]
+<p>which will generate</p>
+[my _sample_output [hesc [my url_for_javascript js/_woof/_woof.js]]]
+<p>Note that the relative URL is always assumed to be relative to
+  the URL root for the Woof! application.
+</p>
+
+<h3>Generating a link to load Javascript</h3>
+Alternatively, you can generate the entire link to load a Javascript
+script with the
+[my _manpage_link ::woof::Controller::include_javascript] controller
+method. Any additional attributes can also be passed to the command.
+For example,
+[my _code_sample {
+[my include_javascript http://example.com/absolute/url/script.js]
+}]
+<p>will generate</p>
+
+[my _sample_output [hesc [my include_javascript http://example.com/absolute/url/script.js]]]
+
+<h3>Including Javascript in the default layout</h3>
+<p>The default layout will
+  automatically include links to Javascript resources if the
+  [my _chapter_link pagevar_object pagevar] object contains the element
+  <code>scripts</code>. See the
+  [my _chapter_link default_page_layout] chapter for more details.

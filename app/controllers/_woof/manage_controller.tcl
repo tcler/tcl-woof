@@ -11,9 +11,7 @@ oo::class create ManageController {
         
         pagevar set responsive_settings { threshold sm }
 
-        pagevar set stylesheets {
-            _woof.css
-        }
+        pagevar lappend stylesheets [my url_for_stylesheet _woof.css]
 
         pagevar set MODULE_SUBHEADING "Site management"
     }

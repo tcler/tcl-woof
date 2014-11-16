@@ -192,6 +192,10 @@
    font-size: 93%;
 }
 
+.wf-main a {
+    text-decoration: none;
+}
+
 .wf-main .ug-ui {
     color: blue;
 }
@@ -217,7 +221,7 @@ ul.ug-nobullets li {
 .ug-sample {
     margin: 2em 2em;
     border: thin solid grey;
-    padding-left: 5px;
+    padding: 0.5em;
 }
 
 .wf-main tbody {

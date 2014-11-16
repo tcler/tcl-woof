@@ -28,13 +28,14 @@ set IE_COMPAT {
 
 $IE_COMPAT
 
-% foreach JS [pagevar get scripts {}] {
-    [my include_javascript $JS]
+% foreach URL [pagevar get scripts {}] {
+%   # Does this need to be hesc'ed ?
+<script src='$URL' type='text/javascript'></script>
 % }
 
 [my include_stylesheet _layout.css]
-% foreach SS [pagevar get stylesheets {}] {
-    [my include_stylesheet $SS]
+% foreach URL [pagevar get stylesheets {}] {
+    <link href='$URL' rel='stylesheet' type='text/css'>
 % }
 
 </head>
