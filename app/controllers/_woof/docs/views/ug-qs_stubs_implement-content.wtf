@@ -41,7 +41,7 @@ it in an editor and replace its content with the following text:</p>
 <span class="ug-filename">http://localhost:8015/fibonacci/help</span>
 brings up the following page in the browser.</p>
 
-<p class="ug-center">[my include_image qs_help_plain.png alt "Quick Start Example Help page"]</p>
+[my _image qs_help_plain.png "Quick Start Example Page"]
 
 <p>No big deal, that's not much different from a static HTML page
 except that it is a HTML fragment as opposed to a full HTML page. We
@@ -58,7 +58,8 @@ C:\fibo> bowwow verify fibonacci
 FibonacciController: 
     Action method stubs: 
         generate
-    View stubs
+
+    View stubs:
         app/controllers/views/fibonacci-generate-main.wtf
 }]
 <p>or</p>
@@ -67,11 +68,12 @@ FibonacciController:
 FibonacciController: 
     Action method stubs: 
         generate
-    View stubs
+
+    View stubs:
         app/controllers/views/fibonacci-generate-main.wtf
 }]
 
 
-<p>As we can see, the method <span class='ug-code'>generate</span> and the
+<p>As we can see, the method [my _code generate] and the
 corresponding view have still to be implemented. We will now go ahead
 and do just that.</p>

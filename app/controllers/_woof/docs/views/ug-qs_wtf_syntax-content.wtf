@@ -38,5 +38,5 @@ above template, the <code>foreach</code> loop encloses the HTML for a
 single row in the table and each iteration of the loop adds one row to
 the output. The result looks like this:</p>
 <p class="ug-center">
-[my include_image qs_table.png alt "Quick Start Example Navigation"]
+[my _image qs_table.png "Quick Start Example Navigation"]
 </p>

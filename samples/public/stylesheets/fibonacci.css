@@ -1,14 +1,24 @@
-.wf_header {
-  color: #c16e8c;
-  background-color: #efece3;
-  padding: 15px;
-  border-bottom: #c16e8c solid;
-  background-image: url(http://world.mathigon.org/resources/Sequences/Fibonacci.jpg);
-  background-repeat: no-repeat;
-  background-size: contain;
-  text-indent: 100px;
+.wf-header {
+   color: #c16e8c;
+   background-color: #e0edde;
+   padding: 10px;
+   border-bottom: #183b75 solid 2px;
+   background-image: url(../images/fibonacci.jpg);
+   background-repeat: no-repeat;
+   background-size: contain;
+   text-indent: 5em;
 }
 
-.wf_sidebar {
-    background-color: #efece3;
+.wf-sidebar {
+   background-color: #e0edde;
+   border-bottom: #183b75 solid 2px;
+}
+
+.wf-main {
+   border-bottom: #183b75 solid 2px;
+}
+
+.wf-footer {
+    font-size:smaller;
+    text-align: center;
 }

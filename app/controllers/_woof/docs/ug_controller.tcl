@@ -219,11 +219,15 @@ oo::class create UgController {
     }
 
     method _note {text} {
-        return "<p class='ug-note'>NOTE: [::woof::util::hesc $text]</p>"
+        return "<table class='ug-note'><tbody><tr><td>NOTE</td><td>[::woof::util::hesc $text]</td></tr></tbody></table>"
     }
 
-    method _note {text} {
-        append html "<table class='ug-note'><tbody><tr><td>NOTE</td><td>[::woof::util::hesc $text]</td></tr></tbody></table>"
+    method _hnote {html} {
+        return "<table class='ug-note'><tbody><tr><td>NOTE</td><td>$html</td></tr></tbody></table>"
+    }
+
+    method _image {image alt} {
+        return [my include_image $image alt $alt class pure-img]
     }
 
     method _manpage_link {name {display ""}} {

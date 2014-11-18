@@ -1,4 +1,9 @@
 <p>The above should have given you a flavor for building an
-application using Woof! under the BowWow server. The rest of this
+application using Woof! under the BowWow server. The exact same
+procedure will also work with any other Web server except
+for an additional step to install Woof! for that server.
+</p>
+<p>
+The rest of this
 guide will go into more detail about each of the features described
 here.</p>

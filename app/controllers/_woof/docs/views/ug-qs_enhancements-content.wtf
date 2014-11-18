@@ -2,7 +2,8 @@
 Fibonacci numbers. However, we are not done as competition in the
 Fibonacci generator space is fierce and we want to draw eyeballs from
 our competitors' sites. We need to enhance the usability and
-attractiveness of our site. Besides, we need to illustrate a few more
+attractiveness of our site and make it more usable on small mobile
+devices. Besides, we need to illustrate a few more
 Woof! features. We will enhance the site in the following ways:</p>
 <ul>
   <li>We will add navigation links so people can easily access the
@@ -12,6 +13,8 @@ Woof! features. We will enhance the site in the following ways:</p>
     to be generated.</li>
   <li>We will attempt to make the site more attractive through the use
     Pure CSS stylesheets and controls.</li>
+  <li>We will make the site [my _chapter_link responsive_web_design responsive]
+    to make is more usable on smartphones and other small-screen devices.
   <li>Finally, we will change the default page of the site to point to
     our Fibonacci site instead of the BowWow welcome page.</li>
 </ul>

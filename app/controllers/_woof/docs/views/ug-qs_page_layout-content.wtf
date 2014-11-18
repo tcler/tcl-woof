@@ -17,20 +17,38 @@ hard-coded links, links generated in this manner will not need to be
 changed if somewhere down the road we change the URL to
 be <span class="ug-filename">/mathsequences/fibonacci/help</span>.</p>
 
-<p>In addition to the navigation menu, let us add a header as well to
-brand our fibonacci generator. We will style this header later, but for
-the moment it only provides a heading for the page.
+<p>In addition to the navigation menu, let us add a header and footer
+as well. We will use the former to
+brand our fibonacci generator and the latter to ensure the great
+man keeps his numbers.
+We will style these later, but for
+the moment we just supply the text.
+</p>
+<p>
+Create the header file
 <span class="ug-filename">app/controllers/views/fibonacci-header.wtf</span>
 with the following contents:</p>
 [my _code_sample {
 <h2 style='color: #808080'>Fibonacci Generator</h2>
 }]
+<p>
+Then the footer file
+<span class="ug-filename">app/controllers/views/fibonacci-footer.wtf</span>:
+</p>
+[my _code_sample {
+<p>Fibonacci sequence (c) 1202 Leonardo Bonacci </p>
+}]
 
 <p>The result is shown in the browser below:</p>
+[my _image qs_nav.png "Quick Start Example Navigation page"]
 
-<p class="ug-center">
-[my include_image qs_nav.png alt "Quick Start Example Navigation page"]
+<p>
+That does not look like much of a visual improvement.
+Well, we have not gotten there 
+yet. We first need to explain page sections.
 </p>
+
+<h3>Page sections</h3>
 
 <p>The question arises as to why we created additional files for the header 
 and the navigation links when it would have been much easier to just modify
