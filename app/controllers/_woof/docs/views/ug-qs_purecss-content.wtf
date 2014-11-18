@@ -5,17 +5,19 @@ for our pages.
 </p>
 <p>
 Create the file
-<span class='ug-filename'>public/stylesheets/fibonacci.css</span> with
+<span class='ug-filename'>public/stylesheets/fibonacci/fibonacci.css</span> with
 the following content.
 </p>
 [my _code_sample {
  .wf-header {
     color: #c16e8c;
     background-color: #efece3;
-    padding: 15px;
+    padding: 10px;
     border-bottom: #183b75 solid;
     background-image: url(http://world.mathigon.org/resources/Sequences/Fibonacci.jpg);
     background-repeat: no-repeat;
+    background-size: contain;
+    text-indent: 5em;
  }
 }]
 <p>
@@ -24,7 +26,7 @@ We then create a skin using the
 as described in the
 [my _chapter_link purecss_skins "PureCSS Skins"] chapter, matching
 colors with the great man's headgear. We save the corresponding CSS in the
-<span class='ug-filename'>public/stylesheets/pure-skin-fibonacci.css</span>
+<span class='ug-filename'>public/stylesheets/fibonacci/pure-skin-fibonacci.css</span>
 file. We could have saved the generated CSS in the 
 <span class='ug-filename'>fibonacci.css</span> as well but keeping it
 separately allows us to change skins more easily in the future.
@@ -33,7 +35,9 @@ We then add the following lines to the
 <code>FibonacciController</code> constructor.
 </p>
 [my _code_sample {
-pagevar set stylesheets { fibonacci.css pure-skin-fibonacci.css } 
+pagevar lappend stylesheets \ 
+    [my url_for_stylesheet fibonacci.css] \ 
+    [my url_for_stylesheet pure-skin-fibonacci.css]
 pagevar set main {cssclasses {+ pure-skin-fibonacci}}
 pagevar set sidebar {cssclasses {+ pure-skin-fibonacci}}
 }]
@@ -45,7 +49,7 @@ page sections. Note that the skin for each page section is separately
 assigned and is optional.
 </p>
 <p>
-Finally we modify the
+We modify the
 <span class='ug-filename'>app/controllers/views/fibonacci-generate-main.wtf</span>
 file to use Pure CSS tables.
 [my _code_sample {
@@ -66,6 +70,11 @@ file to use Pure CSS tables.
   <a href='[request url]'>Show first [incr index] in sequence</a>
  </p>
 }]
+<p>
+Finally, we use the Pure CSS styled menus for our navigation.
+</p>
+
+
 <p>
 Our page now looks like this.
 

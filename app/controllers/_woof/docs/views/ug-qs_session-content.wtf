@@ -1,35 +1,36 @@
 <p>We implement the <code>generate</code> method as shown below.</p>
 [my _code_sample {
-method generate {} {
-    # Generate the next number in the sequence. The sequence generated
-    # so far is stored in the session.
+    method generate {} {
+        # Generate the next number in the sequence. The sequence 
+        # generated so far is stored in the session.
 
-    # Declare a member variable seq to hold the Fibonacci sequence.
-    # All member variables are automatically available for use in
-    # the view templates.
-    my variable seq
+        # Declare a member variable seq to hold the Fibonacci
+        # sequence. All member variables are automatically 
+        # available for use in the view templates.
+        my variable seq
 
-    # If we have already generated a sequence in this session
-    # it will be stored in the session.
-    if {[session exists fibonacci seq]} {
-        # Yep, already in the process of building a sequence
-        lappend seq [expr {[lindex $seq end-1]+[lindex $seq end]}]
-    } else {
-        # First call to generate a sequence
-        set seq {0 1}
+        # If we have already generated a sequence in this session
+        # it will be stored in the session.
+        if {[session exists fibonacci seq]} {
+            # Yep, already in the process of building a sequence
+            lappend seq [expr {[lindex $seq end-1]+[lindex $seq end]}]
+        } else {
+            # First call to generate a sequence
+            set seq {0 1}
+        }
+
+        # Store it back in the session for the next request
+        session set fibonacci $seq
     }
-
-    # Store it back in the session for the next request
-    session set fibonacci $seq
-}
 }]
 <p>The first time a user browses to
 the <span class="ug-filename">fibonacci/generate</span> link, we
 want to display the starting two numbers in the sequence. Then for
 subsequent visits to the page within the same browser session, we want
 to include the next number in the sequence. To do that we need to be
-able store state on the server side. That is what a session does.</p>
+able store state on the server side. That is what a <em>session</em> does.</p>
 
+<h3>Sessions</h3>
 <p>A session maintains state between
 multiple requests from a single client. When the initial client
 request is received, a new session is created for it. Subsequent

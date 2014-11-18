@@ -7,7 +7,9 @@ oo::class create FibonacciController {
         # Very important to pass arguments to parent
         next {*}$args
         pagevar set title "Fibonacci Generator"
-        pagevar set stylesheets { fibonacci.css pure-skin-fibonacci.css}
+        pagevar lappend stylesheets \
+            [my url_for_stylesheet fibonacci.css] \
+            [my url_for_stylesheet pure-skin-fibonacci.css]
         pagevar set main {cssclasses {+ pure-skin-fibonacci}}
         pagevar set sidebar {cssclasses {+ pure-skin-fibonacci}}
     }
@@ -60,8 +62,9 @@ oo::define FibonacciController {
         session set num_fibos $num_fibos
     }
     method help {} {
+        # Nothing to be done other than rendering the template.
     }
     method showerror {} {
-        page store main "<p style='color: red; font-weight: bold;'>[flash get error_message {An error has occurred!}]</p>"
+        page store main "<p style='color: red; font-weight: bold;'>[flash get error_message {An error has occured!}]</p>"
     }
 }

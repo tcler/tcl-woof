@@ -2,14 +2,13 @@
   set selected [file tail [request request_uri]]
   set menu [list \
                 [list Generate [my url_for -action generate]] \
-                [list Help     [my url_for -action help]]]
-  if {$selected eq "generate"} {
-      lset menu {0 2} selected
-  }
+                [list Help [my url_for -action help]]]
+
   if {$selected eq "help"} {
       lset menu {1 2} selected
+  } else {
+      lset menu {0 2} selected
   }
 %)
 
-[woof::pure::menu $menu -direction vertical]
-
+[woof::pure::menu $menu -orient sm]

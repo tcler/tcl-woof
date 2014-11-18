@@ -8,6 +8,18 @@ save a bit of work by using the Woof! application generator
 
 [my _code_sample {
 C:\fibo> bowwow url fibonacci/generate fibonacci/help
+}]
+<p>If you are not using <code>bowwow.exe</code>, <code>wag</code> has
+to be invoked as a script:</p>
+
+[my _code_sample {
+~/fibo> tclsh scripts/wag.tcl url fibonacci/generate fibonacci/help
+}]
+
+<p>Invoking either of the above commands will result in the following
+output:</p>
+[my _code_sample {
+C:\fibo> bowwow url fibonacci/generate fibonacci/help
 Controller FibonacciController:
          File app/controllers/fibonacci_controller.tcl will be created.
          Class FibonacciController will be created.
@@ -16,33 +28,36 @@ Controller FibonacciController:
                 app/controllers/views/fibonacci-generate-main.wtf
                 app/controllers/views/fibonacci-help-main.wtf
 Do you want to continue? [YN] y
+Created file app/controllers/fibonacci_controller.tcl
+Created class FibonacciController.
+Created action FibonacciController.generate.
+Created action FibonacciController.help.
+Created view app/controllers/views/fibonacci-generate-main.wtf.
+Created view app/controllers/views/fibonacci-help-main.wtf.
 }]
 
-<p>If you are not using <code>bowwow.exe</code>, <code>wag</code> has
-to be invoked as a script:</p>
 
-[my _code_sample {
-~/fibo> tclsh scripts/wag.tcl url fibonacci/generate fibonacci/help
-}]
+
 
 <p>
 The <span class="ug-filename">url</span> command generates stubs for
 the specified relative URL(s).
 So the above commands will generate stubs for Web pages
-that can be accessed through the
-URL's <span class="ug-filename">http://localhost:8015/fibonacci/generate</span>
-and <span class="ug-filename">http://localhost:8015/fibonacci/help</span>
-respectively.</p>
+accessed through <span class="ug-filename">/fibonacci/generate</span> and
+<span class="ug-filename">/fibonacci/help</span>
+on our web site.
+</p>
 
-<p>The command will first display the actions it will take in creating
+<p>The [my _code url] 
+command will first display the actions it will take in creating
 the stubs, and then prompt for the go-ahead to actually do so. In this
 Quick Start chapter, we will ignore the MVC-based naming conventions
 being used when generating the stubs. It suffices to know that the
-stub generator will create a class <span class='ug-code'>FibonacciController</span>
+stub generator will create a class [my _code FibonacciController]
 whose methods will be called to handle URL's that are prefixed
 with <span class="ug-filename">/fibonacci</span>. The stub generator
 also creates two methods
-- <span class='ug-code'>generate</span> and <span class='ug-code'>help</span> - corresponding to the
+- [my _code generate] and [my _code help] - corresponding to the
 two URL's we specified on the command line.</p>
 
 <p>If you edit the file

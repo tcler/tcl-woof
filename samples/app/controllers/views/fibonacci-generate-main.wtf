@@ -1,22 +1,20 @@
 [woof::pure::form {
-  input {-label "Count to generate" -name numfibos -type text -required 1}
-  buttons {{Submit -type submit -primary true} {Reset -type reset}}
+    input {-label "Count to generate" -name numfibos -type text -required 1}
+    buttons {{Generate -type submit -primary true} {Reset -type reset}}
 } -layout aligned]
 <hr>
 % my variable seq
 <p>
- The first [llength $seq] numbers in the 
- Fibonacci sequence are shown below:</p>
+The first [llength $seq] numbers in the 
+Fibonacci sequence are shown below:</p>
 %(
   set index 0
   set table {}
   foreach number $seq {
-    lappend table [list [incr index] $number]
+      lappend table [list [incr index] $number]
   }
 %)
 [woof::pure::table $table -heading {Sequence Number} -stripes 1]
 <p>
- <a href='[request url]'>Show first [incr index] in sequence</a>
+<a href='[request url]'>Show first [incr index] in sequence</a>
 </p>
-
-
