@@ -185,31 +185,29 @@ proc pure::table {data args} {
     #     is false.
     #  -raw BOOLEAN - if true, heading and cell contents are not HTML-escaped.
     #     Default is false.
+    #  -attrs ATTRS - additional attributes for the table tag as a dictionary
+    #     of attribute values
 
     set raw 0
     if {[dict exists $args -raw]} {
         set raw [dict get $args -raw]
     }
 
-    set borders vertical
-    if {[dict exists $args -borders]} {
-        set borders [dict get $args -borders]
+    set attrs ""
+    if {[dict exists $args -attrs]} {
+        set attrs [woof::util::tag_attr_fragment [dict get $args -attrs]]
     }
-
-    set stripes 0
-    if {[dict exists $args -stripes]} {
-        set stripes [dict get $args -stripes]
-    }
-
+    set stripes [woof::util::dict_get $args -stripes 0]
+    set borders [woof::util::dict_get $args -borders vertical]
     switch -exact -- $borders {
         horizontal {
-            set html "<table class='pure-table pure-table-horizontal'>"
+            set html "<table $attrs class='pure-table pure-table-horizontal'>"
         }
         both {
-            set html "<table class='pure-table pure-table-bordered'>"
+            set html "<table $attrs class='pure-table pure-table-bordered'>"
         }
         default {
-            set html "<table class='pure-table'>"
+            set html "<table $attrs class='pure-table'>"
         }
     }
     
