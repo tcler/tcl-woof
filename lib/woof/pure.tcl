@@ -75,7 +75,7 @@ proc pure::menu {menudefs args} {
     #  -state open|closed - specifies whether to display the menu as
     #     open (default) or closed
     
-    set orient [woof::util::dict_pop $args -orient horizontal]
+    set orient [woof::util::dict_pop args -orient horizontal]
 
     #ruff
     # The orientation of the menu is controlled through '-orient' option.
@@ -94,7 +94,7 @@ proc pure::menu {menudefs args} {
         sm - md - lg - xl {
             # Recurse to generate two menu defs - one vertical and one
             # horizontal - wrapped by a screen size class
-            set classes [woof::util::dict_pop $args -classes {}]
+            set classes [woof::util::dict_pop args -classes {}]
             set html [menu $menudefs {*}$args -orient vertical -classes [linsert $classes 0 wf-r-$orient]]
             append html \n [menu $menudefs {*}$args -orient horizontal -classes [linsert $classes 0 wf-r-${orient}-]]
             return $html
