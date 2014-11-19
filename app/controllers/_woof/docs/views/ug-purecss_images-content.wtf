@@ -1,0 +1,19 @@
+<p>
+  Pure CSS images are styled so as to fit the image within the containing
+  section. The image link is created with the
+  [my _manpage_link "woof::pure::img" <code>woof::pure::img</code>]
+  command which takes the image url as an argument. For example,
+</p>
+[my _code_sample_with_output {
+  <div style='max-width:30px;background-color:grey;'>
+  [my include_image logo.png alt "Woof logo"]
+  </div>
+}]
+<p>shows the full Woof! logo overflowing the containing [my _code div]
+while</p>
+[my _code_sample_with_output {
+  <div style='max-width:30px;background-color:grey;'>
+  [woof::pure::img [my url_for_image logo.png] "Woof logo"]
+  </div>
+}]
+<p>shrinks it to fit.</p>
