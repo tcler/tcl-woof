@@ -1,7 +1,18 @@
 <p>This chapter provides an introduction to the development of Woof!
 applications by going through the steps to create a simple but
 functional web site. The site will allow users to generate Fibonacci
-sequences since the world can never have enough of those. It is
+sequences since the world can never have enough of those.
+</p>
+
+<p>Our web page, shown below, is simple but contains many of the
+same elements as larger websites and is sufficient to introduce Woof!
+</p>
+
+[my _image qs_final.png "Fibonacci generator"]
+
+
+<p>
+It is
 assumed you have some familiarity with Web application concepts and
 the Tcl language, preferably version 8.6 or later since Woof! makes
 use of the core object capabilities in that version.</p>

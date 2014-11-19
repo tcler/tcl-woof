@@ -1,4 +1,4 @@
-<p>We also need some mechanism to pass the error message to be
+<p>We need some mechanism to pass the error message to be
 displayed to the error page. Remember that each HTTP request is
 independent and may not even be processed by the same interpreter. We
 have to therefore pass the error message from the invocation
@@ -22,7 +22,18 @@ the <code>page</code> object. Here is the code.</p>
   }
 }]
 
-<p>This not the preferred way to create page content as it breaks
-the separation between display and program logic. However, for simpler
-cases it can be convenient and avoids cluttering the application with
-trivial template files.</p>
+[my _note {
+ This not the preferred way to create page content as it breaks
+ the separation between display and program logic. However, for simpler
+ cases it can be convenient and avoids cluttering the application with
+ trivial template files.
+}]
+
+<p>If you now type invalid input into the entry box and click
+[my _ui Generate], you will see the error page below.
+</p>
+
+[my _image qs_error.png "Error page"]
+
+
+

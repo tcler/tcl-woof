@@ -1,38 +1,75 @@
 <p>
 Our page is now sufficiently ugly that we can no longer put off styling it.
-We do this by first creating a CSS file that will provide the basic look
-for our pages.
+For the most part, styling a web site involves writing CSS for the various
+page sections. We will store these definitions in the file
+[my _filename public/stylesheets/fibonacci.css].
 </p>
 <p>
-Create the file
-<span class='ug-filename'>public/stylesheets/fibonacci/fibonacci.css</span> with
-the following content.
+We start off by adding a suitable image for our header.
+In this case, we choose a public domain derived image of Fibonacci available
+from http://world.mathigon.org/resources/Sequences/Fibonacci.jpg and
+store it in our [my _filename public/images] directory.
+</p>
+
+[my _hnote {
+  The images and CSS for our example are available from the
+  <span class='ug-filename'>samples</span> directory in the Woof! distribution.
+}]
+
+<p>
+We then write the CSS for our site basing our colors on the ones
+in the image. Each page section has its own
+CSS class, named after the section and prefixed by [my _code wf-].
+For example, the [my _code wf-header] CSS class styles the 
+[my _code header] section. Our 
+[my _filename public/stylesheets/fibonacci.css] CSS file is
+shown below.
 </p>
 [my _code_sample {
- .wf-header {
-    color: #c16e8c;
-    background-color: #efece3;
-    padding: 10px;
-    border-bottom: #183b75 solid;
-    background-image: url(http://world.mathigon.org/resources/Sequences/Fibonacci.jpg);
-    background-repeat: no-repeat;
-    background-size: contain;
-    text-indent: 5em;
- }
+.wf-header {
+   color: #c16e8c;
+   background-color: #e0edde;
+   padding: 10px;
+   border-bottom: #183b75 solid 2px;
+   background-image: url(../images/fibonacci.jpg);
+   background-repeat: no-repeat;
+   background-size: contain;
+   text-indent: 5em;
+}
+
+.wf-sidebar {
+   background-color: #e0edde;
+   border-bottom: #183b75 solid 2px;
+}
+
+.wf-main {
+   border-bottom: #183b75 solid 2px;
+}
+
+.wf-footer {
+    font-size:smaller;
+    text-align: center;
+}
 }]
+
+
 <p>
-We then create a skin using the
+We will be changing our code to use Pure CSS styles menus and input fields.
+We could use the visual defaults for Pure CSS but to demonstrate
+our graphical design skills (or the lack thereof), we will
+create a skin using the
 <a href="http://yui.github.io/skinbuilder/?mode=pure">PureCSS skin builder</a>
 as described in the
-[my _chapter_link purecss_skins "PureCSS Skins"] chapter, matching
-colors with the great man's headgear. We save the corresponding CSS in the
-<span class='ug-filename'>public/stylesheets/fibonacci/pure-skin-fibonacci.css</span>
+[my _chapter_link purecss_skins "PureCSS Skins"] chapter. Again, we choose
+colors that (we think) go well with the great man's headgear.
+We save the corresponding CSS in the
+[my _filename public/stylesheets/fibonacci/pure-skin-fibonacci.css]
 file. We could have saved the generated CSS in the 
-<span class='ug-filename'>fibonacci.css</span> as well but keeping it
+[my _filename fibonacci.css] as well but keeping it
 separately allows us to change skins more easily in the future.
 </p>
-We then add the following lines to the
-<code>FibonacciController</code> constructor.
+Finally, we need to arrange for our CSS files to be loaded. To do this
+we add the following lines to the [my _code FibonacciController] constructor.
 </p>
 [my _code_sample {
 pagevar lappend stylesheets \ 
@@ -46,12 +83,15 @@ The first of these lines links our generated page to the CSS stylesheets
 we just created. The second and third lines have the effect of <em>adding</em>
 the created skin to the <code>main</code> and <code>sidebar</code>
 page sections. Note that the skin for each page section is separately
-assigned and is optional.
+assigned and is optional. Adding a skin to a section affects the colors
+and styling used for Pure CSS controls.
 </p>
 <p>
-We modify the
-<span class='ug-filename'>app/controllers/views/fibonacci-generate-main.wtf</span>
-file to use Pure CSS tables.
+Then modify the page views to use Pure CSS tables instead of 
+raw HTML based ones. First, change the main section view
+[my _filename app/controllers/views/fibonacci-generate-main.wtf]
+as follows.
+
 [my _code_sample {
  % my variable seq
  <p>
@@ -71,9 +111,26 @@ file to use Pure CSS tables.
  </p>
 }]
 <p>
-Finally, we use the Pure CSS styled menus for our navigation.
+Similarly, change the sidebar view
+[my _filename app/controllers/views/fibonacci-sidebar.wtf]
+to use Pure CSS menus for navigation.
 </p>
+[my _code_sample {
+ %(
+  set selected [file tail [request request_uri]]
+  set menu [list \
+                [list Generate [my url_for -action generate]] \
+                [list Help [my url_for -action help]]]
+  
+  if {$selected eq "help"} {
+      lset menu {1 2} selected
+  } else {
+      lset menu {0 2} selected
+  }
+ %)
 
+ [woof::pure::menu $menu -orient sm]
+}]
 
 <p>
 Our page now looks like this.

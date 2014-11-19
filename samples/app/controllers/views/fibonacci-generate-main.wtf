@@ -14,7 +14,4 @@ Fibonacci sequence are shown below:</p>
       lappend table [list [incr index] $number]
   }
 %)
-[woof::pure::table $table -heading {Sequence Number} -stripes 1]
-<p>
-<a href='[request url]'>Show first [incr index] in sequence</a>
-</p>
+[woof::pure::table $table -heading {Sequence Number} -stripes 1 -attrs [list style "margin-left: 20%;"]]
