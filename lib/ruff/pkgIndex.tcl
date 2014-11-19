@@ -8,4 +8,4 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded ruff 0.4.1 [list source [file join $dir ruff.tcl]]
+package ifneeded ruff 0.4.2 [list source [file join $dir ruff.tcl]]

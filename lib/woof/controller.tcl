@@ -604,7 +604,7 @@ oo::class create Controller {
 
     method url_for_javascript {js args} {
         # Constructs the URL for a Javascript resource
-        # hs - identifies the Javascript resource, may be a file name, relative 
+        # js - identifies the Javascript resource, may be a file name, relative 
         #  or absolute url (see url_for_static)
         #
         # args - may be either a variable number of alternating attribute
