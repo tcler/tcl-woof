@@ -75,10 +75,7 @@ proc pure::menu {menudefs args} {
     #  -state open|closed - specifies whether to display the menu as
     #     open (default) or closed
     
-    set orient horizontal
-    if {[dict exists $args -orient]} {
-        set orient [dict get $args -orient]
-    }
+    set orient [woof::util::dict_pop $args -orient horizontal]
 
     #ruff
     # The orientation of the menu is controlled through '-orient' option.
@@ -97,12 +94,7 @@ proc pure::menu {menudefs args} {
         sm - md - lg - xl {
             # Recurse to generate two menu defs - one vertical and one
             # horizontal - wrapped by a screen size class
-            dict unset args -orient
-            set classes ""
-            if {[dict exists $args -classes]} {
-                set classes [dict get $args -classes]
-                dict unset args -classes
-            }
+            set classes [woof::util::dict_pop $args -classes {}]
             set html [menu $menudefs {*}$args -orient vertical -classes [linsert $classes 0 wf-r-$orient]]
             append html \n [menu $menudefs {*}$args -orient horizontal -classes [linsert $classes 0 wf-r-${orient}-]]
             return $html
@@ -185,29 +177,19 @@ proc pure::table {data args} {
     #     is false.
     #  -raw BOOLEAN - if true, heading and cell contents are not HTML-escaped.
     #     Default is false.
-    #  -attrs ATTRS - additional attributes for the table tag as a dictionary
-    #     of attribute values
 
-    set raw 0
-    if {[dict exists $args -raw]} {
-        set raw [dict get $args -raw]
-    }
-
-    set attrs ""
-    if {[dict exists $args -attrs]} {
-        set attrs [woof::util::tag_attr_fragment [dict get $args -attrs]]
-    }
+    set raw [woof::util::dict_get $args -raw 0]
     set stripes [woof::util::dict_get $args -stripes 0]
     set borders [woof::util::dict_get $args -borders vertical]
     switch -exact -- $borders {
         horizontal {
-            set html "<table $attrs class='pure-table pure-table-horizontal'>"
+            set html "<table class='pure-table pure-table-horizontal'>"
         }
         both {
-            set html "<table $attrs class='pure-table pure-table-bordered'>"
+            set html "<table class='pure-table pure-table-bordered'>"
         }
         default {
-            set html "<table $attrs class='pure-table'>"
+            set html "<table class='pure-table'>"
         }
     }
     
@@ -319,6 +301,15 @@ proc pure::paginator {range url_prefix args} {
 
     append html "</ul>"
     return $html
+}
+
+proc pure::img {url {alt "Image"}} {
+    # Returns a Pure CSS styled image.
+    # url - URL for the image
+    #
+    # Pure CSS styles images are automatically adjusted for the width
+    # of the containing section.
+    return "<img src='$url' class='pure-img' alt='$alt'>"
 }
 
 proc pure::form {formdef args} {
