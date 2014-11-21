@@ -8,7 +8,7 @@ page sections. We will store these definitions in the file
 We start off by adding a suitable image for our header.
 In this case, we choose a public domain derived image of Fibonacci available
 from http://world.mathigon.org/resources/Sequences/Fibonacci.jpg and
-store it in our [my _filename public/images] directory.
+store it in [my _filename public/images/fibonacci.jpg].
 </p>
 
 [my _hnote {
@@ -132,13 +132,9 @@ to use Pure CSS menus for navigation.
  [woof::pure::menu $menu -orient sm]
 }]
 
-<p>
-Our page now looks like this.
+<p>Our page now looks like this.</p>
 
-
-TBD - INSERT IMAGE
-</p>
-
+[my _image qs_purecss.png "Pure CSS styled page"]
 
 <p>We are getting close to the finish line. But there is one important
   basic task we have not covered - getting input from the user. We do that
