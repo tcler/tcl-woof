@@ -7,6 +7,12 @@ in several different server-specific scenarios.</p>
 <p>It is assumed that you already have Tcl 8.6 or later, and one of
 the supported web servers installed on the system.</p>
 
+[my _note {
+As Woof! is still under development with a changing API,
+it does not support installation on top of existing existing Woof! versions.
+Please remove older versions first.
+}]
+
 <h3>Downloading the distribution</h3>
 <p>Woof! can be downloaded from
 <a href='http://sourceforge.net/project/showfiles.php?group_id=250256'>SourceForge</a>.
