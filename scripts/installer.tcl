@@ -147,9 +147,12 @@ proc installer::distribute {target_dir args} {
         file copy -- {*}[glob [file join $src_dir thirdparty lib *]] [file join $zip_dir lib]
         file copy -- [file join $src_dir thirdparty wibble] [file join $zip_dir lib]
         # Generate man pages
-        exec -ignorestderr -- [info nameofexecutable] [file join $src_dir scripts ruffian.tcl] [file join $zip_dir public woof_manual.html]
+        # Now stored statically - exec -ignorestderr -- [info nameofexecutable] [file join $src_dir scripts ruffian.tcl] [file join $zip_dir public woof_manual.html]
 
-        set textfile_patterns {*.txt *.tcl *.htm *.html *.wtf *.bat *.cmd *.cfg}
+        # Clean up any temp files copied from source tree
+        cleanup_tree $zip_dir
+
+        set textfile_patterns {*.md *.txt *.tcl *.htm *.html *.wtf *.bat *.cmd *.cfg}
         
         if {$opts(-kit) in {zip all}} {
             puts "Building zip distribution"
@@ -237,7 +240,9 @@ proc installer::distribute {target_dir args} {
         file copy [file join $src_dir public] $bowwow_dir
         file copy [file join $src_dir scripts] $bowwow_dir
         # Generate man pages
-        exec -ignorestderr -- [info nameofexecutable] [file join $src_dir scripts ruffian.tcl] [file join $bowwow_dir public woof_manual.html]
+        # Now stored statically exec -ignorestderr -- [info nameofexecutable] [file join $src_dir scripts ruffian.tcl] [file join $bowwow_dir public woof_manual.html]
+
+        cleanup_tree $bowwow_dir
 
         distro::build $bowwow_dir $woof_version -manifest $manifest_name -crlf lf
         # TBD - make tclkit path configurable
@@ -592,6 +597,34 @@ proc installer::crlf_tree {dir mode patterns} {
     }
     return
 }
+
+proc installer::_is_temp_file {path} {
+    if {![file isfile $path]} {
+        return 0;
+    }
+    set tail [file tail $path]
+    foreach pat {*.tmp *~} {
+        if {[string match -nocase $pat $tail]} {
+            return 1
+        }
+    }
+    return 0
+}
+
+proc installer::cleanup_tree {dir {patterns *~}} {
+    # Cleans up a directory tree by deleting temporary files
+    # dir - directory containing the files to be converted
+    # patterns - list of patterns to use for identifying temporary files
+    # Recursively traverses the specified directory and deletes
+    # files whose names match one of the specified patterns
+    # (using string match -nocase rules)
+    
+    foreach f [fileutil::find $dir [namespace current]::_is_temp_file] {
+        file delete $f
+    }
+    return
+}
+
 
 ################################################################
 # Main routine
