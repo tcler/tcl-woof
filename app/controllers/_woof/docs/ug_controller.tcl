@@ -38,6 +38,7 @@ oo::class create UgController {
             {apache_websh "Running as an Apache module" 2}
             {install_under_iis "Woof! under Microsoft IIS" 1}
             {iis_scgi "SCGI on IIS 5.1 and 6" 2}
+            {iis7_scgi "SCGI on IIS 7 and 8" 2}
             {install_under_lighttpd "Woof! under Lighttpd" 1}
             {lighttpd_scgi "SCGI on Lighttpd" 2}
             {start_scgi "Running as an SCGI server" 1}
