@@ -18,6 +18,10 @@ c:\myapp> tclsh lib\woof\webservers\scgi_server.tcl -port 10000
 
 <h3>Running Woof! as a Windows service</h3>
 
+[my _hnote {
+To run Woof! as an Windows service, the 
+<a href='http://twapi.sf.net'>TWAPI</a> package must be installed.
+}]
 <p>To run Woof! in production mode, where the Woof! process must be
 running independently of anybody being logged in, it must be installed
 as a Windows service using
@@ -86,8 +90,8 @@ c:\myapp> tclsh scripts\scgi_winservice.tcl -service woofscgi uninstall
 
 <h3>Setting the Woof! service user account</h3>
 <p>By default, the Woof! service will run under the Windows
-LocalSystem account. For security reasons, you may want to change to
-run under a less privileges account. You can do this through
+LocalService account. To change the account under which the service
+runs, specify the account name in
 the <span class="ug-filename">Log on</span> pane in the property sheet
 for the service in Windows Service Control Manager. If you do this,
 make sure the account has access to the resources (file system,

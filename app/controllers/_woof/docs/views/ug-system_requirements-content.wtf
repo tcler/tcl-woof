@@ -15,9 +15,8 @@ In addition, Woof! provides an interface for writing an adapter for web servers
 that do not support either CGI or SCGI.
 </p>
 
-<p>Woof! is also available as a single-file executable,
-[my _chapter_link bowwow BowWow], on Windows, with an embedded web server
-for development or quick try-out purposes.
+<p>Woof! is also includes a built-in Web server,
+[my _chapter_link bowwow BowWow], for development or quick try-out purposes.
 
 <p>Refer to the <a href="installation">Installation</a> chapter
   for more information on the various alternatives.</p>
