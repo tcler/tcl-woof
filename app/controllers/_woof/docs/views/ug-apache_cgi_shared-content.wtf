@@ -83,7 +83,7 @@ AddHandler cgi-script .tcl
 Options +ExecCGI
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ cgi_server.tcl [QSA,L]
+RewriteRule ^(.*)$ cgi_server.tcl/$1 [QSA,L]
 
 # In case Woof! experiences terminal errors
 # Instead of displaying this message you can supply a file here which will be rendered instead

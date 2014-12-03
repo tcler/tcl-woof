@@ -5,12 +5,13 @@
     No other software (web server,
     a Tcl installation etc.) is needed.
     <strong>This is the quickest way to try
-      out Woof! and the application can be easily moved later to a
+      out Woof! and the application can be moved later to a
       different web server with no changes.</strong></li>
   <li>On all platforms, you can 
     [my _chapter_link installation "download and extract"] a Woof!
     distribution and run the
-    [my _chapter_link bowwow_script "<code>bowwow</code> script"]. A Tcl 8.6 shell
+    [my _chapter_link bowwow_script "<code>bowwow</code> script"].
+    A Tcl 8.6 shell
     must have been previously installed on your system. This script
     runs a simple web server, [my _chapter_link bowwow_script "BowWow"],
     that can be used for trying out Woof!.
@@ -20,8 +21,8 @@
   </li>
   <li>A third alternative is to install a suitable web server, Tcl 8.6
     and Woof! as described in 
-    the [my _chapter_link "installation"] chapter. This provides a production
-    environment but entails a few more steps for installation.
+    the [my _chapter_link "installation"] chapter. However,
+    this entails a few more steps for installation.
   </li>
 </ul>
 
