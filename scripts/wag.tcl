@@ -10,10 +10,11 @@ if {! [package vsatisfies [info tclversion] 8.6]} {
     error "Woof! requires Tcl version 8.6 or later. You are running [info tclversion]"
 }
 
-
 # When this file is run, it needs to do its thing inside the Woof
 # safe interpreter so the right context and packages are loaded.
 if {[llength [info commands ::woof::source_file]] == 0} {
+    set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. lib]]]
+
     # We are not inside the Woof interpreter. Create it and resource ourselves.
     namespace eval ::woof::webservers::wag {}
     namespace eval wag {
