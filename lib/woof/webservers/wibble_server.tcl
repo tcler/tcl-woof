@@ -106,12 +106,16 @@ proc ::woof::webservers::wibble::init {args} {
 
         # method request_init - inherited
 
-        method request_parameters {request_context} {
-            set params [dict get $request_context query]
-            if {[dict get $request_context method] eq "POST"} {
+        method request_parameters {ctx} {
+            if {[dict exists $ctx request query]} {
+                set params [dict get $ctx request query]
+            } else {
+                set params {}
+            }
+            if {0 && [dict get $ctx request method] eq "POST"} {
                 # Copied from wibble query parsing code.
                 # TBD - fix, probably not quite right
-                foreach elem [split [dict get $request_context content] &] {
+                foreach elem [split [dict get $ctx request rawpost] &] {
                     regexp {^([^=]*)(?:=(.*))?$} $elem _ key val
                     # TBD - what kind of decoding need be done? URL-decoding
                     # HTML-decoding ?
@@ -130,22 +134,22 @@ proc ::woof::webservers::wibble::init {args} {
             set id [dict get $state woof_req_id]
 
             set need_server_header 1
-            set headers {}
-            foreach {k v} [dict get $response headers] {
-                lappend headers [list $k [list "" $v]]
+            dict for {k v} [dict get $response headers] {
                 if {$k eq "Server"} {
                     set need_server_header 0
+                    break
                 }
             }
             if {$need_server_header} {
-                lappend headers Server [list "" [string totitle [my server_interface]]/$::woof::webservers::wibble::wibble_version]
+                dict set response headers Server "[string totitle [my server_interface]]/$::woof::webservers::wibble::wibble_version"
             }
             set ::woof::webservers::wibble::responses($id) \
                 [dict create \
                      status [dict get $response status] \
+                     status_line [dict get $response status_line] \
                      content [dict get $response content] \
                      encoding [dict get $response encoding] \
-                     header $headers]
+                     headers [dict get $response headers]]
         }
     }
 }
@@ -172,6 +176,9 @@ proc ::woof::webservers::wibble::request_handler {state} {
     if {[info exists responses($id)]} {
         set response $responses($id)
         unset responses($id)
+        # We do not use the default wibble sendcommand because
+        # it uses a different format for the header structure
+        dict set response sendcommand [namespace current]::sendcommand
         ::wibble::sendresponse $response; # RETURNS TO CALLER!
     } else {
         # TBD - should we pass on the request to next handler or
@@ -181,6 +188,38 @@ proc ::woof::webservers::wibble::request_handler {state} {
     # EXECUTION NEVER REACHES HERE!
 }
 
+proc xxx {} {
+    set persist 0
+
+
+}
+
+proc ::woof::webservers::wibble::sendcommand {sock request response} {
+    set persist [expr {
+        [dict get $request protocol] >= "HTTP/1.1"
+        && (! [dict exists $request header connection] ||
+            ![string equal -nocase [dict get $request header connection] close])
+    }]
+
+    chan configure $sock -translation binary
+    set head "[dict get $request protocol] [dict get $response status_line]\r\n"
+    foreach {k val} [dict get $response headers] {
+        append head "$k: $val\r\n"
+    }
+
+    set content [encoding convertto [dict get $response encoding] [dict get $response content]]
+
+    if {!$persist} {
+        append head "Connection: close\r\n"
+    }
+    append head "Content-Length: [string length $content]\r\n\r\n"
+    puts -nonewline $sock $head
+    if {![string equal -nocase [dict get $request method] HEAD]} {
+        puts -nonewline $sock $content
+    }
+
+    return $persist
+}
 
 proc ::woof::webservers::wibble::stop {rootdir args} {
     # Terminates the wibble server
