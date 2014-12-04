@@ -24,6 +24,7 @@ namespace eval ::woof::webservers::wibble {
             # Should always return url beginning with "/" The suffix may or
             # or may not have a / depending on url root. Easiest to
             # just strip off if any and add one.
+            ::woof::log err "RESOURCE_URL:[dict get $_context options suffix]"
             return "/[string trimleft [dict get $_context options suffix] /]"
         }
 
