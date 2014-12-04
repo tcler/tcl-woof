@@ -141,7 +141,7 @@ proc installer::distribute {target_dir args} {
         file delete -force $zip_dir; # Empty it if it exists
         file mkdir $zip_dir
         file copy -- [file join $src_dir ANNOUNCE.txt] [file join $zip_dir README.txt]
-        foreach dir {app config lib public scripts} {
+        foreach dir {app config lib public scripts samples} {
             file copy -- [file join $src_dir $dir] $zip_dir
         }
         file copy -- {*}[glob [file join $src_dir thirdparty lib *]] [file join $zip_dir lib]

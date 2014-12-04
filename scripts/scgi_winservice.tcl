@@ -120,6 +120,7 @@ proc woof::winsvc::install {args} {
                          -shortname]]
     twapi::create_service $service(name) \
         "$exe $script -service $service(name) -port $service(port) run" \
+        -account "NT Authority\\LocalService" -password "" \
         -starttype $opts(startup)
 }
 
