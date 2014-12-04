@@ -3,7 +3,7 @@ namespace eval ::woof::webservers::wibble {
         variable _context
 
         method protocol {} {
-            set proto  [lindex [split [dict get $_context protocol] /] 0]
+            set proto  [lindex [split [dict get $_context request protocol] /] 0]
             if {$proto eq ""} {
                 return http
             } else {
@@ -12,28 +12,30 @@ namespace eval ::woof::webservers::wibble {
         }
 
         method request_method {} {
-            return [string tolower [dict get $_context method]]
+            return [string tolower [dict get $_context request method]]
         }
 
 
         method application_url {} {
-            return [dict get $_context prefix]
+            return [dict get $_context options prefix]
         }
 
         method resource_url {} {
             # Should always return url beginning with "/" The suffix may or
             # or may not have a / depending on url root. Easiest to
             # just strip off if any and add one.
-            return "/[string trimleft [dict get $_context suffix] /]"
+            return "/[string trimleft [dict get $_context options suffix] /]"
         }
 
         method query_string {} {
             # rawquery includes "?" prefix - remove it
-            return [string range [dict get $_context rawquery] 1 end]
+            if {[dict exists $_context request rawquery]} {
+                return [string range [dict get $_context request rawquery] 1 end]
+            }
         }
 
         method remote_addr {} {
-            return [dict get $_context peerhost]
+            return [dict get $_context request peerhost]
         }
     }
 }
