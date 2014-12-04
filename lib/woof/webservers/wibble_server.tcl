@@ -25,13 +25,15 @@ proc ::woof::webservers::wibble::init {args} {
         # method init_log - inherited
         # method log - inherited
 
-        method request_environment {req args} {
+        method request_environment {state args} {
             # Retrieves the environment passed by the web server.
             #
-            # req - opaque request context handle.
+            # state - State dictionary passed by wibble
             #
             # Refer to BaseWebServer for details.
             
+            set req [dict get $state request]
+
             # TBD - optimize this to not return unnecessary values
 
 	    dict set env SERVER_SOFTWARE "[my server_interface]/$::woof::webservers::wibble::wibble_version"
@@ -55,11 +57,15 @@ proc ::woof::webservers::wibble::init {args} {
             # class assumes it is already decoded
 
             # rawquery includes "?" prefix - remove it
-            dict set env QUERY_STRING [string range [dict get $req rawquery] 1 end]
-	    dict set env SCRIPT_NAME [dict get $req prefix]
-            set suffix [dict get $req suffix]
+            if {[dict exists $req rawquery]} {
+                dict set env QUERY_STRING [string range [dict get $req rawquery] 1 end]
+            } else {
+                dict set env QUERY_STRING ""
+            }
+	    dict set env SCRIPT_NAME [dict get $state options prefix]
+            set suffix [dict get $state options suffix]
 	    dict set env PATH_INFO /[string trimleft $suffix /]
-	    dict set env PATH_TRANSLATED [file join [dict get $req fspath] $suffix]
+	    dict set env PATH_TRANSLATED [file join [dict get $state options fspath] $suffix]
 	    dict set env REMOTE_ADDR [dict get $req peerhost]
             dict set env REMOTE_PORT [dict get $req peerport]
 	    if {[dict exists $req content-type]} {
@@ -70,13 +76,22 @@ proc ::woof::webservers::wibble::init {args} {
             }
 
             # Append all HTTP headers sent by the client
-            # wibble concatenates multiple header values with \n. As
+            # wibble overwrites multiple header values in the header key
+            # so we process the rawheader field ourselves. As
             # per HTTP spec, multiple headers are equivalent to a single
             # header with values separated with ",".
-            dict for {k val} [dict get $req header] {
-                dict set env "HTTP_[string map {- _} [string toupper $k]]" \
-                    [string map [list \n ,] $val]
-	    }
+            set hdrs {}
+            foreach line [dict get $req rawheader] {
+                set pos [string first $line :]
+                if {$pos > 0} {
+                    set hdrkey "HTTP_[string map {- _} [string toupper [string range $line 0 $pos-1]]]"
+                    # TBD - any decoding to be done on values?
+                    dict lappend hdrs $hdrkey [string range $line [incr pos] end]
+                }
+            }
+            dict for {hdrkey hdrvals} $hdrs {
+                dict set env $hdrkey [join $hdrvals ,]
+            }
 
             # If any args specified, make sure they are set in returned value
             # to empty strings if not in environment
@@ -111,18 +126,19 @@ proc ::woof::webservers::wibble::init {args} {
             return wibble
         }
 
-        method output {request_context response} {
-            set id [dict get $request_context woof_req_id]
+        method output {state response} {
+            set id [dict get $state woof_req_id]
 
-            set need_server_header true
-            foreach {k v} [set headers [dict get $response headers]] {
+            set need_server_header 1
+            set headers {}
+            foreach {k v} [dict get $response headers] {
+                lappend headers [list $k [list "" $v]]
                 if {$k eq "Server"} {
-                    set need_server_header false
-                    break
+                    set need_server_header 0
                 }
             }
             if {$need_server_header} {
-                lappend headers Server [string totitle [my server_interface]]/$::woof::webservers::wibble::wibble_version
+                lappend headers Server [list "" [string totitle [my server_interface]]/$::woof::webservers::wibble::wibble_version]
             }
             set ::woof::webservers::wibble::responses($id) \
                 [dict create \
@@ -134,32 +150,33 @@ proc ::woof::webservers::wibble::init {args} {
     }
 }
 
-proc ::woof::webservers::wibble::request_handler {request response} {
+proc ::woof::webservers::wibble::request_handler {state} {
     # Called from Wibble to handle a request
-    # request - a dictionary containing client request.
-    #   see Wibble documentation.
-    # response - a dictionary into which the response is to be built. 
+    # state - a dictionary containing keys 'request', 'response' and 'options'.
     #   See Wibble documentation.
     # 
     variable responses;         # Array indexed by request id
     variable request_id
     
     # TBD - better handling of errors and exceptions from process_request
+
     try {
         set id [incr request_id]
-        dict set request woof_req_id $id
-        ::woof::master::process_request $request
+        dict set state woof_req_id $id
+        ::woof::master::process_request $state
     } on error {msg eopts} {
         catch {::woof::master::log err "Error: $msg -- $::errorInfo"}
         return -options $eopts $msg
     }
 
     if {[info exists responses($id)]} {
-        ::wibble::sendresponse "$responses($id)[unset responses($id)]"; # RETURNS TO CALLER!
+        set response $responses($id)
+        unset responses($id)
+        ::wibble::sendresponse $response; # RETURNS TO CALLER!
     } else {
         # TBD - should we pass on the request to next handler or
         # generate an error ?
-        ::wibble::nexthandler $request $response; # RETURNS TO CALLER!
+        ::wibble::nexthandler $state; # RETURNS TO CALLER!
     }
     # EXECUTION NEVER REACHES HERE!
 }
@@ -181,7 +198,21 @@ proc ::woof::webservers::wibble::main {rootdir args} {
     array set opts $args
     set docroot [file join $rootdir public]
     ::woof::master::init wibble $rootdir
-    wibble::handle $opts(-urlroot) static root $docroot
+    wibble::handle / contenttype typetable {
+        application/javascript  ^js$                  application/json  ^json$
+        application/pdf ^pdf$                         audio/mid      ^(?:midi?|rmi)$
+        audio/mp4       ^m4a$                         audio/mpeg     ^mp3$
+        audio/ogg       ^(?:flac|og[ag]|spx)$         audio/vnd.wave ^wav$
+        audio/webm      ^webm$                        image/bmp      ^bmp$
+        image/gif       ^gif$                         image/jpeg     ^(?:jp[eg]|jpeg)$
+        image/png       ^png$                         image/svg+xml  ^svg$
+        image/tiff      ^tiff?$                       text/css       ^css$
+        text/html       ^html?$                       text/plain     ^txt$
+        text/xml        ^xml$                         video/mp4      ^(?:mp4|m4[bprv])$
+        video/mpeg      ^(?:m[lp]v|mp[eg]|mpeg|vob)$  video/ogg      ^og[vx]$
+        video/quicktime ^(?:mov|qt)$                  video/x-ms-wmv ^wmv$
+    }
+    wibble::handle $opts(-urlroot) staticfile root $docroot
     wibble::handle \
         $opts(-urlroot) \
         [namespace current]::request_handler \
