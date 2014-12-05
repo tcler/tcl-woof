@@ -45,9 +45,7 @@ proc ::woof::webservers::wibble::init {args} {
 
             dict set env HTTP_HOST [dict get $req header host]
 
-            # TBD - SERVER_PORT may be slow as it might try to resolve host name,
-            # may be explicitly pass server port(s) ?
-            dict set env SERVER_PORT [lindex [fconfigure [dict get $req socket] -sockname] 2]
+            dict set env SERVER_PORT [dict get $req port]
 	    dict set env SERVER_NAME [lindex [split [dict get $env HTTP_HOST] :] 0]
 	    dict set env SERVER_PROTOCOL [dict get $req protocol]
             dict set env REQUEST_URI [dict get $req uri]
@@ -82,11 +80,11 @@ proc ::woof::webservers::wibble::init {args} {
             # header with values separated with ",".
             set hdrs {}
             foreach line [dict get $req rawheader] {
-                set pos [string first $line :]
+                set pos [string first : $line]
                 if {$pos > 0} {
                     set hdrkey "HTTP_[string map {- _} [string toupper [string range $line 0 $pos-1]]]"
                     # TBD - any decoding to be done on values?
-                    dict lappend hdrs $hdrkey [string range $line [incr pos] end]
+                    dict lappend hdrs $hdrkey [string trim [string range $line [incr pos] end]]
                 }
             }
             dict for {hdrkey hdrvals} $hdrs {
@@ -107,19 +105,29 @@ proc ::woof::webservers::wibble::init {args} {
         # method request_init - inherited
 
         method request_parameters {ctx} {
+            set params {}
+            # Wibble query and post dictionaries are strucured such
+            # that keys with non-empty values have the value stored
+            # in a sub-dictionary with key ""
             if {[dict exists $ctx request query]} {
-                set params [dict get $ctx request query]
-            } else {
-                set params {}
+                set query [dict get $ctx request query]
+                dict for {k val} $query {
+                    if {[dict exists $val ""]} {
+                        lappend params $k [dict get $val ""]
+                    } else {
+                        lappend params $k ""
+                    }
+                }
             }
-            if {0 && [dict get $ctx request method] eq "POST"} {
-                # Copied from wibble query parsing code.
-                # TBD - fix, probably not quite right
-                foreach elem [split [dict get $ctx request rawpost] &] {
-                    regexp {^([^=]*)(?:=(.*))?$} $elem _ key val
-                    # TBD - what kind of decoding need be done? URL-decoding
-                    # HTML-decoding ?
-                    lappend params $key $val
+            if {[dict get $ctx request method] eq "POST" &&
+                [dict exists $ctx request post]} {
+                set query [dict get $ctx request post]
+                dict for {k val} $query {
+                    if {[dict exists $val ""]} {
+                        lappend params $k [dict get $val ""]
+                    } else {
+                        lappend params $k ""
+                    }
                 }
             }
             return $params

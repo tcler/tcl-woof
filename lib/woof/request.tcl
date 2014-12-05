@@ -62,19 +62,39 @@ oo::class create Params {
         # parameter values in the Map and not just the keys specified in $args.
         # See Map.lazy_load for details.
         my variable _request_context
+        my variable _raw_map
 
-        # TBD - we assume query values are UTF-8 encoded but not
-        # query parameters. Also should this be done by the webserver
-        # itself? But then we have to modify code in more places.
-        set qvals {} 
-        foreach {name val} [::woof::webserver request_parameters $_request_context] {
-            # What should the encoding be converted from ?
-            lappend qvals $name [encoding convertfrom utf-8 $val]
+        # Web server interfaces should have already decoded UTF-8
+        # or whatever encoding is in use
+        if {![info exists _raw_map]} {
+            set _raw_map [::woof::webserver request_parameters $_request_context]
         }
-        my set $qvals
+        my set $_raw_map
+    }
+
+    method multiget {key} {
+        # Returns multiple values for a query key
+        # key - key to look up
+        # A query or form may have multiple values associated with a
+        # given key. This method returns all these associated values
+        # for the specified key as a list. Note that even if the key
+        # has a single value, it is returned as a single-element list.
+
+        my variable _raw_map
+        if {![info exists _raw_map]} {
+            my lazy_load
+        }
+        
+        # _raw_map keeps duplicate keys unlike the base Map object
+        return [lmap {k val} $_raw_map {
+            if {$k eq $key} {
+                lindex $val
+            } else {
+                continue
+            }
+        }]
     }
 }
-
 
 #
 # The request object, contains contents of the actual request.
