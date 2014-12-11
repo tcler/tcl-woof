@@ -8,9 +8,10 @@
 package require Tcl 8.5
 package require csv
 package require fileutil
+package require md5
 
 namespace eval distro {
-    variable version 0.2
+    variable version 0.3
 
     # Array keeping track of bundles, indexed by an id. Each
     # element is a dictionary with the following keys:
@@ -431,7 +432,7 @@ proc distro::run_install_steps {steps args} {
         foreach pair $cmds {
             lassign $pair cmd rollback
             if {$opts(-logcmd) ne ""} {
-                eval $opts(-logcmd) [list "Executing: $cmd"]
+                {*}$opts(-logcmd) "Executing: $cmd"
             }
             eval $cmd
             # Command ran so add its reverse to the rollback.
@@ -450,17 +451,17 @@ proc distro::run_install_steps {steps args} {
         # if any, are not recovered.
         
         if {[info exists opts(-logcmd)]} {
-            eval $opts(-logcmd) [list "Error: $msg. Attempting to rollback."]
+            {*}$opts(-logcmd) "Error: $msg. Attempting to rollback."
         }
 
         foreach cmd [lreverse $rollback_cmds] {
             if {[info exists opts(-logcmd)]} {
-                eval $opts(-logcmd) [list "Rollback: $cmd"]
+                {*}$opts(-logcmd) "Rollback: $cmd"
             }
             # Ignore errors, what can we do?
             if {[catch $cmd rollback_msg]} {
                 if {[info exists opts(-logcmd)]} {
-                    eval $opts(-logcmd) [list "Rollback command failed: $cmd. $rollback_msg"]
+                    {*}$opts(-logcmd) "Rollback command failed: $cmd. $rollback_msg"
                 }
             }
         }
@@ -472,12 +473,12 @@ proc distro::run_install_steps {steps args} {
     if {[llength $cleanup_cmds]} {
         foreach cmd [lreverse $cleanup_cmds] {
             if {[info exists opts(-logcmd)]} {
-                eval $opts(-logcmd) [list "Cleanup: $cmd"]
+                {*}$opts(-logcmd) "Cleanup: $cmd"
             }
             # Ignore errors, what can we do other than log?
             if {[catch $cmd msg]} {
                 if {[info exists opts(-logcmd)] && $opts(-logcmd) ne ""} {
-                    eval $opts(-logcmd) [list "Cleanup command failed: $cmd. $msg"]
+                    {*}$opts(-logcmd) "Cleanup command failed: $cmd. $msg"
                 }
             }
         }
@@ -534,6 +535,63 @@ proc distro::install {distro_path target_path args} {
     distro::release $from_distro
     distro::release $to_distro
     return
+}
+
+proc distro::uninstall {target_path args} {
+    # Uninstalls a distribution
+    # target_path - path to the target directory.
+
+    variable distros
+    variable manifest_defaults
+
+    #ruff
+    # -logcmd SCRIPT - command to call to log actions. An additional message
+    #   string is appended to SCRIPT before it is called.
+    #  -manifest NAME - the name to use for the file manifest
+    array set opts [list -manifest $manifest_defaults(filename) \
+                        -logcmd "" \
+                        -updatesameversion true]
+    array set opts $args
+
+    set msgs {}
+    set id [distro::distro $target_path -manifest $opts(-manifest)]
+    distro::read_manifest $id
+    dict for {relpath meta} [dict get $distros($id) manifest] {
+        if {[catch {
+            set path [file join $target_path $relpath]
+            #ruff
+            # All files in the manifest are deleted, but only if the file
+            # has not changed since the installation. Directories are
+            # not removed even if they are empty.
+
+            # Check that file size is the same as in manifest
+            # (cheaper than directly going to md5)
+            if {[file exists $path] &&
+                [file size $path] == [dict get $meta size] &&
+                [md5::md5 -hex -filename $path] eq [dict get $meta md5]} {
+                puts stderr  "Deleting $path"
+                # file delete -force -- $path
+            }
+        } msg]} {
+            # If any errors are encountered in deleting a file, the process
+            # is continues with the next file in the manifest.
+            lappend msgs $msg
+        }
+    }
+
+    if {[catch {
+        #ruff
+        # The manifest file is deleted after uninstalling.
+        file delete -force [file join $target_path [dict get $distros($id) manifest_name]]
+    } msg]} {
+        lappend msgs $msg
+    }
+
+    distro::release $id
+
+    #ruff
+    # Returns a list of errors encountered in deleting files, if any.
+    return $msgs
 }
 
 proc distro::build {path version args} {
@@ -628,6 +686,7 @@ proc distro::_document_self {path} {
         - generating a file manifest for the distribution
         - installation on the target system based on the manifest
         - rollback of installation on failure
+        - basic uninstall
         - updating of installed software with version checking,
           and backup of modified files
         - logging of all install actions
@@ -636,7 +695,7 @@ proc distro::_document_self {path} {
 
         The package is not a full blown install builder or
         installer like InstallJammer. It is targeted towards
-        software with very very basic installation needs. Limitations
+        software with very basic installation needs. Limitations
         are too many to mention, but include:
         - no ability to install into directories outside a single
           directory tree
@@ -667,11 +726,22 @@ proc distro::_document_self {path} {
         commands from a script:
           package require distro
           distro::install DISTROPATH TARGETPATH
-        where DISTROPATH is the directory where the distribution was unpacked, and
-        TARGETPATH is the path of the directory where the files are to be installed.
-        If an older version of the distribution is already installed in the target
-        directory, it will be upgraded. See the ::distro::install command for other options,
-        such as creation of an installation log.
+        where DISTROPATH is the directory where the distribution was
+        unpacked, and TARGETPATH is the path of the directory where
+        the files are to be installed.  If an older version of the
+        distribution is already installed in the target directory, it
+        will be upgraded. See the ::distro::install command for other
+        options, such as creation of an installation log.
+    }
+
+    set uninstall_usage {
+        To uninstall a distribution, run the following commands from a script:
+          package require distro
+          distro::uninstall TARGETPATH
+        where TARGETPATH is the directory where the package was installed.
+        Uninstalling is simplistic in that all files listed in the manifest
+        are deleted. See the ::distro::uninstall command for other
+        options, such as creation of an installation log.
     }
 
     set custom_usage {
@@ -691,6 +761,7 @@ proc distro::_document_self {path} {
                             Introduction [::ruff::extract_docstring $intro] \
                             "Building a distribution" [::ruff::extract_docstring $build_usage] \
                             "Installing a distribution" [::ruff::extract_docstring $install_usage] \
+                            "Uninstalling a distribution"  [::ruff::extract_docstring $uninstall_usage] \
                             "Customization" [::ruff::extract_docstring $custom_usage] \
                            ]]
 }
