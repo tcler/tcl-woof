@@ -569,8 +569,7 @@ proc distro::uninstall {target_path args} {
             if {[file exists $path] &&
                 [file size $path] == [dict get $meta size] &&
                 [md5::md5 -hex -filename $path] eq [dict get $meta md5]} {
-                puts stderr  "Deleting $path"
-                # file delete -force -- $path
+                file delete -force -- $path
             }
         } msg]} {
             # If any errors are encountered in deleting a file, the process
