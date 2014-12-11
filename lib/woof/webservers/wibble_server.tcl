@@ -159,6 +159,10 @@ proc ::woof::webservers::wibble::init {args} {
                      encoding [dict get $response encoding] \
                      headers [dict get $response headers]]
         }
+
+        method stop {} {
+            ::woof::webservers::wibble::stop
+        }
     }
 }
 
@@ -196,12 +200,6 @@ proc ::woof::webservers::wibble::request_handler {state} {
     # EXECUTION NEVER REACHES HERE!
 }
 
-proc xxx {} {
-    set persist 0
-
-
-}
-
 proc ::woof::webservers::wibble::sendcommand {sock request response} {
     set persist [expr {
         [dict get $request protocol] >= "HTTP/1.1"
@@ -229,7 +227,7 @@ proc ::woof::webservers::wibble::sendcommand {sock request response} {
     return $persist
 }
 
-proc ::woof::webservers::wibble::stop {rootdir args} {
+proc ::woof::webservers::wibble::stop {} {
     # Terminates the wibble server
     variable terminate
     set terminate true
