@@ -6,18 +6,17 @@ oo::class create TestController {
         next {*}$args
         # Only use Woof default section layout, not something user might
         # have defined.
-        pagevar set section_layout_alias _layout
+        pagevar set layout _layout
         
-        # Customize the layout as per our liking
-        pagevar set \
-            yui_page_width 750px \
-            yui_sidebar_width 160px \
-            yui_main_percent 75%
-            
-        pagevar set styles {
-            stylesheets/_yui-2-8-0r4-reset-fonts-grids.css
-            stylesheets/_yui-2-8-0r4-base-min.css
-            _woof.css
-        }
+        pagevar set responsive_settings { threshold sm }
+
+        pagevar lappend stylesheets [my url_for_stylesheet _woof.css]
+
+        pagevar set styles [my url_for_stylesheet _woof.css]
+    }
+    
+    method stop {} {
+        page store main "Stopped"
+        woof::webserver stop
     }
 }

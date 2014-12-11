@@ -844,7 +844,7 @@ oo::class create DevModeOnly {
 catch {LocalClientOnly destroy}; # To allow resourcing
 oo::class create LocalClientOnly {
     constructor {request response dispatchinfo args} {
-        if {[$request remote_addr] ne "127.0.0.1"} {
+        if {[$request remote_addr] ni {::1 127.0.0.1}} {
             ::woof::errors::exception WOOF_USER InvalidRequest "Request received for local URL [$request resource_url] from non-local client [$request remote_addr]."
         }
         next $request $response $dispatchinfo {*}$args

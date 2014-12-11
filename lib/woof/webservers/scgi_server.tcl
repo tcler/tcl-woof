@@ -208,9 +208,12 @@ proc ::woof::webservers::scgi::init {args} {
             puts -nonewline $sock [encoding convertto [dict get $response encoding] [dict get $response content]]
             close $sock
         }
+
+        method stop {} {
+            ::scgi::stop
+        }
     }
 }
-
 
 proc ::scgi::stop {} {
     variable listener_so
