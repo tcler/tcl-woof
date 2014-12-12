@@ -690,18 +690,20 @@ proc distro::_document_self {path} {
           and backup of modified files
         - logging of all install actions
         - simulation of install to display actions that will
-          taken without actually executing them.
+          taken without actually executing them
+        - installation of multiple distributions into the same directory
+          (provided no files are shared)
 
         The package is not a full blown install builder or
         installer like InstallJammer. It is targeted towards
         software with very basic installation needs. Limitations
-        are too many to mention, but include:
+        include:
         - no ability to install into directories outside a single
           directory tree
         - no ability to modify the system configuration
           (eg. creating users)
         - no user interface
-        - no facility for subpackages etc.
+        - no facility for subpackages or dependencies
         - no integration with the host operating system installer
 
         Basically, distro is a glorified file copying utility that provides rollback,
@@ -717,7 +719,8 @@ proc distro::_document_self {path} {
            distro::build DIRPATH VERSION
         where DIRPATH is the directory where your distribution resides, and VERSION
         is the version to use for the distribution. You can then use gzip or some
-        other archiving utility to create a distribution archive.
+        other archiving utility to create a distribution archive from
+        this directory.
     }
 
     set install_usage {
@@ -729,7 +732,14 @@ proc distro::_document_self {path} {
         unpacked, and TARGETPATH is the path of the directory where
         the files are to be installed.  If an older version of the
         distribution is already installed in the target directory, it
-        will be upgraded. See the ::distro::install command for other
+        will be upgraded.
+
+        It is possible to install multiple distributions into the same
+        target directory as long as they do not share any files. To do this
+        choose a different name for the manifest file with the 
+        '-manifest' option for the build and install commands.
+
+        See the ::distro::install command for other
         options, such as creation of an installation log.
     }
 
@@ -739,14 +749,16 @@ proc distro::_document_self {path} {
           distro::uninstall TARGETPATH
         where TARGETPATH is the directory where the package was installed.
         Uninstalling is simplistic in that all files listed in the manifest
-        are deleted. See the ::distro::uninstall command for other
-        options, such as creation of an installation log.
+        are deleted. This makes it useful only when there are no shared
+        files with other distributions. See the ::distro::uninstall command
+        for other options, such as creation of an installation log.
     }
 
     set custom_usage {
         More sophisticated distribution and install scripts may built
         using lower level commands. Refer to the command reference
-        for details.
+        for details and implementation of the build and install commands
+        for example use.
     }
 
     ::ruff::document_namespaces html [namespace current] \
