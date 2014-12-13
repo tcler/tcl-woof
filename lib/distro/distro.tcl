@@ -450,17 +450,17 @@ proc distro::run_install_steps {steps args} {
         # like deletion of old backup files and creation of new directories, 
         # if any, are not recovered.
         
-        if {[info exists opts(-logcmd)]} {
+        if {$opts(-logcmd) ne ""} {
             {*}$opts(-logcmd) "Error: $msg. Attempting to rollback."
         }
 
         foreach cmd [lreverse $rollback_cmds] {
-            if {[info exists opts(-logcmd)]} {
+            if {$opts(-logcmd) ne ""} {
                 {*}$opts(-logcmd) "Rollback: $cmd"
             }
             # Ignore errors, what can we do?
             if {[catch $cmd rollback_msg]} {
-                if {[info exists opts(-logcmd)]} {
+                if {$opts(-logcmd) ne ""} {
                     {*}$opts(-logcmd) "Rollback command failed: $cmd. $rollback_msg"
                 }
             }
@@ -472,12 +472,12 @@ proc distro::run_install_steps {steps args} {
     # Now run cleanup under a catch
     if {[llength $cleanup_cmds]} {
         foreach cmd [lreverse $cleanup_cmds] {
-            if {[info exists opts(-logcmd)]} {
+            if {$opts(-logcmd) ne ""} {
                 {*}$opts(-logcmd) "Cleanup: $cmd"
             }
             # Ignore errors, what can we do other than log?
             if {[catch $cmd msg]} {
-                if {[info exists opts(-logcmd)] && $opts(-logcmd) ne ""} {
+                if {$opts(-logcmd) ne ""} {
                     {*}$opts(-logcmd) "Cleanup command failed: $cmd. $msg"
                 }
             }
