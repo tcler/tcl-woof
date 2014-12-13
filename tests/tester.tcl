@@ -60,7 +60,13 @@ proc ::woof::test::main {command args} {
     variable script_dir
 
     switch -exact -- $command {
-        config {
+        config -
+        resetconfig {
+            if {$command eq "config"} {
+                unset -nocomplain config
+            } else {
+                ::woof::test::read_config
+            }
             array set config $args
             set config(-woofdir) [clean_path $config(-woofdir)]
             if {[info exists config(-serverdir)]} {
@@ -74,7 +80,7 @@ proc ::woof::test::main {command args} {
             ::woof::test::run {*}$args
         }
         default {
-            error "Command must be on of 'config' or 'test'.
+            error "Command must be on of 'config', 'resetconfig' or 'test'.
         }
     }
 }

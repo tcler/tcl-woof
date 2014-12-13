@@ -6,10 +6,18 @@
 
 # This file contains test utility procs
 
+if {[info exists ::woof::test::script_dir]} {
+    puts "Already sourced"
+    return
+}
+puts "Running testutil"
+
+package require tcltest
 package require Itcl
 package require Testing
 package require WebDriver
 package require fileutil
+package require json
 
 if {[catch {
     package require distro
@@ -25,13 +33,27 @@ namespace eval ::woof::test {
         proc windows {} {return false}
     }
 
-    variable script_dir
+    variable paths
     # We use the shortname to avoid quoting problems when exec'ing
     if {[windows]} {
-	set script_dir [file attributes [file normalize [file dirname [info script]]] -shortname]
+	set paths(test_scripts) [file attributes [file normalize [file dirname [info script]]] -shortname]
     } else {
-	set script_dir [file normalize [file dirname [info script]]]
+	set paths(test_scripts) [file normalize [file dirname [info script]]]
     }
+    set paths(source_root) [file normalize [file join $paths(test_scripts) ..]]
+
+    variable script_dir
+    set script_dir $paths(test_scripts); # For backward compatibility
+}
+
+proc ::woof::test::woof_path {args} {
+    variable config
+    return [file normalize [file join $config(-woofdir) {*}$args]]
+}
+
+proc ::woof::test::source_path {args} {
+    variable paths
+    return [file normalize [file join $paths(source_root) {*}$args]]
 }
 
 proc ::woof::test::save_config {} {
@@ -49,6 +71,47 @@ proc ::woof::test::read_config {} {
     set fd [open [file join $script_dir testconfig.cfg]]
     array set config [read $fd]
     close $fd
+}
+
+proc woof::test::ensure_parent_dir {path} {
+    if {[file exists [file dirname $path]]} {
+        return
+    }
+    file mkdir [file dirname $path]
+}
+
+# Does NOT expand wildcards. Quite simplistic, does not handle links
+# well etc.
+# Will overwrite destination files. Will abort on error with
+# copies only partially done.
+proc woof::test::copy_dir {from to} {
+    if {![file isdirectory $from]} {
+        error "Directory $from not found."
+    }
+
+    set to_is_dir [file isdirectory $to]
+    set to_exists [file exists $to]
+
+    if {$to_exists && ! $to_is_dir} {
+        error "Destination $to exists but is not a directory."
+    }
+
+    file mkdir $to
+
+    foreach entry [glob -directory $from -tails *] {
+        set from_entry [file join $from $entry]
+        set to_entry [file join $to $entry]
+        if {[file isdirectory $from_entry]} {
+            copy_dir $from_entry $to_entry
+        } else {
+            # Ordinary file
+            if {[file exists $to_entry] &&
+                [file isdirectory $to_entry]} {
+                error "Attempt to copy file $from_entry on top of a existing directory $to_entry."
+            }
+            file copy -force -- $from_entry $to_entry
+        }
+    }
 }
 
 proc ::woof::test::assert_server_running {} {
@@ -218,4 +281,43 @@ proc ::woof::test::list_compare {avalues bvalues} {
 if {[llength [info commands ::tcltest::customMatch]]} {
     ::tcltest::customMatch boolean ::woof::test::boolean_compare
     ::tcltest::customMatch list ::woof::test::list_compare
+}
+
+
+proc woof::test::open_websession {} {
+    assert_selenium_running
+    WebDriver::Capabilities [namespace current]::webcaps -browser_name chrome
+    WebDriver::Session [namespace current]::websession http://127.0.0.1:4444/wd/hub [namespace current]::webcaps
+}
+
+proc woof::test::close_websession {} {
+    itcl::delete object [namespace current]::websession
+    itcl::delete object [namespace current]::webcaps
+}
+
+proc woof::test::assert_selenium_healthy {} {
+    set tok [http::geturl http://localhost:4444/wd/hub/status]
+    if {[http::status $tok] ne "ok"} {
+        error "HTTP check for Selenium server failed with status [http::status $tok][http::cleanup $tok]"
+    }
+
+    set status [dict get [json::json2dict [http::data $tok]] status]
+    if {$status != 0} {
+        error "Selenium server returned status $status"
+    }
+    return
+}
+
+# Return 1 on success, or 0 if selenium was running but could not be shut down
+proc woof::test::shutdown_selenium {} {
+    if {![catch{
+        set tok [http::geturl http://localhost:4444/selenium-server/driver/ -query cmd=shutDownSeleniumServer]
+    }]} {
+        http::cleanup $tok
+        after 100;              # Wait for it to exit
+        return [catch {
+            http::cleanup [http::geturl http://localhost:4444/wd/hub/status]
+        }]
+    }
+    return 1
 }
