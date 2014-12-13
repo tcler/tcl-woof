@@ -6,12 +6,85 @@
 
 # This file contains test utility procs
 
-package require uri
-if {$::tcl_platform(platform) eq "windows"} {
-    package require twapi
+package require Itcl
+package require Testing
+package require WebDriver
+package require fileutil
+
+if {[catch {
+    package require distro
+}]} {
+    source [file join [file dirname [info script]] .. lib distro distro.tcl]
 }
 
 namespace eval ::woof::test {
+
+    if {$::tcl_platform(platform) eq "windows"} {
+        proc windows {} {return true}
+    } else {
+        proc windows {} {return false}
+    }
+
+    variable script_dir
+    # We use the shortname to avoid quoting problems when exec'ing
+    if {[windows]} {
+	set script_dir [file attributes [file normalize [file dirname [info script]]] -shortname]
+    } else {
+	set script_dir [file normalize [file dirname [info script]]]
+    }
+}
+
+proc ::woof::test::save_config {} {
+    variable config
+    variable script_dir
+    set fd [open [file join $script_dir testconfig.cfg] w]
+    puts $fd [array get config]
+    close $fd
+}
+
+proc ::woof::test::read_config {} {
+    variable config
+    variable script_dir
+
+    set fd [open [file join $script_dir testconfig.cfg]]
+    array set config [read $fd]
+    close $fd
+}
+
+proc ::woof::test::assert_server_running {} {
+    variable config
+
+    set url [uri::join scheme http host localhost port $config(-port) path /]
+    puts "Testing server availability at $url"
+    if {[catch {
+        set tok [http::geturl $url]
+        array set meta [http::meta $tok]
+        if {![info exists meta(Server)]} {
+            set msg "No identification returned by server. Please check configuration and command line options."
+        } else {
+            if {![string match -nocase "*${config(-server)}*" $meta(Server)]} {
+                set msg "Reached server $meta(Server), expected $config(-server). Please check configuration and command line options."
+            }
+            # Ideally, want to check the server interface but not sure how
+        }
+        http::cleanup $tok
+        if {[info exists msg]} {
+            error $msg
+        }
+    } msg]} {
+        progress "Stopping server $config(-server)"
+        ::woof::test::webserver_stop
+        error $msg
+    }        
+    return
+}
+
+proc ::woof::test::setup_woof_config {} {
+    variable config
+    # Set application.cfg to reflect URL root
+    set fd [open [file join $config(woofdir) config application.cfg] w]
+    puts $fd "set url_root $opts(-urlroot)"
+    close $fd
 }
 
 proc ::woof::test::init_values {} {
@@ -45,35 +118,73 @@ proc ::woof::test::url_part {url field} {
 }
 
 proc ::woof::test::clean_path {path} {
-    if {$::tcl_platform(platform) eq "windows"} {
+    if {[windows]} {
         return [file attributes [file normalize $path] -shortname]
     } else {
         return [file normalize $path]
     }
 }
 
-if {$::tcl_platform(platform) eq "windows"} {
-    interp alias {} ::woof::test::process_exists {} ::twapi::process_exists
-    interp alias {} ::woof::test::end_process {} ::twapi::end_process
-} else {
-    proc ::woof::test::process_exists pid {
-	return [file exists /proc/$pid]
-    }
-    proc ::woof::test::end_process {pid args} {
-	exec kill $pid
+namespace eval woof::test {
+    if {[windows]} {
+        proc terminate {pid} {
+            catch {
+                exec {*}[auto_execok taskkill.exe] /PID $pid
+            }
+        }
+
+        proc kill {pid} {
+            catch {
+                exec {*}[auto_execok taskkill.exe] /F /PID $pid
+            }
+        }
+
+        proc process_exists {pid} {
+            set tasklist [exec {*}[auto_execok tasklist.exe] /fi "pid eq $pid" /nh]
+            return [regexp "^\\s*\\S+\\s+$pid\\s" $tasklist]
+        }
+    } else {
+        proc terminate {pid} {
+            catch {
+                exec kill -15 $pid
+            }
+        }
+
+        proc kill {pid} {
+            catch {
+                exec kill -9 $pid
+            }
+        }
+
+        proc process_exists {pid} {
+            if {[catch { set fp [open "/proc/$pid/stat"]}] != 0} {
+                return 0
+            }
+
+            set stats [read $fp]
+            close $fp
+
+            if {[regexp {\d+ \([^)]+\) (\S+)} $stats match state]} {
+                if {$state eq {Z}} {
+                    return 0
+                }
+            }
+
+            return 1
+        }
     }
 }
 
 proc ::woof::test::start_scgi_process {} {
     variable scgi_pid
-    variable popts
+    variable config
 
     if {[info exists scgi_pid] && [process_exists $scgi_pid]} {
         return
     }
 
     unset -nocomplain scgi_pid;             # In case exec fails
-    set scgi_pid [exec [info nameofexecutable] [clean_path [file join $popts(-woofdir) lib woof webservers scgi_server.tcl]] &]
+    set scgi_pid [exec [info nameofexecutable] [clean_path [file join $config(-woofdir) lib woof webservers scgi_server.tcl]] &]
     # Wait for it to start before returning
     after 10
 }
@@ -82,19 +193,17 @@ proc ::woof::test::stop_scgi_process {} {
     variable scgi_pid
 
     if {[info exists scgi_pid]} {
-        end_process $scgi_pid -force true
+        kill $scgi_pid
         unset scgi_pid
     }
 }
 
 
-::tcltest::customMatch boolean ::woof::test::boolean_compare
 proc ::woof::test::boolean_compare {aval bval} {
     # Compare booleans (e.g. true and 1 should compare equal)
     expr {(!!$aval) == (!!$bval)}
 }
 
-::tcltest::customMatch list ::woof::test::list_compare
 proc ::woof::test::list_compare {avalues bvalues} {
     # Compare lists
     if {[llength $avalues] != [llength $bvalues]} {
@@ -106,3 +215,7 @@ proc ::woof::test::list_compare {avalues bvalues} {
     return 1
 }
 
+if {[llength [info commands ::tcltest::customMatch]]} {
+    ::tcltest::customMatch boolean ::woof::test::boolean_compare
+    ::tcltest::customMatch list ::woof::test::list_compare
+}

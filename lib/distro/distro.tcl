@@ -668,7 +668,7 @@ proc distro::_contained_file {base path} {
     return false
 }
 
-proc distro::_document_self {path} {
+proc distro::_document_self {path args} {
     # Generates documentation for the package in HTML format.
     # path - path to the output file
     variable version
@@ -766,7 +766,7 @@ proc distro::_document_self {path} {
         -output $path \
         -titledesc "distro - a distribution and installation utility (V$version)" \
         -copyright "[clock format [clock seconds] -format %Y] Ashok P. Nadkarni" \
-        -includesource false \
+        {*}$args \
         -preamble [dict create :: \
                        [list \
                             Introduction [::ruff::extract_docstring $intro] \

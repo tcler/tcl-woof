@@ -13,7 +13,7 @@ namespace eval ::woof::test::apache {
 
     proc setup_config {} {
         # Set up the Apache configuration
-        namespace upvar ::woof::test popts opts
+        namespace upvar ::woof::test config opts
 
         progress "Setting up Apache config: [array get opts]"
 
@@ -82,7 +82,7 @@ namespace eval ::woof::test::iis {
         error "The test framework is not currently capable of setting up IIS. You must do it manually and then run the test scripts with the testonly command."
 
         # Set up the IIS configuration
-        namespace upvar ::woof::test popts opts
+        namespace upvar ::woof::test config opts
 
         progress "Setting up IIS config: [array get opts]"
 
@@ -158,7 +158,7 @@ namespace eval ::woof::test::wibble {
 
     proc setup_config {} {
         # Set up the wibble configuration
-        namespace upvar ::woof::test popts opts
+        namespace upvar ::woof::test config opts
 
         progress "Setting up wibble config: [array get opts]"
 
@@ -176,7 +176,7 @@ namespace eval ::woof::test::wibble {
 
     proc start {} {
         variable wibble_pid
-        namespace upvar ::woof::test popts opts
+        namespace upvar ::woof::test config opts
         
         if {[info exists wibble_pid] && [process_exists $wibble_pid]} {
             return
@@ -192,7 +192,7 @@ namespace eval ::woof::test::wibble {
         variable wibble_pid
 
         if {[info exists wibble_pid]} {
-            ::twapi::end_process $wibble_pid -force true
+            kill $wibble_pid
             unset wibble_pid
         }
     }
@@ -232,37 +232,37 @@ proc ::woof::test::copy_template {from to map} {
 
 proc ::woof::test::webserver_setup {} {
     variable script_dir
-    variable popts
+    variable config
 
     # Sets up the specified server configuration
-    if {$popts(-server) ni {apache iis wibble}} {
+    if {$config(-server) ni {apache iis wibble}} {
         error "Server $options(-server) not supported."
     }
 
     # Installs Woof! "in-place" within $woof_dir
-    if {$popts(-server) ni {bowwow wibble}} {
-        exec [info nameofexecutable] [file join $popts(-woofdir) scripts installer.tcl] install $popts(-server) $popts(-interface)
+    if {$config(-server) ni {bowwow wibble}} {
+        exec [info nameofexecutable] [file join $config(-woofdir) scripts installer.tcl] install $config(-server) $config(-interface)
     }
 
-    return [::woof::test::${popts(-server)}::setup_config]
+    return [::woof::test::${config(-server)}::setup_config]
 }
 
 proc ::woof::test::webserver_start {} {
     variable script_dir
-    variable popts
+    variable config
 
-    if {$popts(-interface) eq "scgi"} {
+    if {$config(-interface) eq "scgi"} {
         start_scgi_process
     }
-    ::woof::test::${popts(-server)}::start
+    ::woof::test::${config(-server)}::start
 }
 
 proc ::woof::test::webserver_stop {args} {
     variable script_dir
-    variable popts
+    variable config
 
-    ::woof::test::${popts(-server)}::stop
-    if {$popts(-interface) eq "scgi"} {
+    ::woof::test::${config(-server)}::stop
+    if {$config(-interface) eq "scgi"} {
         stop_scgi_process
     }
 }

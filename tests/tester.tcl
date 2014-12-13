@@ -3,96 +3,52 @@
 package require tcltest
 package require http
 package require uri
+source testutil.tcl
+source webserver_config.tcl
 
 namespace eval ::woof::test {
-    variable script_dir
-    # We use the shortname to avoid quoting problems when exec'ing
-    if {$::tcl_platform(platform) eq "windows"} {
-	set script_dir [file attributes [file normalize [file dirname [info script]]] -shortname]
-    } else {
-	set script_dir [file normalize [file dirname [info script]]]
-    }
 
     variable outchan stdout
 
     # Program/test run options
-    variable popts
-    array set popts {
-        -interface cgi
-        -server apache
-        -port   80
-        -config rewrite
-        -urlroot /myapp
+    variable config
+    array set config {
+        -interface direct
+        -server wibble
+        -port   8015
+        -webconfig default
+        -urlroot /
     }
-    set popts(-woofdir) [file join $script_dir ..]
-    if {$::tcl_platform(platform) eq "windows"} {
-        set popts(-serverdir) [file join $::env(ProgramFiles) "Apache Software Foundation" Apache2.2]
-    } else {
-        set popts(-serverdir) TBD
-    }
+    set config(-woofdir) [file join $script_dir ..]
 }
 
-if {$::tcl_platform(platform) eq "windows"} {
-    package require twapi
-    proc ::woof::test::windows {} {return true}
-} else {
-    proc ::woof::test::windows {} {return false}
-}
-
-source testutil.tcl
-source webserver_config.tcl
-
-proc ::woof::test::run {} {
-    variable popts
+proc ::woof::test::run {args} {
+    variable config
 
     # Restart the web server
-    progress "Restarting server $popts(-server)"
+    progress "Restarting server $config(-server)"
     ::woof::test::webserver_stop
     ::woof::test::webserver_start
 
     # Verify server is set up
-    set url [uri::join scheme http host localhost port $popts(-port) path /]
-    puts "Testing server availability at $url"
-    if {[catch {
-        set tok [http::geturl $url]
-        array set meta [http::meta $tok]
-        if {![info exists meta(Server)]} {
-            set msg "No identification returned by server. Please check configuration and command line options."
-        } else {
-            if {![string match -nocase "*${popts(-server)}*" $meta(Server)]} {
-                set msg "Reached server $meta(Server), expected $popts(-server). Please check configuration and command line options."
-            }
-            # Ideally, want to check the server interface but not sure how
+    assert_server_running
+    set ::env(WOOF_TEST_URLROOT) $config(-urlroot)
+    set ::env(WOOF_TEST_PORT)    $config(-port)
+    # Collect those options understood by the tcltest package.
+    set test_opts {}
+    foreach opt [::tcltest::configure] {
+        if {[dict exists $args $opt]} {
+            lappend test_opts $opt [dict get $args $opt]
         }
-        http::cleanup $tok
-        if {[info exists msg]} {
-            error $msg
-        }
-    } msg]} {
-        progress "Stopping server $popts(-server)"
-        ::woof::test::webserver_stop
-        error $msg
-    } else {
-        set ::env(WOOF_TEST_URLROOT) $popts(-urlroot)
-        set ::env(WOOF_TEST_PORT)    $popts(-port)
-
-        # Collect those options understood by the tcltest package.
-        set test_opts {}
-        foreach opt [::tcltest::configure] {
-            if {[info exists popts($opt)]} {
-                lappend test_opts $opt $popts($opt)
-            }
-        }
-
-        tcltest::configure {*}$test_opts
-
+    }
+    tcltest::configure {*}$test_opts
+    try {
         tcltest::runAllTests
-        progress "Stopping server $popts(-server)"
+        progress "Stopping server $config(-server)"
+    } finally {
         ::woof::test::webserver_stop
     }
-
 }
-
 
 proc ::woof::test::progress {msg} {
     variable outchan
@@ -100,25 +56,25 @@ proc ::woof::test::progress {msg} {
 }
 
 proc ::woof::test::main {command args} {
-    variable popts
+    variable config
+    variable script_dir
 
-    array set popts $args
-    set popts(-woofdir) [clean_path $popts(-woofdir)]
-    set popts(-serverdir) [clean_path $popts(-serverdir)]
     switch -exact -- $command {
-        test {
-            # After setting up the config,
-            # the webserver_setup returns the actual option values used,
-            # and we just pass them on to run_tests
-
-            ::woof::test::webserver_setup
-            ::woof::test::run
-        }
         config {
-            ::woof::test::webserver_setup
+            array set config $args
+            set config(-woofdir) [clean_path $config(-woofdir)]
+            if {[info exists config(-serverdir)]} {
+                set config(-serverdir) [clean_path $config(-serverdir)]
+            }
+
+            save_config
         }
-        testonly {
-            ::woof::test::run
+        test {
+            ::woof::test::read_config
+            ::woof::test::run {*}$args
+        }
+        default {
+            error "Command must be on of 'config' or 'test'.
         }
     }
 }

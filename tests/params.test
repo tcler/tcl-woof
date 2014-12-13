@@ -67,7 +67,7 @@ namespace eval ::woof::test::params {
             if {$val_node eq ""} {
                 return "No value node found for parameter '$name'."
             }
-            set param_val [$val_node text]
+            set param_val [encoding convertfrom utf-8 [$val_node text]]
             if {$param_val ne $val} {
                 return "Returned value for parameter '$name' is '$param_val' instead of expected value '$val'."
             }
