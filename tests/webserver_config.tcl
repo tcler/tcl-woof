@@ -1,5 +1,7 @@
 # Commands for setting up configurations
 
+package require registry
+
 namespace eval ::woof::test {}
 namespace eval ::woof::test::iis {}
 
@@ -73,79 +75,71 @@ namespace eval ::woof::test::apache {
 # IIS stuff
 
 namespace eval ::woof::test::iis {
-    variable iis_service_name
-    set iis_service_name W3SVC
-
     namespace path ::woof::test
+    namespace upvar ::woof::test config config
 
-    proc setup_config {} {
-        error "The test framework is not currently capable of setting up IIS. You must do it manually and then run the test scripts with the testonly command."
+    proc iisx_dir {} {
+        foreach ver {8.1 8.0 7.5 7.0} {
+            if {![catch {
+                registry get HKEY_LOCAL_MACHINE\\software\\Microsoft\\iisexpress\\$ver InstallPath
+            } dir]} {
+                proc iisx_dir {} "return $dir"
+                tailcall iisx_dir
+            }
+        }
 
-        # Set up the IIS configuration
-        namespace upvar ::woof::test config opts
+        error "Could not locate IIS Express directory"
+    }
 
-        progress "Setting up IIS config: [array get opts]"
+    proc config_path {} {
+        set path [test_path temp iis config woofiisx.config]
+        ensure_parent_dir $path
+        proc config_path {} "return $path"
+        tailcall config_path
+    }
 
-        set iis_root [clean_path $opts(-serverdir)]
-        set woof_root [clean_path $opts(-woofdir)]
+    proc site_path {} {
+        set path [test_path temp iis site woofiisx.config]
+        ensure_parent_dir $path
+        proc site_path {} "return $path"
+        tailcall site_path
+    }
 
-        if {$opts(-urlroot) eq "/"} {
+    proc appcmd {args} {
+        exec [file join [iisx_dir] appcmd.exe] {*}$args /apphostconfig:[clean_path [config_path]]
+    }
+
+    proc prepare {} {
+        variable config
+
+        if {$config(-urlroot) eq "/"} {
             error "IIS testing does not currently support a configuration rooted at /"
         }
 
-        reset_iis_config
+        file copy -force [file join $::env(USERPROFILE) Documents IISExpress config applicationhost.config] [config_path]
 
-        switch -exact -- $opts(-config) {
-            rewrite {
-                
-            }
-            transparent {
-                set opts(-urlroot) $opts(-urlroot)/cgi_server.tcl
-                TBD
-            }
-        }
+        # NOTE: When using IIS Express, bindings must specify localhost (not
+        # even 127.0.0.1) and a port number > 1024 if not running with
+        # elevated privs
+        appcmd add site /name:WoofTestSite /bindings:http/*:$config(-port):localhost /physicalPath:[clean_path [site_path]]
+        appcmd add vdir /app.name:WoofTestSite/ /path:$config(-urlroot) /physicalPath:"[clean_path $config(-woofdir) public]"
+        appcmd set config /section:system.webServer/handlers "-accessPolicy:Read, Execute, Script"
 
+        return
+    }
 
-        # Write the IIRF ini file
-
-        set template_map [list \
-                              server_root $iis_root \
-                              server_port $opts(-port) \
-                              woof_root $woof_root \
-                              url_root $opts(-urlroot)]
-
-        set test_conf_dir [file join $::woof::test::script_dir iis]
-
-        # Copy Iis test configuration
-        copy_template \
-            [file join $test_conf_dir httpd-${opts(-interface)}-${opts(-config)}.conf] \
-            [file join $iis_root conf httpd.conf] \
-            $template_map
-        copy_template \
-            [file join $test_conf_dir common.conf] \
-            [file join $iis_root conf common.conf] \
-            $template_map
-
-        # Set application.cfg to reflect URL root
-        set fd [open [file join $woof_root config application.cfg] w]
-        puts $fd "set url_root $opts(-urlroot)"
-        close $fd
-
-        return [array get opts]
+    proc cleanup {} {
+        file delete -force [test_path temp iis]
     }
 
     proc start {} {
-        variable iis_service_name
-        if {![twapi::start_service $iis_service_name -wait 10000]} {
-            error "Could not start service $iis_service_name"
-        }
+        variable config
+        stop
+        exec [file join [iisx_dir] iisexpress.exe] /site:WoofTestSite /config:[config_path] &
     }
 
     proc stop {} {
-        variable iis_service_name
-        if {![twapi::stop_service $iis_service_name -wait 10000]} {
-            error "Could not stop service $iis_service_name"
-        }
+        catch {exec {*}[auto_execok taskkill] /IM iisexpress.exe}
     }
 }
 
@@ -155,45 +149,60 @@ namespace eval ::woof::test::iis {
 namespace eval ::woof::test::wibble {
 
     namespace path ::woof::test
+    namespace upvar ::woof::test config config
 
-    proc setup_config {} {
+    proc pidpath {} {
+        return [test_path temp wibble wibble.pid]
+    }
+
+    proc prepare {} {
+        variable config
+
         # Set up the wibble configuration
-        namespace upvar ::woof::test config opts
 
-        progress "Setting up wibble config: [array get opts]"
+        progress "Setting up wibble config: [array get config]"
 
         # Nothing to really do for wibble itself. 
         # All config is done at start time through the command line
-
-        # Set application.cfg to reflect URL root
-        set woof_root [clean_path $opts(-woofdir)]
-        set fd [open [file join $woof_root config application.cfg] w]
-        puts $fd "set url_root $opts(-urlroot)"
-        close $fd
-
-        return [array get opts]
+        # when starting wibble
     }
 
     proc start {} {
-        variable wibble_pid
-        namespace upvar ::woof::test config opts
+        variable config
         
-        if {[info exists wibble_pid] && [process_exists $wibble_pid]} {
-            return
+        set pidfile [pidpath]
+
+        if {[file exists $pidfile]} {
+            set pid [read_file $pidfile]
+            if {[process_exists $pid]} {
+                # Cannot use the same process since config may be different
+                error "Wibble seems to be already running with PID $pid. Please stop it first."
+            }
         }
 
         unset -nocomplain wibble_pid;             # In case exec fails
-        set wibble_pid [exec [info nameofexecutable] [clean_path [file join $opts(-woofdir) lib woof webservers wibble_server.tcl]] -urlroot $opts(-urlroot) -port $opts(-port) &]
+        set wibble_pid [exec [info nameofexecutable] [clean_path [file join $config(-woofdir) lib woof webservers wibble_server.tcl]] -urlroot $config(-urlroot) -port $config(-port) &]
+        write_file $pidfile $wibble_pid
+
         # Wait for it to start before returning
         after 10
+        return
     }
 
     proc stop {} {
-        variable wibble_pid
-
-        if {[info exists wibble_pid]} {
-            kill $wibble_pid
-            unset wibble_pid
+        variable config
+        
+        catch {
+            http::cleanup [http::geturl [make_test_url _woof/test/test/stop]]
+        }
+        after 50;               # Wait to see if it exits cleanly
+        set pidfile [pidpath]
+        if {[file exists $pidfile]} {
+            set pid [read_file $pidfile]
+            if {[process_exists $pid]} {
+                terminate $pid
+            }
+            file delete -force $pidfile
         }
     }
 }
@@ -230,7 +239,7 @@ proc ::woof::test::copy_template {from to map} {
     close $fd
 }
 
-proc ::woof::test::webserver_setup {} {
+proc ::woof::test::webserver_prepare {} {
     variable script_dir
     variable config
 
@@ -244,7 +253,7 @@ proc ::woof::test::webserver_setup {} {
         exec [info nameofexecutable] [file join $config(-woofdir) scripts installer.tcl] install $config(-server) $config(-interface)
     }
 
-    return [::woof::test::${config(-server)}::setup_config]
+    return [::woof::test::${config(-server)}::prepare]
 }
 
 proc ::woof::test::webserver_start {} {

@@ -7,17 +7,19 @@
 # This file contains test utility procs
 
 if {[info exists ::woof::test::script_dir]} {
-    puts "Already sourced"
     return
 }
-puts "Running testutil"
 
 package require tcltest
+package require http
+package require uri
+package require fileutil
+package require json
 package require Itcl
 package require Testing
 package require WebDriver
-package require fileutil
-package require json
+
+source [file join [file dirname [info script]] webserver_config.tcl]
 
 if {[catch {
     package require distro
@@ -46,6 +48,20 @@ namespace eval ::woof::test {
     set script_dir $paths(test_scripts); # For backward compatibility
 }
 
+proc ::woof::test::read_file {path} {
+    set fd [open $path]
+    set data [read $fd]
+    close $fd
+    return $data
+}
+
+proc ::woof::test::write_file {path data} {
+    ensure_parent_dir $path
+    set fd [open $path w]
+    puts -nonewline $fd $data
+    close $fd
+}
+
 proc ::woof::test::woof_path {args} {
     variable config
     return [file normalize [file join $config(-woofdir) {*}$args]]
@@ -56,21 +72,21 @@ proc ::woof::test::source_path {args} {
     return [file normalize [file join $paths(source_root) {*}$args]]
 }
 
+proc ::woof::test::test_path {args} {
+    variable paths
+    return [file normalize [file join $paths(test_scripts) {*}$args]]
+}
+
 proc ::woof::test::save_config {} {
     variable config
     variable script_dir
-    set fd [open [file join $script_dir testconfig.cfg] w]
-    puts $fd [array get config]
-    close $fd
+    write_file [file join $script_dir testconfig.cfg] [array get config]
 }
 
 proc ::woof::test::read_config {} {
     variable config
     variable script_dir
-
-    set fd [open [file join $script_dir testconfig.cfg]]
-    array set config [read $fd]
-    close $fd
+    array set config [read_file [file join $script_dir testconfig.cfg]]
 }
 
 proc woof::test::ensure_parent_dir {path} {
@@ -145,34 +161,18 @@ proc ::woof::test::assert_server_running {} {
 proc ::woof::test::setup_woof_config {} {
     variable config
     # Set application.cfg to reflect URL root
-    set fd [open [file join $config(woofdir) config application.cfg] w]
-    puts $fd "set url_root $opts(-urlroot)"
+    set fd [open [file join $config(-woofdir) config application.cfg] w]
+    puts $fd "set url_root $config(-urlroot)"
     close $fd
 }
 
-proc ::woof::test::init_values {} {
-    variable test_url
-    array set test_url {
-        scheme    http
-        host      127.0.0.1
-        port      8015
-        urlroot   /
-        url_module _woof/test
-        query    a=b&=d
-    }
-
-    catch {set test_url(port) $::env(WOOF_TEST_PORT)}
-    catch {set test_url(host) $::env(WOOF_TEST_HOST)}
-    catch {set test_url(urlroot) $::env(WOOF_TEST_URLROOT)}
-}
-
 proc ::woof::test::make_test_url {rurl {query ""}} {
-    variable test_url
+    variable config
     return [uri::join \
                 scheme http \
-                host $test_url(host) \
-                port $test_url(port) \
-                path [file join $test_url(urlroot) $rurl] \
+                host $config(-host) \
+                port $config(-port) \
+                path [file join $config(-urlroot) $rurl] \
                 query $query]
 }
 
@@ -180,63 +180,62 @@ proc ::woof::test::url_part {url field} {
     return [dict get [uri::split $url] $field]
 }
 
-proc ::woof::test::clean_path {path} {
+proc ::woof::test::clean_path {args} {
     if {[windows]} {
-        return [file attributes [file normalize $path] -shortname]
+        return [file nativename [file attributes [file normalize [file join {*}$args]] -shortname]]
     } else {
-        return [file normalize $path]
+        return [file normalize [file join {*}$args]]
     }
 }
 
-namespace eval woof::test {
-    if {[windows]} {
-        proc terminate {pid} {
-            catch {
-                exec {*}[auto_execok taskkill.exe] /PID $pid
-            }
+
+if {[woof::test::windows]} {
+    proc woof::test::terminate {pid} {
+        catch {
+            exec {*}[auto_execok taskkill.exe] /PID $pid
+        }
+    }
+
+    proc woof::test::kill {pid} {
+        catch {
+            exec {*}[auto_execok taskkill.exe] /F /PID $pid
+        }
+    }
+
+    proc woof::test::process_exists {pid} {
+        set tasklist [exec {*}[auto_execok tasklist.exe] /fi "pid eq $pid" /nh]
+        return [regexp "^\\s*\\S+\\s+$pid\\s" $tasklist]
+    }
+} else {
+    proc woof::test::terminate {pid} {
+        catch {
+            exec kill -15 $pid
+        }
+    }
+    proc woof::test::kill {pid} {
+        catch {
+            exec kill -9 $pid
+        }
+    }
+
+    proc woof::test::process_exists {pid} {
+        if {[catch { set fp [open "/proc/$pid/stat"]}] != 0} {
+            return 0
         }
 
-        proc kill {pid} {
-            catch {
-                exec {*}[auto_execok taskkill.exe] /F /PID $pid
-            }
-        }
+        set stats [read $fp]
+        close $fp
 
-        proc process_exists {pid} {
-            set tasklist [exec {*}[auto_execok tasklist.exe] /fi "pid eq $pid" /nh]
-            return [regexp "^\\s*\\S+\\s+$pid\\s" $tasklist]
-        }
-    } else {
-        proc terminate {pid} {
-            catch {
-                exec kill -15 $pid
-            }
-        }
-
-        proc kill {pid} {
-            catch {
-                exec kill -9 $pid
-            }
-        }
-
-        proc process_exists {pid} {
-            if {[catch { set fp [open "/proc/$pid/stat"]}] != 0} {
+        if {[regexp {\d+ \([^)]+\) (\S+)} $stats match state]} {
+            if {$state eq {Z}} {
                 return 0
             }
-
-            set stats [read $fp]
-            close $fp
-
-            if {[regexp {\d+ \([^)]+\) (\S+)} $stats match state]} {
-                if {$state eq {Z}} {
-                    return 0
-                }
-            }
-
-            return 1
         }
+
+        return 1
     }
 }
+
 
 proc ::woof::test::start_scgi_process {} {
     variable scgi_pid
@@ -295,7 +294,7 @@ proc woof::test::close_websession {} {
     itcl::delete object [namespace current]::webcaps
 }
 
-proc woof::test::assert_selenium_healthy {} {
+proc woof::test::assert_selenium_running {} {
     set tok [http::geturl http://localhost:4444/wd/hub/status]
     if {[http::status $tok] ne "ok"} {
         error "HTTP check for Selenium server failed with status [http::status $tok][http::cleanup $tok]"
