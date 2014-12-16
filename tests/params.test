@@ -11,22 +11,16 @@ package require http
 package require tdom
 
 source [file join [file dirname [info script]] testutil.tcl]
-
-# Initialize URL component values from environment
-::woof::test::init_values
+::woof::test::read_config
 
 namespace eval ::woof::test::params {
     namespace import ::tcltest::test
 
     namespace path ::woof::test
 
-    namespace upvar ::woof::test test_url test_url
-
     proc do_query {query {headers {}}} {
-        variable test_url
-        set url [make_test_url params/dump]
         set tok [http::geturl [make_test_url \
-                                   "$test_url(url_module)/params/dump" \
+                                   "_woof/test/params/dump" \
                                    [http::formatQuery {*}$query]] \
                      -headers $headers]
 

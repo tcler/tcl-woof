@@ -1,10 +1,6 @@
 # Main script for driving tests
 
-package require tcltest
-package require http
-package require uri
 source testutil.tcl
-source webserver_config.tcl
 
 namespace eval ::woof::test {
 
@@ -13,13 +9,15 @@ namespace eval ::woof::test {
     # Program/test run options
     variable config
     array set config {
+        -scheme http
+        -host 127.0.0.1
+        -port   8015
         -interface direct
         -server wibble
-        -port   8015
         -webconfig default
         -urlroot /
     }
-    set config(-woofdir) [file join $script_dir ..]
+    set config(-woofdir) [clean_path [file join $script_dir ..]]
 }
 
 proc ::woof::test::run {args} {
@@ -55,19 +53,37 @@ proc ::woof::test::progress {msg} {
     puts $outchan $msg
 }
 
-proc ::woof::test::main {command args} {
+proc ::woof::test::usage {{msg {}}} {
+    if {[string length $msg]} {
+        puts stderr $msg
+    }
+    puts -nonewline stderr "Usage: [file tail [info nameofexecutable]] [info script] COMMAND ?OPTIONS?"
+    puts -nonewline {
+where COMMAND is one of the following (listed in order they are normally run)
+        resetconfig - reset test configuration to defaults
+        config      - write test configuration based on passed options
+        prepare     - prepare environment for a test run, including 
+                      configuring and starting web server
+        run         - run tests
+        cleanup     - shut down web server and clean up test environment
+    }
+    exit [string length $msg]
+}
+
+proc ::woof::test::main {args} {
     variable config
     variable script_dir
 
+    set args [lassign $args command]
+    if {$command ne "resetconfig"} {
+        read_config
+    }
     switch -exact -- $command {
         config -
         resetconfig {
             if {$command eq "config"} {
-                unset -nocomplain config
-            } else {
-                ::woof::test::read_config
+                array set config $args
             }
-            array set config $args
             set config(-woofdir) [clean_path $config(-woofdir)]
             if {[info exists config(-serverdir)]} {
                 set config(-serverdir) [clean_path $config(-serverdir)]
@@ -75,12 +91,24 @@ proc ::woof::test::main {command args} {
 
             save_config
         }
+        prepare {
+            setup_woof_config
+            webserver_prepare
+            webserver_start
+        }
+        cleanup {
+            webserver_stop
+        }
         test {
             ::woof::test::read_config
             ::woof::test::run {*}$args
         }
+        "" -
+        help {
+            usage
+        }
         default {
-            error "Command must be on of 'config', 'resetconfig' or 'test'.
+            usage "Invalid command '$command'"
         }
     }
 }
