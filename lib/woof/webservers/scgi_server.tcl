@@ -1,4 +1,4 @@
-#!C:/Tcl/bin/tclsh86t.exe
+#!c:/Tcl/863/x64/bin/tclsh.exe
 # Copyright (c) 2009, Ashok P. Nadkarni
 # All rights reserved.
 # See the file LICENSE in the Woof! root directory for license
@@ -90,9 +90,13 @@ proc ::woof::webservers::scgi::init {args} {
     oo::class create WebServer {
         superclass ::woof::webservers::BaseWebServer
         constructor {args} {
+            my variable _enable_nph
+
             # Webserver interface class for SCGI
             #
             next {*}$args
+
+            set _enable_nph [::woof::master::config get scgi_enable_nph]
         }
 
         method request_environment {request_context args} {
@@ -183,12 +187,11 @@ proc ::woof::webservers::scgi::init {args} {
             # TBD - replace multiple puts with a single one
             # TBD - add error handling
 
+            my variable _enable_nph
+
             set sock [dict get $request_context socket]
             set head ""
-            if {[dict exists $request_context headers SERVER_SOFTWARE] &&
-                [string equal -length 13 Microsoft-IIS [dict get $request_context headers SERVER_SOFTWARE]]} {
-                # On IIS, isapi_scgi expects a real HTTP status line
-                # TBD - should this be 1.x, 1.0 or 1.1 ?
+            if {$_enable_nph} {
                 append head "HTTP/1.0 [dict get $response status_line]\r\n"
             } else { 
                 # Other servers expect a Status: dummy header
