@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <system.webServer>
+        <rewrite>
+            <rules>
+                <clear />
+                <rule name="Let static resources be served by IIS" stopProcessing="true">
+                    <match url="^(stylesheets|js|images|%ISAPI_DLL%)(/.*)?$" />
+                    <conditions logicalGrouping="MatchAll" trackAllCaptures="false" />
+                    <action type="None" />
+                </rule>
+                <rule name="Insert isapi_scgi.dll into URL path" stopProcessing="false">
+                    <match url="^(.*)?$" />
+                    <conditions logicalGrouping="MatchAll" trackAllCaptures="true" />
+                    <action type="Rewrite" url="%ISAPI_DLL%/{R:0}" />
+                </rule>
+            </rules>
+        </rewrite>
+    </system.webServer>
+</configuration>

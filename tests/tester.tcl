@@ -66,6 +66,7 @@ where COMMAND is one of the following (listed in order they are normally run)
                       configuring and starting web server
         run         - run tests
         cleanup     - shut down web server and clean up test environment
+        printconfig - print current test configuration
     }
     exit [string length $msg]
 }
@@ -91,6 +92,9 @@ proc ::woof::test::main {args} {
 
             save_config
         }
+        printconfig {
+            parray config
+        }
         prepare {
             setup_woof_config
             webserver_prepare
@@ -98,6 +102,8 @@ proc ::woof::test::main {args} {
         }
         cleanup {
             webserver_stop
+            webserver_cleanup
+            cleanup_woof_config
         }
         test {
             ::woof::test::read_config

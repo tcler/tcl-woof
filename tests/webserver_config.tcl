@@ -83,7 +83,7 @@ namespace eval ::woof::test::iis {
             if {![catch {
                 registry get HKEY_LOCAL_MACHINE\\software\\Microsoft\\iisexpress\\$ver InstallPath
             } dir]} {
-                proc iisx_dir {} "return $dir"
+                proc iisx_dir {} "[list return $dir]"
                 tailcall iisx_dir
             }
         }
@@ -94,14 +94,14 @@ namespace eval ::woof::test::iis {
     proc config_path {} {
         set path [test_path temp iis config woofiisx.config]
         ensure_parent_dir $path
-        proc config_path {} "return $path"
+        proc config_path {} "[list return $path]"
         tailcall config_path
     }
 
     proc site_path {} {
-        set path [test_path temp iis site woofiisx.config]
-        ensure_parent_dir $path
-        proc site_path {} "return $path"
+        set path [test_path temp iis site]
+        file mkdir $path
+        proc site_path {} "[list return $path]"
         tailcall site_path
     }
 
@@ -116,26 +116,48 @@ namespace eval ::woof::test::iis {
             error "IIS testing does not currently support a configuration rooted at /"
         }
 
+        set public_dir [clean_path $config(-woofdir) public]
+
         file copy -force [file join $::env(USERPROFILE) Documents IISExpress config applicationhost.config] [config_path]
 
         # NOTE: When using IIS Express, bindings must specify localhost (not
         # even 127.0.0.1) and a port number > 1024 if not running with
         # elevated privs
         appcmd add site /name:WoofTestSite /bindings:http/*:$config(-port):localhost /physicalPath:[clean_path [site_path]]
-        appcmd add vdir /app.name:WoofTestSite/ /path:$config(-urlroot) /physicalPath:"[clean_path $config(-woofdir) public]"
+        appcmd add vdir /app.name:WoofTestSite/ /path:$config(-urlroot) /physicalPath:$public_dir
         appcmd set config /section:system.webServer/handlers "-accessPolicy:Read, Execute, Script"
+
+        if {$config(-interface) eq "scgi"} {
+            if {$::env(PROCESSOR_ARCHITECTURE) eq "AMD64"} {
+                set scgi_dll isapi_scgi64.dll
+            } else {
+                set scgi_dll isapi_scgi.dll
+            }
+            file copy -force [source_path thirdparty isapi_scgi $scgi_dll] $public_dir
+            file copy -force [source_path thirdparty isapi_scgi isapi_scgi.ini] $public_dir
+            copy_template [test_path iis web.config-scgi] [file join $public_dir web.config] [list isapi_dll $scgi_dll]
+        }
 
         return
     }
 
     proc cleanup {} {
+        variable config
+        stop
+        set public_dir [clean_path $config(-woofdir) public]
+        if {$config(-interface) eq "scgi"} {
+            file delete [file join $public_dir isapi_scgi.dll]
+            file delete [file join $public_dir isapi_scgi64.dll]
+            file delete [file join $public_dir isapi_scgi.ini]
+        }
+        file delete [file join $public_dir web.config]
         file delete -force [test_path temp iis]
     }
 
     proc start {} {
         variable config
         stop
-        exec [file join [iisx_dir] iisexpress.exe] /site:WoofTestSite /config:[config_path] &
+        exec cmd /c start [clean_path [file join [iisx_dir] iisexpress.exe]] /site:WoofTestSite /config:[config_path] &
     }
 
     proc stop {} {
@@ -167,6 +189,11 @@ namespace eval ::woof::test::wibble {
         # when starting wibble
     }
 
+    proc cleanup {} {
+        stop
+        # Nothing else to do
+    }
+
     proc start {} {
         variable config
         
@@ -180,7 +207,6 @@ namespace eval ::woof::test::wibble {
             }
         }
 
-        unset -nocomplain wibble_pid;             # In case exec fails
         set wibble_pid [exec [info nameofexecutable] [clean_path [file join $config(-woofdir) lib woof webservers wibble_server.tcl]] -urlroot $config(-urlroot) -port $config(-port) &]
         write_file $pidfile $wibble_pid
 
@@ -208,36 +234,6 @@ namespace eval ::woof::test::wibble {
 }
 
 ################################################################
-# General routines
-
-proc ::woof::test::copy_template {from to map} {
-    # Copy a template after replacing placeholders
-
-    set fd [open $from r]
-    set data [read $fd]
-    close $fd
-
-    # Substitute the content
-    regsub -all -- {%SERVER_ROOT%} $data [dict get $map server_root] data
-    regsub -all -- {%SERVER_PORT%} $data [dict get $map server_port] data
-    regsub -all -- {%WOOF_ROOT%} $data [dict get $map woof_root] data
-    if {[dict get $map url_root] eq "/"} {
-        # Special case URL_ROOT=/ else we will land up with paths
-        # like //stylesheets so replace such cases first and then
-        # remaining %URL_ROOT%
-        regsub -all -- {%URL_ROOT%/} $data / data
-    }
-    regsub -all -- {%URL_ROOT%} $data [dict get $map url_root] data
-
-    # Assume if .sav exists, original already backed up
-    if {![file exists ${to}.sav]} {
-        file copy $to ${to}.sav
-    }
-
-    set fd [open $to w]
-    puts $fd $data
-    close $fd
-}
 
 proc ::woof::test::webserver_prepare {} {
     variable script_dir
@@ -254,6 +250,11 @@ proc ::woof::test::webserver_prepare {} {
     }
 
     return [::woof::test::${config(-server)}::prepare]
+}
+
+proc ::woof::test::webserver_cleanup {} {
+    variable config
+    return [::woof::test::${config(-server)}::cleanup]
 }
 
 proc ::woof::test::webserver_start {} {

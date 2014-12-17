@@ -6,10 +6,6 @@
 
 # This file contains tests for the Request object
 
-package require tcltest
-package require http
-package require tdom
-
 source [file join [file dirname [info script]] testutil.tcl]
 ::woof::test::read_config
 
