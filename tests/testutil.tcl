@@ -15,6 +15,7 @@ package require http
 package require uri
 package require fileutil
 package require json
+package require tdom
 package require Itcl
 package require Testing
 package require WebDriver
@@ -96,6 +97,34 @@ proc woof::test::ensure_parent_dir {path} {
     file mkdir [file dirname $path]
 }
 
+# Copy a template after replacing placeholders
+proc ::woof::test::copy_template {from to map} {
+    set fd [open $from r]
+    set data [read $fd]
+    close $fd
+
+    # Substitute the content
+    if {[dict exists $map url_root]} {
+        if {[dict get $map url_root] eq "/"} {
+            # Special case URL_ROOT=/ else we will land up with paths
+            # like //stylesheets so replace such cases first and then
+            # remaining %URL_ROOT% in loop below
+            regsub -all -- {%URL_ROOT%/} $data / data
+        }
+    }
+
+    dict for {key val} $map {
+        regsub -all -- "***=%[string toupper $key]%" $data $val data
+    }
+
+    # Assume if .sav exists, original already backed up
+    if {![file exists ${to}.sav]} {
+        file copy $to ${to}.sav
+    }
+
+    write_file $to $data
+}
+
 # Does NOT expand wildcards. Quite simplistic, does not handle links
 # well etc.
 # Will overwrite destination files. Will abort on error with
@@ -161,9 +190,13 @@ proc ::woof::test::assert_server_running {} {
 proc ::woof::test::setup_woof_config {} {
     variable config
     # Set application.cfg to reflect URL root
-    set fd [open [file join $config(-woofdir) config application.cfg] w]
-    puts $fd "set url_root $config(-urlroot)"
-    close $fd
+    write_file [file join $config(-woofdir) config application.cfg] \
+        "set url_root $config(-urlroot)\n"
+}
+
+proc ::woof::test::cleanup_woof_config {} {
+    variable config
+    file delete [file join $config(-woofdir) config application.cfg]
 }
 
 proc ::woof::test::make_test_url {rurl {query ""}} {
@@ -238,28 +271,38 @@ if {[woof::test::windows]} {
 
 
 proc ::woof::test::start_scgi_process {} {
-    variable scgi_pid
     variable config
 
-    if {[info exists scgi_pid] && [process_exists $scgi_pid]} {
-        return
+    set pidfile [test_path temp scgi.pid]
+    if {[file exists $pidfile]} {
+        set pid [read_file $pidfile]
+        if {[process_exists $pid]} {
+            # Cannot use the same process since config may be different
+            error "SCGI server seems to be already running with PID $pid. Please stop it first."
+        }
     }
 
-    unset -nocomplain scgi_pid;             # In case exec fails
-    set scgi_pid [exec [info nameofexecutable] [clean_path [file join $config(-woofdir) lib woof webservers scgi_server.tcl]] &]
+    set pid [exec [info nameofexecutable] [clean_path [file join $config(-woofdir) lib woof webservers scgi_server.tcl]] &]
+    write_file $pidfile $pid
+
     # Wait for it to start before returning
     after 10
+    return
 }
 
 proc ::woof::test::stop_scgi_process {} {
-    variable scgi_pid
+    variable config
 
-    if {[info exists scgi_pid]} {
-        kill $scgi_pid
-        unset scgi_pid
+    set pidfile [test_path temp scgi.pid]
+    if {[file exists $pidfile]} {
+        set pid [read_file $pidfile]
+        if {[process_exists $pid]} {
+            # Note "terminate" call does not work for the scgi script
+            kill $pid
+        }
+        file delete -force $pidfile
     }
 }
-
 
 proc ::woof::test::boolean_compare {aval bval} {
     # Compare booleans (e.g. true and 1 should compare equal)
