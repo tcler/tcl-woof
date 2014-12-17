@@ -118,7 +118,7 @@ proc ::woof::test::copy_template {from to map} {
     }
 
     # Assume if .sav exists, original already backed up
-    if {![file exists ${to}.sav]} {
+    if {[file exists $to] && ![file exists ${to}.sav]} {
         file copy $to ${to}.sav
     }
 
