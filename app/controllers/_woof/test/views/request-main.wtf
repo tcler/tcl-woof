@@ -2,6 +2,7 @@
 % # Replace the contents of this file with the template for the
 % # main page section of the request action of the
 % # _test controller.
+<p>Request received [clock format [clock seconds]]</p>
 <h2>Request object methods</h2>
 <p>The following environment was passed by the [::woof::webserver server_interface] server interface.</p>
 <dl>

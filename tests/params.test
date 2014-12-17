@@ -21,7 +21,7 @@ namespace eval ::woof::test::params {
                      -headers $headers]
 
         if {[http::ncode $tok] ne 200} {
-            error "Server rerurned HTTP code [http::code $tok][http::cleanup $tok]"
+            error "Server returned HTTP code [http::code $tok][http::cleanup $tok]"
         }
         set dom [dom parse -keepEmpties -html [http::data $tok]]
         return [dict create tok $tok dom $dom]
