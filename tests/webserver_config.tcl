@@ -106,7 +106,6 @@ namespace eval ::woof::test::iis {
     }
 
     proc appcmd {args} {
-        puts $args
         exec [file join [iisx_dir] appcmd.exe] {*}$args /apphostconfig:[clean_path [config_path]]
     }
 
