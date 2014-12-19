@@ -541,7 +541,7 @@ oo::class create Controller {
             }
 
             #ruff
-            # If the resource is a file, it is searched for in the search            
+            # If the resource is a file, it is searched for in the search
             # directory path for the controller. The root for all relative
             # directories in the search path is the public
             # directory under the Woof root unless the -subdir option is
@@ -552,7 +552,7 @@ oo::class create Controller {
             if {$path ne ""} {
                 set resource [::woof::url_for_file $path $resource]
             } else {
-                exception WOOF MissingFile "Resource $resource not found."
+                exception WOOF MissingFile "Resource $resource not found (relative root $relroot)."
             }
         }
 

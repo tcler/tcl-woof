@@ -236,7 +236,7 @@ oo::class create UgController {
         if {$display eq ""} {
             set display "<span class='ug-code'>[hesc [namespace tail $name]]</span>"
         }
-        return "<a href='[my url_for_static woof_manual.html -subdir _woof]#$name'>$display</a>"
+        return "<a href='[my url_for_static woof_manual.html -subdir html/_woof]#$name'>$display</a>"
     }
 
     method _tcl_manpage_link {name {display ""}} {
