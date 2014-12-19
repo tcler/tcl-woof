@@ -12,7 +12,7 @@
                 <rule name="Insert isapi_scgi.dll into URL path" stopProcessing="false">
                     <match url="^(.*)?$" />
                     <conditions logicalGrouping="MatchAll" trackAllCaptures="true" />
-                    <action type="Rewrite" url="%ISAPI_DLL%/{R:0}" />
+                    <action type="Rewrite" url="woof.scgi/{R:0}" />
                 </rule>
             </rules>
         </rewrite>

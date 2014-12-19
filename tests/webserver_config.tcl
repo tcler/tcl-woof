@@ -106,6 +106,7 @@ namespace eval ::woof::test::iis {
     }
 
     proc appcmd {args} {
+        puts $args
         exec [file join [iisx_dir] appcmd.exe] {*}$args /apphostconfig:[clean_path [config_path]]
     }
 
@@ -125,7 +126,7 @@ namespace eval ::woof::test::iis {
         # elevated privs
         appcmd add site /name:WoofTestSite /bindings:http/*:$config(-port):localhost /physicalPath:[clean_path [site_path]]
         appcmd add vdir /app.name:WoofTestSite/ /path:$config(-urlroot) /physicalPath:$public_dir
-        appcmd set config /section:system.webServer/handlers "-accessPolicy:Read, Execute, Script"
+        appcmd set config WoofTestSite /section:system.webServer/handlers "-accessPolicy:Read, Execute, Script"
 
         if {$config(-interface) eq "scgi"} {
             if {$::env(PROCESSOR_ARCHITECTURE) eq "AMD64"} {
@@ -133,10 +134,18 @@ namespace eval ::woof::test::iis {
             } else {
                 set scgi_dll isapi_scgi.dll
             }
-            file copy -force [source_path thirdparty isapi_scgi $scgi_dll] $public_dir
-            file copy -force [source_path thirdparty isapi_scgi isapi_scgi.ini] $public_dir
+            # file copy -force [source_path thirdparty isapi_scgi $scgi_dll] $public_dir
+            # file copy -force [source_path thirdparty isapi_scgi isapi_scgi.ini] $public_dir
             copy_template [test_path iis web.config-scgi] [file join $public_dir web.config] [list isapi_dll $scgi_dll]
+            set scgi_dll_path [clean_path [source_path thirdparty isapi_scgi $scgi_dll]]
+            appcmd set config \
+                /section:system.webServer/handlers \
+                "/+\[name='ISAPISCGI',path='*.scgi',scriptProcessor='$scgi_dll_path',verb='*',modules='IsapiModule',resourceType='Unspecified',allowPathInfo='true'\]"
+            appcmd set config /section:system.webServer/security/isapiCgiRestriction "/+\[path='$scgi_dll_path',allowed='true',description='ISAPISCGI'\]"
         }
+
+
+
 
         return
     }
