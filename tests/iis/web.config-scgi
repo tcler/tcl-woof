@@ -5,7 +5,7 @@
             <rules>
                 <clear />
                 <rule name="Let static resources be served by IIS" stopProcessing="true">
-                    <match url="^(stylesheets|js|images|%ISAPI_DLL%)(/.*)?$" />
+                    <match url="^(stylesheets|js|images|html)(/.*)?$" />
                     <conditions logicalGrouping="MatchAll" trackAllCaptures="false" />
                     <action type="None" />
                 </rule>
