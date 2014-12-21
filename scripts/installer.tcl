@@ -384,6 +384,7 @@ proc installer::install {server module args} {
     variable manifest_name
 
     switch -exact -- $server {
+        iis7 -
         iis {
             if {$::tcl_platform(platform) ne "windows"} {
                 error "Server $server is not supported on this platform"

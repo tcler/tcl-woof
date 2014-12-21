@@ -22,7 +22,7 @@ below.</p>
 <p>This scenario makes the following assumptions:</p>
 <ul>
     <li>You have full control over IIS configuration.</li>
-    <li>The server hosts the Woof! application alongside other applications.</li>
+    <li>The server hosts the Woof! application alongside other applications on the default web site.</li>
     <li>The application is rooted at /myapp, i.e. <span class="ug-filename">http://www.mysite.com/myapp</span> is the entry point into the application.</li>
     <li>You have the means to modify the system configuration so that the Woof! SCGI server is started automatically either at boot time or when IIS is started.</li>
 </ul>
@@ -57,102 +57,71 @@ set url_root /myapp
 <p>This will allow Woof! to correctly decode and generate URL's for
 the Woof! application.</p>
 
-<h3>Step 2 - install <code>isapi_scgi</code></h3>
-<p>The <code>isapi_scgi</code> IIS extension for SCGI is open source
-software that can be freely downloaded and used. A sample installation
-is shown below. The <code>isapi_scgi</code> 
-<a href="http://www.magicsplat.com">web
-site</a> contains detailed download, installation and usage
-instructions.</p>
+<h3>Step 2 - configure the application URL in IIS</h3>
 
-<p>Download the extension from the <code>isapi_scgi</code> 
-<a href="https://sourceforge.net/projects/twapi/files/">download
-area</a>. Extract the <span class="ug-filename">isapi_scgi.dll</span>
-file from the downloaded archive and place it in
-the <span class="ug-filename">public</span> folder of your Woof!
-installation (<span class="ug-filename">/myapp/public</span> in our
-example).</p>
-
-
-<p>Start up the MMC IIS manager and select the server in the left
-pane. Then double click the ISAPI and CGI Restrictions icon as shown
-  in the figure below.</p>
-
-<p class='ug-center'>
-[my _image iis7_isapi_ext_icon.png "IIS7 ISAPI screen"]
-</p>
-
-<p>
-Then in the Actions pane, click the Add link to bring up 
-the dialog to add the ISAPI SCGI extension as shown
-below.</p>
-
-<p class='ug-center'>
-[my _image iis7_scgi_isapi_add.png "IIS7 ISAPI add screen"]
-</p>
-
-Type the path to the extension dll in the first field. Note the
-<strong>Allow extension path to execute</strong> checkbox must be selected.
-
-
-<h3>Step 3 - configure the application in IIS</h3>
-
-<p>The sample session below illustrates installation under IIS 7 on
-Windows Server 2008. 
-The session shown configures IIS such that the extension will
-be accessed under the
-URL <span class="ug-filename">/myapp/isapi_scgi.dll/</span>. All
-requests to URLs below this will be passed by the extension to the
-SCGI server. In a later step, we will configure a IIS URL rewriter to
-hide the use of the DLL so requests
-under <span class="ug-filename">/myapp</span> will be passed to the
-SCGI server.</p>
-
-<p>Start up the MMC IIS manager and create a new virtual
-directory, <span class="ug-filename">myapp</span>, under the default
-Web site as shown in the screen shot below.</p>
-
-<p class='ug-center'>
-[my _image iis7_scgi_new_directory.png "Initial MMC screen"]
-</p>
-
-<p>This will bring up the virtual directory creation dialog. Fill out
-the fields as shown below.
-
-<p class='ug-center'>
-[my _image iis7_scgi_directory_dialog.png "Virtual directory dialog"]
-</p>
-
-<p>Fill the alias as
+<p>Now create a virtual directory [my _filename /myapp]
+for the site with the physical location
+pointing to the [my _filename public] subdirectory of our Woof! installation.
+Fill the alias as
 type <span class="ug-filename">myapp</span>. This is the URL root
 under which we want the Woof! application to be accessed and must be
 the same as the value of the <code>url_root</code> Woof! configuration
 variable we used in Step 1 except for leaving out the leading
 slash.</p>
-
-<p>The next field is the location of the physical directory
-for the application. Here we enter the path to the public subdirectory
-under our Woof! installation and then click OK to create the
-virtual directory.</p>
-
-<p>Next we need to enable the ISAPI SCGI extension for this directory.
-Select the myapp virtual directory and double click the Handle Mappings
-icon in the Features pane as shown below.
 </p>
 
-<p class='ug-center'>
-[my _image iis7_scgi_handler_icon.png "Virtual directory handler icon"]
+[my _code_sample {
+   appcmd add vdir /app.name:"Default Web Site/" /path:/myapp /physicalPath:c:\myappdir\public
+}]
+
+<h3>Step 3 - install <code>isapi_scgi</code></h3>
+<p>The <code>isapi_scgi</code> IIS extension for SCGI is open source
+software that can be freely downloaded and used. A sample installation
+is shown below using the IIS command line configuration tool 
+<span class="ug-filename">appcmd</span> which can be found in the
+<span class="ug-filename">%SYSTEMROOT%\\system32\\inetsrv</span>
+directory. The <code>isapi_scgi</code> 
+<a href="http://www.magicsplat.com">web
+site</a> contains detailed download, installation and usage
+instructions using the IIS Manager as well.</p>
+
+<p>Download the extension from the <code>isapi_scgi</code> 
+<a href="https://sourceforge.net/projects/twapi/files/">download
+area</a>. Extract the downloaded archive into a directory that
+is accessible to the IIS server but does not need to be in the
+Woof installation or under the site directory. The sample
+session below assumes it is extracted into the
+<span class="ug-filename">c:\\isapi_scgi</span> directory
+and that we are configuring the 64-bit version. For the 32-bit version,
+replace the [my _filename isapi_scgi64.dll] with
+[my _filename isapi_scgi.dll].
 </p>
 
-<p>That will bring up the handler mappings view in the center pane. Click the
-  Edit Feature Permissions link in the Actions pane on the right to bring up
-  the dialog shown below.</p>
+[my _hnote {
+The sequence of steps outlined below is only one of many possible ways
+IIS may be configured. For example, you may prefer to enable the 
+<code>isapi_scgi</code> handler only for one specific directory.
+}]
 
-<p class='ug-center'>
-[my _image iis7_scgi_handler_mapping.png "Virtual directory handler mapping"]
+<p>We need to inform IIS that the [my _filename isapi_scgi] DLL should
+  be permitted to execute.</p>
+[my _code_sample {
+    appcmd set config /section:system.webServer/security/isapiCgiRestriction /+[path='c:\isapi_scgi\isapi_scgi64.dll',allowed='true',description='ISAPISCGI']
+}]
+<p>Next, add the <code>isapi_scgi</code> handler for files ending in
+  [my _filename .scgi]. Note that no such file has to actually exist because
+  the <code>resourceType</code> attribute value is the literal
+  <code>Unspecified</code>.
+</p>
+[my _code_sample {
+    appcmd set config /section:system.webServer/handlers /+[name='ISAPISCGI',path='*.scgi',scriptProcessor='c:\isapi_scgi\isapi_scgi64.dll',verb='*',modules='IsapiModule',resourceType='Unspecified',allowPathInfo='true']
+}]
+
+<p>It is important that the <code>allowPathInfo</code> attribute
+  be specified as <code>true</code> in order for Woof! to route URL's
+  to the correct controller.
 </p>
 
-<p>Make sure the Execute checkbox is selected and click Ok.
 
 <h3>Step 4 - configure SCGI</h3>
 <p>If you are not running the default SCGI server address and port,
@@ -160,11 +129,12 @@ follow the steps described in
 the <code>isapi_scgi</code> [my _chapter_link configuration "configuration manual"]
 to set up <code>isapi_scgi</code> options. This step is not
 required if you are running the default SCGI configuration.</p>
+
 <h3>Step 5 - configure URL rewriting</h3>
 <p>This step is optional but is usually desirable for various
 reasons. The configuration steps described so far will result in the
 Woof! SCGI server being invoked for URL's starting with
-<span class="ug-filename">http://www.mysite.com/myapp/isapi_scgi.dll</span>.
+<span class="ug-filename">http://www.mysite.com/myapp/woof.scgi</span>.
 A URL rewrite filter will allow this root URL to be changed
 to <span class="ug-filename">http://www.mysite.com/myapp</span>
 instead. This step is optional but is recommended for all the reasons
@@ -183,8 +153,9 @@ extension which supports IIS 7 and 8. Follow the directions there
 to download and install the extension.
 </p>
 <p>
-Although the URL Rewrite extension can be configured through the IIS
-manager UI, here we will take the simpler route of just creating a
+Although the URL Rewrite extension can also be configured through the IIS
+manager UI or through [my _code appcmd],
+here we will take the simpler route of just creating a
 configuration file [my _filename c:\\myappdir\\public\\web.config]
 with the following content.
 </p>
@@ -197,14 +168,14 @@ with the following content.
             <rules>
                 <clear />
                 <rule name="Let static resources be served by IIS" stopProcessing="true">
-                    <match url="^(stylesheets|js|images|isapi_scgi.dll)(/.*)?$" />
+                    <match url="^(stylesheets|js|images|html)(/.*)?$" />
                     <conditions logicalGrouping="MatchAll" trackAllCaptures="false" />
                     <action type="None" />
                 </rule>
-                <rule name="Insert isapi_scgi.dll into URL path" stopProcessing="false">
+                <rule name="Insert SCGI extension into URL path" stopProcessing="false">
                     <match url="^(.*)?$" />
                     <conditions logicalGrouping="MatchAll" trackAllCaptures="true" />
-                    <action type="Rewrite" url="isapi_scgi.dll/{R:0}" />
+                    <action type="Rewrite" url="woof.scgi/{R:0}" />
                 </rule>
             </rules>
         </rewrite>
@@ -228,6 +199,15 @@ the [my _code <rule>] tag. The [my _code <match>] tag under each rule
 defines the regular expression pattern to be matched against the portion
 of the URL beyond the [my _code /myapp] prefix.
 </p>
+<p>The first rule is to ensure that static resources like images and
+stylesheets in the public directory are directly served by
+IIS and not passed to our SCGI server. Therefore, the first rule is written
+with an [my _code <action>] type of [my _code None] which means the URL
+being processed will be unchanged. More important, the rule
+has an [my _code stopProcessing] attribute of [my _code true]
+which mean further rules will not be applied. The URL will therefore
+be entirely unchanged and directly served by IIS.
+</p>
 <p>
 The second rule is the primary rule that accomplishes what we want to do.
 It basically says that any URL under [my _code /myapp] should be rewritten
@@ -236,24 +216,7 @@ a regular expression back-reference and is replaced
 by the matched expression in the URL. When a client accesses
 the URL [my _code /myapp/path/to/resource], [my _code "{R:0}"] will
 match [my _code path/to/resource] and that portion of the URL will
-be replaced by [my _code isapi_scgi.dll/path/to/resource].
-</p>
-
-<p>The first rule is to make exceptions for the second rule.
-We want static resources like images and
-stylesheets in the public directory to be directly served by
-IIS not passed to our SCGI server. Therefore, the first rule is written
-with an [my _code <action>] type of [my _code None] which means the URL
-being processed will be unchanged. More important, the rule
-has an [my _code stopProcessing] attribute of [my _code true]
-which mean further rules will not be applied. The URL will therefore
-be entirely unchanged and directly served by IIS.
-</p>
-
-<p>As an aside, note that [my _code isapi_scgi.dll] is also part of the
-first rule. This is for a different reason - in this case
-no rewriting is necessary since [my _code isapi_scgi.dll] is already
-part of the URL and thus the request will be passed to the SCGI server.
+be replaced by [my _code woof.scgi/path/to/resource].
 </p>
 
 <p>
