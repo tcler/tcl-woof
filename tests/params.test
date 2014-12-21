@@ -57,7 +57,7 @@ namespace eval ::woof::test::params {
             if {$val_node eq ""} {
                 return "No value node found for parameter '$name'."
             }
-            set param_val [encoding convertfrom utf-8 [$val_node text]]
+            set param_val [$val_node text]
             if {$param_val ne $val} {
                 return "Returned value for parameter '$name' is '$param_val' instead of expected value '$val'."
             }
@@ -112,6 +112,8 @@ namespace eval ::woof::test::params {
         # Note the following unicode sequence is chosen such that
         # the first two chars have a HTML & mapping, the last two do
         # not.
+        # This test may fail for wibble (and posibly others) because
+        # of HTTP header parsing differences wrt to encodings
         set params [list pname \u00a9\u221e\u0102\u0108]
         set state [do_query $params]
         check_values [dict get $state dom] $params
