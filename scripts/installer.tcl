@@ -104,23 +104,33 @@ proc installer::distribute {target_dir args} {
     variable ctcl_exe
     variable manifest_name
 
-    if {$::tcl_platform(platform) ne "windows"} {
-        # ctcs gorc etc. not available on Unix. TBD - need to clean up this mess
-        error "Sorry, currently the distribution can only be created on Windows."
-    }
-
     # Note - tarrer defaults to bsdtar since Gnu tar does not properly
     # set directory permissions when tarring on Windows
     array set opts {
         -gzipper gzip
         -zipper zip
-        -tarrer bsdtar
         -force false
         -kit all
         -fromscm false
     }
+    if {$::tcl_platform(platform) eq "windows"} {
+        set opts(-tarrer) bsdtar
+    } else {
+        set opts(-tarrer) tar
+    }
+
     array set opts $args
     
+    if {$::tcl_platform(platform) ne "windows"} {
+	if {$opts(-kit) eq "bowwow"} {
+	    error "Sorry, currently bowwow.exe can only be created on Windows."
+	}
+	if {$opts(-kit) eq "all"} {
+	    puts stderr "Warning: bowwow.exe cannot be created on this platform."
+	}
+    }
+
+
     if {[file exists $target_dir] && ! $opts(-force)} {
         error "Target directory '$target_dir' already exists."
     }
@@ -213,7 +223,8 @@ proc installer::distribute {target_dir args} {
         exec cmd /c [file join $src_dir tools makeziptm.cmd] [file join $target_dir woof-tm.zip] $tm_file
     }
 
-    if {$opts(-kit) in {all bowwow}} {
+    if {($::tcl_platform(platform) eq "windows") &&
+	($opts(-kit) in {all bowwow})} {
         # Now also create a standalone kit 
         puts "Creating bowwow"
         set bowwow_dir [file join $target_dir bowwow-${woof_version}.vfs]
