@@ -312,7 +312,7 @@ proc ::wibble::dequery {str} {
             set val [list "" [decode \
                 [string range $val 1 end]]]
         }
-        lappend query [decode $key] $val
+        lappend query [decode $key] [encoding convertfrom utf-8 $val]
     }
     return $query
 }
@@ -1076,7 +1076,7 @@ proc ::wibble::getrequest {port chan peerhost peerport} {
                 set split [string first \r\n\r\n $part]
                 set val [deheader [string map {\r ""}\
                     [string range $part 0 [expr {$split - 1}]]]]
-                dict set val "" [string range $part [expr {$split + 4}] end]
+                dict set val "" [encoding convertfrom utf-8 [string range $part [expr {$split + 4}] end]]
                 lappend post [dict getnull $val content-disposition name] $val
                 set beg [expr {$end + 3}]
                 set end [expr {[string first $sep $data $beg] - 1}]
