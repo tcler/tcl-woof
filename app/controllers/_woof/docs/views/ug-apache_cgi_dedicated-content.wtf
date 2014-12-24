@@ -56,12 +56,33 @@ locate URL resources.</p>
 
 <h3>Step 3 - configure CGI</h3>
 <p>We now add a <span class='ug-code'>Directory</span> section
-to <span class="ug-filename">httpd.conf</span>:</p>
+to <span class="ug-filename">httpd.conf</span> to set appropriate
+configuration for our directory including access control.
+</p>
+
+<p>
+For Apache 2.2, this section should be:
+</p>
 [my _code_sample {
 <Directory "/var/myapp/public">
-    Options +ExecCGI
     Order allow,deny
     Allow from all
+    Options +ExecCGI
+    AddHandler cgi-script .tcl
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ cgi_server.tcl/$1 [QSA,L]
+</Directory>
+}]
+
+<p>
+For Apache 2.4, this section should be:
+</p>
+
+[my _code_sample {
+<Directory "/home/vmuser/src/woof/dist/woof-0.5a1/public" >
+    Require all granted
+    Options +ExecCGI
     AddHandler cgi-script .tcl
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-f
