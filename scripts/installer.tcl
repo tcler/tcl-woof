@@ -67,16 +67,18 @@ proc installer::usage {{msg ""} {code ""}} {
 }
 
 
-proc installer::install_log {msg} {
+proc installer::install_log {args} {
     # Logs a message to the install log
     # msg - log message
     # The message is logged only if the application has set the
     # opened the log file channel.
 
     variable log_fd
-    variable 
+
     if {[info exists log_fd]} {
-        puts $log_fd "[clock format [clock seconds] -format %T] $msg"
+	foreach msg $args {
+	    puts $log_fd "[clock format [clock seconds] -format %T] $msg"
+	}
     }
 }
 
@@ -378,6 +380,23 @@ proc installer::write_defaults {woof_dir} {
     }
 }
 
+proc installer::check_prerequisites {} {
+    set ip [interp create]
+    set errors [$ip eval {
+	set errors ""
+	foreach name {uri fileutil md5 uuid html} {
+	    if {[catch "package require $name" msg]} {
+		lappend errors "Check for package $name failed: $msg"
+	    }
+	}	
+	set errors
+    }]
+    if {[llength $errors]} {
+	install_log {*}$errors
+	error "Check for prerequisites failed."
+    }
+}
+
 proc installer::install {server module args} {
     # Installs Woof
     # module - the name of the server module to be used (eg. ncgi_server)
@@ -390,6 +409,7 @@ proc installer::install {server module args} {
     #   will reside
     
     variable log_fd
+    variable log_path
     variable root_dir
     variable woof_version
     variable manifest_name
@@ -420,7 +440,8 @@ proc installer::install {server module args} {
     array set opts $args
     if {[info exists opts(-installdir)]} {
         if {[file isdirectory $opts(-installdir)]} {
-            set log_fd [open [file join $opts(-installdir) install-$timestamp.log] w]
+	    set log_path [file join $opts(-installdir) install-$timestamp.log]
+            set log_fd [open $log_path w]
             install_log "Starting install of version $woof_version - installing in existing directory $opts(-installdir)."
             install_log "Installation arguments: [join [list $server $module {*}$args] {. }]."
 
@@ -468,18 +489,26 @@ proc installer::install {server module args} {
         } else {
             # Directory does not exist. Create it
             file mkdir $opts(-installdir)
-            set log_fd [open [file join $opts(-installdir) install-$timestamp.log] w]
+	    set log_path [file join $opts(-installdir) install-$timestamp.log]
+	    set log_fd [open $log_path w]
             install_log "Starting install of version $woof_version - new installation in directory '$opts(-installdir)'."
-            install_log "Installation arguments: [join [list $server $module {*}$args] {. }]."
+            install_log "Installation arguments: [join [list $server $module {*}$args] {, }]."
         }
+
+	check_prerequisites
+
         install_log "Copying files into target directory '$opts(-installdir)'."
         distro::install $root_dir $opts(-installdir) -manifest $manifest_name -logcmd [namespace current]::install_log
     } else {
         # This is treated as a new (in-place) install
         set opts(-installdir) $root_dir
-        set log_fd [open [file join $opts(-installdir) install-$timestamp.log] w]
+	set log_path [file join $opts(-installdir) install-$timestamp.log]
+	set log_fd [open $log_path w]
+
+	check_prerequisites
+
         install_log "Starting install of version $woof_version - in-place install in directory $opts(-installdir)."
-        install_log "Installation arguments: [join [list $server $module {*}$args] {. }]."
+        install_log "Installation arguments: [join [list $server $module {*}$args] {, }]."
     }
 
     try {
@@ -643,6 +672,7 @@ proc installer::cleanup_tree {dir {patterns *~}} {
 
 proc installer::main {command args} {
     variable exit_code
+    variable log_path
 
     # Utility for managing Woof deployments and installations
     # command - the command to carry out, must be one of
@@ -666,7 +696,11 @@ proc installer::main {command args} {
     } msg]} {
         puts stderr "Error: $msg"
         if {$command eq "install"} {
-            puts stderr "Please see the installation log for details."
+	    if {[info exists log_path]} {
+		puts stderr "Please see the installation log '$log_path' for details."
+	    } else {
+		puts stderr "Please see the installation log for details."
+	    }
         }
         set exit_code 1
     }
