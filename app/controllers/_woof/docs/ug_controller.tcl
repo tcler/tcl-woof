@@ -34,7 +34,8 @@ oo::class create UgController {
             {install_under_apache "Woof! under Apache 2" 1}
             {apache_cgi_dedicated "Dedicated CGI on Apache" 2}
             {apache_cgi_shared "Shared CGI on Apache" 2}
-            {apache_scgi "SCGI on Apache" 2}
+            {apache_scgi "SCGI on Apache using mod_scgi" 2}
+            {apache_proxy_scgi "SCGI on Apache using mod_proxy_scgi" 2}
             {install_under_iis "Woof! under Microsoft IIS" 1}
             {iis_scgi "SCGI on IIS 5.1 and 6" 2}
             {iis7_scgi "SCGI on IIS 7 and 8" 2}

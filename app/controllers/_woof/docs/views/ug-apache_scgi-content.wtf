@@ -3,9 +3,18 @@ Gateway Interface</a> (SCGI) is a standard for communication
 between web servers and application servers on the back end. It has
 several performance advantages over CGI. This chapter describes
 configuring Apache to use SCGI to communicate with a Woof!
-application server on the back end. The process of running Woof! as a
+application server on the back end using the [my _filename mod_scgi]
+module. The process of running Woof! as a
 SCGI application server is described in
 [my _chapter_link start_scgi].</p>
+
+[my _hnote [woof::wtf::html_frag {
+For versions of Apache that come with
+[my _filename mod_proxy_scgi], you may wish to
+use that in preference to [my _filename mod_scgi] as described in
+[my _chapter_link apache_proxy_scgi]. For newer versions of Apache,
+the [my _filename mod_scgi] source needs to be modified to build.
+}]]
 
 <p>SCGI is not a standard part of the Apache distribution and you need
 to install the <code>mod_scgi</code> Apache module to support it. Some
@@ -84,7 +93,7 @@ locate URL resources.</p>
 to <span class="ug-filename">httpd.conf</span>:</p>
 [my _code_sample {
 SCGIMount / 127.0.0.1:9999
-<LocationMatch "/stylesheets|images/">
+<LocationMatch "/stylesheets|images|js|html/">
     SCGIHandler Off
 </LocationMatch>
 }]
@@ -128,5 +137,7 @@ complete. You can now move on to
 <h3><a name="cgi2scgi">Using SCGI in a shared hosting environment</a></h3>
 <p>Using SCGI as described above is not possible in a shared hosting
 environment if your service provider is not willing to add the SCGI
-module to the Apache configuration. <strong><em>Document the cgi2scgi
-adapter</em></strong></p>
+module to the Apache configuration. In this case, you may be able
+to use the [my _filename cgi2scgi] adapter that comes with
+[my _filename mod_scgi].
+</p>
