@@ -93,7 +93,7 @@ RewriteRule ^(.*)$ cgi_server.tcl/$1 [QSA,L]
 ErrorDocument 500 "<h2>Application error</h2>Woof application failed to start properly"
 }]
 <p>The content above is very similar to the changes made to the
-<span class='ug-filename>httpd.conf</span> file in the 
+[my _filename httpd.conf] file in the 
 previous section. See the description there for an explanation of the
 directives.</p>
 <h3>Completing the installation</h3>

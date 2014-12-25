@@ -1,0 +1,117 @@
+<p>The <a href="http://python.ca/scgi/protocol.txt">Simple Common
+Gateway Interface</a> (SCGI) is a standard for communication
+between web servers and application servers on the back end. It has
+several performance advantages over CGI. This chapter describes
+configuring Apache to use SCGI to communicate with a Woof!
+application server on the back end using the Apache 
+[my _filename mod_proxy_scgi]
+module. The process of running Woof! as a
+SCGI application server is described in
+[my _chapter_link start_scgi].</p>
+
+[my _hnote [woof::wtf::html_frag {
+For versions of Apache that do not come with
+[my _filename mod_proxy_scgi], you may wish to
+use [my _filename mod_scgi] as described in
+[my _chapter_link apache_scgi].
+}]]
+
+<p>The steps below assume you are installing on a Linux or Unix
+system. Installation on Windows is substantially identical except for
+path differences.</p>
+<h3>Assumptions</h3>
+<p>This scenario makes the following assumptions:</p>
+<ul>
+  <li>This is a dedicated server and you have full control over the
+    Apache configuration files.</li>
+  <li>You are running Apache 2.4. The Apache configuration files may
+    differ for other versions.</li>
+  <li>The server only hosts the Woof! application and nothing
+    else.</li>
+  <li>The application is rooted at the top level,
+    i.e. <span class="ug-filename">http://www.mysite.com</span> is
+    the entry point into the application.</li>
+  <li>You have the means to modify the system configuration so that
+    the Woof! SCGI server is started automatically either at boot time
+    or when Apache is started.</li>
+</ul>
+<h3>Step 1 - enable [my _filename mod_proxy_scgi]</h3>
+
+<p>To enable the module, both the following lines must be added or
+uncommented in Apache configuration file
+[my _filename httpd.conf] or equivalent.</p>
+[my _code_sample {
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_scgi_module modules/mod_proxy_scgi.so
+}]
+<h3>Step 2 - install Woof!</h3>
+<p>The next step is to install Woof! for Apache and SCGI
+using the [my _chapter_link installer "installer script"].
+[my _code_sample {
+~/woof-dist> tclsh scripts/installer.tcl install apache scgi -installdir /var/myapp
+}]
+<p>This will create the Woof! 
+[my _chapter_link directory_structure "directory structure"]
+under [my _filename /var/myapp]. In particular, the 
+[my _filename /var/myapp/public]
+will contain the publically accessible directory tree that will be the
+document root for the dedicated web server. Its subdirectories are
+intended to be directly served by Apache without going through Woof!
+as detailed below.</p>
+<h3>Step 3 - set the document root</h3>
+<p>Since this is the only application on the server, the document root
+for Apache must be changed to point to the Woof! public directory by
+editing the definition of DocumentRoot
+in <span class="ug-filename">httpd.conf</span>.</p>
+[my _code_sample {
+DocumentRoot /var/myapp/public
+<Directory "/var/myapp/public">
+  # The options below may need to be changed based on your Apache installation.
+  Options Indexes FollowSymLinks
+  AllowOverride None
+  Require all granted
+</Directory>
+}]
+<p>Note that the document root points to
+the <span class="ug-filename">public</span> subdirectory, <em>not</em>
+the Woof! root directory. By default, Apache will now look under
+the <span class="ug-filename">/var/myapp/public</span> directory to
+locate URL resources.</p>
+<h3>Step 4 - configure SCGI</h3>
+<p>Apache has to be configured for SCGI by adding the following
+to <span class="ug-filename">httpd.conf</span>:</p>
+[my _code_sample {
+<Location />
+   SetEnvIf Request_URI .* proxy-scgi-pathinfo
+   ProxyPass scgi://localhost:9999/
+</Location>
+
+<LocationMatch "^/(stylesheets|images|js|html)/">
+   ProxyPass !
+</LocationMatch>
+}]
+<p>
+The [my _code <Location>] directive specifies that all URL's 
+should be passed on to the SCGI server on port 9999. 
+We then create exceptions for the
+directories containing static resources using
+[my _code <LocationMatch>] so that they are directly served by
+Apache without bothering Woof!.
+</p>
+
+<p>
+The [my _code SetEnvIf] directive sets the Apache environment
+[my _code proxy-scgi-pathinfo]. Without this, [my _filename mod_proxy_scgi]
+does not set or pass the [my _code PATH_INFO] environment used
+in CGI/SCGI to map requests.
+</p>
+
+<h3>Step 5 - starting the SCGI server</h3>
+<p>The Woof! SCGI server script that handles connections passed by
+Apache needs to be started whenever Apache runs. This step is actually
+independent of the web server and is described
+in [my _chapter_link start_scgi].</p>
+<h3>Completing the installation</h3>
+<p>Once the steps described there are done, configuration is
+complete. You can now move on to 
+[my _chapter_link installation_final_steps "completing the installation"].</p>
