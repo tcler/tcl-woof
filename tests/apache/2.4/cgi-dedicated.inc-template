@@ -1,0 +1,14 @@
+#
+# DocumentRoot: The directory out of which you will serve your
+# documents. By default, all requests are taken from this directory, but
+# symbolic links and aliases may be used to point to other locations.
+#
+DocumentRoot "/home/vmuser/woof/public"
+<Directory "/home/vmuser/woof/public" >
+    Options +ExecCGI
+    Require all granted
+    AddHandler cgi-script .tcl
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ cgi_server.tcl/$1 [QSA,L]
+</Directory>
