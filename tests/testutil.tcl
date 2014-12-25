@@ -10,15 +10,16 @@ if {[info exists ::woof::test::script_dir]} {
     return
 }
 
+lappend auto_path [file normalize [file join .. thirdparty lib]]
 package require tcltest
 package require http
 package require uri
 package require fileutil
-package require json
+#package require json
 package require tdom
-package require Itcl
-package require Testing
-package require WebDriver
+#package require Itcl
+#package require Testing
+#package require WebDriver
 
 source [file join [file dirname [info script]] webserver_config.tcl]
 
