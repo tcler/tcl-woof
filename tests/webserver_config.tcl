@@ -14,9 +14,14 @@ namespace eval ::woof::test::apache {
     namespace path ::woof::test
     namespace upvar ::woof::test config config
 
-    variable apache_service_name
-    set apache_service_name apache
-
+    proc apache_version {} {
+	variable config
+	set verstr [lindex [split [exec [file join $config(-serverdir) bin apachectl] -v] \n] 0]
+	if {![regexp {Apache/(\d+\.\d+)} $verstr - ver]} {
+	    error "Could not detect Apache version"
+	}
+	return $ver
+    }
     proc prepare {} {
 	variable config
 
@@ -27,34 +32,32 @@ namespace eval ::woof::test::apache {
 	}
         set woof_root [clean_path $config(-woofdir)]
 
+	set webconfig_file "$config(-interface)-$config(webconfig).inc"
         set template_map [list \
+			      config_inc   $webconfig_file \
                               server_root $config(-serverdir) \
                               server_port $config(-port) \
                               woof_root $woof_root \
                               url_root $config(-urlroot)]
 
-        set test_conf_dir [file join $::woof::test::script_dir apache]
+	set apache_ver [apache_version]
 
+        set test_conf_dir [file join $::woof::test::script_dir apache $apache_ver]
 	set apache_conf_file [file join $config(-serverdir) conf httpd.conf]
-	set apache_common_file [file join $config(-serverdir) conf common.conf]
 
 	if {[file exists $apache_conf_file] &&
 	    ![file exists ${apache_conf_file}.pretest]} {
 	    file copy $apache_conf_file ${apache_conf_file}.pretest
 	}
-	if {[file exists $apache_common_file] &&
-	    ![file exists ${apache_common_file}.pretest]} {
-	    file copy $apache_common_file ${apache_common_file}.pretest
-	}
 
         # Copy Apache test configuration
         copy_template \
-            [file join $test_conf_dir httpd-${config(-interface)}-${config(-webconfig)}.conf] \
+            [file join $test_conf_dir httpd.conf-template] \
 	    $apache_conf_file \
             $template_map
         copy_template \
-            [file join $test_conf_dir common.conf] \
-	    $apache_common_file \
+            [file join $test_conf_dir ${webconfig_file}-template] \
+	    [file join $config(-serverdir) conf $webconfig_file] \
             $template_map
 
         return
@@ -66,15 +69,15 @@ namespace eval ::woof::test::apache {
         stop
 
 	set apache_conf_file [file join $config(-serverdir) conf httpd.conf]
-	set apache_common_file [file join $config(-serverdir) conf common.conf]
+	set webconfig_file [file join $config(-serverdir) conf "$config(-interface)-$config(webconfig).inc"]
 
 	if {[file exists ${apache_conf_file}.pretest]} {
 	    file copy -force ${apache_conf_file}.pretest $apache_conf_file
 	}
-	if {[file exists ${apache_common_file}.pretest]} {
-	    file copy -force ${apache_common_file}.pretest $apache_common_file
+	if {[file exists $webconfig_file]} {
+	    file delete $webconfig_file
 	}
-
+	return
     }
 
     proc start {} {
@@ -219,7 +222,6 @@ namespace eval ::woof::test::wibble {
 
     proc start {} {
         variable config
-        
         set pidfile [pidpath]
 
         if {[file exists $pidfile]} {

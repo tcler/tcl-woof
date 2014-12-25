@@ -384,7 +384,7 @@ proc installer::check_prerequisites {} {
     set ip [interp create]
     set errors [$ip eval {
 	set errors ""
-	foreach name {uri fileutil md5 uuid html} {
+	foreach name {uri fileutil md5 uuid html ncgi cmdline} {
 	    if {[catch "package require $name" msg]} {
 		lappend errors "Check for package $name failed: $msg"
 	    }
