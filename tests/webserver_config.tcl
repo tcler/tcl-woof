@@ -1,73 +1,90 @@
 # Commands for setting up configurations
 
-package require registry
+if {$::tcl_platform(platform) eq "windows"} {
+    package require registry
+}
 
 namespace eval ::woof::test {}
+namespace eval ::woof::test::apache {}
 namespace eval ::woof::test::iis {}
 
 ################################################################
 # Apache stuff
 namespace eval ::woof::test::apache {
+    namespace path ::woof::test
+    namespace upvar ::woof::test config config
+
     variable apache_service_name
     set apache_service_name apache
 
-    namespace path ::woof::test
+    proc prepare {} {
+	variable config
 
-    proc setup_config {} {
-        # Set up the Apache configuration
-        namespace upvar ::woof::test config opts
+        progress "Setting up Apache config: [array get config]"
 
-        progress "Setting up Apache config: [array get opts]"
-
-        set apache_root [clean_path $opts(-serverdir)]
-        set woof_root [clean_path $opts(-woofdir)]
+	if {![info exists config(-serverdir)]} {
+	    error "Please define the Apache root directory with the -serverdir option"
+	}
+        set woof_root [clean_path $config(-woofdir)]
 
         set template_map [list \
-                              server_root $apache_root \
-                              server_port $opts(-port) \
+                              server_root $config(-serverdir) \
+                              server_port $config(-port) \
                               woof_root $woof_root \
-                              url_root $opts(-urlroot)]
+                              url_root $config(-urlroot)]
 
         set test_conf_dir [file join $::woof::test::script_dir apache]
 
+	set apache_conf_file [file join $config(-serverdir) conf httpd.conf]
+	set apache_common_file [file join $config(-serverdir) conf common.conf]
+
+	if {[file exists $apache_conf_file] &&
+	    ![file exists ${apache_conf_file}.pretest]} {
+	    file copy $apache_conf_file ${apache_conf_file}.pretest
+	}
+	if {[file exists $apache_common_file] &&
+	    ![file exists ${apache_common_file}.pretest]} {
+	    file copy $apache_common_file ${apache_common_file}.pretest
+	}
+
         # Copy Apache test configuration
         copy_template \
-            [file join $test_conf_dir httpd-${opts(-interface)}-${opts(-config)}.conf] \
-            [file join $apache_root conf httpd.conf] \
+            [file join $test_conf_dir httpd-${config(-interface)}-${config(-webconfig)}.conf] \
+	    $apache_conf_file \
             $template_map
         copy_template \
             [file join $test_conf_dir common.conf] \
-            [file join $apache_root conf common.conf] \
+	    $apache_common_file \
             $template_map
 
-        # Set application.cfg to reflect URL root
-        set fd [open [file join $woof_root config application.cfg] w]
-        puts $fd "set url_root $opts(-urlroot)"
-        close $fd
+        return
+    }
 
-        return [array get opts]
+    proc cleanup {} {
+        variable config
+
+        stop
+
+	set apache_conf_file [file join $config(-serverdir) conf httpd.conf]
+	set apache_common_file [file join $config(-serverdir) conf common.conf]
+
+	if {[file exists ${apache_conf_file}.pretest]} {
+	    file copy -force ${apache_conf_file}.pretest $apache_conf_file
+	}
+	if {[file exists ${apache_common_file}.pretest]} {
+	    file copy -force ${apache_common_file}.pretest $apache_common_file
+	}
+
     }
 
     proc start {} {
-        variable apache_service_name
-        if {$::tcl_platform(platform) eq "windows"} {
-            if {![twapi::start_service $apache_service_name -wait 10000]} {
-                error "Could not start service $apache_service_name"
-            }
-        } else {
-            exec -ignorestderr -- sudo /etc/init.d/apache2 start
-        }
+	variable config
+	exec [file join $config(-serverdir) bin apachectl] -k restart
     }
 
     proc stop {} {
-        variable apache_service_name
-        if {$::tcl_platform(platform) eq "windows"} {
-            if {![twapi::stop_service $apache_service_name -wait 10000]} {
-                error "Could not stop service $apache_service_name"
-            }
-        } else {
-            exec -ignorestderr -- sudo /etc/init.d/apache2 stop
-        }
+	variable config
+	exec [file join $config(-serverdir) bin apachectl] -k stop
     }
 }
 
