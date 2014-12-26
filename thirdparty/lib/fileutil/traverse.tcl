@@ -2,12 +2,12 @@
 #
 #	Directory traversal.
 #
-# Copyright (c) 2006-2008 by Andreas Kupries <andreas_kupries@users.sourceforge.net>
+# Copyright (c) 2006-2009 by Andreas Kupries <andreas_kupries@users.sourceforge.net>
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 # 
-# RCS: @(#) $Id: traverse.tcl,v 1.6 2008/02/28 07:11:34 andreas_kupries Exp $
+# RCS: @(#) $Id: traverse.tcl,v 1.9 2012/08/29 20:42:19 andreas_kupries Exp $
 
 package require Tcl 8.3
 
@@ -21,6 +21,7 @@ if {[package vsatisfies [package present Tcl] 8.5]} {
     package require snit 1.3
 }
 package require control  ; # Helpers for control structures
+package require fileutil ; # -> fullnormalize
 
 snit::type ::fileutil::traverse {
 
@@ -207,9 +208,9 @@ snit::type ::fileutil::traverse {
 
 		set norm [fileutil::fullnormalize $f]
 		if {[info exists _known($norm)]} continue
-		set _known($norm) .
 
 		if {[Recurse $f]} {
+		    set _known($norm) .
 		    lappend _pending $f
 		}
 	    }
@@ -217,7 +218,7 @@ snit::type ::fileutil::traverse {
 	    # Stop expanding if we have paths to return.
 
 	    if {[llength $_results]} {
-		set top    [lindex   $_results end]
+		set top      [lindex   $_results end]
 		set _results [lreplace $_results end end]
 		set currentfile $top
 		return 1
@@ -252,6 +253,8 @@ snit::type ::fileutil::traverse {
     ## Internal helpers.
 
     method Init {} {
+	array unset _known *
+
 	# Path ok as result?
 	if {[Valid $_base]} {
 	    lappend _results $_base
@@ -259,10 +262,10 @@ snit::type ::fileutil::traverse {
 
 	# Expansion allowed by prefilter?
 	if {[file isdirectory $_base] && [Recurse $_base]} {
+	    set norm [fileutil::fullnormalize $_base]
+	    set _known($norm) .
 	    lappend _pending $_base
 	}
-
-	array unset _known *
 
 	# System is set up now.
 	set _init 1
@@ -414,4 +417,4 @@ if {[package vsatisfies [package present Tcl] 8.4]} {
 # ### ### ### ######### ######### #########
 ## Ready
 
-package provide fileutil::traverse 0.4
+package provide fileutil::traverse 0.4.3

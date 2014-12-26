@@ -4,16 +4,16 @@
 #
 # Copyright (c) 1998-2000 by Ajuba Solutions.
 # Copyright (c) 2002      by Phil Ehrens <phil@slug.org> (fileType)
-# Copyright (c) 2005-2007 by Andreas Kupries <andreas_kupries@users.sourceforge.net>
+# Copyright (c) 2005-2013 by Andreas Kupries <andreas_kupries@users.sourceforge.net>
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 # 
-# RCS: @(#) $Id: fileutil.tcl,v 1.72 2008/12/02 17:29:09 andreas_kupries Exp $
+# RCS: @(#) $Id: fileutil.tcl,v 1.78 2010/06/17 04:46:19 andreas_kupries Exp $
 
 package require Tcl 8.2
 package require cmdline
-package provide fileutil 1.13.5
+package provide fileutil 1.14.6
 
 namespace eval ::fileutil {
     namespace export \
@@ -212,7 +212,54 @@ proc ::fileutil::FADD {filename} {
 #    directory (stat might return enough information too (mode), but
 #    possibly also not portable).
 
-if {[package vsatisfies [package present Tcl] 8.4]} {
+if {[package vsatisfies [package present Tcl] 8.5]} {
+    # Tcl 8.5+.
+    # We have to check readability of "current" on our own, glob
+    # changed to error out instead of returning nothing.
+
+    proc ::fileutil::ACCESS {args} {}
+
+    proc ::fileutil::GLOBF {current} {
+	if {![file readable $current]} {
+	    return {}
+	}
+	if {([file type $current] eq "link") &&
+	    !([file exists   [file readlink $current]] &&
+	      [file readable [file readlink $current]])} {
+	    return {}
+	}
+
+	set res [lsort -unique [concat \
+		     [glob -nocomplain -directory $current -types f          -- *] \
+		     [glob -nocomplain -directory $current -types {hidden f} -- *]]]
+
+	# Look for broken links (They are reported as neither file nor directory).
+	foreach l [lsort -unique [concat \
+		       [glob -nocomplain -directory $current -types l          -- *] \
+		       [glob -nocomplain -directory $current -types {hidden l} -- *]]] {
+	    if {[file isfile      $l]} continue
+	    if {[file isdirectory $l]} continue
+	    lappend res $l
+	}
+	return [lsort -unique $res]
+    }
+
+    proc ::fileutil::GLOBD {current} {
+	if {![file readable $current]} {
+	    return {}
+	}
+	if {([file type $current] eq "link") &&
+	    !([file exists   [file readlink $current]] &&
+	      [file readable [file readlink $current]])} {
+	    return {}
+	}
+
+	lsort -unique [concat \
+	    [glob -nocomplain -directory $current -types d          -- *] \
+	    [glob -nocomplain -directory $current -types {hidden d} -- *]]
+    }
+
+} elseif {[package vsatisfies [package present Tcl] 8.4]} {
     # Tcl 8.4+.
     # (Ad 1) We have -directory, and -types,
     # (Ad 2) Links are returned for -types f/d if they refer to files/dirs.
@@ -221,25 +268,25 @@ if {[package vsatisfies [package present Tcl] 8.4]} {
     proc ::fileutil::ACCESS {args} {}
 
     proc ::fileutil::GLOBF {current} {
-	set res [concat \
-		     [glob -nocomplain -directory $current -types f          -- *] \
-		     [glob -nocomplain -directory $current -types {hidden f} -- *]]
+	set res [lsort -unique [concat \
+		    [glob -nocomplain -directory $current -types f          -- *] \
+		    [glob -nocomplain -directory $current -types {hidden f} -- *]]]
 
 	# Look for broken links (They are reported as neither file nor directory).
-	foreach l [concat \
+	foreach l [lsort -unique [concat \
 		       [glob -nocomplain -directory $current -types l          -- *] \
-		       [glob -nocomplain -directory $current -types {hidden l} -- *] ] {
+		       [glob -nocomplain -directory $current -types {hidden l} -- *]]] {
 	    if {[file isfile      $l]} continue
 	    if {[file isdirectory $l]} continue
 	    lappend res $l
 	}
-	return $res
+	return [lsort -unique $res]
     }
 
     proc ::fileutil::GLOBD {current} {
-	concat \
+	lsort -unique [concat \
 	    [glob -nocomplain -directory $current -types d          -- *] \
-	    [glob -nocomplain -directory $current -types {hidden d} -- *]
+	    [glob -nocomplain -directory $current -types {hidden d} -- *]]
     }
 
 } elseif {[package vsatisfies [package present Tcl] 8.3]} {
@@ -512,22 +559,47 @@ proc ::fileutil::stripN {path n} {
 # Results:
 #	path		The (possibly) modified path.
 
-proc ::fileutil::stripPath {prefix path} {
-    # [file split] is used to generate a canonical form for both
-    # paths, for easy comparison, and also one which is easy to modify
-    # using list commands.
+if {[string equal $tcl_platform(platform) windows]} {
 
-    if {[string equal $prefix $path]} {
-	return "."
+    # Windows. While paths are stored with letter-case preserved al
+    # comparisons have to be done case-insensitive. For reference see
+    # SF Tcllib Bug 2499641.
+
+    proc ::fileutil::stripPath {prefix path} {
+	# [file split] is used to generate a canonical form for both
+	# paths, for easy comparison, and also one which is easy to modify
+	# using list commands.
+
+	set prefix [file split $prefix]
+	set npath  [file split $path]
+
+	if {[string equal -nocase $prefix $npath]} {
+	    return "."
+	}
+
+	if {[string match -nocase "${prefix} *" $npath]} {
+	    set path [eval [linsert [lrange $npath [llength $prefix] end] 0 file join ]]
+	}
+	return $path
     }
+} else {
+    proc ::fileutil::stripPath {prefix path} {
+	# [file split] is used to generate a canonical form for both
+	# paths, for easy comparison, and also one which is easy to modify
+	# using list commands.
 
-    set prefix [file split $prefix]
-    set npath  [file split $path]
+	set prefix [file split $prefix]
+	set npath  [file split $path]
 
-    if {[string match ${prefix}* $npath]} {
-	set path [eval [linsert [lrange $npath [llength $prefix] end] 0 file join ]]
+	if {[string equal $prefix $npath]} {
+	    return "."
+	}
+
+	if {[string match "${prefix} *" $npath]} {
+	    set path [eval [linsert [lrange $npath [llength $prefix] end] 0 file join ]]
+	}
+	return $path
     }
-    return $path
 }
 
 # ::fileutil::jail --
@@ -580,13 +652,13 @@ proc fileutil::jail {jail filename} {
 	# symlinks may have bent it out of shape in unrecognizable ways.
 
 	return [eval [linsert [lrange [file split \
-		[LexNormalize $filename]] 1 end] 0 file join [pwd] $jail]]
+		[lexnormalize $filename]] 1 end] 0 file join [pwd] $jail]]
     } else {
 	# The path is relative, consider it as outside
 	# implicitly. Normalize it lexically! to prevent escapes, then
 	# put the jail in front, use PWD to ensure absoluteness.
 
-	return [eval [linsert [file split [LexNormalize $filename]] 0 \
+	return [eval [linsert [file split [lexnormalize $filename]] 0 \
 		file join [pwd] $jail]]
     }
 }
@@ -1507,12 +1579,20 @@ proc ::fileutil::fileType {filename} {
 
     if { [ regexp {^\#\!\s*(\S+)} $test -> terp ] } {
         lappend type script $terp
-    } elseif {[regexp "\\\[manpage_begin " $test]} {
+    } elseif {([regexp "\\\[manpage_begin " $test] &&
+	       !([regexp -- {--- !doctools ---} $test] || [regexp -- "!tcl\.tk//DSL doctools//EN//" $test])) ||
+                ([regexp -- {--- doctools ---} $test]  || [regexp -- "tcl\.tk//DSL doctools//EN//" $test])} {
 	lappend type doctools
-    } elseif {[regexp "\\\[toc_begin " $test]} {
+    } elseif {([regexp "\\\[toc_begin " $test] &&
+	       !([regexp -- {--- !doctoc ---} $test] || [regexp -- "!tcl\.tk//DSL doctoc//EN//" $test])) ||
+                ([regexp -- {--- doctoc ---} $test]  || [regexp -- "tcl\.tk//DSL doctoc//EN//" $test])} {
 	lappend type doctoc
-    } elseif {[regexp "\\\[index_begin " $test]} {
+    } elseif {([regexp "\\\[index_begin " $test] &&
+	       !([regexp -- {--- !docidx ---} $test] || [regexp -- "!tcl\.tk//DSL docidx//EN//" $test])) ||
+              ([regexp -- {--- docidx ---} $test] || [regexp -- "tcl\.tk//DSL docidx//EN//" $test])} {
 	lappend type docidx
+    } elseif {[regexp -- "tcl\\.tk//DSL diagram//EN//" $test]} {
+	lappend type tkdiagram
     } elseif { $binary && [ regexp {^[\x7F]ELF} $test ] } {
         lappend type executable elf
     } elseif { $binary && [string match "MZ*" $test] } {
@@ -1863,7 +1943,7 @@ proc ::fileutil::install {args} {
 
 # ### ### ### ######### ######### #########
 
-proc ::fileutil::LexNormalize {sp} {
+proc ::fileutil::lexnormalize {sp} {
     set spx [file split $sp]
 
     # Resolution of embedded relative modifiers (., and ..).
@@ -2028,8 +2108,8 @@ proc ::fileutil::relative {base dst} {
 	return -code error "Unable to compute relation for paths of different pathtypes: [file pathtype $base] vs. [file pathtype $dst], ($base vs. $dst)"
     }
 
-    set base [LexNormalize [file join [pwd] $base]]
-    set dst  [LexNormalize [file join [pwd] $dst]]
+    set base [lexnormalize [file join [pwd] $base]]
+    set dst  [lexnormalize [file join [pwd] $dst]]
 
     set save $dst
     set base [file split $base]
@@ -2091,8 +2171,8 @@ proc ::fileutil::relativeUrl {base dst} {
 	return -code error "Unable to compute relation for paths of different pathtypes: [file pathtype $base] vs. [file pathtype $dst], ($base vs. $dst)"
     }
 
-    set base [LexNormalize [file join [pwd] $base]]
-    set dst  [LexNormalize [file join [pwd] $dst]]
+    set base [lexnormalize [file join [pwd] $base]]
+    set dst  [lexnormalize [file join [pwd] $dst]]
 
     set basedir [file dirname $base]
     set dstdir  [file dirname $dst]
