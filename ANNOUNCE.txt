@@ -1,7 +1,6 @@
 Version 0.5 beta of Woof! has been released.
 
-What is Woof!
--------------
+## What is Woof!
 
 Woof! - Web Oriented Object Framework - is an
 open-source, platform and server-independent, web
@@ -29,8 +28,7 @@ customize, and embeddable into other applications.
 * Comprehensive documentation (well, getting there)
 
 
-Files
------
+## Files
 
 The download area is at http://sourceforge.net/projects/woof/files/
 
@@ -42,16 +40,14 @@ woof-VERSION.zip and woof-VERSION.tar.gz are source
 distributions for use with other web servers.
 
 
-Requirements
-------------
+## Requirements
 
 See http://woof.sourceforge.net/woof-ug/_woof/docs/ug/system_requirements.
 Woof! has been tested with IIS on Windows,
 Apache on Debian Wheezy and Lighttpd on Ubuntu.
 
 
-Release Notes
--------------
+## Release Notes
 
 This is the fourth public release of Woof! and is
 intended to allow people to try out Woof! and
@@ -63,26 +59,24 @@ The page layout system in particular has been changed due to the underlying
 YUI CSS libraries no longer being developed by Yahoo.
 
 
-Installation
-------------
+## Installation
 
 See http://woof.sourceforge.net/woof-ug/_woof/docs/ug/installation
 for install instructions.  Upgrades are not yet supported.
 
 
-Getting started
----------------
+## Getting started
 
 See the Woof! Quick Start Guide at 
 http://woof.sourceforge.net/woof-ug/_woof/docs/ug/quick_start.
 
 
-Useful URLs
------------
-Home page - http://woof.sourceforge.net/woof_home
-Programming guide - http://woof.sourceforge.net/woof-ug/_woof/docs/ug/index
-Reference pages - http://woof.sourceforge.net/woof-ug/woof_manual.html
-SourceForge project - http://sourceforge.net/projects/woof
+## Useful URLs
+
+* Home page - http://woof.sourceforge.net/woof_home
+* Programming guide - http://woof.sourceforge.net/woof-ug/_woof/docs/ug/index
+* Reference pages - http://woof.sourceforge.net/woof-ug/woof_manual.html
+* SourceForge project - http://sourceforge.net/projects/woof
 
 
 
