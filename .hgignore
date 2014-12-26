@@ -10,7 +10,7 @@ syntax: glob
 application.cfg
 dist
 temp
-thirdparty/isapi_scgi
+tests/isapi_scgi
 cleanup.cmd
 prepare.cmd
 testconfig.cfg
