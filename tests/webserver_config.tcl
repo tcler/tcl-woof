@@ -32,7 +32,7 @@ namespace eval ::woof::test::apache {
 	}
         set woof_root [clean_path $config(-woofdir)]
 
-	set webconfig_file "$config(-interface)-$config(webconfig).inc"
+	set webconfig_file "$config(-interface)-$config(-webconfig).inc"
         set template_map [list \
 			      config_inc   $webconfig_file \
                               server_root $config(-serverdir) \
@@ -69,10 +69,10 @@ namespace eval ::woof::test::apache {
         stop
 
 	set apache_conf_file [file join $config(-serverdir) conf httpd.conf]
-	set webconfig_file [file join $config(-serverdir) conf "$config(-interface)-$config(webconfig).inc"]
+	set webconfig_file [file join $config(-serverdir) conf "$config(-interface)-$config(-webconfig).inc"]
 
 	if {[file exists ${apache_conf_file}.pretest]} {
-	    file copy -force ${apache_conf_file}.pretest $apache_conf_file
+	    file rename -force -- ${apache_conf_file}.pretest $apache_conf_file
 	}
 	if {[file exists $webconfig_file]} {
 	    file delete $webconfig_file

@@ -1,3 +1,6 @@
+# Needs to be set for mod_proxy_scgi to set PATH_INFO
+SetEnvIf Request_URI .* proxy-scgi-pathinfo
+
 #
 # DocumentRoot: The directory out of which you will serve your
 # documents. By default, all requests are taken from this directory, but
