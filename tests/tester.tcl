@@ -39,7 +39,7 @@ proc ::woof::test::run {args} {
             lappend test_opts $opt [dict get $args $opt]
         }
     }
-    tcltest::configure {*}$test_opts
+    set ::argv $args;           # For runAllTests
     try {
         tcltest::runAllTests
         progress "Stopping server $config(-server)"

@@ -59,7 +59,7 @@ namespace eval ::woof::test::request {
              protocol        exact   $config(-scheme) ""\
              query_string    exact   ""              a=b&=d \
              referer         exact   ""              "" \
-             remote_addr     exact   127.0.0.1       "" \
+             remote_addr     regexp  {127\.0\.0\.1|::1}   "" \
              request_method  exact   get             "" \
              request_uri     exact   [file join $config(-urlroot) _woof/test request/dump] "?a=b&=d" \
              resource_url    exact   "/[file join _woof/test request/dump]" "" \

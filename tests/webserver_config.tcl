@@ -132,6 +132,10 @@ namespace eval ::woof::test::iis {
     proc prepare {} {
         variable config
 
+        if {$config(-host) ne "localhost"} {
+            error "IIS testing does not currently support server address of $config(-host). Must be specified as \"localhost\" due to IIS Express limitations."
+        }
+
         if {$config(-urlroot) eq "/"} {
             error "IIS testing does not currently support a configuration rooted at /"
         }
@@ -153,10 +157,8 @@ namespace eval ::woof::test::iis {
             } else {
                 set scgi_dll isapi_scgi.dll
             }
-            # file copy -force [source_path thirdparty isapi_scgi $scgi_dll] $public_dir
-            # file copy -force [source_path thirdparty isapi_scgi isapi_scgi.ini] $public_dir
             copy_template [test_path iis web.config-scgi] [file join $public_dir web.config] [list isapi_dll $scgi_dll]
-            set scgi_dll_path [clean_path [source_path thirdparty isapi_scgi $scgi_dll]]
+            set scgi_dll_path [clean_path [test_path isapi_scgi $scgi_dll]]
             # allowPathInfo='true' required for PATH_INFO to be correct
             appcmd set config \
                 /section:system.webServer/handlers \
