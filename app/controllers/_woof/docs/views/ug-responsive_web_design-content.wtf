@@ -4,6 +4,7 @@ one size (or a few) fits all philosophy of web page design does not
 always work. What looks good on your desktop display may not show up
 well on your smartphone in terms of both looks and usability.
 </p>
+
 <p>
 One solution is to have a entirely separate web site geared towards smaller
 devices. While that might afford the most flexibility and best user
@@ -14,6 +15,18 @@ makes use of various techniques to display the same content differently
 based on the device screen geometry (or to be more precise, the
 browser window size).
 </p>
+
+<p>
+This chapter describes Woof! support for these techniques via
+Pure CSS . The image below for the Woof! welcome page illustrates
+how the display layout is adapted for smaller browser screen widths.
+Compare this with the same page displayed on a
+[my _chapter_link install_final_steps "wider window"].
+You can see the effect on a desktop by narrowing the width of your 
+browser window.
+</p>
+[my _image bowwow_responsive_welcome.png "BowWow Welcome"]
+
 <p>
 Responsive techniques include
 <ul>

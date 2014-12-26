@@ -1,3 +1,8 @@
+[my _note {
+The instructions below have not been updated and
+may need to be adapted for the latest versions.
+}]
+
 <p>The <a href="http://python.ca/scgi/protocol.txt">Simple Common
 Gateway Interface</a> (SCGI) is a standard for communication between
 web servers and application servers on the back end. It has several
@@ -79,22 +84,29 @@ directly without going through SCGI and Woof!. There are better ways
 of doing this in Lighttpd 1.5 but that has not released as yet.</p>
 <p>The remaining lines configure the host and port that the Woof! SCGI server is running on.</p>
 
-<p>
-<em>The setting of the variable <code>fix-root-scriptname</code>
+[my _hnote {
+The setting of the variable <code>fix-root-scriptname</code>
 is required for some versions of Lighttpd to fix a 
 <a href='http://redmine.lighttpd.net/issues/show/729'>bug</a>
 in Lighttpd when it is running a SCGI server rooted at <code>/</code>.
-</p>
+}]
+
 <h3>Step 4 - starting the SCGI server</h3>
 <p>The Woof! SCGI server script that handles connections passed by
 Apache needs to be started whenever Apache runs. This step is actually
 independent of the web server and is described
 in [my _chapter_link start_scgi].</p>
-<p><em>NOTE: Lighttpd has a mechanism to start the SCGI server through the bin-path attribute in the scgi.server definition. This mechanism will not work with the Woof! SCGI server as Lighttpd in this case will create the listening socket and pass it to the created process as file descriptor 0. Woof! on the other hand expects to create the socket itself.</em></p>
+
+[my _note {
+Lighttpd has a mechanism to start the SCGI server through the bin-path
+attribute in the scgi.server definition. This mechanism will not work
+with the Woof! SCGI server as Lighttpd in this case will create the
+listening socket and pass it to the created process as file descriptor
+0. Woof! on the other hand expects to create the socket
+itself.
+}]
+
 <h3>Completing the installation</h3>
 <p>Once the steps described there are done, configuration is
 complete. You can now move on to
 [my _chapter_link installation_final_steps "completing the installation"].</p>
-<h3><a name="cgi2scgi">Using SCGI in a shared hosting
-environment</a></h3>
-<p>Using SCGI as described above is not possible in a shared hosting environment if your service provider is not willing to add the SCGI module to the web server configuration. <strong><em>TBD - Document the cgi2scgi adapter</em></strong></p>

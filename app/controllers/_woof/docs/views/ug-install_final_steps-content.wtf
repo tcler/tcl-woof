@@ -11,7 +11,7 @@ configured.</p>
 <p>A successful installation will bring up a page similar to the one
 below.</p>
 <p class="ug-center">
-[my include_image bowwow_welcome.png alt "Woof! welcome page"]</p>
+[my _image bowwow_welcome.png "Woof! welcome page"]</p>
 
 <h3>Additional steps before going live</h3>
 <p>There are some additional steps you need to take once you are ready to go live with your application.</p>
