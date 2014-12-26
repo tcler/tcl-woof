@@ -4,16 +4,30 @@ environment. The common steps required to install Woof! are described
 below. Subsequent sections describe installing and configuring Woof!
 in several different server-specific scenarios.</p>
 
-<p>It is assumed that you already have Tcl 8.6 or later, and one of
-the supported web servers installed on the system.</p>
-
 [my _note {
 As Woof! is still under development with a changing API,
 it does not support installation on top of existing existing Woof! versions.
 Please remove older versions first.
 }]
 
-<h3>Downloading the distribution</h3>
+<h3>Prerequisites</h3>
+<p>Woof! depends on Tcl 8.6.3 and the packages listed below. Note
+this does not apply to the [my _chapter_link bowwow "<code>bowwow</code>"] 
+executable which is self-contained.
+</p>
+<ul>
+  <li>[my _code uri]</li>
+  <li>[my _code fileutil]</li>
+  <li>[my _code md5]</li>
+  <li>[my _code uuid]</li>
+  <li>[my _code html]</li>
+  <li>[my _code ncgi]</li>
+  <li>[my _code cmdline]</li>
+</ul>
+The above packages are all part of the
+<a href='http://core.tcl.tk/tcllib/home'>[my _code tcllib]</a> distribution.
+
+<h3>Downloading Woof!</h3>
 <p>Woof! can be downloaded from
 <a href='http://sourceforge.net/project/showfiles.php?group_id=250256'>SourceForge</a>.
 It is is distributed in tar/gzip
