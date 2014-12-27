@@ -127,7 +127,7 @@ proc util::unmixcase {name} {
 }
 
 # Copied from html package. Don't need the whole package
-proc ::woof::util::hesc str {
+proc util::hesc str {
     string map {
         \xa0 &nbsp; \xa1 &iexcl; \xa2 &cent; \xa3 &pound; \xa4 &curren;
         \xa5 &yen; \xa6 &brvbar; \xa7 &sect; \xa8 &uml; \xa9 &copy;
