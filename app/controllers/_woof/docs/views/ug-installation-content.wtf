@@ -15,7 +15,7 @@ Please remove older versions first.
 this does not apply to the [my _chapter_link bowwow "<code>bowwow</code>"] 
 executable which is self-contained.
 </p>
-<ul>
+<ul style='list-style-type: none;'>
   <li>[my _code uri]</li>
   <li>[my _code fileutil]</li>
   <li>[my _code md5]</li>

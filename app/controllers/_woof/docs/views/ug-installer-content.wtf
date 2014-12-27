@@ -38,7 +38,10 @@ create a distribution from the contents of the source repository, specify
 <p>Note that this command makes use of several external programs to
   build the archives. These must be present in the path.</p>
 
-<em>Building a distribution can currently be done only on Windows.</em>
+[my _hnote [woof::wtf::html_frag {
+Although the distribution can be built on either Unix or Windows,
+only the latter will build the [my _filename bowwow.exe] executable.
+}]]
 
 <h3>Installing a distribution</h3>
 
@@ -66,3 +69,8 @@ tclsh scripts/installer.tcl install SERVER INTERFACE ?options?
 
 <p>See the [my _chapter_link installation] chapter for valid values,
   usage examples, and details about each supported server and interface.</p>
+
+<p>The installer will write progress and error messages to a log file
+  in the target directory where Woof! is being installed. This can
+  be useful for troubleshooting purposes.</p>
+

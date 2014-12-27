@@ -1,0 +1,25 @@
+<h3>Permissions</h3>
+<p>
+One of the most common errors made is not ensuring proper permissions
+on various files and directories. Make sure the [my _code tclsh]
+executable and Woof! directories are accessible for read and execute
+to the account under
+which the Web server. In CGI and SCGI configurations, this applies to the
+account under which the Woof! runs as well. Note that
+the [my _filename temp] directory in the Woof!
+folder and the directory to which logging has been configured need
+to be writable.
+</p>
+<h3>URL root</h3>
+<p>
+If you have forgotten or incorrectly set [my _code url_root] in the
+configuration file, pages will fail to display or will display correctly
+but links will not work. Ensure that [my _code url_root] is set
+and matches the configuration of the Web server.
+</p>
+<h3>Changes not taking effect</h3>
+<p>If modifications to the application do not seem to take effect, ensure
+that the browser cache is not interfering. Also, in production mode
+you may need to restart the Woof! server as it caches template
+and class definitions. This is not required for CGI.
+</p>
