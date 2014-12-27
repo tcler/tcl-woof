@@ -152,7 +152,7 @@ proc installer::distribute {target_dir args} {
         set zip_dir [file join $target_dir "woof-$woof_version"]
         file delete -force $zip_dir; # Empty it if it exists
         file mkdir $zip_dir
-        file copy -- [file join $src_dir ANNOUNCE.txt] [file join $zip_dir README.txt]
+        file copy -- [file join $src_dir readme.md] [file join $zip_dir README.txt]
         foreach dir {app config lib public scripts samples} {
             file copy -- [file join $src_dir $dir] $zip_dir
         }
@@ -365,7 +365,7 @@ proc installer::write_defaults {woof_dir} {
     variable root_dir
 
     foreach {src_path dst_path} {
-        config/_application.cfg       config/application.cfg
+        config/_application.cfg-template       config/application.cfg
         app/controllers/views/_layout.wtf  app/controllers/views/layout.wtf
     } {
         set dst_path [file join $woof_dir $dst_path]
