@@ -13,7 +13,7 @@ if {! [package vsatisfies [info tclversion] 8.6]} {
 namespace eval installer {
     # TBD - what if script is implicitly invoked on Unix? Does it still get path to executable ?
     # Tcl executable
-    variable tclexe [info nameofexecutable]
+    variable tclexe [file normalize [info nameofexecutable]]
 
     # Dir where woof is installed or when running as an installer
     # where the distribution resides
@@ -296,8 +296,6 @@ proc installer::install_wub {woof_root wub_root args} {
 }
 
 proc installer::install_webserver_interface {server module woof_dir args} {
-    variable tclexe
-
     install_log "Installing web server interface $module for server $server."
 
     switch -exact -- $module {
