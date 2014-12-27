@@ -3,9 +3,8 @@ To generate html docs,
 asciidoc.py -a data-uri -a icons -a max-width=55em index.adoc
 ////
 
-image:public/images/_woof/logo.png[align="left"]
 
-#### Web Oriented Object Framework
+#### image:logo.png[align="left"] Web Oriented Object Framework
 
 A Web framework for lazy dogs! Woof! is an open-source, platform and
 server-independent web application framework. It is intended to be
@@ -15,12 +14,13 @@ embeddable into other applications.
 * Platform and web server agnostic
 * Templates with configurable layouts, inheritance and pluggable engines
 * Support for responsive web design
+* Skinnable with Pure CSS skin builder
 * Web support libraries for controls, session and cookie handling etc.
 * Flexible routing with URL generation
 * Localization support with inheritance
 * Built-in web server, scaffolding tool,
   documentation generator, interactive debugging console and more
-* Comprehensive documentation (well, getting there): http://woof.sourceforge.net/woof-ug-0.5/_woof/docs/ug/index[User Guide v0.5], http://woof.sourceforge.net/woof-ug-0.5/woof_manual.html[Reference Manual v0.5], http://woof.sourceforge.net/woof-ug-0.4/_woof/docs/ug/index[User Guide v0.4], http://woof.sourceforge.net/woof-ug-0.4/woof_manual.html[Reference Manual v0.4]
+* Comprehensive documentation (well, getting there): http://woof.sourceforge.net/woof-ug-0.5/_woof/docs/ug/index[User Guide v0.5], http://woof.sourceforge.net/woof-ug-0.5/html/_woof/woof_manual.html[Reference Manual v0.5], http://woof.sourceforge.net/woof-ug-0.4/_woof/docs/ug/index[User Guide v0.4], http://woof.sourceforge.net/woof-ug-0.4/woof_manual.html[Reference Manual v0.4]
 
 #### Ruff! - Runtime Function Formatter
 
