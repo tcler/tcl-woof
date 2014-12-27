@@ -1,8 +1,29 @@
-# Copyright (c) 2009, Ashok P. Nadkarni
+# Copyright (c) 2009-2014, Ashok P. Nadkarni
 # All rights reserved.
 # See the file LICENSE in the Woof! root directory for license
 
 fconfigure stdout -translation binary
+
+namespace eval ::woof::webservers::cgi {
+
+    # In some hosted environments, this script may be invoked via a link.
+    # To locate the Woof install, we need the real location so normalize
+    variable cgi_script [info script]
+
+    proc normalize_cgi_script {} {
+        variable cgi_script
+
+        set cgi_script [file normalize $cgi_script]
+        if {![catch {set link [file readlink $cgi_script]}]} {
+            set cgi_script [file normalize [file join [file dirname $cgi_script\
+] $link]]
+        }
+    }
+
+    normalize_cgi_script
+}
+
+
 
 # For testing purposes, enable this fragment and just print out environment
 if {0} {
@@ -60,9 +81,9 @@ proc ::woof::webservers::cgi::init {args} {
 
 # The woof root is expected to be our parent directory
 if {[catch {
-    set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname [info script]] .. lib]]]
-    source [file join [file dirname [info script]] .. lib woof master.tcl]
-    ::woof::master::init cgi [file normalize [file join [file dirname [info script]] ..]]
+    set auto_path [linsert $auto_path 0 [file normalize [file join [file dirname $::woof::webservers::cgi::cgi_script] .. lib]]]
+    source [file join [file dirname $::woof::webservers::cgi::cgi_script] .. lib woof master.tcl]
+    ::woof::master::init cgi [file normalize [file join [file dirname $::woof::webservers::cgi::cgi_script] ..]]
     set output_done [::woof::master::process_request]
 } msg]} {
     if {[info exists output_done] && $output_done} {
