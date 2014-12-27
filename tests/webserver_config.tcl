@@ -38,6 +38,7 @@ namespace eval ::woof::test::apache {
                               server_root $config(-serverdir) \
                               server_port $config(-port) \
                               woof_root $woof_root \
+			      document_root [clean_path [file join $woof_root public]] \
                               url_root $config(-urlroot)]
 
 	set apache_ver [apache_version]
@@ -65,8 +66,6 @@ namespace eval ::woof::test::apache {
 
     proc cleanup {} {
         variable config
-
-        stop
 
 	set apache_conf_file [file join $config(-serverdir) conf httpd.conf]
 	set webconfig_file [file join $config(-serverdir) conf "$config(-interface)-$config(-webconfig).inc"]
