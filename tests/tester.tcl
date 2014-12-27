@@ -101,9 +101,19 @@ proc ::woof::test::main {args} {
             webserver_start
         }
         cleanup {
-            webserver_stop
-            webserver_cleanup
-            cleanup_woof_config
+	    unset -nocomplain ermsg
+            if {[catch {webserver_stop} msg]} {
+		lappend ermsg $msg
+	    }
+	    if {[catch {webserver_cleanup} msg]} {
+		lappend ermsg $msg
+	    }
+            if {[catch {cleanup_woof_config} msg]} {
+		lappend ermsg $msg
+	    }
+	    if {[info exists ermsg]} {
+		error [join $ermsg \n]
+	    }
         }
         test {
             ::woof::test::read_config

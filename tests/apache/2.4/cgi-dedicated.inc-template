@@ -3,8 +3,8 @@
 # documents. By default, all requests are taken from this directory, but
 # symbolic links and aliases may be used to point to other locations.
 #
-DocumentRoot "/home/vmuser/woof/public"
-<Directory "/home/vmuser/woof/public" >
+DocumentRoot "%DOCUMENT_ROOT%"
+<Directory "%DOCUMENT_ROOT%" >
     Options +ExecCGI
     Require all granted
     AddHandler cgi-script .tcl
