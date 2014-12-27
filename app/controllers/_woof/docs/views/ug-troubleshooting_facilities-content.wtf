@@ -1,0 +1,107 @@
+<h3>Woof! development mode</h3>
+<p>
+Set the [my _code run_mode] 
+[my _chapter_link development_aids "configuration setting"] to
+[my _code development]. Amongst other things, this will enable
+display of more detailed error information.
+For security reasons, only a limited amount of information is displayed
+in the browser in case of errors when this is set to [my _code production].
+Remember to set it back once you have resolved the issue.
+</p>
+<h3>Log files</h3>
+<p>
+Because there are multiple components involved,
+with potentially multiple log files for each, pertinent information may
+be scattered across several files.
+</p>
+<ul>
+<li>Woof! logs - see [my _chapter_link logging] for details on Woof! logs.
+  For post-installation issues, also look at the install log which
+  is placed in the directory where Woof! is installed.</li>
+<li>Web server logs - most web servers will log all URL's being accessed
+  as well as errors. However, these often go to different log files so make
+  sure to check both as appropriate for you web server.</li>
+<li>If you are using a connector, such as [my _filename isapi_scgi] on
+  Windows, that may also have its own log file.
+<li>System logs - check system logs and the Windows event log on Windows
+  for system errors such as permissions, firewall ACL's etc.</li>
+</ul>
+
+<p>Note that most components can be configured to log additional levels of
+  detail. You may need to do this to get at the relevant information.</p>
+
+<h3>Woof! debug console</h3>
+<p>
+For issues related to page generation and display, the 
+[my _chapter_link console "Woof! interactive console"] can
+be very useful. This shows both the HTTP headers and HTML content 
+being generated while allowing for standard Tcl techniques for
+stepping through the code, examining variables, attaching filter methods
+for tracing and so on. For example, you can directly invoke commands for 
+URL routing to verify that requests are being dispatched correctly.
+</p>
+
+<h3>CGI and SCGI connectors</h3>
+<p>
+Sometimes it is not clear whether a problem is caused by incorrect
+configuration of the Web server or the Woof! library or application code.
+The first step in these cases is to verify that the Web server is
+able to invoke the appropriate Woof! connector and passing it the correct
+information.
+</p>
+<p>
+In the case of CGI, you can verify this by enabling the following 
+code at the top
+of the [my _filename cgi_server.tcl] file which is generally installed
+in the [my _filename public] directory. This is shown below.
+</p>
+[my _code_sample {
+ # For testing purposes, enable this fragment and just print out environment
+ if {0} {
+    puts -nonewline "Content-type: text/html\r\n\r\n"
+    foreach e [lsort [array names ::env]] {
+        puts $e=$::env($e)<br>
+    }
+    exit 0
+ }
+}]
+
+<p>This will print out the environment and exit without loading Woof!</p>
+
+[my _hnote [::woof::wtf::html_frag {
+Make sure to modify the correct file being invoked via CGI and not
+the [my _filename lib/woof/webservers/cgi_server.tcl] file which
+is only a template.
+}]]
+
+<p>In the case of SCGI, instead of running the 
+[my _chapter_link start_scgi "Woof! SCGI server"], run the
+[my _filename scripts/scgi_tester.tcl] script. This will also
+print the environment passed by the Web server without loading Woof!
+</p>
+
+<p>After doing the above, use the browser to connect to the Woof! URL
+  of interest.</p>
+
+<p>If you do not see a web page with the environment
+printed, the problem is likely to be that the Web server has not been
+configured properly for invoking the CGI / SCGI connector. Re-check
+you Web configuration settings.</p>
+
+<p>If you see a page with the environment values being generated, the
+Web server is correctly configured to invoke the connector. However,
+there may still be an error in configuration that results in the
+incorrect values being passed to the connector. In particular,
+check that the value of the [my _code PATH_INFO] environment variable
+corresponds to the controller method you expect to be invoked.</p>
+
+<h3>Browser tools</h3>
+<p>Finally, don't forget about the development tools that are available
+in all browsers. For example, [my _code F12] in IE or 
+[my _code Ctrl-Shift-i] in Chrome will bring up the developer tools
+pane. These can help with both page generation issues by allowing
+inspection of the DOM, CSS etc. as well connectivity and protocol
+related issues, for example incorrect headers cookies etc. They also
+allow the browser to be set up for development, for example by disabling
+the browser cache.
+</p>

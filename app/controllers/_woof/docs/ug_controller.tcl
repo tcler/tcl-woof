@@ -133,6 +133,9 @@ oo::class create UgController {
             {console "console - interactive console" 1}
             {ruffian "ruffian - documentation generator" 1}
             {scgi_winservice "scgi_winservice - Woof! Windows service" 1}
+            {troubleshooting "Troubleshooting"}
+            {troubleshooting_facilities "Troubleshooting facilities" 1}
+            {common_errors "Common errors" 1}
             {acknowledgements "Acknowledgements"}
         }
 

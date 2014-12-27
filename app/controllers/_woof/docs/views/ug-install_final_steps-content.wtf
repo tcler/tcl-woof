@@ -12,7 +12,11 @@ configured.</p>
 below.</p>
 <p class="ug-center">
 [my _image bowwow_welcome.png "Woof! welcome page"]</p>
-
+<p>
+If you do not see this page, see the installation log in the directory
+where you installed Woof! for any errors. If nothing obvious shows there,
+refer to the [my _chapter_link troubleshooting] chapter for help.
+</p>
 <h3>Additional steps before going live</h3>
 <p>There are some additional steps you need to take once you are ready to go live with your application.</p>
 
