@@ -703,7 +703,7 @@ proc ruff::extract_ooclass_method {class method} {
             foreach {params body} [info class constructor $class] break
         }
         destructor  {
-            set body [lindex [info class destructor $class] 0]
+            set body [info class destructor $class]
             set params {}
         }
         default {
@@ -1285,6 +1285,9 @@ proc ruff::document_namespaces {formatter namespaces args} {
     # -title STRING - specifies the title to use for the page
     # -recurse BOOLEAN - if true, child namespaces are recursively
     #  documented.
+    # -autolink BOOLEAN - if true (default), automatically generate
+    #  links to program element definitions. If false, links are only
+    #  generated if enclosed in [].
     #
     # Any additional arguments are passed through to the document command.
     #
@@ -1301,8 +1304,11 @@ proc ruff::document_namespaces {formatter namespaces args} {
         -append false
         -title ""
         -recurse false
+        -autolink true
     }
     array set opts $args
+    variable autolink;          # Hack
+    set autolink $opts(-autolink)
     
     if {$opts(-recurse)} {
         set namespaces [_namespace_tree $namespaces]

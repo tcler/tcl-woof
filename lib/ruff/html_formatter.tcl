@@ -343,7 +343,6 @@ proc ::ruff::formatter::html::_locate_link {link_label scope} {
 }
 
 proc ::ruff::formatter::html::_linkify {text {link_regexp {}} {scope {}}} {
-
     # Convert matching substrings to links
     # text - string to be substituted
     # link_regexp - regexp to use for matching potential links
@@ -361,8 +360,13 @@ proc ::ruff::formatter::html::_linkify {text {link_regexp {}} {scope {}}} {
         return [_locate_link $text $scope]
     }
 
-    set start_delim {^|[^[:alnum:]_\:]}
-    set end_delim {$|[^[:alnum:]_\:]}
+    if {$::ruff::autolink} {
+        set start_delim {^|[^[:alnum:]_\:]}
+        set end_delim {$|[^[:alnum:]_\:]}
+    } else {
+        set start_delim {^|\[}
+        set end_delim {$|\]}
+    }
     set arg_re {\$[_[:alnum:]]+}
     set const_re {'[<>\._[:alnum:]]+'}
 
