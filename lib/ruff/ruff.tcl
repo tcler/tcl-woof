@@ -22,7 +22,7 @@ if {[info commands dict] == ""} {
 }
 
 namespace eval ruff {
-    variable version 0.4.2
+    variable version 0.5.0
 
     variable names
     set names(display) "Ruff!"
@@ -755,6 +755,8 @@ proc ruff::extract_proc_or_method {proctype procname param_names param_defaults 
     #   source - the source code of the command
     #
 
+    variable ProgramOptions
+    
     array set param_default $param_defaults
     array set params {}
     array set options {}
@@ -865,6 +867,10 @@ proc ruff::extract_proc_or_method {proctype procname param_names param_defaults 
     # least indented line to 0 spaces and then add 4 spaces for each line.
     append source [::textutil::adjust::indent [::textutil::adjust::undent $body] "    "]
     append source "\n}"
+    if {$ProgramOptions(-hidesourcecomments)} {
+        regsub -line -all {^\s*#.*$} $source "" source
+        regsub -all {\n{2,}} $source "\n" source
+    }
     set doc(source) $source
 
     return [eval dict create [array get doc]]
@@ -1300,6 +1306,7 @@ proc ruff::document_namespaces {formatter namespaces args} {
         -includeprocs true
         -includeprivate false
         -includesource false
+        -hidesourcecomments false
         -output ""
         -append false
         -title ""
@@ -1307,8 +1314,9 @@ proc ruff::document_namespaces {formatter namespaces args} {
         -autolink true
     }
     array set opts $args
-    variable autolink;          # Hack
-    set autolink $opts(-autolink)
+    variable ProgramOptions
+    set ProgramOptions(-autolink) $opts(-autolink)
+    set ProgramOptions(-hidesourcecomments) $opts(-hidesourcecomments)
     
     if {$opts(-recurse)} {
         set namespaces [_namespace_tree $namespaces]
