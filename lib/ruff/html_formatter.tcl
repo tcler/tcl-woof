@@ -360,7 +360,7 @@ proc ::ruff::formatter::html::_linkify {text {link_regexp {}} {scope {}}} {
         return [_locate_link $text $scope]
     }
 
-    if {$::ruff::autolink} {
+    if {$::ruff::ProgramOptions(-autolink)} {
         set start_delim {^|[^[:alnum:]_\:]}
         set end_delim {$|[^[:alnum:]_\:]}
     } else {
