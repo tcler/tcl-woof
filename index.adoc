@@ -20,7 +20,7 @@ embeddable into other applications.
 * Localization support with inheritance
 * Built-in web server, scaffolding tool,
   documentation generator, interactive debugging console and more
-* Comprehensive documentation (well, getting there): http://woof.sourceforge.net/woof-ug-0.5/_woof/docs/ug/index[User Guide v0.5], http://woof.sourceforge.net/woof-ug-0.5/html/_woof/woof_manual.html[Reference Manual v0.5], http://woof.sourceforge.net/woof-ug-0.4/_woof/docs/ug/index[User Guide v0.4], http://woof.sourceforge.net/woof-ug-0.4/woof_manual.html[Reference Manual v0.4]
+* Comprehensive documentation (well, getting there): http://woof.sourceforge.net/woof-ug-0.5/_woof/docs/ug/index[User Guide v0.5], http://woof.sourceforge.net/woof-ug-0.5/html/_woof/woof_manual.html[Reference Manual v0.5]
 
 #### Ruff! - Runtime Function Formatter
 

@@ -168,7 +168,7 @@ oo::class create Request {
         if {[env exists HTTPS https] && ($https eq "on")} {
             return true
         }
-        if {[env exists HTTP_X_FORWARDED_PROTO https] && {$https eq "https"}} {
+        if {[env exists HTTP_X_FORWARDED_PROTO https] && ($https eq "https")} {
             return true
         }
         return false
