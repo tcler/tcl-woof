@@ -4,6 +4,8 @@
 
 # Woof! Installation Script
 # Utility for Woof! distribution and installation
+# To build a distribution,
+#  tclsh scripts\installer.tcl distribute dist
 
 if {! [package vsatisfies [info tclversion] 8.6]} {
     puts stderr "Woof! requires Tcl version 8.6 or later. You are running [info tclversion]"
@@ -24,9 +26,10 @@ namespace eval installer {
     variable source_root_dir
     set source_root_dir $root_dir
 
-    # Exes for resource editing and compression
-    variable upx_exe  [file join $source_root_dir tools win32 upx.exe]
+    # Exes for zipping, resource editing and exe compression
+    variable zip_exe  [file join $source_root_dir tools win32 zip.exe]
     variable ctcl_exe [file join $source_root_dir tools win32 ctcl.exe]
+    variable upx_exe  [file join $source_root_dir tools win32 upx.exe]
     
     # Woof! version
     variable woof_version
@@ -86,7 +89,7 @@ proc installer::distribute {target_dir args} {
     # Generates distribution kits for Woof
     # target_dir - path to the directory where the distribution kits are
     #   to be placed. The directory must not exist.
-    # -zipper ZIPEXE - ZIP file executable ('zip' by default)
+    # -zipper ZIPEXE - ZIP file executable (tools\win32\zip by default)
     # -sdx SDXKIT - path to 'sdx.kit' file for generating Tcl kits
     # -tarrer TAREXE - path to the tar exe
     # -gzipper GZIPEXE - path to gzip
@@ -104,17 +107,18 @@ proc installer::distribute {target_dir args} {
     variable woof_numeric_version
     variable upx_exe
     variable ctcl_exe
+    variable zip_exe
     variable manifest_name
 
     # Note - tarrer defaults to bsdtar since Gnu tar does not properly
     # set directory permissions when tarring on Windows
     array set opts {
         -gzipper gzip
-        -zipper zip
         -force false
         -kit all
         -fromscm false
     }
+    set opts(-zipper) $zip_exe
     if {$::tcl_platform(platform) eq "windows"} {
         set opts(-tarrer) bsdtar
     } else {

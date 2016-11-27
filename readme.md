@@ -1,13 +1,14 @@
-Version 0.5 beta of Woof! has been released.
+Version 0.5b4 of Woof! has been released.  Primary difference
+from 0.5b3 are bug fixes, particularly one that caused SSL
+connections to fail in some configurations.
 
 ## What is Woof!
 
-Woof! - Web Oriented Object Framework - is an
-open-source, platform and server-independent, web
-application framework written in the Tcl
-programming language. It is intended to be easy to
-install and deploy, simple to understand and
-customize, and embeddable into other applications.
+Woof! - Web Oriented Object Framework - is an open-source, platform
+and server-independent, web application framework written in the Tcl
+programming language. It is intended to be easy to install and deploy,
+simple to understand and customize, and embeddable into other
+applications.
 
 * Platform independent (requires Tcl 8.6)
 * Web server agnostic with CGI, SCGI support and API's for writing 
@@ -22,8 +23,7 @@ customize, and embeddable into other applications.
 * Localization support
 * Development aids - built-in web server, scaffolding tool,
   documentation generator, interactive debugging console
-* Comprehensive documentation (well, getting there)
-
+* Comprehensive documentation
 
 ## Files
 
