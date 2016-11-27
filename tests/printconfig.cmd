@@ -1,0 +1,1 @@
+@tclsh tester.tcl printconfig

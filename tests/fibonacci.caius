@@ -1,0 +1,93 @@
+package require tcltest
+source testutil.tcl
+
+namespace eval woof::test {
+    variable source_root
+    set source_root [file normalize [file join [file dirname [info script]] ..]]
+    
+    variable target_root
+    if {![info exists target_root]} {
+        set target_root $source_root
+    }
+
+    proc source_path {args} {
+        variable source_root
+        return [file normalize [file join $source_root {*}$args]]
+    }
+
+    proc target_path {args} {
+        variable target_root
+        return [file normalize [file join $target_root {*}$args]]
+    }
+
+    proc ensure_parent_dir {path} {
+        if {[file exists [file dirname $path]]} {
+            return
+        }
+        file mkdir [file dirname $path]
+    }
+
+    # Does NOT expand wildcards. Quite simplistic, does not handle links
+    # well etc.
+    # Will overwrite destination files. Will abort on error with
+    # copies only partially done.
+    proc copy_dir {from to} {
+        if {![file isdirectory $from]} {
+            error "Directory $from not found."
+        }
+
+        set to_is_dir [file isdirectory $to]
+        set to_exists [file exists $to]
+
+        if {$to_exists && ! $to_is_dir} {
+            error "Destination $to exists but is not a directory."
+        }
+
+        file mkdir $to
+
+        foreach entry [glob -directory $from -tails *] {
+            set from_entry [file join $from $entry]
+            set to_entry [file join $to $entry]
+            if {[file isdirectory $from_entry]} {
+                copy_dir $from_entry $to_entry
+            } else {
+                # Ordinary file
+                if {[file exists $to_entry] &&
+                    [file isdirectory $to_entry]} {
+                        error "Attempt to copy file $from_entry on top of a existing directory $to_entry."
+                }
+                file copy -force -- $from_entry $to_entry
+            }
+        }
+    }
+}
+
+itcl::class FibonacciTests {
+    inherit Testing::TestObject
+
+    method setup_before {} {
+        distro::build ../samples/fibonacci 0.1 -manifest MANIFEST.fibonacci
+        distro::install ../samples/fibonacci [::woof::test::source_path] -manifest MANIFEST.fibonacci
+        # woof::test::copy_dir [::woof::test::source_path samples fibonacci] [::woof::test::target_path]
+    }
+
+    method teardown_after {} {
+        distro::uninstall [::woof::test::source_path] -manifest MANIFEST.fibonacci
+        file delete ../samples/fibonacci/MANIFEST.fibonacci
+    }
+
+    method test-1 {} {}
+}
+
+# exit [[FibonacciTests #auto] run $::argv]
+
+tcltest::test t-1 {
+    Testing 1 2 3
+} -setup {
+    set caps [namespace which [WebDriver::Capabilities #auto -browser_name chrome]]
+    set session [WebDriver::Session #auto http://127.0.0.1:4444/wd/hub $caps]
+} -body {
+    set window [$session active_window]
+    $window set_url http://www.example.com
+    $window url
+} -result http://www.example.com
