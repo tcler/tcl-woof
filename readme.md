@@ -7,7 +7,7 @@ connections to fail in some configurations.
 Woof! - Web Oriented Object Framework - is an open-source, platform
 and server-independent, web application framework written in the Tcl
 programming language. It is intended to be easy to install and deploy,
-simple to understand and customize, and embeddable into other
+simple to understand and customize, and embedable into other
 applications.
 
 * Platform independent (requires Tcl 8.6)
@@ -15,14 +15,16 @@ applications.
   adapters for other interfaces
 * Configurable page layouts
 * Templates with inheritance
-* Pluggable template engines
+* Plug-in template engines
 * Support for responsive web design
 * Pure CSS controls
 * Built-in query, session and cookie handling
 * Flexible routing with matching URL generation
 * Localization support
-* Development aids - built-in web server, scaffolding tool,
-  documentation generator, interactive debugging console
+* Scaffolding tool for method and template generation
+* Built-in web server for development
+* Interactive debugging console
+* Documentation generator
 * Comprehensive documentation
 
 ## Files
@@ -74,9 +76,9 @@ http://woof.sourceforge.net/woof-ug/_woof/docs/ug/quick_start.
 
 ## Useful URLs
 
-* Home page - http://woof.sourceforge.net/woof_home
+* Home page - http://woof.sourceforge.net
 * Programming guide - http://woof.sourceforge.net/woof-ug/_woof/docs/ug/index
-* Reference pages - http://woof.sourceforge.net/woof-ug/woof_manual.html
+* Reference pages - http://woof.sourceforge.net/woof-ug/html/_woof/woof_manual.html
 * SourceForge project - http://sourceforge.net/projects/woof
 
 
