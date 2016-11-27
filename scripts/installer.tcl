@@ -5,7 +5,7 @@
 # Woof! Installation Script
 # Utility for Woof! distribution and installation
 # To build a distribution,
-#  tclsh scripts\installer.tcl distribute dist
+#  tclsh scripts\installer.tcl distribute dist -fromscm 1
 
 if {! [package vsatisfies [info tclversion] 8.6]} {
     puts stderr "Woof! requires Tcl version 8.6 or later. You are running [info tclversion]"
@@ -263,9 +263,9 @@ proc installer::distribute {target_dir args} {
 
         distro::build $bowwow_dir $woof_version -manifest $manifest_name -crlf lf
         # TBD - make tclkit path configurable
-        set tclkit [file join $src_dir thirdparty tclkits tclkit-cli-x86.exe]
+        set tclkit [file nativename [file normalize [file join $src_dir thirdparty tclkits tclkit-cli-x86.exe]]]
         set bowwow [file join $target_dir bowwow-${woof_version}]
-        set sdx [file join $src_dir tools sdx.kit]
+        set sdx [file normalize [file join $src_dir tools sdx.kit]]
         exec $tclkit $sdx wrap ${bowwow}.kit -vfs $bowwow_dir
         set bowwow_exe [file join $target_dir bowwow-${woof_version}.exe]
         # Need to copy the executable because we cannot use it as the runtime file
@@ -275,6 +275,7 @@ proc installer::distribute {target_dir args} {
         # Decompress the exe
         # exec $upx_exe -d $runtime
         exec $tclkit $sdx wrap ${bowwow}.exe -runtime $runtime -vfs $bowwow_dir
+        puts stderr target_dir=$target_dir,tclkit=$tclkit,pwd=[pwd]
         exec cmd /c cd $target_dir && $tclkit $sdx mksplit [file tail ${bowwow}.exe]
 	exec $ctcl_exe write_version_resource ${bowwow}.head -copyright "2014 Ashok P. Nadkarni" -timestamp now -version $woof_numeric_version -productversion $woof_numeric_version ProductName "BowWow Web Server" FileDescription "BowWow Web Server" CompanyName "Ashok P. Nadkarni" FileVersion "$woof_numeric_version.0" ProductVersion "$woof_numeric_version.0"
 	exec $ctcl_exe write_icon_resource ${bowwow}.head "public/images/_woof/woof_icon.ico" -name TK
@@ -703,6 +704,8 @@ proc installer::main {command args} {
 	    } else {
 		puts stderr "Please see the installation log for details."
 	    }
+        } else {
+            puts stderr "$::errorInfo"
         }
         set exit_code 1
     }
