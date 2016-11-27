@@ -1,0 +1,31 @@
+source testutil.tcl
+
+woof::test::open_websession
+
+
+distro::build ../samples/fibonacci 0.1 -manifest MANIFEST.fibonacci
+distro::install ../samples/fibonacci [::woof::test::source_path] -manifest MANIFEST.fibonacci
+
+namespace eval woof::test::fibonacci {
+    namespace import ::tcltest::test
+
+    test t-1 {
+        Testing 1 2 3
+    } -setup {
+        set caps [namespace which [WebDriver::Capabilities #auto -browser_name chrome]]
+        set session [WebDriver::Session #auto http://127.0.0.1:4444/wd/hub $caps]
+    } -cleanup {
+        itcl::delete object $session
+        itcl::delete object $caps
+    } -body {
+        set window [$session active_window]
+        $window set_url http://
+        $window url
+    } -result http://www.example.com/
+}
+
+woof::test::close_websession
+distro::uninstall [::woof::test::source_path] -manifest MANIFEST.fibonacci
+file delete ../samples/fibonacci/MANIFEST.fibonacci
+
+tcltest::cleanupTests
