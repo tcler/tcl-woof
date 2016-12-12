@@ -347,6 +347,8 @@ proc pure::form {formdef args} {
     # entry field.
     # The second element of the pair is a dictionary with the following keys
     # and corresponding values. Keys that are optional are indicated as such.
+    #   -checked - a boolean value (optiona, default 0) that marks
+    #      a checkbox or radio button in a group as selected
     #   -enabled - a boolean value (optional, default 1) that marks
     #      the field as enabled or not
     #   -id - Specifies the id attribute of the input field (optional)
@@ -466,6 +468,9 @@ proc pure::_parse_formdef {form_elem def need_control_group} {
             }
             if {[dict exists $def -required] && [dict get $def -required]} {
                 append html " required"
+            }
+            if {[dict exists $def -checked] && [dict get $def -checked]} {
+                append html " checked"
             }
             append html ">\n"
             if {[dict exists $def -label]} {
